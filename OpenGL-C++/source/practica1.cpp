@@ -3,39 +3,49 @@
 #include <GL/gl.h>
 #include <GL/glut.h>
 
+#include <vector>
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
 
+// Main Includes
 #include "../header/window.h"
 #include "../header/camera.h"
 
+#include "../header/object3d.h"
+#include "../header/cube.h"
+// 3D includes
+
 using namespace std;
 
+// Boolean keycontrol array.
 bool keys_ascii[256] = {0};
+vector<Object3D*> objetos;
 
+// Initialization of Window and Camera.
 Window my_screen(50, 50, 500, 500);
-Camera camera(0, 0, 500, 500, 0, 1000);
+Camera camera(0, 0, 500, 500, 5, 500);
 
+// Cleaning method
 void clean(){ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); }
 
-/* Proyección */
+// Projection
 void projection(){
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glFrustum(-5, 5, -5, 5, camera.getFrontPlane(), camera.getBackPlane());
 }
 
-// Transformaciones de vista.
+// View transformations
 void change_observer(){
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glTranslatef(0.f, 0.f, -camera.getFrontPlane());
-	glRotatef(camera.getRotationX(), 0.f, 1.f, 0.f);
-	glRotatef(camera.getRotationY(), 1.f, 0.f, 0.f);
+	glTranslatef(0.f, 0.f, -2*camera.getFrontPlane());
+	glRotatef(camera.getRotacionX(), 0.f, 1.f, 0.f);
+	glRotatef(camera.getRotacionY(), 1.f, 0.f, 0.f);
 }
 
-// Dibuja un eje de coordenadas
+// Draws a coordinate axis
 void draw_axis(int size){
 	glBegin(GL_LINES);
 		glColor3f(1.f, 0.f, 0.f); // Color Rojo (Eje X)
@@ -52,19 +62,22 @@ void draw_axis(int size){
 	glEnd();
 }
 
-// Dibujamos los objetos en escena.
+// Drawing Method
 void draw_objects(){
 	float x_r = (float)(keys_ascii[102] - keys_ascii[100]) * 0.02f;
 	float y_r = (float)(keys_ascii[101] - keys_ascii[103]) * 0.02f;
-	camera.addXRotation(x_r);
-	camera.addYRotation(y_r);
+	camera.addXRotacion(x_r);
+	camera.addYRotacion(y_r);
 
-	draw_axis(100.f);
-	glFlush();
+	for(int i = 0; i < objetos.size(); i++){
+		objetos[i]->dibujar();
+	}
+
+	//draw_axis(2.f);
 	glutPostRedisplay();
 }
 
-// Dibujamos la escena
+// Drawing scene
 void draw_scene(void){
 	clean();
 	change_observer();
@@ -80,25 +93,22 @@ void change_window_size(int _w,int _h){
 	glutPostRedisplay();
 }
 
-void normal_keys(unsigned char key, int x, int y){
-	switch (toupper(key)) {
-		case 'Q':
-			exit(0);
-		break;
-	}
-}
-
-void key_pressed(int key, int x, int y){
-	keys_ascii[key] = true;
-}
-
-void key_unpressed(int key, int x, int y){
-	keys_ascii[key] = false;
-}
+// Key Event
+void key_pressed(int key, int x, int y){ keys_ascii[key] = true; }
+void key_unpressed(int key, int x, int y){ keys_ascii[key] = false; }
 
 // Init
 void init(void){
-	glClearColor(1.f, 1.f, 1.f, 1.f); // RGB(255, 255, 255, 255);
+	// Adding objects to scene
+	objetos.push_back(new Cube());
+	Cube* cubo_scalado = new Cube();
+	cubo_scalado->setScalado(1.4f);
+	cubo_scalado->setColor(0xff33ff);
+	cout << cubo_scalado->getColor();
+	objetos.push_back(cubo_scalado);
+
+
+	glClearColor(1.f, 1.f, 1.f, 1.f); // RGB(255, 255, 255, 255) [White];
 	projection();
 	glViewport(0, 0, my_screen.getWidth(), my_screen.getHeight());
 }
@@ -120,6 +130,5 @@ int main(int argc, char **argv){
 
 	init();
 	glutMainLoop();
-
 	return 0;
 }
