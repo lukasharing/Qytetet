@@ -9,18 +9,23 @@
 #include <ctype.h>
 
 // Main Includes
+#include <cmath>
 #include "../header/window.h"
 #include "../header/camera.h"
-
+// 3D includes
 #include "../header/object3d.h"
 #include "../header/cube.h"
-// 3D includes
+#include "../header/tetraedro.h"
 
 using namespace std;
+
+#define PI 3.14159265358979323846  /* pi */
 
 // Boolean keycontrol array.
 bool keys_ascii[256] = {0};
 vector<Object3D*> objetos;
+
+const float r2d = 180.f / PI;
 
 // Initialization of Window and Camera.
 Window my_screen(50, 50, 500, 500);
@@ -70,11 +75,14 @@ void draw_objects(){
 	camera.addYRotacion(y_r);
 
 	for(int i = 0; i < objetos.size(); i++){
-		objetos[i]->dibujar();
+		if(objetos[i]->getName() == "miCuboMenosFavorito"){
+			objetos[i]->getRotation().addX(0.0005f);
+			objetos[i]->getRotation().addY(0.0005f);
+		}
+		objetos[i]->draw(0.0, 0.0, -2*camera.getFrontPlane());
 	}
 
 	//draw_axis(2.f);
-	glutPostRedisplay();
 }
 
 // Drawing scene
@@ -83,6 +91,7 @@ void draw_scene(void){
 	change_observer();
 	draw_objects();
 	glutSwapBuffers();
+	glutPostRedisplay();
 }
 
 // Events.
@@ -90,7 +99,6 @@ void change_window_size(int _w,int _h){
 	my_screen.resize(_w, _h);
 	projection();
 	glViewport(0, 0, _w, _h);
-	glutPostRedisplay();
 }
 
 // Key Event
@@ -100,13 +108,11 @@ void key_unpressed(int key, int x, int y){ keys_ascii[key] = false; }
 // Init
 void init(void){
 	// Adding objects to scene
-	objetos.push_back(new Cube());
 	Cube* cubo_scalado = new Cube();
-	cubo_scalado->setScalado(1.4f);
+	cubo_scalado->setName("miCuboMenosFavorito");
+	cubo_scalado->setScale(1.0f);
 	cubo_scalado->setColor(0xff33ff);
-	cout << cubo_scalado->getColor();
 	objetos.push_back(cubo_scalado);
-
 
 	glClearColor(1.f, 1.f, 1.f, 1.f); // RGB(255, 255, 255, 255) [White];
 	projection();
@@ -119,7 +125,7 @@ int main(int argc, char **argv){
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 	glutInitWindowPosition(my_screen.getX(), my_screen.getY());
 	glutInitWindowSize(my_screen.getWidth(), my_screen.getHeight());
-	glutCreateWindow("Ejercicio de entrega - Lukas Häring");
+	glutCreateWindow("Ejercicio de entrega - Lukas Haring");
 	glEnable(GL_DEPTH_TEST);
 	//Events functions.
 	glutDisplayFunc(draw_scene);
