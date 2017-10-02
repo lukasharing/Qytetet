@@ -1,8 +1,6 @@
 #ifndef CUBE_H
 #define CUBE_H
 #include "../header/object3d.h"
-#include <iostream>
-using namespace std;
 
 class Cube : public Object3D{
   public:
@@ -40,8 +38,19 @@ Cube::Cube(){
   };
   sides.assign(_e, _e + 36);
 
+  float _c[36]{
+  	1.f,0.f,1.f,	1.f,0.f,1.f,
+  	1.f,0.f,1.f,	1.f,0.f,1.f,
+
+    1.f,0.f,1.f,	1.f,0.f,1.f,
+  	1.f,0.f,1.f,	1.f,0.f,1.f,
+
+  	1.f,0.f,1.f,	1.f,0.f,1.f,
+  	1.f,0.f,1.f,	1.f,0.f,1.f,
+  };
+  colors.assign(_c, _c + 36);
+
   // Normal Calculation
   normal_calculation();
-  solid = false;
 };
 #endif

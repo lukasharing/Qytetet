@@ -1,10 +1,11 @@
 #ifndef OBJECT3D_H
 #define OBJECT3D_H
 #include <GL/gl.h>
-#include <GL/glut.h>
-#include <cmath>
+#include <iostream>
+#include <fstream>
+#include <string>
 #include "vector3d.h"
-#define PI 3.14159265358979323846
+#include "camera.h"
 
 class Object3D{
   protected:
@@ -13,19 +14,19 @@ class Object3D{
     std::vector<float> normals;// normals
     std::vector<float> vertices;// Vertices
     std::vector<unsigned int> sides; // Sides
+    std::vector<float> colors;
 
     // Properties
-    bool  solid;
-
-    Vector3D position; // Posicion
-    Vector3D rotation; // Rotacion
+    bool chess;
+    GLenum draw_type;
 
     // Transformations
     float scale;
-    float color[3];
+    Vector3D position; // Posicion
+    Vector3D rotation; // Rotacion
   public:
 
-    void draw(double, double, double);
+    void draw(Camera);
 
     // Transformaciones
     float getScale();
@@ -33,88 +34,76 @@ class Object3D{
     Vector3D& getPosition();
     Vector3D& getRotation();
 
-    // color setter
-    void setColor(int);
-    void setColor(float, float, float);
-    void setColor(int, int, int);
-    void setColor(float*);
-
-    void setName(std::string);
-    std::string getName();
-    void setVertices(float*);
+    // Drawing type
+    void setDrawType(GLenum);
 
     // getter
-    int getColor() const;
+    void setChess(bool);
+    void setName(std::string);
+    void setVertices(float*);
+    std::string getName();
 
     void normal_calculation();
     void new_object();
+    // Empty
     Object3D();
+    // Load From Arrays
     Object3D(float*, int*, int, int);
+    // Load From PLY
+    Object3D(std::string);
+    ~Object3D();
 };
 
+
+/* Get and Set Methods (No explanation needed). */
 float Object3D::getScale(){  return scale; };
 void Object3D::setScale(float _scale){ scale = _scale; };
 Vector3D& Object3D::getPosition(){ return position; };
 Vector3D& Object3D::getRotation(){ return rotation; };
 
-void Object3D::setColor(int _c){ setColor((_c>>16)&0xff, (_c>>8)&0xff, _c&0xff); };
-void Object3D::setColor(float r, float g, float b){ color[0] = r; color[1] = g; color[2] = b; };
-void Object3D::setColor(int r, int g, int b){ color[0] = r/255.f; color[1] = g/255.f; color[2] = b/255.f; };
-void Object3D::setColor(float* c){ for(int i = 0; i < 3; i++){ color[i] = c[i]; } };
+void Object3D::setDrawType(GLenum t){ draw_type = t; };
 
+void Object3D::setChess(bool _c){ chess = _c; };
 void Object3D::setName(std::string _n){ name = _n; };
 std::string Object3D::getName(){ return name; };
-int Object3D::getColor() const{ return ((int)(color[0]*255)<<16|(int)(color[1]*255)<<8|(int)(color[2]*255)); };
 
-void Object3D::draw(double _x, double _y, double _z){
+
+/* Draw method, need 1 parameter, the camera */
+void Object3D::draw(Camera cam){
   if(sides.size() > 0){
     glEnableClientState(GL_VERTEX_ARRAY);
     glPushMatrix();
       glTranslated(position.getX(), position.getY(), position.getZ());
       glScalef(scale, scale, scale);
-      glRotatef(rotation.getX() * 180 / PI, 0.f, 1.f, 0.f);
-      glRotatef(rotation.getY() * 180 / PI, 1.f, 0.f, 0.f);
 
-      glBegin(GL_TRIANGLES);
-        for(int i = 0; i < sides.size(); i+= 3){
-          float x = normals[i + 0] + position.getX();
-          float y = normals[i + 1] + position.getY();
-          float z = normals[i + 2] + position.getZ();
+      glPolygonMode(GL_FRONT, draw_type);
+      glPolygonMode(GL_BACK, draw_type);
+      if(colors.size() > 0 && !chess){
+        glEnableClientState(GL_COLOR_ARRAY);
+        glColorPointer(3, GL_FLOAT, 0, &colors[0]);
+      }else{
+        glColor3f(0.5f, 0.3f, 0.4f);
+      }
+      glVertexPointer(3, GL_FLOAT, 0, &vertices[0]);
+      if(chess){
+        glDrawElements(GL_TRIANGLES, sides.size()/2, GL_UNSIGNED_INT, &sides[0]);
+        glColor3f(1.f, 0.3f, 0.4f);
+        glDrawElements(GL_TRIANGLES, sides.size()/2, GL_UNSIGNED_INT, &sides[sides.size()/2]);
+      }else{
+        glDrawElements(GL_TRIANGLES, sides.size(), GL_UNSIGNED_INT, &sides[0]);
+      }
+      //glDrawElements(GL_TRIANGLES, sides.size(), GL_UNSIGNED_INT, &sides[sides.size()/3-1]);
 
-          float cs = cos(rotation.getX()), sn = sin(rotation.getX());
-
-          float tx = x;
-          float ty = y * cs - z * sn;
-          float tz = y * sn + z * cs;
-
-          cs = cos(rotation.getY());
-          sn = sin(rotation.getY());
-          float t1x = tx * cs + tz * sn;
-          float t1y = ty;
-          float t1z = tz * cs - tx * sn;
-
-          float dx = t1x - _x;
-          float dy = t1y - _y;
-          float dz = t1z - _z;
-
-          float scale = sqrt(dx * dx + dy * dy + dz * dz) / 10.f;
-          glColor3f(color[0] * scale, color[1] * scale, color[2] * scale);
-          for(int j = 0; j < 3; j++){
-            int side = 3 * sides[i + j];
-            glVertex3f(vertices[side + 0], vertices[side + 1], vertices[side + 2]);
-          }
-        }
-      glEnd();
-
-      /*glVertexPointer(3, GL_FLOAT, 0, &vertices[0]);
-      glDrawElements(solid ? GL_TRIANGLES : GL_LINE_STRIP, sides.size(), GL_UNSIGNED_INT, &sides[0]);*/
     glPopMatrix();
-
     glDisableClientState(GL_VERTEX_ARRAY);
+
+    if(colors.size() > 0 && !chess){
+      glDisableClientState(GL_COLOR_ARRAY);
+    }
   }
 };
 
-
+/* Normal calculation method (No parameters) */
 void Object3D::normal_calculation(){
   int total = sides.size();
   normals.resize(total);
@@ -141,23 +130,74 @@ void Object3D::normal_calculation(){
   }
 };
 
+/* New object method */
 void Object3D::new_object(){
+  draw_type = GL_FILL;
   position.new_object();
   rotation.new_object();
   scale = 1.f;
-  color[0] = color[1] = color[2] = 0.f;
-  solid = false;
+  chess = false;
 };
 
+/* Empty contructor */
 Object3D::Object3D(){
   new_object();
 };
 
+/* Constructor by vectors */
 Object3D::Object3D(float* _v, int* _s, int total_vertices, int total_sides){
   new_object();
   vertices.assign(_v, _v + total_vertices);
   sides.assign(_s, _s + total_sides);
   normal_calculation();
-  solid = false;
+};
+
+/* Constructor by path, it has to be existent. */
+Object3D::Object3D(std::string name){
+  new_object();
+  std::ifstream ply_object(name.c_str());
+  if (ply_object.is_open()){
+    std::string str;
+    ply_object >> str;
+    if(str == "ply"){
+      std::cout << "Loading PLY File...\n";
+      ply_object >> str;
+      while(str != "end_header"){
+        if(str == "element"){
+          ply_object >> str;
+          int size;
+          ply_object >> size;
+          std::cout << str << " -> " << size << "\n";
+          if(str == "vertex"){ vertices.resize(3 * size); }
+          else if(str == "face"){ sides.resize(3 * size); }
+        }
+        ply_object >> str;
+      }
+
+      // Load Vertex
+      for(int i = 0; i < vertices.size(); i++){
+        float v;
+        ply_object >> v;
+        vertices[i] = v;
+      }
+      // Load Edges
+      for(int i = 0; i < sides.size(); i++){
+        int e;
+        if(i % 3 == 0){ ply_object >> e; }
+        ply_object >> e;
+        sides[i] = e;
+      }
+    }
+  }
+  ply_object.close();
+  normal_calculation();
+};
+
+/* Destructor. */
+Object3D::~Object3D(){
+  normals.clear();// normals
+  vertices.clear();// Vertices
+  sides.clear(); // Sides
+  colors.clear();
 };
 #endif

@@ -2,12 +2,12 @@
 #define TETRAEDRO_H
 #include "../header/object3d.h"
 
-class Tetraedro : public Object3D{
+class Tetrahedron : public Object3D{
   public:
-    Tetraedro();
+    Tetrahedron();
 };
 
-Tetraedro::Tetraedro(){
+Tetrahedron::Tetrahedron(){
   new_object();
   // Assigning Vertices
   float _v[12]{
@@ -28,8 +28,14 @@ Tetraedro::Tetraedro(){
   };
   sides.assign(_s, _s + 12);
 
+  float _c[12]{
+  	0.f,1.f,0.f,	0.f,1.f,0.f,
+  	0.f,1.f,0.f,	0.f,1.f,0.f,
+  };
+  colors.assign(_c, _c + 12);
+
+
   // Normal Calculation
   normal_calculation();
-  solid = false;
 };
 #endif
