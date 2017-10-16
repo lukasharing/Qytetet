@@ -15,6 +15,7 @@
 // 3D includes
 #include "../header/object3d.h"
 #include "../header/cube.h"
+#include "../header/revolution_object.h"
 #include "../header/tetrahedron.h"
 
 using namespace std;
@@ -25,6 +26,7 @@ using namespace std;
 bool keys_ascii[256] = {0};
 vector<Object3D*> objects;
 Object3D* currentVisible;
+Revolution* pawn;
 
 // Prevents from redrawing more times than needed.
 bool is_being_draw = false;
@@ -119,6 +121,8 @@ void key_pressed(unsigned char key, int x, int y){
 			case 'l': type = GL_LINE; break;
 			case 'f': type = GL_FILL; break;
 			case 'c': type = GL_FILL; is_chess = true;	break;
+			case 'x': pawn->generate_revolution(pawn->getSlices() + 1); break;
+			case 'z': pawn->generate_revolution(max(1, pawn->getSlices() - 1)); break;
 		}
 		currentVisible->setDrawType(type);
 		currentVisible->setChess(is_chess);
@@ -141,13 +145,9 @@ void init(void){
 	ant->setScale(0.5f);
 	objects.push_back(ant);
 
-	Object3D* shark = new Object3D("../models/shark.ply");
-	shark->setScale(1.5f);
-	objects.push_back(shark);
-
-	Object3D* cat = new Object3D("../models/cat.ply");
-	cat->setScale(20.f);
-	objects.push_back(cat);
+	pawn = new Revolution("../models/peon.ply", 10);
+	pawn->setScale(1.f);
+	objects.push_back(pawn);
 
 	glClearColor(1.f, 1.f, 1.f, 1.f); // RGB(255, 255, 255, 255) [White];
 	projection();

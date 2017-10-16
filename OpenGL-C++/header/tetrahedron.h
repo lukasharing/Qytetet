@@ -1,6 +1,6 @@
 #ifndef TETRAEDRO_H
 #define TETRAEDRO_H
-#include "../header/object3d.h"
+#include "object3d.h"
 
 class Tetrahedron : public Object3D{
   public:
@@ -30,7 +30,7 @@ Tetrahedron::Tetrahedron(){
 
   float _c[12]{
   	0.f,1.f,0.f,	0.f,1.f,0.f,
-  	0.f,1.f,0.f,	0.f,1.f,0.f,
+  	0.f,1.f,0.f,	1.f,0.f,1.f,
   };
   colors.assign(_c, _c + 12);
 

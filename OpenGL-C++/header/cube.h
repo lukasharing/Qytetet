@@ -1,6 +1,6 @@
 #ifndef CUBE_H
 #define CUBE_H
-#include "../header/object3d.h"
+#include "object3d.h"
 
 class Cube : public Object3D{
   public:
@@ -29,12 +29,12 @@ Cube::Cube(){
   // Assigning Sides
   int _e[36]{
   	0,1,2,	2,3,0,
+      	6,2,1,	1,5,6,
   	0,1,5,	5,4,0,
-   	0,4,7,	7,3,0,
+      	6,2,3,
+   	0,4,7,	7,3,0, 3,7,6,
+       	6,7,4,	4,5,6
 
-  	6,2,1,	1,5,6,
-  	6,2,3,	3,7,6,
-   	6,7,4,	4,5,6
   };
   sides.assign(_e, _e + 36);
 

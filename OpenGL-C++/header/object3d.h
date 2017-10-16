@@ -25,11 +25,13 @@ class Object3D{
     Vector3D position; // Posicion
     Vector3D rotation; // Rotacion
   public:
+    // PLY
+    void load_ply(std::string);
 
     void draw(Camera);
 
     // Transformaciones
-    float getScale();
+    float getScale() const;
     void setScale(float);
     Vector3D& getPosition();
     Vector3D& getRotation();
@@ -56,7 +58,7 @@ class Object3D{
 
 
 /* Get and Set Methods (No explanation needed). */
-float Object3D::getScale(){  return scale; };
+float Object3D::getScale() const{  return scale; };
 void Object3D::setScale(float _scale){ scale = _scale; };
 Vector3D& Object3D::getPosition(){ return position; };
 Vector3D& Object3D::getRotation(){ return rotation; };
@@ -155,12 +157,17 @@ Object3D::Object3D(float* _v, int* _s, int total_vertices, int total_sides){
 /* Constructor by path, it has to be existent. */
 Object3D::Object3D(std::string name){
   new_object();
+  load_ply(name);
+  normal_calculation();
+};
+
+void Object3D::load_ply(std::string name){
   std::ifstream ply_object(name.c_str());
   if (ply_object.is_open()){
     std::string str;
     ply_object >> str;
     if(str == "ply"){
-      std::cout << "Loading PLY File...\n";
+      std::cout << "Loading " << name << " PLY File...\n";
       ply_object >> str;
       while(str != "end_header"){
         if(str == "element"){
@@ -190,8 +197,7 @@ Object3D::Object3D(std::string name){
     }
   }
   ply_object.close();
-  normal_calculation();
-};
+}
 
 /* Destructor. */
 Object3D::~Object3D(){
