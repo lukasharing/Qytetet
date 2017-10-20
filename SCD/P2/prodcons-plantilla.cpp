@@ -5,8 +5,8 @@
 #include <random>
 #include "Semaphore.h"
 
-using namespace std ;
-using namespace SEM ;
+using namespace std;
+using namespace SEM;
 
 //**********************************************************************
 // variables compartidas
@@ -17,7 +17,7 @@ unsigned int cont_prod[num_items] = {0}; // contadores de verificación: produci
 unsigned int cont_cons[num_items] = {0}; // contadores de verificación: consumidos
 Semaphore hay_productos(0);
 Semaphore producto_completo(buffer_size);
-Semaphore exclusion(1);
+Semaphore mutex_fuma(1);
 unsigned int contador = 0, libre = 0;
 
 //**********************************************************************
@@ -38,7 +38,9 @@ template<int min, int max> int aleatorio(){
 
 int producir_dato(){
 	this_thread::sleep_for(chrono::milliseconds(aleatorio<20, 100>()));
+	mutex_fuma.sem_wait();
 	cout << "Producido: " << contador << endl << flush;
+	mutex_fuma.sem_signal();
 	cont_prod[contador]++;
 	return (contador = (contador+1) % num_items);
 }
@@ -48,7 +50,9 @@ void consumir_dato(unsigned dato){
 	assert(dato < num_items);
 	cont_cons[dato]++;
 	this_thread::sleep_for(chrono::milliseconds(aleatorio<20, 100>()));
+	mutex_fuma.sem_wait();
 	cout << "Consumido: " << dato << endl ;
+	mutex_fuma.sem_signal();
 }
 
 
@@ -58,7 +62,7 @@ void test_contadores(){
 	bool ok = true ;
 	cout << "Comprobando contadores ...." << endl;
 	for(unsigned i = 0; i < num_items; i++){
-		if (cont_prod[i] != 1){ 
+		if (cont_prod[i] != 1){
 			cout << "error: Valor " << i << " producido " << cont_prod[i] << " veces." << endl;
 			ok = false ;
 		}
@@ -74,9 +78,9 @@ void  funcion_hebra_productora(){
 	for(unsigned i = 0 ; i < num_items; i++){
 		int dato = producir_dato();
 		producto_completo.sem_wait();
-		exclusion.sem_wait();
+		mutex_fuma.sem_wait();
 		buffer[libre++] = dato;
-		exclusion.sem_signal();
+		mutex_fuma.sem_signal();
 		hay_productos.sem_signal();
 	}
 }
@@ -84,12 +88,11 @@ void  funcion_hebra_productora(){
 //----------------------------------------------------------------------
 
 void funcion_hebra_consumidora(){
-	for(unsigned i = 0 ; i < num_items; i++)
-	{
+	for(unsigned i = 0 ; i < num_items; i++){
 		hay_productos.sem_wait();
-		exclusion.sem_wait();
+		mutex_fuma.sem_wait();
 		int dato = buffer[--libre];
-		exclusion.sem_signal();
+		mutex_fuma.sem_signal();
 		producto_completo.sem_signal();
 		consumir_dato(dato);
 	}
@@ -102,11 +105,11 @@ int main(){
 	cout << "--------------------------------------------------------" << endl;
 	cout << flush;
 
-	thread hebra_productora(funcion_hebra_productora),
-	hebra_consumidora(funcion_hebra_consumidora);
+	thread hebra_productora(funcion_hebra_productora);
+	thread hebra_consumidora(funcion_hebra_consumidora);
 
-	hebra_productora.join() ;
-	hebra_consumidora.join() ;
+	hebra_productora.join();
+	hebra_consumidora.join();
 
 	test_contadores();
 	return 1;
