@@ -15,6 +15,7 @@ class Object3D{
     std::vector<float> vertices;// Vertices
     std::vector<unsigned int> sides; // Sides
     std::vector<float> colors;
+    int covers;
 
     // Properties
     bool chess;
@@ -38,6 +39,10 @@ class Object3D{
 
     // Drawing type
     void setDrawType(GLenum);
+
+    // console
+    void console_vertices();
+    void console_faces();
 
     // getter
     void setChess(bool);
@@ -92,7 +97,7 @@ void Object3D::draw(Camera cam){
         glColor3f(1.f, 0.3f, 0.4f);
         glDrawElements(GL_TRIANGLES, sides.size()/2, GL_UNSIGNED_INT, &sides[sides.size()/2]);
       }else{
-        glDrawElements(GL_TRIANGLES, sides.size(), GL_UNSIGNED_INT, &sides[0]);
+        glDrawElements(GL_TRIANGLES, sides.size() - covers, GL_UNSIGNED_INT, &sides[0] + covers);
       }
       //glDrawElements(GL_TRIANGLES, sides.size(), GL_UNSIGNED_INT, &sides[sides.size()/3-1]);
 
@@ -132,8 +137,29 @@ void Object3D::normal_calculation(){
   }
 };
 
+void Object3D::console_vertices(){
+  std::cout << "Vertices from the object" << std::endl;
+  for(int i = 0; i < vertices.size() / 3; i++){
+    for(int j = 0; j < 3; j++){
+      std::cout << vertices[i * 3 + j] << ',';
+    }
+    std::cout << std::endl;
+  }
+};
+
+void Object3D::console_faces(){
+  std::cout << "Faces from the object" << std::endl;
+  for(int i = 0; i < sides.size() / 3; i++){
+    for(int j = 0; j < 3; j++){
+      std::cout << sides[i * 3 + j] << ',';
+    }
+    std::cout << std::endl;
+  }
+};
+
 /* New object method */
 void Object3D::new_object(){
+  covers = 0;
   draw_type = GL_FILL;
   position.new_object();
   rotation.new_object();

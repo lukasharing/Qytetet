@@ -17,7 +17,12 @@
 #include "../header/cube.h"
 #include "../header/revolution_object.h"
 #include "../header/tetrahedron.h"
-
+#include "../header/sweep_object.h"
+#include <pthread.h>
+void junk() {
+  int i;
+  i=pthread_getconcurrency();
+};
 using namespace std;
 
 #define PI 3.14159265358979323846  /* PI */
@@ -115,17 +120,20 @@ void key_pressed(unsigned char key, int x, int y){
 		currentVisible = objects[ds-1];
 	}else{
 		GLenum type = GL_FILL;
-		bool is_chess = false;
+		bool is_chess = false, modify = false;
 		switch(key){
-			case 'p': type = GL_POINT; 	 break;
+			case 'p': type = GL_POINT;break;
 			case 'l': type = GL_LINE; break;
 			case 'f': type = GL_FILL; break;
-			case 'c': type = GL_FILL; is_chess = true;	break;
-			case 'x': pawn->generate_revolution(pawn->getSlices() + 1); break;
-			case 'z': pawn->generate_revolution(max(1, pawn->getSlices() - 1)); break;
+			case 'c': type = GL_FILL; is_chess = true; break;
+			case 'x': pawn->generate_revolution(pawn->getSlices() + 1, 2); modify = true; break;
+			case 'z': pawn->generate_revolution(max(2, pawn->getSlices() - 1), 2); modify = true; break;
+			case 'a': pawn->setCover(pawn->getCover() == 0 ? 6 * pawn->getSlices() : 0); modify = true; break;
 		}
-		currentVisible->setDrawType(type);
-		currentVisible->setChess(is_chess);
+    if(!modify){
+  		currentVisible->setDrawType(type);
+  		currentVisible->setChess(is_chess);
+    }
 	}
 	glutPostRedisplay();
 }
@@ -145,9 +153,44 @@ void init(void){
 	ant->setScale(0.5f);
 	objects.push_back(ant);
 
-	pawn = new Revolution("../models/peon.ply", 10);
+	pawn = new Revolution("../models/peon.ply", 4, 2);
 	pawn->setScale(1.f);
 	objects.push_back(pawn);
+
+  /* Revolution from points */
+  const int number = 6;
+  float points[number * 3] = {
+    .5f, 0.f, .5f,
+    1.f, 0.f, 1.f,
+    1.5f, 0.f, .5f,
+    1.5f, 0.f, -.5f,
+    1.f, 0.f, -1.f,
+    .5f, 0.f, -.5f
+  };
+  int slices = 4;
+  Revolution* rev = new Revolution(points, number, slices, 2);
+	rev->setScale(1.f);
+  rev->setCover(6 * slices);
+	objects.push_back(rev);
+
+  const int seg_cur = 5;
+  const int number1 = 4;
+  float points1[number1 * 3] = {
+    -.5f, 0.f, -.5f,
+    +.5f, 0.f, -.5f,
+    +.5f, 0.f, +.5f,
+    -.5f, 0.f, +.5f,
+  };
+  float curve[seg_cur * 3] = {
+    2.0f, 2.0f, 0.f,
+    1.0f, 1.0f, 0.f,
+    0.f, 0.f, 0.f,
+    -1.0f, 1.0f, 0.f,
+    -2.0f, 2.0f, 0.f,
+  };
+  Sweep* swpt = new Sweep(points1, number1, curve, seg_cur);
+	swpt->setScale(1.f);
+	objects.push_back(swpt);
 
 	glClearColor(1.f, 1.f, 1.f, 1.f); // RGB(255, 255, 255, 255) [White];
 	projection();
@@ -160,7 +203,7 @@ int main(int argc, char **argv){
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 	glutInitWindowPosition(my_screen.getX(), my_screen.getY());
 	glutInitWindowSize(my_screen.getWidth(), my_screen.getHeight());
-	glutCreateWindow("Ejercicio de entrega - Lukas Haring");
+	glutCreateWindow("Ejercicio de entrega - Lukas Haring v.01");
 	glEnable(GL_DEPTH_TEST);
 
 	//Events functions.

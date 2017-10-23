@@ -1,0 +1,172 @@
+\documentclass[8pt, a4paper, titlepage]{article}
+
+%page styles
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage[letterpaper, margin=1.5in]{geometry}
+\usepackage{amsfonts}
+% Code %
+\usepackage{listings}
+\usepackage{color}
+ 
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+%gnu%
+\usepackage[miktex]{gnuplottex}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+ 
+\lstset{style=mystyle}
+
+\begin{document}
+   \section{Productor Consumidor - Lukas Häring}
+   		\subsection{Comentarios}
+   		Encontramos en éste ejemplo 3 semáforos, vamos a comentar cada uno de ellos
+   		\begin{enumerate}
+   			\item En la línea 18, encontramos un semáforo que regula cuándo hay suficiente productos o no, es decir si el vector tiene valors, entonces los consumidores pueden obtener los recursos y por ello al principio al no haber productos, éste debe estar en el valor 0, además es usado en \textbf{funcion\_hebra\_consumidora()} y llamado en \textbf{funcion\_hebra\_productora()} (cambio de 0 a 1) cuando se ha generado un producto.
+   			\item En la línea 19, encontramos un semáforo con el valor del tamaño máximo del buffer, se encargará de indicarle al productor que el buffer está lleno y por lo tanto no deberá producir, si el buffer tiene espacio, éste se activará y podrá volver a llenar el vector.
+   			\item La línea 20 contiene un semáforo que actúa de \textit{mutex} (Es obvio que su valor debe estar en 1), se encarga de que los valores se vayan introduciendo o sacando del buffer correctamente de manera lineal (Uno detrás de otro), no es llamado por ninguna otra función más que \textbf{funcion\_hebra\_productora() y funcion\_hebra\_consumidora()}.
+   		\end{enumerate}
+   		\subsection{Código}
+   		\begin{lstlisting}[language=C++]
+#include <iostream>
+#include <cassert>
+#include <thread>
+#include <mutex>
+#include <random>
+#include "Semaphore.h"
+
+using namespace std;
+using namespace SEM;
+
+//**********************************************************************
+// variables compartidas
+
+const int num_items = 40, buffer_size = 10;   // tamanho del buffer
+unsigned int buffer[buffer_size] = {0};
+unsigned int cont_prod[num_items] = {0}; // contadores de verificacion: producidos
+unsigned int cont_cons[num_items] = {0}; // contadores de verificacion: consumidos
+Semaphore hay_productos(0);
+Semaphore producto_completo(buffer_size);
+Semaphore mutex_fuma(1);
+unsigned int contador = 0, libre = 0;
+
+//**********************************************************************
+// plantilla de funcion para generar un entero aleatorio uniformemente
+// distribuido entre dos valores enteros, ambos incluidos
+// (ambos tienen que ser dos constantes, conocidas en tiempo de compilacion)
+//----------------------------------------------------------------------
+template<int min, int max> int aleatorio(){
+	static default_random_engine generador((random_device())());
+	static uniform_int_distribution<int> distribucion_uniforme(min, max) ;
+	return distribucion_uniforme(generador);
+}
+
+
+//**********************************************************************
+// funciones comunes a las dos soluciones (fifo y lifo)
+//----------------------------------------------------------------------
+
+int producir_dato(){
+	this_thread::sleep_for(chrono::milliseconds(aleatorio<20, 100>()));
+	mutex_fuma.sem_wait();
+	cout << "Producido: " << contador << endl << flush;
+	mutex_fuma.sem_signal();
+	cont_prod[contador]++;
+	return (contador = (contador+1) % num_items);
+}
+//----------------------------------------------------------------------
+
+void consumir_dato(unsigned dato){
+	assert(dato < num_items);
+	cont_cons[dato]++;
+	this_thread::sleep_for(chrono::milliseconds(aleatorio<20, 100>()));
+	mutex_fuma.sem_wait();
+	cout << "Consumido: " << dato << endl ;
+	mutex_fuma.sem_signal();
+}
+
+
+//----------------------------------------------------------------------
+
+void test_contadores(){
+	bool ok = true ;
+	cout << "Comprobando contadores ...." << endl;
+	for(unsigned i = 0; i < num_items; i++){
+		if (cont_prod[i] != 1){
+			cout << "error: Valor " << i << " producido " << cont_prod[i] << " veces." << endl;
+			ok = false ;
+		}
+	}
+	if (ok){
+		cout << "Solucion (aparentemente) correcta." << endl << flush;
+	}
+}
+
+//----------------------------------------------------------------------
+
+void  funcion_hebra_productora(){
+	for(unsigned i = 0 ; i < num_items; i++){
+		int dato = producir_dato();
+		producto_completo.sem_wait();
+		mutex_fuma.sem_wait();
+		buffer[libre++] = dato;
+		mutex_fuma.sem_signal();
+		hay_productos.sem_signal();
+	}
+}
+
+//----------------------------------------------------------------------
+
+void funcion_hebra_consumidora(){
+	for(unsigned i = 0 ; i < num_items; i++){
+		hay_productos.sem_wait();
+		mutex_fuma.sem_wait();
+		int dato = buffer[--libre];
+		mutex_fuma.sem_signal();
+		producto_completo.sem_signal();
+		consumir_dato(dato);
+	}
+}
+//----------------------------------------------------------------------
+
+int main(){
+	cout << "--------------------------------------------------------" << endl;
+	cout << "Problema de los productores-consumidores (solucion LIFO)." << endl;
+	cout << "--------------------------------------------------------" << endl;
+	cout << flush;
+
+	thread hebra_productora(funcion_hebra_productora);
+	thread hebra_consumidora(funcion_hebra_consumidora);
+
+	hebra_productora.join();
+	hebra_consumidora.join();
+
+	test_contadores();
+	return 1;
+}
+
+
+\end{lstlisting}
+
+\end{document}
