@@ -173,22 +173,19 @@ void init(void){
   rev->setCover(6 * slices);
 	objects.push_back(rev);
 
-  const int seg_cur = 5;
   const int number1 = 4;
   float points1[number1 * 3] = {
-    -.5f, 0.f, -.5f,
-    +.5f, 0.f, -.5f,
-    +.5f, 0.f, +.5f,
-    -.5f, 0.f, +.5f,
+    -1.f, 0.f, -1.f,
+    +1.f, 0.f, -1.f,
+    +1.f, 0.f, +1.f,
+    -1.f, 0.f, +1.f,
   };
-  float curve[seg_cur * 3] = {
-    2.0f, 2.0f, 0.f,
-    1.0f, 1.0f, 0.f,
-    0.f, 0.f, 0.f,
-    -1.0f, 1.0f, 0.f,
-    -2.0f, 2.0f, 0.f,
-  };
-  Sweep* swpt = new Sweep(points1, number1, curve, seg_cur);
+  vector<float> curve;
+  for(float i = -PI; i < PI; i+=0.3){
+    curve.insert(curve.end(), { cos(i * 2.f) * 2.f, sin(i * 2.f) * 2.f, i*3.f });
+  }
+
+  Sweep* swpt = new Sweep(points1, number1, &curve[0], curve.size()/3);
 	swpt->setScale(1.f);
 	objects.push_back(swpt);
 

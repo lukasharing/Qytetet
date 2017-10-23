@@ -24,15 +24,14 @@ void Sweep::generate_sweep(){
 
   // Polygon normal
   float lx = curve[0], ly = curve[1], lz = curve[2];
-  for(int i = 1; i < curve_vertices * 3; i+= 3){
+  for(int i = 3; i < curve_vertices * 3; i+= 3){
     float sx = curve[i + 0], sy = curve[i + 1], sz = curve[i + 2];
 
     float dx = lx - sx, dy = ly - sy, dz = lz - sz;
     float ds = sqrt(dx * dx + dy * dy + dz * dz);
     dx /= ds; dy /= ds; dz /= ds;
 
-    float angle_x = acos(dx);
-    float angle_z = acos(dz);
+    float angle_x = acos(dx), angle_z = acos(dz);
     float csx = cos(angle_x), snx = sin(angle_x);
     float csz = cos(angle_z), snz = sin(angle_z);
     for(int j = 0; j < polygon_vertices * 3; j += 3){
@@ -42,7 +41,11 @@ void Sweep::generate_sweep(){
       float ry = y * csz - z * snz;
       float rz = y * snz + z * csz;
 
-      vertices.insert(vertices.end(), { lx + rx, ly + ry, lz + rz });
+      float gx = rx * csz - ry * snz;
+      float gy = rx * snz + ry * csz;
+      float gz = rz;
+
+      vertices.insert(vertices.end(), { lx + gx, ly + gy, lz + gz });
     }
     if(i + 3 == curve_vertices * 3){
       for(int j = 0; j < polygon_vertices * 3; j += 3){
@@ -51,7 +54,11 @@ void Sweep::generate_sweep(){
         float rx = x;
         float ry = y * csx - z * snx;
         float rz = y * snx + z * csx;
-        vertices.insert(vertices.end(), { sx + rx, sy + ry, sz + rz });
+
+        float gx = rx * csz - ry * snz;
+        float gy = rx * snz + ry * csz;
+        float gz = rz;
+        vertices.insert(vertices.end(), { sx + gx, sy + gy, sz + gz });
       }
     }
     lx = sx; ly = sy; lz = sz;

@@ -1,0 +1,91 @@
+In file included from C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\sweep_object.h:3:0:
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:14:5: error: 'vector' in namespace 'std' does not name a type
+     std::vector<float> normals;// normals
+     ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:15:5: error: 'vector' in namespace 'std' does not name a type
+     std::vector<float> vertices;// Vertices
+     ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:16:5: error: 'vector' in namespace 'std' does not name a type
+     std::vector<unsigned int> sides; // Sides
+     ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:17:5: error: 'vector' in namespace 'std' does not name a type
+     std::vector<float> colors;
+     ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h: In member function 'void Object3D::draw(Camera)':
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:80:6: error: 'sides' was not declared in this scope
+   if(sides.size() > 0){
+      ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:88:10: error: 'colors' was not declared in this scope
+       if(colors.size() > 0 && !chess){
+          ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:94:40: error: 'vertices' was not declared in this scope
+       glVertexPointer(3, GL_FLOAT, 0, &vertices[0]);
+                                        ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:107:8: error: 'colors' was not declared in this scope
+     if(colors.size() > 0 && !chess){
+        ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h: In member function 'void Object3D::normal_calculation()':
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:115:15: error: 'sides' was not declared in this scope
+   int total = sides.size();
+               ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:116:3: error: 'normals' was not declared in this scope
+   normals.resize(total);
+   ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:118:16: error: 'vertices' was not declared in this scope
+     float cx = vertices[3 * sides[i + 0] + 0];
+                ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:133:48: error: 'sqrt' was not declared in this scope
+     float md = sqrt(nx * nx + ny * ny + nz * nz);
+                                                ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h: In member function 'void Object3D::console_vertices()':
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:142:22: error: 'vertices' was not declared in this scope
+   for(int i = 0; i < vertices.size() / 3; i++){
+                      ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h: In member function 'void Object3D::console_faces()':
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:152:22: error: 'sides' was not declared in this scope
+   for(int i = 0; i < sides.size() / 3; i++){
+                      ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h: In constructor 'Object3D::Object3D(float*, int*, int, int)':
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:178:3: error: 'vertices' was not declared in this scope
+   vertices.assign(_v, _v + total_vertices);
+   ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:179:3: error: 'sides' was not declared in this scope
+   sides.assign(_s, _s + total_sides);
+   ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h: In member function 'void Object3D::load_ply(std::string)':
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:204:32: error: 'vertices' was not declared in this scope
+           if(str == "vertex"){ vertices.resize(3 * size); }
+                                ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:205:35: error: 'sides' was not declared in this scope
+           else if(str == "face"){ sides.resize(3 * size); }
+                                   ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:211:26: error: 'vertices' was not declared in this scope
+       for(int i = 0; i < vertices.size(); i++){
+                          ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:217:26: error: 'sides' was not declared in this scope
+       for(int i = 0; i < sides.size(); i++){
+                          ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h: In destructor 'Object3D::~Object3D()':
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:230:3: error: 'normals' was not declared in this scope
+   normals.clear();// normals
+   ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:231:3: error: 'vertices' was not declared in this scope
+   vertices.clear();// Vertices
+   ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:232:3: error: 'sides' was not declared in this scope
+   sides.clear(); // Sides
+   ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:233:3: error: 'colors' was not declared in this scope
+   colors.clear();
+   ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\sweep_object.h: In member function 'void Sweep::generate_sweep()':
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\sweep_object.h:22:3: error: 'sides' was not declared in this scope
+   sides.clear();
+   ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\sweep_object.h:23:3: error: 'vertices' was not declared in this scope
+   vertices.clear();
+   ^
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\sweep_object.h: In constructor 'Sweep::Sweep(std::string, float*, int)':
+C:\Users\lukas\Documents\GitHub\University_Projects\OpenGL-C++\header\sweep_object.h:88:22: error: 'vertices' was not declared in this scope
+   polygon_vertices = vertices.size() / 3;
+                      ^
