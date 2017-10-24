@@ -17,7 +17,7 @@ class Revolution : public Object3D{
     int getSlices() const{ return current_slices; };
 };
 
-void Revolution::generate_revolution(int n, int rotation = 0){
+void Revolution::generate_revolution(int n, int rotation){
   current_slices = n;
   float slices  = 6.283185307f / n;
   sides.clear();
@@ -25,12 +25,28 @@ void Revolution::generate_revolution(int n, int rotation = 0){
 
   int idx = revolution_height - 1;
   if(vertices[idx * 3] != 0.f || vertices[idx * 3 + 1] != 0.f){
-    vertices.insert(vertices.end(), {0.f, 0.f, vertices[idx * 3 + 2]});
+    float x = 0.f, y = 0.f, z = 0.f;
+    if(rotation == 0){
+        x = vertices[idx * 3 + 0];
+    }else if(rotation == 1){
+        y = vertices[idx * 3 + 1];
+    }else{
+        z = vertices[idx * 3 + 2];
+    }
+    vertices.insert(vertices.end(), {x, y, z});
     revolution_height++;
   }
 
   if(vertices[0] != 0.f || vertices[1] != 0.f){
-    vertices.insert(vertices.begin(), {0.f, 0.f, vertices[2]});
+    float x = 0.f, y = 0.f, z = 0.f;
+    if(rotation == 0){
+        x = vertices[0];
+    }else if(rotation == 1){
+        y = vertices[1];
+    }else{
+        z = vertices[2];
+    }
+    vertices.insert(vertices.begin(), {x, y, z});
     revolution_height++;
   }
 
@@ -38,18 +54,19 @@ void Revolution::generate_revolution(int n, int rotation = 0){
     float angle = (i + 1) * slices;
     float cs = cos(angle), sn = sin(angle);
 
-		for(int j = 1; j < revolution_height - 1; j++){
-      int id = j * 3;
-      float x = vertices[id + 0], y = vertices[id + 1], z = vertices[id + 2];
-			switch(rotation){
-				case 0:
-      		vertices.insert(vertices.end(), {x, cs * y - sn * z, sn * y + cs * z});
-				case 1:
-      		vertices.insert(vertices.end(), {x * cs + z * sn, y, z * cs - x * sn});
-				case 2:
-      		vertices.insert(vertices.end(), {x * cs - y * sn, x * sn + y * cs, z});
-			}
+    for(int j = 1; j < revolution_height - 1; j++){
+        int id = j * 3;
+        float x = vertices[id + 0], y = vertices[id + 1], z = vertices[id + 2];
+	    if(rotation == 0){
+            vertices.insert(vertices.end(), {x, cs * y - sn * z, sn * y + cs * z});
+		}else if(rotation == 1){
+            vertices.insert(vertices.end(), {x * cs + z * sn, y, z * cs - x * sn});
+		}else{
+            vertices.insert(vertices.end(), {x * cs - y * sn, x * sn + y * cs, z});
+	    }
     }
+
+    console_vertices();
   }
 
   // Adding Lower Cover
