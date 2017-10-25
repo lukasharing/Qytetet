@@ -1,11 +1,11 @@
 package modeloqytetet;
 
 public class Casilla {
-    private final int numeroCasilla;
-    private final int coste;
+    private int numeroCasilla = 0;
+    private int coste;
     private int numHoteles;
-    private int numCasas;
-    private final TipoCasilla tipo;
+    private int numCasas = 0;
+    private TipoCasilla tipo;
     private TituloPropiedad titulo;
 
     
@@ -41,28 +41,27 @@ public class Casilla {
     void setNumCasas(int a){ numCasas = a; };
     private void setTitulo(TituloPropiedad propiedad){ titulo = propiedad; };
     
-    public boolean soyEdificable(){ return tipo == TipoCasilla.CALLE; };
-    public boolean estaHipotecada(){ return titulo.getHipotecada(); };
+    boolean soyEdificable(){ return tipo == TipoCasilla.CALLE; };
+    boolean estaHipotecada(){ return titulo.getHipotecada(); };
+    boolean tengoPropietario(){ return titulo.tengoPropietario(); };
     
-    TituloPropiedad asignarPropietario(Jugador jugador){};
-    int calcularValorHipoteca(){};
-    int cancelarHipoteca(){};
-    int cobrarAlquiler(){};
-    int edificarCasa(){};
-    int edificarHotel(){};
-    boolean estaHipotecada(){};
-    int hipotecar(){};
-    int precioTotalComprar(){};
-    boolean propietarioEncarcelado(){ return  };
-    ~sePuedeEdificarCasa() : boolean{};
-    ~sePuedeEdificarHotel() : boolean{};
-    ~setNumCasas(nuevoNumero : int) : void{};
-    ~setNumHoteles(nuevoNumero : int) : void{};
-    ~soyEdificable() : boolean{};
-    ~tengoPropietario() : boolean{};
-    ~venderTitulo() : int{};
-    -setTitulo(titulo : TituloPropiedad) : void{};
-    -asignarTituloPropiedad() : void{};
+    TituloPropiedad asignarPropietario(Jugador jugador){
+        titulo.setPropietario(jugador);
+        return titulo;
+    };
+    //int calcularValorHipoteca(){};
+    //int cancelarHipoteca(){};
+    //int cobrarAlquiler(){};
+    //int edificarCasa(){};
+    //int edificarHotel(){};
+    //boolean estaHipotecada(){};
+    //int hipotecar(){};
+    //int precioTotalComprar(){};
+    //boolean propietarioEncarcelado(){ return };
+    //boolean sePuedeEdificarCasa(){};
+    //boolean sePuedeEdificarHotel(){};
+    //int venderTitulo(){};
+    //void asignarTituloPropiedad(){};
 
     @Override
     public String toString() {

@@ -48,7 +48,7 @@ public class Tablero {
     
     public Casilla getCarcel(){ return carcel; };
     
-    public boolean esCasillaCarcel (int numeroCasilla){ return casillas.get(numeroCasilla).getTipo() == TipoCasilla.CARCEL; };
+    public boolean esCasillaCarcel(int numeroCasilla){ return casillas.get(numeroCasilla).getTipo() == TipoCasilla.CARCEL; };
     public Casilla obtenerCasillaNumero(int numeroCasilla){ return casillas.get(numeroCasilla); };
     public Casilla obtenerNuevaCasilla(Casilla casilla, int desplazamiento){ return casillas.get((casilla.getNumeroCasilla() + desplazamiento) % casillas.size()); };
     

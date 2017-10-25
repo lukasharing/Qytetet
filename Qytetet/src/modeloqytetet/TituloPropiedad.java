@@ -10,7 +10,7 @@ package modeloqytetet;
 
 public class TituloPropiedad {
     private Jugador propietario = null;
-    private Casilla casilla;
+    public Casilla casilla;
     
     private final   String nombre;
     private boolean hipotecada;

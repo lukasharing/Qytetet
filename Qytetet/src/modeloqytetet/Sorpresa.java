@@ -17,7 +17,7 @@ public class Sorpresa {
     }
     
     public String getDescripcion(){ return texto; };
-    public TipoSorpresa getTipoSorpresa(){ return tipo; };
+    public TipoSorpresa getTipo(){ return tipo; };
     public int getValor(){ return valor; };
     @Override
     public String toString() { return "Sorpresa{" + "texto=" + texto + ", valor=" + Integer.toString(valor) + ", tipo=" + tipo + "}"; }
