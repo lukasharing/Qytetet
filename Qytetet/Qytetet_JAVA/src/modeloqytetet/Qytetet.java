@@ -26,12 +26,12 @@ public class Qytetet {
         nombres.add("María");
         
         inicializarTablero();
-        inicializarSorpresas();
+        inicializarCartasSorpresas();
         inicializarJugadores(nombres);
         salidaJugadores();
     };
     
-    private void inicializarSorpresas(){
+    private void inicializarCartasSorpresas(){
         // Añadimos las cartas de PAGARCOBRAR (x2)
         mazo.add(new Sorpresa("Has ganado la lotería!", +100, TipoSorpresa.PAGARCOBRAR));
         mazo.add(new Sorpresa("Has perdido tu cartera en la calle...", -100, TipoSorpresa.PAGARCOBRAR));

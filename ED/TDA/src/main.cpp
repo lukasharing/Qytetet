@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <ctime>
+#include "../include/encyclopedia.h"
 using namespace std;
 
 int main(int nargs, char* args[]){

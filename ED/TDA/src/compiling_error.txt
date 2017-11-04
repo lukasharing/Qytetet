@@ -1,0 +1,20 @@
+In file included from C:\Users\lukas\Documents\GitHub\University_Projects\ED\TDA\src\../include/../include/century_node.h:7:0,
+                 from C:\Users\lukas\Documents\GitHub\University_Projects\ED\TDA\src\../include/encyclopedia.h:9,
+                 from C:\Users\lukas\Documents\GitHub\University_Projects\ED\TDA\src\main.cpp:5:
+C:\Users\lukas\Documents\GitHub\University_Projects\ED\TDA\src\../include/../include/../include/year_node.h:28:16: warning: inline function 'int YearNode::getYear() const' used but never defined [enabled by default]
+     inline int getYear() const;
+                ^
+In file included from C:\Users\lukas\Documents\GitHub\University_Projects\ED\TDA\src\../include/encyclopedia.h:9:0,
+                 from C:\Users\lukas\Documents\GitHub\University_Projects\ED\TDA\src\main.cpp:5:
+C:\Users\lukas\Documents\GitHub\University_Projects\ED\TDA\src\../include/../include/century_node.h:54:16: warning: inline function 'int CenturyNode::getCentury() const' used but never defined [enabled by default]
+     inline int getCentury() const;
+                ^
+C:\Users\lukas\AppData\Local\Temp\ccNQmrwy.o:main.cpp:(.text+0xd4): undefined reference to `Encyclopedia::load_content(std::string)'
+C:\Users\lukas\AppData\Local\Temp\ccNQmrwy.o:main.cpp:(.text+0x151): undefined reference to `Encyclopedia::load_content(std::string)'
+C:\Users\lukas\AppData\Local\Temp\ccNQmrwy.o:main.cpp:(.text+0x1ce): undefined reference to `Encyclopedia::load_content(std::string)'
+C:\Users\lukas\AppData\Local\Temp\ccNQmrwy.o:main.cpp:(.text+0x24b): undefined reference to `Encyclopedia::load_content(std::string)'
+C:\Users\lukas\AppData\Local\Temp\ccNQmrwy.o:main.cpp:(.text+0x2e9): undefined reference to `Encyclopedia::findByYear(int)'
+C:\Users\lukas\AppData\Local\Temp\ccNQmrwy.o:main.cpp:(.text+0x35a): undefined reference to `Encyclopedia::findByCentury(int)'
+C:\Users\lukas\AppData\Local\Temp\ccNQmrwy.o:main.cpp:(.text+0x47d): undefined reference to `Encyclopedia::findByTags(std::string)'
+c:/winbuild/bin/../lib/gcc/i686-w64-mingw32/4.8.3/../../../../i686-w64-mingw32/bin/ld.exe: C:\Users\lukas\AppData\Local\Temp\ccNQmrwy.o: bad reloc address 0x15c in section `.rdata'
+collect2.exe: error: ld returned 1 exit status
