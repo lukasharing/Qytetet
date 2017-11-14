@@ -15,6 +15,8 @@ class Object3D{
     std::vector<float> vertices;// Vertices
     std::vector<unsigned int> sides; // Sides
     std::vector<float> colors;
+
+    float color[3] = {0.5f, 0.3f, 0.4f};
     int covers;
 
     // Properties
@@ -26,10 +28,11 @@ class Object3D{
     Vector3D position; // Posicion
     Vector3D rotation; // Rotacion
   public:
+    void setColor(float r, float g, float b){ color[0]=r; color[1]=g; color[2]=b; }
     // PLY
     void load_ply(std::string);
 
-    void draw(Camera);
+    virtual void draw(long int);
 
     // Transformaciones
     float getScale() const;
@@ -38,14 +41,14 @@ class Object3D{
     Vector3D& getRotation();
 
     // Drawing type
-    void setDrawType(GLenum);
+    virtual void setDrawType(GLenum);
 
     // console
     void console_vertices();
     void console_faces();
 
     // getter
-    void setChess(bool);
+    virtual void setChess(bool);
     void setName(std::string);
     void setVertices(float*);
     std::string getName();
@@ -76,7 +79,7 @@ std::string Object3D::getName(){ return name; };
 
 
 /* Draw method, need 1 parameter, the camera */
-void Object3D::draw(Camera cam){
+void Object3D::draw(long int delta){
   if(sides.size() > 0){
     glEnableClientState(GL_VERTEX_ARRAY);
     glPushMatrix();
@@ -89,7 +92,7 @@ void Object3D::draw(Camera cam){
         glEnableClientState(GL_COLOR_ARRAY);
         glColorPointer(3, GL_FLOAT, 0, &colors[0]);
       }else{
-        glColor3f(0.5f, 0.3f, 0.4f);
+        glColor3f(color[0], color[1], color[2]);
       }
       glVertexPointer(3, GL_FLOAT, 0, &vertices[0]);
       if(chess){

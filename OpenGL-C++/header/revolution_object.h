@@ -7,9 +7,10 @@ class Revolution : public Object3D{
   private:
     unsigned int revolution_height;
     unsigned int current_slices;
+    float fraction;
   public:
-    Revolution(std::string, int, int);
-    Revolution(float*, int, int, int);
+    Revolution(std::string, int, int, float);
+    Revolution(float*, int, int, int, float);
     void generate_revolution(int, int);
 
     void setCover(int _c){ covers = _c; };
@@ -52,21 +53,19 @@ void Revolution::generate_revolution(int n, int rotation){
 
 	for(int i = 0; i < n-1; i++){
     float angle = (i + 1) * slices;
-    float cs = cos(angle), sn = sin(angle);
+    float cs = cos(angle/fraction), sn = sin(angle/fraction);
 
     for(int j = 1; j < revolution_height - 1; j++){
         int id = j * 3;
         float x = vertices[id + 0], y = vertices[id + 1], z = vertices[id + 2];
 	    if(rotation == 0){
-            vertices.insert(vertices.end(), {x, cs * y - sn * z, sn * y + cs * z});
-		}else if(rotation == 1){
-            vertices.insert(vertices.end(), {x * cs + z * sn, y, z * cs - x * sn});
-		}else{
-            vertices.insert(vertices.end(), {x * cs - y * sn, x * sn + y * cs, z});
-	    }
+        vertices.insert(vertices.end(), {x, cs * y - sn * z, sn * y + cs * z});
+  		}else if(rotation == 1){
+        vertices.insert(vertices.end(), {x * cs + z * sn, y, z * cs - x * sn});
+  		}else{
+        vertices.insert(vertices.end(), {x * cs - y * sn, x * sn + y * cs, z});
+      }
     }
-
-    console_vertices();
   }
 
   // Adding Lower Cover
@@ -110,8 +109,9 @@ void Revolution::generate_revolution(int n, int rotation){
   }
 };
 
-Revolution::Revolution(std::string name, int n, int rotation){
+Revolution::Revolution(std::string name, int n, int rotation, float fr = 1.0f){
   new_object();
+  fraction = fr;
   load_ply(name);
   revolution_height = vertices.size() / 3;
   generate_revolution(n, rotation);
@@ -119,8 +119,9 @@ Revolution::Revolution(std::string name, int n, int rotation){
   normal_calculation();
 };
 
-Revolution::Revolution(float* _p, int s, int n, int rotation){
+Revolution::Revolution(float* _p, int s, int n, int rotation, float fr = 1.0f){
   new_object();
+  fraction = fr;
   revolution_height = s;
   vertices.resize(s * 3);
   vertices.assign(_p, _p + s * 3);

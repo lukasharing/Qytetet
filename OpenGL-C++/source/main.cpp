@@ -2,7 +2,6 @@
 
 #include <GL/gl.h>
 #include <GL/glut.h>
-
 #include <vector>
 #include <stdlib.h>
 #include <stdio.h>
@@ -18,6 +17,8 @@
 #include "../header/revolution_object.h"
 #include "../header/tetrahedron.h"
 #include "../header/sweep_object.h"
+
+#include "../header/mario/bomb.h"
 #include <pthread.h>
 void junk() {
   int i;
@@ -32,9 +33,12 @@ bool keys_ascii[256] = {0};
 vector<Object3D*> objects;
 Object3D* currentVisible;
 Revolution* pawn;
+Hierarchy* model;
 
 // Prevents from redrawing more times than needed.
 bool is_being_draw = false;
+bool automatic = true;
+long int time = 0;
 
 // Initialization of Window and Camera.
 Window my_screen(50, 50, 500, 500);
@@ -85,10 +89,13 @@ void draw_objects(){
 	float y_r = (float)(keys_ascii[101] - keys_ascii[103]) * 0.02f;
 	camera.getRotation().addX(x_r);
 	camera.getRotation().addY(y_r);
-	currentVisible->draw(camera);
+  currentVisible->draw(time);
 	if(x_r == 0.0f && y_r == 0.0f){
 		is_being_draw = false;
-	}else{
+	}
+
+  if(automatic || is_being_draw){
+    time++;
 		glutPostRedisplay();
 	}
 }
@@ -118,20 +125,22 @@ void key_pressed(unsigned char key, int x, int y){
 	int ds = key - '0';
 	if(ds >= 0 && ds <= objects.size()){
 		currentVisible = objects[ds-1];
-	}else{
+  }else{
 		GLenum type = GL_FILL;
 		bool is_chess = false, modify = false;
 		switch(key){
 			case 'p': type = GL_POINT;break;
 			case 'l': type = GL_LINE; break;
 			case 'f': type = GL_FILL; break;
-			case 'c': type = GL_FILL; is_chess = true; break;
-			case 'x': pawn->generate_revolution(pawn->getSlices() + 1, 2); modify = true; break;
-			case 'z': pawn->generate_revolution(max(2, pawn->getSlices() - 1), 2); modify = true; break;
-			case 'a': pawn->setCover(pawn->getCover() == 0 ? 6 * pawn->getSlices() : 0); modify = true; break;
+      case 'z': model->setLibertyValue(0, -0.1f); break;
+      case 'x': model->setLibertyValue(1, -0.1f); break;
+      case 'c': model->setLibertyValue(2, -0.1f); break;
+      case 'b': model->setLibertyValue(0, 0.1f); break;
+      case 'n': model->setLibertyValue(1, 0.1f); break;
+      case 'm': model->setLibertyValue(2, 0.1f); break;
 		}
     if(!modify){
-  		currentVisible->setDrawType(type);
+      currentVisible->setDrawType(type);
   		currentVisible->setChess(is_chess);
     }
 	}
@@ -148,13 +157,8 @@ void init(void){
 	Cube* cube = new Cube();
 	objects.push_back(cube);
 
-
-	Object3D* ant = new Object3D("../models/ant.ply");
-	ant->setScale(0.5f);
-	objects.push_back(ant);
-
 	pawn = new Revolution("../models/peon.ply", 4, 2);
-	pawn->setScale(1.f);
+	pawn->setScale(3.f);
 	objects.push_back(pawn);
 
   /* Revolution from points */
@@ -173,23 +177,12 @@ void init(void){
   rev->setCover(6 * slices);
 	objects.push_back(rev);
 
-  const int number1 = 4;
-  float points1[number1 * 3] = {
-    -1.f, 0.f, -1.f,
-    +1.f, 0.f, -1.f,
-    +1.f, 0.f, +1.f,
-    -1.f, 0.f, +1.f,
-  };
-  vector<float> curve;
-  for(float i = -PI; i < PI; i+=0.3){
-    curve.insert(curve.end(), { cos(i * 2.f) * 2.f, sin(i * 2.f) * 2.f, i*3.f });
-  }
 
-  Sweep* swpt = new Sweep(points1, number1, &curve[0], curve.size()/3);
-	swpt->setScale(1.f);
-	objects.push_back(swpt);
+  Bomb* mario_bomb = new Bomb();
+  mario_bomb->setScale(3.f);
+	objects.push_back(model = mario_bomb);
 
-	glClearColor(1.f, 1.f, 1.f, 1.f); // RGB(255, 255, 255, 255) [White];
+	glClearColor(.25f, .60f, 1.f, 1.f);
 	projection();
 	glViewport(0, 0, my_screen.getWidth(), my_screen.getHeight());
 }
