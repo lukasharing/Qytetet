@@ -31,9 +31,9 @@ using namespace std;
 // Boolean keycontrol array.
 bool keys_ascii[256] = {0};
 vector<Object3D*> objects;
-Object3D* currentVisible;
-Revolution* pawn;
 Hierarchy* model;
+Object3D* currentVisible = model;
+Revolution* pawn;
 
 // Prevents from redrawing more times than needed.
 bool is_being_draw = false;
