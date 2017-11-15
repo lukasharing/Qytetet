@@ -39,7 +39,7 @@ class DispersedVector{
     */
     DispersedVector(){
       virtual_size = 0;
-      null_value = NULL;
+      null_value = T();
     };
 
     /**
@@ -47,10 +47,32 @@ class DispersedVector{
       @param
     */
     DispersedVector(int a, const T& b){
-	  assert(a >= 0);
+      assert(a >= 0);
       virtual_size = a;
       null_value = b;
     };
+
+    /**
+      @brief Copy constructor
+      @param Container to copy
+    */
+    DispersedVector(const DispersedVector<T> c){
+      values = c;
+      virtual_size = c.virtual_size;
+      null_value = c.null_value;
+    };
+
+    /**
+      @brief Virtual /not of the container
+      @param Size of the container
+    */
+    inline size_type size() const{ return virtual_size; };
+
+    /**
+      @brief 
+      @param Returns the null_value
+    */
+    T default_value() const{ return null_value; };
 
     /**
       @brief sets a value in a specified position
@@ -101,10 +123,8 @@ class DispersedVector{
       assert(!values.empty());
       if(!values.empty() && (*--values.end()).index == virtual_size - 1){
         values.erase(--values.end());
-        virtual_size--;
-      }else{
-        virtual_size--;
       }
+      virtual_size--;
     };
 
     /**
@@ -160,9 +180,8 @@ class DispersedVector{
     };
 
     /**
-      @brief
-      @param
-      @return
+      @brief Peeks from the first value in the container
+      @return First element in the set
     */
     T& front(){
       if(!values.empty() && (*values.begin()).index == 0){
@@ -173,9 +192,8 @@ class DispersedVector{
     };
 
     /**
-      @brief
-      @param
-      @return
+      @brief Peeks from the last value in the container
+      @return Last element in the set
     */
     T& back(){
       if(!values.empty() && (*values.end()).value == virtual_size - 1){
@@ -210,10 +228,39 @@ class DispersedVector{
         vector += std::to_string((*i).value) + ' ';
         last = size + 1;
       }
-      for(int i = last; i < virtual_size; i++){
+      for(int i = last; i < virtual_size; ++i){
         vector += std::to_string(null_value) + ' ';
       }
       return vector;
+    };
+
+    /**
+      @brief Overloading = operator
+      @param DispersedVector to copy
+      @return pointer to the container
+    */
+    DispersedVector<T>& operator = (const DispersedVector<T> & x){
+      if(this != &x){
+	DispersedVector(x);
+      }
+      return *this;
+    };
+
+
+    /**
+      @brief Overloading == operator
+      @param DispersedVector to compare
+      @return pointer to the container
+    */
+    bool operator == (const DispersedVector<T> & x){
+      bool not_equal = true;
+      typename std::set< DispersedVector<T> >::iterator i;
+      for(i = 0; i != x.values.end() && x.values.size() == values.size() && not_equal; ++i){
+	if(){
+	   not_equal = false;
+	}
+      }
+      return equal && virtual_size == x.virtual_size;
     };
 };
 
