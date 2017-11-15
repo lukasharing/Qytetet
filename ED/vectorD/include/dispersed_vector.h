@@ -1,19 +1,15 @@
 #ifndef DISPERSEDVECTOR_H
 #define DISPERSEDVECTOR_H
-
-
-#include<iostream>
-
-
 #include <string>
 #include <algorithm>
 #include <set>
+#include <vector>
 #include <cassert>
 template<typename T>
 struct DispersedValue{
   mutable T value;
-  unsigned int index;
-  DispersedValue(T v, unsigned int i):index(i), value(v){};
+  int index;
+  DispersedValue(T v, int i):value(v), index(v){};
 };
 
 template<typename T>
@@ -34,8 +30,8 @@ inline bool operator==(const DispersedValue<T>& lhs, const T& rhs){
 template<typename T>
 class DispersedVector{
   private:
-    std::set<DispersedValue<T>> values;
-    unsigned int virtual_size;
+    std::set< DispersedValue<T> > values;
+    int virtual_size;
     T null_value;
   public:
     /**
@@ -50,7 +46,8 @@ class DispersedVector{
       @brief Resize constructor
       @param
     */
-    DispersedVector(unsigned int a, const T& b){
+    DispersedVector(int a, const T& b){
+	  assert(a >= 0);
       virtual_size = a;
       null_value = b;
     };
@@ -61,7 +58,7 @@ class DispersedVector{
     */
     void set(int a, const T& b){
       assert(a >= 0 && a < virtual_size);
-      typename std::set<DispersedValue<T>>::iterator found = std::find(values.begin(), values.end(), a);
+      typename std::set< DispersedValue<T> >::iterator found = std::find(values.begin(), values.end(), a);
       if(found != values.end()){
         (*found).value = b;
       }else{
@@ -81,7 +78,7 @@ class DispersedVector{
     */
     void push_back(const T& v){
       if(v != null_value){
-        unsigned int i;
+        int i;
         if(!values.empty()){
           i = (*values.end()).index;
           if(i == virtual_size){
@@ -130,9 +127,9 @@ class DispersedVector{
     */
     void resize(int r){
       assert(r >= 0);
-      typename std::set<DispersedValue<T>>::iterator v = values.end();
+      typename std::set< DispersedValue<T> >::iterator v = values.end();
 
-      std::vector<typename std::set<DispersedValue<T>>::iterator> elements;
+      std::vector<typename std::set< DispersedValue<T> >::iterator> elements;
       while(v-- != values.begin() && (*v).index >= r){
         elements.push_back(v);
       }
@@ -140,8 +137,6 @@ class DispersedVector{
         values.erase(elements.back());
         elements.pop_back();
       }
-
-      std::cout << std::endl;
       virtual_size = r;
     };
 
@@ -153,7 +148,7 @@ class DispersedVector{
     T at(int a){
       assert(a >= 0 && a < virtual_size);
       if(!values.empty()){
-        typename std::set<DispersedValue<T>>::iterator found = std::find(values.begin(), values.end(), a);
+        typename std::set< DispersedValue<T> >::iterator found = std::find(values.begin(), values.end(), a);
         if(found != values.end()){
           return (*found).value;
         }else{
@@ -205,7 +200,9 @@ class DispersedVector{
     std::string to_string(){
       std::string vector = "";
       int last = 0;
-      for(auto i = values.begin(); i != values.end(); i++){
+	
+	  typename std::set< DispersedValue<T> >::iterator i;
+      for(i = values.begin(); i != values.end(); ++i){
         int size = (*i).index;
         for(int j = last; j < size; j++){
           vector += std::to_string(null_value) + ' ';
