@@ -1,17 +1,17 @@
 #ifndef DISPERSEDVECTOR_H
 #define DISPERSEDVECTOR_H
 #include <string>
-#include <algorithm>
 #include <set>
 #include <vector>
 #include <cassert>
-
-#include<iostream>
+#include <algorithm>
+#include <iterator>
 template<typename T>
 struct DispersedValue{
   mutable T value;
   int index;
   DispersedValue(T v, int i):value(v), index(i){};
+  //T operator*() { return value; }
 };
 
 template<typename T>
@@ -55,6 +55,43 @@ class DispersedVector{
       return not_equal && virtual_size == x.virtual_size;
     };
   public:
+
+    /**
+      @brief Iterator
+    */
+    typedef typename std::set< DispersedValue<T> >::iterator iterator;
+    // class iterator{
+    //   public:
+    //       friend class DispersedValue<T>;
+    //       typedef iterator self_type;
+    //       typedef T value_type;
+    //       typedef T& reference;
+    //       typedef T* pointer;
+    //
+    //       typedef std::forward_iterator_tag iterator_category;
+    //       typedef int difference_type;
+    //       iterator(pointer ptr){ ptr = values.begin(); };
+    //       self_type operator=(const self_type& other) { ptr_ = other.ptr_; return *this; };
+    //       self_type operator++() { ptr_++; return *this; }; // PREFIX
+    //       self_type operator++(int junk) { self_type i = *this; ptr_++; return i; }; // POSTFIX
+    //       reference operator*() { return (*ptr_).value(); };
+    //       const pointer operator->() { return ptr_; };
+    //       bool operator==(const self_type& rhs) const{ return ptr_ == rhs.ptr_; };
+    //       bool operator!=(const self_type& rhs) const{ return ptr_ != rhs.ptr_; };
+    //     private:
+    //         pointer* ptr_;
+    // };
+    /**
+      @brief Iterator
+    */
+    iterator begin(){
+      return values.begin();
+    };
+
+    iterator end(){
+      return values.end();
+    };
+
     /**
       @brief Predefined Constructor
     */
@@ -147,13 +184,6 @@ class DispersedVector{
       }
       virtual_size--;
     };
-
-    /**
-      @brief Insert an array into the dispersed vector
-      @param position, array
-    */
-    //void insert(int a, const T t*){};
-
     /**
       @brief Clears the vector
     */

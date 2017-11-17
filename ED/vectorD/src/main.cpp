@@ -42,8 +42,9 @@ int main(){
   std::cout << "Resized to the size of 3" << std::endl;
   std::cout << matriz.to_string() << std::endl;
 
+  DispersedVector<int>::iterator it;
+  for(it = matriz.begin(); it != matriz.end(); ++it){
+    std::cout << "Default Iterator value " << (*it).value << std::endl;
+  }
 
-  std::cout << "Copy container and change value at position 0" << std::endl;
-  DispersedVector<int> matrizcopia = matriz;
-  std::cout << (matrizcopia != matriz) << std::endl;
 }
