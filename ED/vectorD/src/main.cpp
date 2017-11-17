@@ -2,7 +2,7 @@
 #include<iostream>
 using namespace std;
 int main(){
-  DispersedVector<int> matriz(4, 0);
+  DispersedVector<int> matriz(10, 0);
   matriz.push_back(10);
   matriz.push_back(20);
   matriz.push_back(30);
@@ -41,4 +41,9 @@ int main(){
   matriz.resize(3);
   std::cout << "Resized to the size of 3" << std::endl;
   std::cout << matriz.to_string() << std::endl;
+
+
+  std::cout << "Copy container and change value at position 0" << std::endl;
+  DispersedVector<int> matrizcopia = matriz;
+  std::cout << (matrizcopia != matriz) << std::endl;
 }

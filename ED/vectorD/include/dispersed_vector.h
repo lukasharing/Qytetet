@@ -5,11 +5,13 @@
 #include <set>
 #include <vector>
 #include <cassert>
+
+#include<iostream>
 template<typename T>
 struct DispersedValue{
   mutable T value;
   int index;
-  DispersedValue(T v, int i):value(v), index(v){};
+  DispersedValue(T v, int i):value(v), index(i){};
 };
 
 template<typename T>
@@ -33,6 +35,25 @@ class DispersedVector{
     std::set< DispersedValue<T> > values;
     int virtual_size;
     T null_value;
+    void copy(const DispersedVector<T>& c){
+      values = c.values;
+      virtual_size = c.virtual_size;
+      null_value = c.null_value;
+    };
+
+    bool compare(const DispersedVector<T>& x){
+      bool not_equal = true;
+      if(x.values.size() == values.size()){
+        typename std::set< DispersedValue<T> >::iterator i = x.values.begin();
+        typename std::set< DispersedValue<T> >::iterator j = values.begin();
+        for(; j != values.end() && not_equal; ++i, ++j){
+          if((*i).value != (*j).value){
+            not_equal = false;
+          }
+        }
+      }
+      return not_equal && virtual_size == x.virtual_size;
+    };
   public:
     /**
       @brief Predefined Constructor
@@ -56,34 +77,34 @@ class DispersedVector{
       @brief Copy constructor
       @param Container to copy
     */
-    DispersedVector(const DispersedVector<T> c){
-      values = c;
-      virtual_size = c.virtual_size;
-      null_value = c.null_value;
+    DispersedVector(const DispersedVector<T> & x){
+      copy(x);
     };
 
     /**
       @brief Virtual /not of the container
       @param Size of the container
     */
-    inline size_type size() const{ return virtual_size; };
+    inline int size() const{ return virtual_size; };
 
     /**
-      @brief 
+      @brief
       @param Returns the null_value
     */
-    T default_value() const{ return null_value; };
+    inline T default_value() const{ return null_value; };
 
     /**
       @brief sets a value in a specified position
       @param position, value
     */
     void set(int a, const T& b){
-      assert(a >= 0 && a < virtual_size);
       typename std::set< DispersedValue<T> >::iterator found = std::find(values.begin(), values.end(), a);
       if(found != values.end()){
         (*found).value = b;
       }else{
+        if(a > virtual_size){
+          virtual_size = a;
+        }
         values.insert(DispersedValue<T>(b, a));
       }
     };
@@ -165,7 +186,7 @@ class DispersedVector{
       @param position
       @return value at position n if exist, if not, then null_value
     */
-    T at(int a){
+    T& at(int a){
       assert(a >= 0 && a < virtual_size);
       if(!values.empty()){
         typename std::set< DispersedValue<T> >::iterator found = std::find(values.begin(), values.end(), a);
@@ -215,11 +236,11 @@ class DispersedVector{
     /**
       @brief Vector to string
     */
-    std::string to_string(){
+    std::string to_string() const{
       std::string vector = "";
       int last = 0;
-	
-	  typename std::set< DispersedValue<T> >::iterator i;
+
+      typename std::set< DispersedValue<T> >::iterator i;
       for(i = values.begin(); i != values.end(); ++i){
         int size = (*i).index;
         for(int j = last; j < size; j++){
@@ -241,7 +262,7 @@ class DispersedVector{
     */
     DispersedVector<T>& operator = (const DispersedVector<T> & x){
       if(this != &x){
-	DispersedVector(x);
+        copy(x);
       }
       return *this;
     };
@@ -250,18 +271,16 @@ class DispersedVector{
     /**
       @brief Overloading == operator
       @param DispersedVector to compare
-      @return pointer to the container
+      @return boolean if are equal in size and elements
     */
-    bool operator == (const DispersedVector<T> & x){
-      bool not_equal = true;
-      typename std::set< DispersedVector<T> >::iterator i;
-      for(i = 0; i != x.values.end() && x.values.size() == values.size() && not_equal; ++i){
-	if(){
-	   not_equal = false;
-	}
-      }
-      return equal && virtual_size == x.virtual_size;
-    };
+    inline bool operator == (const DispersedVector<T> & x){ return compare(x); };
+
+    /**
+      @brief Overloading != operator
+      @param DispersedVector to compare
+      @return boolean if are not equal in size and elements
+    */
+    inline bool operator != (const DispersedVector<T> & x){ return !compare(x); };
 };
 
 
