@@ -1,4 +1,4 @@
-package InterfazTextualQytetet;
+package interfazTextualQytetet;
 import modeloqytetet.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,7 +18,8 @@ public class ControladorQytetet {
 	
 	public void desarrolloJuego() {
 		boolean puedeJugar = true, finalizado = false;
-		String rs = "------------------------------------\nEs el turno de " + jugador.getNombre() + ", actualmente se encuentra en la casilla " + casilla.getNumeroCasilla();
+		vista.mostrar("------------------------------------");
+		String rs = "Es el turno de " + jugador.getNombre() + ", actualmente se encuentra en la casilla " + casilla.getNumeroCasilla();
 		if(casilla.getTipo() == TipoCasilla.CALLE) {
 			rs += " con nombre " + casilla.getTitulo().getNombre();
 		}else {
@@ -65,9 +66,10 @@ public class ControladorQytetet {
 					  if(!noTienePropietario){
 						  boolean comprar = vista.elegirQuieroComprar();
 						  if(comprar) {
-							  vista.mostrar("El usuario compró " + desplazamiento.getTitulo().getNombre());
 							  boolean compra = juego.comprarTituloPropiedad();
-							  if(!compra) {
+							  if(compra) {
+								  vista.mostrar("El usuario compró " + desplazamiento.getTitulo().getNombre());	  
+							  }else {
 								  vista.mostrar("No se pudo realizar la compra.");
 							  }
 						  }
@@ -89,9 +91,9 @@ public class ControladorQytetet {
 							  	case 1: posible = juego.edificarCasa(casilla); break;
 							  	case 2: posible = juego.edificarHotel(casilla); break;
 							  	case 3: posible = juego.venderPropiedad(casilla); break;
-							  	case 4: posible = juego.venderPropiedad(casilla); break;
+							  	case 4: posible = juego.hipotecarPropiedad(casilla); break;
 							  	case 5: posible = juego.cancelarHipoteca(casilla); break;
-							  	default: vista.mostrar("No existe dicha opcion"); break;
+							  	default:break;
 							  }
 							  if(!posible) {
 								  vista.mostrar("No se pudo realizar la operacion");

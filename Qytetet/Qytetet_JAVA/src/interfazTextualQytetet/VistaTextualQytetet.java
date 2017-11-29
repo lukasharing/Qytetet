@@ -1,4 +1,4 @@
-package InterfazTextualQytetet;
+package interfazTextualQytetet;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;

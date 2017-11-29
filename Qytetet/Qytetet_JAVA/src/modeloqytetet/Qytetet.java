@@ -127,20 +127,16 @@ public class Qytetet {
     };
     
     public boolean jugar() {
-    	int valorDado = Dado.tirar();
+    	int valorDado = Dado.getInstance().tirar();
     	Casilla casillaPosicion = jugadorActual.getCasillaActual();
     	Casilla nuevaCasilla = tablero.obtenerNuevaCasilla(casillaPosicion, valorDado);
-    	jugadorActual.actualizarPosicion(nuevaCasilla);
-    	boolean tienePropietario = true;
-    	if(nuevaCasilla.getTipo() == TipoCasilla.CALLE) {
-	    	tienePropietario = nuevaCasilla.tengoPropietario();
-	    	if(!nuevaCasilla.soyEdificable()) {
-	    		if(nuevaCasilla.getTipo() == TipoCasilla.JUEZ) {
-	    			encarcelarJugador();
-	    		}else {
-	    			cartaActual = mazo.get(0);
-	    		}
-	    	}
+    	boolean tienePropietario = jugadorActual.actualizarPosicion(nuevaCasilla);
+    	if(!nuevaCasilla.soyEdificable()) {
+    		switch(nuevaCasilla.getTipo()) {
+	    		case JUEZ: encarcelarJugador(); break;
+	    		case SORPRESA: cartaActual = mazo.get(0); break;
+	    		default: break;
+    		}
     	}
     	return tienePropietario;
     };
@@ -161,12 +157,12 @@ public class Qytetet {
     };
     
     void encarcelarJugador() {
-    	if(!jugadorActual.tengoCartaLibertad()) {
-    		Casilla casillaCarcel = tablero.getCarcel();
-    		jugadorActual.irACarcel(casillaCarcel);
-    	}else {
+    	if(jugadorActual.tengoCartaLibertad()) {
     		Sorpresa carta = jugadorActual.devolverCartaLibertad();
     		mazo.add(carta);
+    	}else {
+    		Casilla casillaCarcel = tablero.getCarcel();
+    		jugadorActual.irACarcel(casillaCarcel);
     	}
     };
     
@@ -174,11 +170,11 @@ public class Qytetet {
     	boolean libre = false;
     	switch (metodo) {
 			case TIRANDODADO:
-				int valorDado = Dado.tirar();
+				int valorDado = Dado.getInstance().tirar();
 				libre = valorDado > 5;
 			break;
 			case PAGANDOLIBERTAD:
-				boolean tengoSaldo = jugadorActual.pagarLibertad(-Qytetet.PRECIO_LIBERTAD);
+				boolean tengoSaldo = jugadorActual.pagarLibertad(Qytetet.PRECIO_LIBERTAD);
 				libre = tengoSaldo;
 			break;
     	}
@@ -212,8 +208,8 @@ public class Qytetet {
     		case PORJUGADOR:
     			for(Jugador jugador : jugadores) {
     				if(!jugador.equals(jugadorActual)) {
-    					jugadorActual.modificarSaldo(-cartaActual.getValor());
-    					jugador.modificarSaldo(cartaActual.getValor());
+    					jugadorActual.modificarSaldo(cartaActual.getValor());
+    					jugador.modificarSaldo(-cartaActual.getValor());
     				}
     			}
 			break;
@@ -234,13 +230,13 @@ public class Qytetet {
     		puedoVender = jugadorActual.puedoVenderPropiedad(casilla);
     		if(puedoVender) {
     			jugadorActual.venderPropiedad(casilla);
-    			
     		}
     	}
     	return puedoVender;
     };
     
     public boolean cancelarHipoteca(Casilla casilla) {
+    	// No se lo que se hace en la vida real para cancelar una hipoteca
     	return false;
     };
     

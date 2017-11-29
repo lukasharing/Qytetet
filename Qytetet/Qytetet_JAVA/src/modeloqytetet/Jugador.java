@@ -24,12 +24,12 @@ public class Jugador {
 
     
     boolean actualizarPosicion(Casilla casilla){
-        boolean tienePropietario = false;
+        boolean tienePropietario = true;
     	if(casilla.getNumeroCasilla() < casillaActual.getNumeroCasilla()){
         	this.modificarSaldo(Qytetet.SALDO_SALIDA);
         }
         this.setCasillaActual(casilla);
-        if(casilla.getTipo() == TipoCasilla.CALLE && casilla.soyEdificable()) {
+        if(casilla.soyEdificable()) {
         	boolean tengoPropietario = casilla.tengoPropietario();
         	tienePropietario = tengoPropietario;
         	if(tengoPropietario) {
@@ -111,7 +111,7 @@ public class Jugador {
     	boolean esMia = this.esDeMipropiedad(casilla);
     	if(esMia) {
     		int costeEdificarCasa = casilla.getPrecioEdificar();
-    		boolean tengoSaldo = tengoSaldo(-costeEdificarCasa);
+    		boolean tengoSaldo = tengoSaldo(costeEdificarCasa);
     		return tengoSaldo;
     	}
     	return false;
@@ -131,7 +131,10 @@ public class Jugador {
     	boolean esMia = this.esDeMipropiedad(casilla);
     	return esMia;
     };
-    //boolean puedoPagarHipoteca(Casilla casilla){};
+    boolean puedoPagarHipoteca(Casilla casilla){
+    	// No se especifica NADA
+    	return true;
+    };
     boolean puedoVenderPropiedad(Casilla casilla){
     	boolean esMia = esDeMipropiedad(casilla);
     	boolean hipotecada = casilla.estaHipotecada();

@@ -10,10 +10,7 @@ module ModeloQytetet
     end
     
     def to_s
-      "Texto: #{@texto} \n Valor: #{@valor} \n Tipo: #{@tipo}"
+      "Existe una sorpresa de tipo #{@tipo} con un efecto de #{@valor}";
     end
-    
-    private 
-    attr_writer :texto, :tipo, :valor;
   end
 end

@@ -55,12 +55,15 @@ public class Casilla {
     	int cantidadRecibida = hipotecaBase * (1 + (int)(numCasas * 0.5 + numHoteles));
     	return cantidadRecibida;
     };
-    //int cancelarHipoteca(){};
+    int cancelarHipoteca(){
+    	// Debemos implementarlo, no se como se cancela una hipoteca en la vida real.
+    	return 0;
+    };
     int cobrarAlquiler(){
     	int costeAlquilerBase = titulo.getAlquilerBase();
     	int costeAlquiler = costeAlquilerBase + (int)(numCasas * 0.5 + numHoteles * 2);
     	titulo.cobrarAlquiler(costeAlquiler);
-    	return 1;
+    	return costeAlquiler;
     };
     int edificarCasa(){
     	this.setNumCasas(numCasas + 1);
@@ -77,8 +80,11 @@ public class Casilla {
     	int cantidadRecibida = this.calcularValorHipoteca();
     	return cantidadRecibida;
     };
-    //int precioTotalComprar(){};
-    boolean propietarioEncarcelado(){ return true; };
+    int precioTotalComprar(){
+    	// No se especifica NADA
+    	return 0;
+    };
+    boolean propietarioEncarcelado(){ return this.titulo.propietarioEncarcelado(); };
     boolean sePuedeEdificarCasa(){ return numCasas < 4; };
     boolean sePuedeEdificarHotel(){ return numHoteles < 4; };
     
@@ -90,7 +96,9 @@ public class Casilla {
     	int precioVenta = precioCompra * (int)(1 + titulo.getFactorRevalorizacion());
     	return precioVenta;
     };
-    //void asignarTituloPropiedad(){};
+    void asignarTituloPropiedad(){
+    	// No se especifica NADA
+    };
 
     @Override
     public String toString() {
