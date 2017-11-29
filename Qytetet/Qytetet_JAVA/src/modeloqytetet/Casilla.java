@@ -24,13 +24,14 @@ public class Casilla {
         this.numCasas        = 0;
         this.tipo            = TipoCasilla.CALLE;
         this.titulo          = titulo;
+        titulo.setCasilla(this);
         this.coste           = coste;
     };
     
     /* GETTER / SETTER */
     public TipoCasilla getTipo(){ return tipo; };
     public TituloPropiedad getTitulo(){ return titulo; };
-    int getNumeroCasilla(){ return numeroCasilla; };
+    public int getNumeroCasilla(){ return numeroCasilla; };
     //int getCosteHipoteca(){};
     int getCoste(){ return coste; };
     int getNumCasas(){ return numCasas; };
@@ -41,7 +42,7 @@ public class Casilla {
     void setNumCasas(int a){ numCasas = a; };
     private void setTitulo(TituloPropiedad propiedad){ titulo = propiedad; };
     
-    boolean soyEdificable(){ return tipo == TipoCasilla.CALLE; };
+    boolean soyEdificable(){ return this.tipo == TipoCasilla.CALLE; };
     boolean estaHipotecada(){ return titulo.getHipotecada(); };
     boolean tengoPropietario(){ return titulo.tengoPropietario(); };
     
@@ -49,22 +50,56 @@ public class Casilla {
         titulo.setPropietario(jugador);
         return titulo;
     };
-    //int calcularValorHipoteca(){};
+    int calcularValorHipoteca(){
+    	int hipotecaBase = titulo.getHipotecaBase();
+    	int cantidadRecibida = hipotecaBase * (1 + (int)(numCasas * 0.5 + numHoteles));
+    	return cantidadRecibida;
+    };
     //int cancelarHipoteca(){};
-    //int cobrarAlquiler(){};
-    //int edificarCasa(){};
-    //int edificarHotel(){};
-    //boolean estaHipotecada(){};
-    //int hipotecar(){};
+    int cobrarAlquiler(){
+    	int costeAlquilerBase = titulo.getAlquilerBase();
+    	int costeAlquiler = costeAlquilerBase + (int)(numCasas * 0.5 + numHoteles * 2);
+    	titulo.cobrarAlquiler(costeAlquiler);
+    	return 1;
+    };
+    int edificarCasa(){
+    	this.setNumCasas(numCasas + 1);
+    	int costeEdificarCasa = this.getPrecioEdificar();
+    	return costeEdificarCasa;
+    };
+    int edificarHotel(){
+    	this.setNumHoteles(numHoteles + 1);
+    	int costeEdificarHotel = this.getPrecioEdificar();
+    	return costeEdificarHotel;
+    };
+    int hipotecar(){
+    	titulo.setHipotecada(true);
+    	int cantidadRecibida = this.calcularValorHipoteca();
+    	return cantidadRecibida;
+    };
     //int precioTotalComprar(){};
-    //boolean propietarioEncarcelado(){ return };
-    //boolean sePuedeEdificarCasa(){};
-    //boolean sePuedeEdificarHotel(){};
-    //int venderTitulo(){};
+    boolean propietarioEncarcelado(){ return true; };
+    boolean sePuedeEdificarCasa(){ return numCasas < 4; };
+    boolean sePuedeEdificarHotel(){ return numHoteles < 4; };
+    
+    int venderTitulo(){
+    	setNumCasas(0);
+    	setNumHoteles(0);
+    	titulo.setPropietario(null);
+    	int precioCompra = coste + this.getPrecioEdificar() * (numCasas + numHoteles);
+    	int precioVenta = precioCompra * (int)(1 + titulo.getFactorRevalorizacion());
+    	return precioVenta;
+    };
     //void asignarTituloPropiedad(){};
 
     @Override
     public String toString() {
-        return "Casilla{" + "numeroCasilla=" + numeroCasilla + ", coste=" + coste + ", numHoteles=" + numHoteles + ", numCasas=" + numCasas + ", tipo=" + tipo + ", titulo=" + titulo + '}';
+        String resultado = "La casilla ("+ this.numeroCasilla + ") ";
+        if(this.tipo == TipoCasilla.CALLE) {
+        	resultado += this.getTitulo().getNombre() + " y valorada en " + this.coste + " tiene " + this.numCasas + " casas y " + this.numHoteles + " hoteles.";
+        }else {
+        	resultado += "es de tipo " + this.tipo;
+        }
+        return resultado;
     }
 }

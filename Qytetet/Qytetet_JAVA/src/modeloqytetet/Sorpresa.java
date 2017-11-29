@@ -20,5 +20,7 @@ public class Sorpresa {
     public TipoSorpresa getTipo(){ return tipo; };
     public int getValor(){ return valor; };
     @Override
-    public String toString() { return "Sorpresa{" + "texto=" + texto + ", valor=" + Integer.toString(valor) + ", tipo=" + tipo + "}"; }
+    public String toString() {
+    	return "Existe una sorpresa de tipo " + this.tipo + " con un efecto de " + this.valor;
+	}
 }

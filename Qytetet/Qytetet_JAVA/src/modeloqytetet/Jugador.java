@@ -3,7 +3,7 @@ package modeloqytetet;
 import java.util.ArrayList;
 
 public class Jugador {
-    private ArrayList <TituloPropiedad> propiedades;
+    public ArrayList <TituloPropiedad> propiedades;
     private Casilla casillaActual;
     private Sorpresa cartaLibertad;
     
@@ -13,28 +13,65 @@ public class Jugador {
     
     public Jugador(String nombre){
         this.nombre = nombre;
+        this.propiedades = new ArrayList<TituloPropiedad>();
+        this.cartaLibertad = null;
     };
     
     public Casilla getCasillaActual(){ return casillaActual; };
     public boolean getEncarcelado(){ return encarcelado; };
-    public boolean tengoPropiedades(){ return (propiedades.size() > 0); };
-    boolean actualizarPosicion(Casilla casilla){ 
-        if(casilla.getNumeroCasilla() != casillaActual.getNumeroCasilla()){
-            casillaActual = casilla; 
-            return true;
-        }else{
-            return false;
-        } 
+    public String getNombre() { return nombre; };
+    public boolean tengoPropiedades(){ return (this.propiedades.size() > 0); };
+
+    
+    boolean actualizarPosicion(Casilla casilla){
+        boolean tienePropietario = false;
+    	if(casilla.getNumeroCasilla() < casillaActual.getNumeroCasilla()){
+        	this.modificarSaldo(Qytetet.SALDO_SALIDA);
+        }
+        this.setCasillaActual(casilla);
+        if(casilla.getTipo() == TipoCasilla.CALLE && casilla.soyEdificable()) {
+        	boolean tengoPropietario = casilla.tengoPropietario();
+        	tienePropietario = tengoPropietario;
+        	if(tengoPropietario) {
+        		boolean encarcelado = casilla.propietarioEncarcelado();
+        		if(!encarcelado) {
+        			int costeAlquiler = casilla.cobrarAlquiler();
+        			this.modificarSaldo(-costeAlquiler);
+        		}
+        	}
+        }else if(casilla.getTipo() == TipoCasilla.IMPUESTO) {
+        	int coste = casilla.getCoste();
+        	this.modificarSaldo(-coste);
+        }
+        return tienePropietario;
     };
-    boolean comprarTitulo(){ return !casillaActual.tengoPropietario(); };
+    
+    public boolean estaBancarrota() { return saldo <= 0; }
+    
+    boolean comprarTitulo(){
+    	boolean puedoComprar = false;
+    	if(casillaActual.soyEdificable()) {
+    		boolean tengoPropietario = casillaActual.tengoPropietario();
+    		if(!tengoPropietario) {
+    			int costeCompra = casillaActual.getCoste();
+    			if(costeCompra <= saldo) {
+    				TituloPropiedad titulo = casillaActual.asignarPropietario(this);
+    				propiedades.add(titulo);
+    				puedoComprar = true;
+    				this.modificarSaldo(-costeCompra);
+    			}
+    		}
+    	}
+    	return puedoComprar;
+	};
     Sorpresa devolverCartaLibertad(){
         Sorpresa carta = cartaLibertad;
         cartaLibertad = null;
         return carta;
     };
     void irACarcel(Casilla casilla){
-        casillaActual = casilla;
-        encarcelado = true;
+        setCasillaActual(casilla);
+        setEncarcelado(true);
     };
     void modificarSaldo(int cantidad){ saldo += cantidad; };
     int obtenerCapital(){
@@ -57,22 +94,61 @@ public class Jugador {
         }
         return hipotecadas;
     };
-    //void pagarCobrarPorCasaYHotel(int cantidad){};
-    //boolean pagarLibertad(int cantidad){};
-    //boolean puedoEdificarCasa(Casilla casilla){};
-    //boolean puedoEdificarHotel(Casilla casilla){};
-    //boolean puedoHipotecar(Casilla casilla){};
+    
+    void pagarCobrarPorCasaYHotel(int cantidad){
+    	int numeroTotal = cuantasCasasHotelesTengo();
+    	this.modificarSaldo(-numeroTotal * cantidad);
+    };
+    
+    boolean pagarLibertad(int cantidad){
+    	boolean tengoSaldo = this.tengoSaldo(cantidad);
+    	if(tengoSaldo) {
+    		this.modificarSaldo(-cantidad);
+    	}
+    	return tengoSaldo;
+    };
+    boolean puedoEdificarCasa(Casilla casilla){
+    	boolean esMia = this.esDeMipropiedad(casilla);
+    	if(esMia) {
+    		int costeEdificarCasa = casilla.getPrecioEdificar();
+    		boolean tengoSaldo = tengoSaldo(-costeEdificarCasa);
+    		return tengoSaldo;
+    	}
+    	return false;
+    };
+    
+    boolean puedoEdificarHotel(Casilla casilla){
+    	boolean esMia = this.esDeMipropiedad(casilla);
+    	if(esMia) {
+    		int costeEdificarHotel= casilla.getPrecioEdificar();
+    		boolean tengoSaldo = tengoSaldo(costeEdificarHotel);
+    		return tengoSaldo;
+    	}
+    	return false;
+    };
+    
+    boolean puedoHipotecar(Casilla casilla){
+    	boolean esMia = this.esDeMipropiedad(casilla);
+    	return esMia;
+    };
     //boolean puedoPagarHipoteca(Casilla casilla){};
     boolean puedoVenderPropiedad(Casilla casilla){
-        return esDeMipropiedad(casilla);
+    	boolean esMia = esDeMipropiedad(casilla);
+    	boolean hipotecada = casilla.estaHipotecada();
+    	boolean puedoVender = esMia && !hipotecada;
+    	return puedoVender;
     };
     void setCartaLibertad(Sorpresa carta){ cartaLibertad = carta; };
     void setCasillaActual(Casilla casilla){ casillaActual = casilla; };
     void setEncarcelado(boolean encarcelado){ this.encarcelado = encarcelado; };
     boolean tengoCartaLibertad(){ return cartaLibertad != null; };
+    
     void venderPropiedad(Casilla casilla){
-        
+    	int precioVenta = casilla.venderTitulo();
+    	this.modificarSaldo(precioVenta);
+    	this.eliminarDeMisPropiedades(casilla);
     };
+    
     private int cuantasCasasHotelesTengo(){
         int total = 0;
         for(TituloPropiedad propiedad : propiedades){
@@ -90,18 +166,13 @@ public class Jugador {
         propiedades.remove(k - 1);
     };
     private boolean esDeMipropiedad(Casilla casilla){
-        boolean esmio = false;
-        for(TituloPropiedad propiedad : propiedades){
-            if(propiedad.equals(casilla.getTitulo())){
-                esmio = true;
-            }
-        }
-        return esmio;
+        boolean esMia = propiedades.contains(casilla.getTitulo());
+        return esMia;
     };
     private boolean tengoSaldo(int cantidad){ return (saldo >= cantidad); };
     
     @Override
     public String toString(){
-        return "El jugador: " + nombre + " con saldo " + saldo + " " + (encarcelado ? "" : "no ") + "se encuentra encarcelado";
+        return "El jugador " + this.nombre + " se encuentra en la casilla " + this.casillaActual.getNumeroCasilla() + " con saldo " + this.saldo + ", este " + (this.encarcelado ? "" : "no ") + " se encuentra encarcelado";
     }
 }

@@ -9,7 +9,7 @@ package modeloqytetet;
  */
 
 public class TituloPropiedad {
-    private Jugador propietario = null;
+    private Jugador propietario;
     public Casilla casilla;
     
     private final   String nombre;
@@ -32,27 +32,34 @@ public class TituloPropiedad {
         this.alquilerBase           = alquilerBase;
         this.factorRevalorizacion   = factorRevalorizacion;
         this.hipotecaBase           = hipotecaBase;
-        this.precioEdificar         = precioEdificar;
+        this.precioEdificar      	= precioEdificar;
+        this.propietario         	= null;
     };
     
     /* Getter */
-    String getNombre(){ return nombre; };
+    public String getNombre(){ return nombre; };
     boolean getHipotecada(){ return hipotecada; };
     int getAlquilerBase(){ return alquilerBase; };
     float getFactorRevalorizacion(){ return factorRevalorizacion; };
     int getHipotecaBase(){ return hipotecaBase; };
     int getPrecioEdificar(){ return precioEdificar; };
     
-    void setHipotecada(boolean hipotecada){ this.hipotecada = hipotecada; };
-    void setPropietario(Jugador propietario){ this.propietario = propietario; };
+    void setHipotecada(boolean _hipotecada){ this.hipotecada = _hipotecada; };
+    void setPropietario(Jugador _propietario){ this.propietario = _propietario; };
     void setCasilla(Casilla casilla){ this.casilla = casilla; };
     
-    boolean tengoPropietario(){ return propietario != null; };
-    //void cobrarAlquiler(int coste){ return propietario != null; };
+    boolean tengoPropietario(){ return this.propietario != null; };
+    void cobrarAlquiler(int costeAlquiler){
+    	propietario.modificarSaldo(-costeAlquiler);
+    };
     boolean propietarioEncarcelado(){ return propietario.getEncarcelado(); };
     
     @Override
     public String toString() {
         return "TituloPropiedad{" + "nombre=" + nombre + ", hipotecada=" + hipotecada + ", alquilerBase=" + alquilerBase + ", factorRevalorizacion=" + factorRevalorizacion + ", hipotecaBase=" + hipotecaBase + ", precioEdificar=" + precioEdificar + '}';
+    };
+    
+    public boolean equals(TituloPropiedad cmp) {
+    	return cmp.casilla.getNumeroCasilla() == this.casilla.getNumeroCasilla();
     };
 }
