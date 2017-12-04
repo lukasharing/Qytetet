@@ -1,5 +1,0 @@
-hello world
-bye world
-lorem ipsum
-c++ is beautiful
-java is awful

@@ -1,36 +1,33 @@
 #include <iostream>
-
 #include <GL/gl.h>
 #include <GL/glut.h>
 #include <vector>
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
 
 // Main Includes
 #include <cmath>
 #include "../header/window.h"
 #include "../header/camera.h"
-// 3D includes
+//
+// // // 3D includes
 #include "../header/object3d.h"
+#include "../header/hierarchical_object.h"
 #include "../header/cube.h"
 #include "../header/revolution_object.h"
 #include "../header/tetrahedron.h"
-#include "../header/sweep_object.h"
-
 #include "../header/mario/bomb.h"
-#include <pthread.h>
-void junk() {
-  int i;
-  i=pthread_getconcurrency();
-};
-using namespace std;
+
+// #include <pthread.h>
+// void junk() {
+//   int i;
+//   i=pthread_getconcurrency();
+// };
+//using namespace std;
 
 #define PI 3.14159265358979323846  /* PI */
-
+//
 // Boolean keycontrol array.
 bool keys_ascii[256] = {0};
-vector<Object3D*> objects;
+std::vector<Object3D*> objects;
 Hierarchy* model;
 Object3D* currentVisible = model;
 Revolution* pawn;
@@ -62,8 +59,8 @@ void change_observer(){
 	glRotatef(camera.getRotation().getX(), 0.f, 1.f, 0.f);
 	glRotatef(camera.getRotation().getY(), 1.f, 0.f, 0.f);
 }
-
-// Draws a coordinate axis (NOT USED)
+//
+// // Draws a coordinate axis (NOT USED)
 void draw_axis(int size){
 	glBegin(GL_LINES);
 		// Color Rojo (Eje X)
@@ -81,13 +78,13 @@ void draw_axis(int size){
 		glVertex3f(0.f, 0.f, +size);
 	glEnd();
 }
-
-// Drawing Method
+//
+// // Drawing Method
 void draw_objects(){
 	is_being_draw = true;
 	float x_r = (float)(keys_ascii[102] - keys_ascii[100]) * 0.02f;
 	float y_r = (float)(keys_ascii[101] - keys_ascii[103]) * 0.02f;
-	camera.getRotation().addX(x_r);
+	/*camera.getRotation().addX(x_r);
 	camera.getRotation().addY(y_r);
   currentVisible->draw(time);
 	if(x_r == 0.0f && y_r == 0.0f){
@@ -97,27 +94,31 @@ void draw_objects(){
   if(automatic || is_being_draw){
     time++;
 		glutPostRedisplay();
-	}
+	}*/
 }
 
 // Drawing scene
-void draw_scene(void){
-	clean();
-	change_observer();
-	draw_objects();
-	glutSwapBuffers();
-}
+// void draw_scene(void){
+// 	clean();
+// 	change_observer();
+// 	draw_objects();
+// 	glutSwapBuffers();
+// }
 
-
-// Resize Sceene (Callback from resizing screen).
+//Resize Sceene (Callback from resizing screen).
 void resize_scene(int _w, int _h){
 	camera.resize(_w, _h);
 	projection();
 	glViewport(0, 0, _w, _h);
 }
 
-// Key Event
-void key_special_pressed(int key, int x, int y){ if(!is_being_draw || !keys_ascii[key]){ glutPostRedisplay(); keys_ascii[key] = true; } }
+// // Key Event
+void key_special_pressed(int key, int x, int y){
+	if(!is_being_draw || !keys_ascii[key]){
+		//glutPostRedisplay();
+		keys_ascii[key] = true;
+	}
+}
 void key_special_unpressed(int key, int x, int y){ keys_ascii[key] = false; }
 void key_pressed(unsigned char key, int x, int y){
 	keys_ascii[key] = false;
@@ -126,29 +127,30 @@ void key_pressed(unsigned char key, int x, int y){
 	if(ds >= 0 && ds <= objects.size()){
 		currentVisible = objects[ds-1];
   }else{
-		GLenum type = GL_FILL;
 		bool is_chess = false, modify = false;
+		GLenum type;
 		switch(key){
 			case 'p': type = GL_POINT;break;
 			case 'l': type = GL_LINE; break;
 			case 'f': type = GL_FILL; break;
-      case 'z': model->setLibertyValue(0, -0.1f); break;
-      case 'x': model->setLibertyValue(1, -0.1f); break;
-      case 'c': model->setLibertyValue(2, -0.1f); break;
-      case 'b': model->setLibertyValue(0, 0.1f); break;
-      case 'n': model->setLibertyValue(1, 0.1f); break;
-      case 'm': model->setLibertyValue(2, 0.1f); break;
+			case 'z': model->setLibertyValue(0, -0.1f); break;
+			case 'x': model->setLibertyValue(1, -0.1f); break;
+			case 'c': model->setLibertyValue(2, -0.1f); break;
+			case 'b': model->setLibertyValue(0, 0.1f); break;
+			case 'n': model->setLibertyValue(1, 0.1f); break;
+			case 'm': model->setLibertyValue(2, 0.1f); break;
+			default: type = GL_FILL; break;
 		}
     if(!modify){
       currentVisible->setDrawType(type);
   		currentVisible->setChess(is_chess);
     }
 	}
-	glutPostRedisplay();
+	//glutPostRedisplay();
 }
 
 // Init
-void init(void){
+void init(){
 	// Adding objects to scene
 	Tetrahedron* tetrahedron = new Tetrahedron();
 	objects.push_back(tetrahedron);
@@ -188,22 +190,23 @@ void init(void){
 }
 
 // Main Program
-int main(int argc, char **argv){
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
-	glutInitWindowPosition(my_screen.getX(), my_screen.getY());
-	glutInitWindowSize(my_screen.getWidth(), my_screen.getHeight());
-	glutCreateWindow("Ejercicio de entrega - Lukas Haring v.01");
+int main(int argc, char *argv[]){
+	std::cout << "HOLA" << std::endl;
+	// glutInit(&argc, argv);
+	// glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
+	// glutInitWindowPosition(my_screen.getX(), my_screen.getY());
+	// glutInitWindowSize(my_screen.getWidth(), my_screen.getHeight());
+	// glutCreateWindow("Ejercicio de entrega - Lukas Haring v.01");
 	glEnable(GL_DEPTH_TEST);
-
-	//Events functions.
-	glutDisplayFunc(draw_scene);
-	glutReshapeFunc(resize_scene);
-	glutSpecialFunc(key_special_pressed);
-	glutSpecialUpFunc(key_special_unpressed);
-	glutKeyboardUpFunc(key_pressed);
-
+  //
+	// //Events functions.
+	// glutDisplayFunc(draw_scene);
+	// glutReshapeFunc(resize_scene);
+	// glutSpecialFunc(key_special_pressed);
+	// glutSpecialUpFunc(key_special_unpressed);
+	// glutKeyboardUpFunc(key_pressed);
+  //
 	init();
-	glutMainLoop();
+	// glutMainLoop();
 	return 0;
 }

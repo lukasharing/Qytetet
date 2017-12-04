@@ -1,7 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
-#include "vector3D.h"
 #include <GL/gl.h>
+#include "vector3d.h"
 class Camera{
   private:
     float w, h; // Tamaño
