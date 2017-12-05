@@ -14,7 +14,6 @@ class Hierarchy : public Object3D{
     void add_element(std::string, Object3D*);
     Object3D* get_element(std::string);
     void setDrawType(GLenum) override;
-    void setChess(bool) override;
     void setLibertyValue(int, float);
     float getLibertyValue(int);
 };
@@ -29,12 +28,6 @@ Object3D* Hierarchy::get_element(std::string name){ return models[name]; };
 void Hierarchy::setDrawType(GLenum t){
   for (std::map<std::string, Object3D*>::iterator it = models.begin(); it != models.end(); ++it){
     it->second->setDrawType(t);
-  }
-};
-
-void Hierarchy::setChess(bool t){
-  for (std::map<std::string, Object3D*>::iterator it = models.begin(); it != models.end(); ++it){
-    it->second->setChess(t);
   }
 };
 

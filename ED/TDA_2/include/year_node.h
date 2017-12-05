@@ -77,7 +77,7 @@ class YearNode{
      * @param ninguno
      * @return devuelve una cadena con todos los eventos en dicho año
     */
-    std::string toString();
+    std::string to_string();
 
     /**
      * @brief Comparación de 2 eventos

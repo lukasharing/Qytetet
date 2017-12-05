@@ -55,7 +55,6 @@ Bomb::Bomb(){
 };
 
 void Bomb::draw(long int delta){
-  glEnableClientState(GL_VERTEX_ARRAY);
   glPushMatrix();
     glScalef(scale, scale, scale);
     get_element("body")->draw(delta);

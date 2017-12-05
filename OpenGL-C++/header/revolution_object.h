@@ -71,12 +71,12 @@ void Revolution::generate_revolution(int n, int rotation){
   // Adding Lower Cover
   unsigned int rhgt = revolution_height - 2;
   unsigned int last_bottom = revolution_height;
-  sides.insert(sides.end(), {0, 1, last_bottom });
+  sides.insert(sides.end(), {last_bottom, 1, 0 });
   for(int i = 0; i < n - 2; i++){
-    sides.insert(sides.end(), { 0, last_bottom, last_bottom + rhgt });
+    sides.insert(sides.end(), { last_bottom + rhgt, last_bottom, 0 });
     last_bottom += rhgt;
   }
-  sides.insert(sides.end(), {0, last_bottom, 1});
+  sides.insert(sides.end(), {1, last_bottom, 0});
 
   // Adding Upper Cover
   unsigned int last_top = revolution_height + rhgt - 1;
@@ -101,7 +101,7 @@ void Revolution::generate_revolution(int n, int rotation){
         u22 += u22 < rhgt ? 1 : 2;
         u3 += u3 < rhgt ? 1 : 2;
 
-        sides.insert(sides.end(), { u1, u21, u3});
+        sides.insert(sides.end(), { u3, u21, u1});
         sides.insert(sides.end(), { u1, u22, u3});
 
       }

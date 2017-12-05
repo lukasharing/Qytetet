@@ -8,19 +8,28 @@
 #include <algorithm>
 #include "../include/year_node.h"
 
+typedef std::multimap<std::string, std::set<YearNode, cmp_year>::iterator> tags_container;
+typedef std::pair<tags_container::iterator, tags_container::iterator> tagitpair;
+typedef std::list<YearNode> year_container;
+typedef std::pair<int, std::list<YearNode>::iterator> sorting_pair;
+typedef std::set<sorting_pair, cmp_year> sorted_years;
+
 // Custom Functor
-struct cmp_year  {
-  bool operator() (const YearNode& lhs, const YearNode& rhs )  {
-    return lhs.getYear() < rhs.getYear();
-  }
+struct cmp_year{
+  bool operator() const(const sorting_pair& lhs, const sorting_pair& rhs){ return lhs.left < rhs.left; };
 };
 
-typedef std::multimap<std::string, std::set<YearNode, cmp_year>::iterator> tags_container;
+struct find_year{
+  const int& y;
+  find_year(int _y):y(_y);
+  bool operator()(const sorting_pair&p){ return p.left == _y; };
+};
 
 class CenturyNode{
   private:
     int century;
-    std::set<YearNode, cmp_year> years;
+    year_container years;
+    sorted_years sorted;
     tags_container tags;
 
     inline int getLowerBound() const{ return years.cbegin()->getYear(); };
@@ -33,8 +42,8 @@ class CenturyNode{
     };
   public:
     /** Iterators **/
-    typedef std::set<YearNode, cmp_year>::iterator iterator;
-    typedef std::set<YearNode, cmp_year>::const_iterator const_iterator;
+    typedef sorted_years::iterator iterator;
+    typedef sorted_years::const_iterator const_iterator;
     CenturyNode::iterator begin(){ return years.begin(); };
     CenturyNode::iterator end(){ return years.end(); };
     CenturyNode::const_iterator begin() const{ return years.cbegin(); };
@@ -93,7 +102,7 @@ class CenturyNode{
      * @return Devuelve un struct tag que contiene el valor (La palabra) y en qué año/s
      se utilizó dicha palabra.
     */
-    std::pair<tags_container::iterator, tags_container::iterator> getTag(std::string);
+    void copy_by_tag(const Encyclopedia&, std::string);
 
     /**
      * @brief Busca según uno/varios tags
@@ -101,7 +110,7 @@ class CenturyNode{
      * @return Devuelve una cadena con la información de TODOS los años en los que
      se utilizó dicho tags en dicha centuria.
     */
-    CenturyNode findByTags(std::string);
+    tagitpair findByTag(std::string);
 
     /**
      * @brief Convierte el nodo en texto plano.
@@ -142,13 +151,24 @@ YearNode::iterator CenturyNode::getYear(int _year){
   return end();
 };
 
-std::pair<tags_container::iterator, tags_container::iterator> CenturyNode::getTag(std::string tag){ return tags.equal_range(tag); };
+void CenturyNode::copy_by_tag(const Encyclopedia& e, std::string t){
+  tagitpair tags = tags.equal_range(t);
+  tags_container::iterator it;
+  for(it = t.first; it != t.second; ++it){
+    
+  }
+};
 
 void CenturyNode::add_event(std::string event_info, int _year){
   /* Find year if not, create it, then add the event */
-  YearNode year = getYear(_year);
-  if(year.empty()){
-    years.insert(year);
+  sorted_years::iterator it = std::find_if(sorted_years.begin(), sorted_years.end(), find_year(_year));
+  year_container::iterator found;
+  if(it == sorted_years.end()){
+    years.push_back(new YearNode(year));
+    found = --years.end();
+    sorted_years.insert(sorting_pair(year, last));
+  }else{
+    found = it->second();
   }
 
   /* Add tags to tagset */
@@ -156,64 +176,21 @@ void CenturyNode::add_event(std::string event_info, int _year){
   std::string word;
   while(event >> word){
     // Cleaning non-ascii
-    word.erase(std::remove_if(word.begin(), word.end(), [](char c) { return !std::isalpha(c); } ), word.end());
+    word.erase(std::remove_if(word.begin(), word.end(), [](char c){ return !std::isalpha(c); }), word.end());
     if(word.size() >= 4){
-      Tag* found = getTag(word);
-      if(found == NULL){
-        tags.insert(found = new Tag(word));
-      }
-      found->years.insert(year);
+      tags.insert(std::pair<std::string, std::set<YearNode, cmp_year>::iterator>(word, found));
     }
   }
-  year->add_event(event_info);
+  found.add_event(event_info);
 };
 
-std::string CenturyNode::findByTags(std::string all_tags){
-  std::string tagy = "";
+tagitpair CenturyNode::findByTag(std::string tag){ return tags.equal_range(tag); };
 
-  std::istringstream iss(all_tags);
-  std::string word;
-
-  bool exist = true;
-
-  std::set<YearNode*, cmp_year> found_years;
-  while(exist && (iss >> word)){
-    Tag* found = getTag(word);
-
-    if(found == NULL){
-      exist = false;
-    }else{
-      // Union of two sets
-      found_years.insert(found->years.begin(), found->years.end());
-    }
-  }
-
-  if(!found_years.empty()){
-    for(std::set<YearNode*>::iterator i = found_years.begin(); i != found_years.end(); i++){
-      int year = (*i)->getYear();
-      std::string found = (*i)->findByTags(all_tags);
-      if(found != ""){
-        tagy += "Found in the year " + std::to_string(century) + (year < 10 ? "0" : "") + std::to_string(year) + "\n";
-        tagy += found;
-      }
-    }
-  }
-  return tagy;
-};
-
-std::string CenturyNode::getTags() const{
-  std::string all_tags = "";
-  for(std::set<Tag*>::iterator i = tags.begin(); i != tags.end(); i++){
-    all_tags += (*i)->value + " = " + std::to_string((*i)->years.size()) + "\n";
-  }
-  return all_tags;
-};
-
-std::string CenturyNode::toString(){
+std::string CenturyNode::to_string(){
   std::string text = "In the " + std::to_string(century) + " th century happened: \n";
-  for(std::set<YearNode*>::iterator i = years.begin(); i != years.end(); i++){
-    text += "\tYear " + std::to_string((*i)->getYear()) + ": \n";
-    text += (*i)->toString();
+  sorted_years::iterator it = years.begin();
+  for(it = years.begin(); it != years.end(); ++it){
+    text += "\tYear " + std::to_string(it->first) + ": \n" + it->second->to_string();
   }
   return text;
 };

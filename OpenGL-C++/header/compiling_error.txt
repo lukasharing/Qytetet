@@ -1,0 +1,102 @@
+In file included from D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\cube.h:3:0:
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:14:10: error: 'vector' in namespace 'std' does not name a template type
+     std::vector<float> normals;// normals
+          ^~~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:15:10: error: 'vector' in namespace 'std' does not name a template type
+     std::vector<float> vertices;// Vertices
+          ^~~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:16:10: error: 'vector' in namespace 'std' does not name a template type
+     std::vector<float> normal_vertices;// normals
+          ^~~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:17:10: error: 'vector' in namespace 'std' does not name a template type
+     std::vector<unsigned int> sides; // Sides
+          ^~~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:18:10: error: 'vector' in namespace 'std' does not name a template type
+     std::vector<float> colors;
+          ^~~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:19:10: error: 'vector' in namespace 'std' does not name a template type
+     std::vector<float> texture;
+          ^~~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h: In member function 'virtual void Object3D::draw(long int)':
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:90:6: error: 'sides' was not declared in this scope
+   if(sides.size() > 0){
+      ^~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:96:35: error: 'normals' was not declared in this scope
+     glNormalPointer(GL_FLOAT, 0, &normals[0]);
+                                   ^~~~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:97:38: error: 'vertices' was not declared in this scope
+     glVertexPointer(3, GL_FLOAT, 0, &vertices[0]);
+                                      ^~~~~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:102:42: error: 'texture' was not declared in this scope
+       glTexCoordPointer(2, GL_FLOAT, 0, &texture[0]);
+                                          ^~~~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h: In member function 'void Object3D::normal_calculation()':
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:135:15: error: 'sides' was not declared in this scope
+   int total = sides.size();
+               ^~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:137:3: error: 'normal_vertices' was not declared in this scope
+   normal_vertices.resize(total);
+   ^~~~~~~~~~~~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:147:16: error: 'vertices' was not declared in this scope
+     float cx = vertices[f0 + 0];
+                ^~~~~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:162:48: error: 'sqrt' was not declared in this scope
+     float md = sqrt(mx * mx + my * my + mz * mz);
+                                                ^
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:168:5: error: 'normals' was not declared in this scope
+     normals.insert(normals.end(), {nx, ny, nz});
+     ^~~~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h: In member function 'void Object3D::console_vertices()':
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:182:22: error: 'vertices' was not declared in this scope
+   for(int i = 0; i < vertices.size() / 3; i++){
+                      ^~~~~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h: In member function 'void Object3D::console_faces()':
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:192:22: error: 'sides' was not declared in this scope
+   for(int i = 0; i < sides.size() / 3; i++){
+                      ^~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h: In constructor 'Object3D::Object3D(float*, int*, int, int)':
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:219:3: error: 'vertices' was not declared in this scope
+   vertices.assign(_v, _v + total_vertices);
+   ^~~~~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:220:3: error: 'sides' was not declared in this scope
+   sides.assign(_s, _s + total_sides);
+   ^~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h: In member function 'void Object3D::load_ply(std::__cxx11::string)':
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:245:32: error: 'vertices' was not declared in this scope
+           if(str == "vertex"){ vertices.resize(3 * size); }
+                                ^~~~~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:246:35: error: 'sides' was not declared in this scope
+           else if(str == "face"){ sides.resize(3 * size); }
+                                   ^~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:252:26: error: 'vertices' was not declared in this scope
+       for(int i = 0; i < vertices.size(); i++){
+                          ^~~~~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:258:26: error: 'sides' was not declared in this scope
+       for(int i = 0; i < sides.size(); i++){
+                          ^~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h: In destructor 'Object3D::~Object3D()':
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:271:3: error: 'normals' was not declared in this scope
+   normals.clear();// normals
+   ^~~~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:272:3: error: 'vertices' was not declared in this scope
+   vertices.clear();// Vertices
+   ^~~~~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:273:3: error: 'sides' was not declared in this scope
+   sides.clear(); // Sides
+   ^~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\object3d.h:274:3: error: 'colors' was not declared in this scope
+   colors.clear();
+   ^~~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\cube.h: In constructor 'Cube::Cube()':
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\cube.h:29:3: error: 'vertices' was not declared in this scope
+   vertices.assign(_v, _v + 24);
+   ^~~~~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\cube.h:42:3: error: 'texture' was not declared in this scope
+   texture.assign(_t, _t + 16);
+   ^~~~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\cube.h:55:3: error: 'sides' was not declared in this scope
+   sides.assign(_e, _e + size * 6);
+   ^~~~~
+D:\Lukas H�ring\Documents\GitHub\University_Projects\OpenGL-C++\header\cube.h:67:3: error: 'colors' was not declared in this scope
+   colors.assign(_c, _c + 36);
+   ^~~~~~

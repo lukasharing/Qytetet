@@ -6,6 +6,7 @@
 #include <functional>
 #include <set>
 #include <string>
+#include "../include/year_node.h"
 #include "../include/century_node.h"
 
 struct cmp_cent{
@@ -14,13 +15,40 @@ struct cmp_cent{
   }
 };
 
+typedef std::pair<int, CenturyNode::iterator> sorting_pair;
+typedef std::set<sorting_pair, cmp_cent> sorted_cent;
+
+struct find_century{
+  const int& c;
+  find_year(int _c):c(_c);
+  bool operator()(const sorting_pair&p){ return p.left == _c; };
+};
+
 class Encyclopedia{
   private:
-    std::set<CenturyNode, cmp_cent> centuries;
+    std::list<CenturyNode> centuries;
+    sorted_cent sorted_centuries;
     inline int getLowerBound() const{ return centuries.begin()->getCentury(); };
     inline int getUpperBound() const{ return centuries.rbegin()->getCentury(); };
     inline bool isInBound(int c){ return c >= getLowerBound() && c <= getUpperBound(); };
+    void copy(const Encyclopedia& e){
+      for(Encyclopedia::iterator it = e.begin(); it != e.end(); ++it){
+        add_event(*e);
+      }
+    };
   public:
+    typedef sorted_cent::iterator iterator;
+    typedef sorted_cent::const_iterator const_iterator;
+    Encyclopedia::iterator begin(){ return centuries.begin(); };
+    Encyclopedia::iterator end(){ return centuries.end(); };
+    Encyclopedia::const_iterator begin() const{ return centuries.cbegin(); };
+    Encyclopedia::const_iterator end() const{ return centuries.cend(); };
+
+    /**
+     * @brief Crea un nodo vacío
+     * @param El número de la centuria
+    */
+    void create_node(int c);
 
     /**
      * @brief Carga el contenido en la enciclopedia, dicho contenido del archivo
@@ -28,43 +56,37 @@ class Encyclopedia{
      éste tiene que tener un salto de línea, creando así los nodos de centurias necesarios y
      acontinuación los nodos de los años (0 - 99);
      * @param Una URL Existente si es posible.
+     * @return boolean true or false if could or not be opened
     */
-    void load_content(std::string);
+    bool load_content(std::string);
 
     /**
      * @brief Obtención de un nodo de centuria.
      * @param El entero de la centuria
      * @return El nodo de la centuria
     */
-    CenturyNode::iterator getCentury(int);
-
-    /**
-     * @brief Eventos ocurridos en dicha centuria
-     * @param El entero que indica la centuria, positivo si D.C, negativo si A.C.
-     * @return Una cadena con la información de cada evento.
-    */
-    std::string findByCentury(int);
+    iterator getCentury(int);
 
     /**
      * @brief Eventos ocurridos en dicho año
      * @param El entero que indica la fecha completa
      * @return Una cadena con la información de cada evento.
     */
-    std::string findByYear(int);
+    CenturyNode::iterator getYear(int);
 
     /**
-     * @brief Busca según unos tags característicos en todas las centurias
+     * @brief Busca según un tag
      * @param Cadena de texto de dichos tags
      * @return Toda la información en la cual se usó dichos tags.
     */
-    std::string findByTags(std::string);
+    Encyclopedia findByTag(std::string);
 
     /**
      * @brief Devuelve toda la información de la enciclopedia.
      * @param Ninguno
      * @return Una cadena con toda la información ocurrida.
     */
-    std::string toString();
+    std::string to_string();
 
     /**
      * @brief Devuelve todos los tags
@@ -74,7 +96,13 @@ class Encyclopedia{
     std::string showTags();
 };
 
-void Encyclopedia::load_content(std::string file_path){
+void create_node(const int& cnt){
+  centuries.push_back(CenturyNode(cnt));
+  century_node = centuries.rbegin();
+  sorted_cent.insert(sorting_pair(cnt, century_node));
+};
+
+bool Encyclopedia::load_content(std::string file_path){
   std::ifstream reader;
   reader.open(file_path.c_str());
   if(reader.is_open()){
@@ -88,13 +116,10 @@ void Encyclopedia::load_content(std::string file_path){
 
       // Lets look if the element exist if not, add it
       int century = events_year / 100;
+      iterator century_node = getCentury(century);
 
-      CenturyNode century_node = getCentury(century);
-
-      if(century_node == NULL){
-        std::set<CenturyNode>::iterator it = centuries.begin();
-        century_node = new CenturyNode(century);
-        centuries.insert(it, century_node);
+      if(century_node == end()){
+        create_node(century);
       }
 
       int year = events_year % 100;
@@ -102,58 +127,46 @@ void Encyclopedia::load_content(std::string file_path){
         century_node->edd_event(event_info, year);
       }
     }
-  }else{
-    std::cout << "Encyclopedia ERROR: The path file " << file_path << " couldn't be opened.";
+    reader.close();
+    return true;
   }
   reader.close();
+  return false;
 };
 
-CenturyNode::iterator Encyclopedia::getCentury(int _century){
-  return centuries.find(_century);
+Encyclopedia::iterator Encyclopedia::getCentury(int _century){
+  return std::find_if(sorted_centuries.begin(), sorted_centuries.end(), find_century(_century))->second;
 };
 
 /* Find Methods */
-std::string Encyclopedia::findByYear(int _year){
-  CenturyNode::iterator century = getCentury(_year / 100);
+CenturyNode::iterator Encyclopedia::getYear(int _year){
+  Encyclopedia result;
+  Encyclopedia::iterator century = getCentury(_year / 100);
   if(century != centuries.end()){
-    YearNode* year = century->getYear(_year % 100);
-    if(year != NULL){
-      return year->toString();
+    YearNode::iterator year = century->getYear(_year % 100);
+    if(year != century->end()){
+      return result;
     }
   }
-  return "Coudln't find any results";
+  return century->end();
 };
 
-std::string Encyclopedia::findByCentury(int cent){
-  CenturyNode century = getCentury(cent);
-  if(century != NULL){
-    return century->toString();
-  }
-  return "Coudln't find any results";
-};
-
-std::string Encyclopedia::findByTags(std::string tags){
-  std::string result = "";
-  for(std::set<CenturyNode>::iterator c = centuries.begin(); c != centuries.end(); c++){
-    result += c->findByTags(tags);
+Encyclopedia Encyclopedia::findByTag(std::string tag){
+  Encyclopedia result;
+  Encyclopedia::iterator it;
+  for(it = begin(); it != end(); ++it){
+    it->copy_by_tag(result, tag);
   }
   return result;
 };
 
-std::string Encyclopedia::toString(){
+std::string Encyclopedia::to_string(){
   std::string ency_txt = "";
-  for(std::set<CenturyNode*>::iterator c = centuries.begin(); c != centuries.end(); c++){
-    ency_txt += c->toString() + '\n';
+  Encyclopedia::iterator it;
+  for(it = centuries.begin(); it != centuries.end(); ++it){
+    ency_txt += c->to_string() + '\n';
   }
   return ency_txt;
-};
-
-std::string Encyclopedia::showTags(){
-  std::string tags = "";
-  for(std::set<CenturyNode>::iterator c = centuries.begin(); c != centuries.end(); c++){
-    tags += c->getTags() + '\n';
-  }
-  return tags;
 };
 
 Encyclopedia union_encyclopedia(const Encyclopedia& e1, const Encyclopedia& e2){

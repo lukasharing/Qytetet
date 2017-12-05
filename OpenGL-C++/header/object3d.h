@@ -4,23 +4,27 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <algorithm>
 #include "vector3d.h"
 #include "camera.h"
 
 class Object3D{
   protected:
     std::string name;
-
     std::vector<float> normals;// normals
     std::vector<float> vertices;// Vertices
+    std::vector<float> normal_vertices;// normals
     std::vector<unsigned int> sides; // Sides
     std::vector<float> colors;
+    std::vector<float> texture;
+    bool has_texture = false;
 
-    float color[3] = {0.5f, 0.3f, 0.4f};
+    float color[4] = {0.5f, 0.3f, 0.4f, 1.0f};
     int covers;
 
     // Properties
-    bool chess;
+    GLuint texture_id;
+    GLenum material_type;
     GLenum draw_type;
 
     // Transformations
@@ -37,6 +41,7 @@ class Object3D{
     // Transformaciones
     float getScale() const;
     void setScale(float);
+    void setTexture(GLuint);
     Vector3D& getPosition();
     Vector3D& getRotation();
 
@@ -48,7 +53,6 @@ class Object3D{
     void console_faces();
 
     // getter
-    virtual void setChess(bool);
     void setName(std::string);
     void setVertices(float*);
     std::string getName();
@@ -68,12 +72,15 @@ class Object3D{
 /* Get and Set Methods (No explanation needed). */
 float Object3D::getScale() const{  return scale; };
 void Object3D::setScale(float _scale){ scale = _scale; };
+void Object3D::setTexture(GLuint u){
+  has_texture = true;
+  texture_id = u;
+};
 Vector3D& Object3D::getPosition(){ return position; };
 Vector3D& Object3D::getRotation(){ return rotation; };
 
 void Object3D::setDrawType(GLenum t){ draw_type = t; };
 
-void Object3D::setChess(bool _c){ chess = _c; };
 void Object3D::setName(std::string _n){ name = _n; };
 std::string Object3D::getName(){ return name; };
 
@@ -82,61 +89,98 @@ std::string Object3D::getName(){ return name; };
 void Object3D::draw(long int delta){
   if(sides.size() > 0){
     glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+  	glEnable(GL_CULL_FACE);
+
+    // Buffers
+    glNormalPointer(GL_FLOAT, 0, &normals[0]);
+    glVertexPointer(3, GL_FLOAT, 0, &vertices[0]);
+    if(has_texture){
+      glEnable(GL_TEXTURE_2D);
+      glBindTexture(GL_TEXTURE_2D, texture_id);
+      glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+      glTexCoordPointer(2, GL_FLOAT, 0, &texture[0]);
+    	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+      glMatrixMode(GL_TEXTURE);
+      glLoadIdentity();
+      glTranslatef(0.5,0.5,0.0);
+      glRotatef(delta,0.0,0.0,1.0);
+      glTranslatef(-0.5,-0.5,0.0);
+      glMatrixMode(GL_MODELVIEW);
+    }
+
+    glMaterialfv(GL_FRONT_AND_BACK, material_type, color);
     glPushMatrix();
       glTranslated(position.getX(), position.getY(), position.getZ());
       glScalef(scale, scale, scale);
-
       glPolygonMode(GL_FRONT, draw_type);
-      glPolygonMode(GL_BACK, draw_type);
-      if(colors.size() > 0 && !chess){
-        glEnableClientState(GL_COLOR_ARRAY);
-        glColorPointer(3, GL_FLOAT, 0, &colors[0]);
-      }else{
-        glColor3f(color[0], color[1], color[2]);
-      }
-      glVertexPointer(3, GL_FLOAT, 0, &vertices[0]);
-      if(chess){
-        glDrawElements(GL_TRIANGLES, sides.size()/2, GL_UNSIGNED_INT, &sides[0]);
-        glColor3f(1.f, 0.3f, 0.4f);
-        glDrawElements(GL_TRIANGLES, sides.size()/2, GL_UNSIGNED_INT, &sides[sides.size()/2]);
-      }else{
-        glDrawElements(GL_TRIANGLES, sides.size() - covers, GL_UNSIGNED_INT, &sides[0] + covers);
-      }
-      //glDrawElements(GL_TRIANGLES, sides.size(), GL_UNSIGNED_INT, &sides[sides.size()/3-1]);
+      glDrawElements(GL_TRIANGLES, sides.size() - covers, GL_UNSIGNED_INT, &sides[0] + covers);
 
+      // for(int i = 0; i < sides.size(); i += 3){
+      //   float cx = vertices[i + 0];
+      //   float cy = vertices[i + 1];
+      //   float cz = vertices[i + 2];
+      //
+      //   glBegin(GL_LINES);
+      //   glVertex3f(cx, cy, cz);
+      //   glVertex3f(cx + normal_vertices[i + 0], cy + normal_vertices[i + 1], cz + normal_vertices[i + 2]);
+      //   glEnd();
+      // }
     glPopMatrix();
-    glDisableClientState(GL_VERTEX_ARRAY);
-
-    if(colors.size() > 0 && !chess){
-      glDisableClientState(GL_COLOR_ARRAY);
+    if(has_texture){
+      glDisable(GL_TEXTURE_2D);
+      glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     }
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
   }
 };
 
 /* Normal calculation method (No parameters) */
 void Object3D::normal_calculation(){
   int total = sides.size();
-  normals.resize(total);
+
+  normal_vertices.resize(total);
+  std::fill(normal_vertices.begin(), normal_vertices.end(), 0);
+  int mds = total / 3;
+  int times[mds] = {0};
   for(int i = 0; i < total; i += 3){
-    float cx = vertices[3 * sides[i + 0] + 0];
-    float x1 = cx - vertices[3 * sides[i + 1] + 0];
-    float x2 = cx - vertices[3 * sides[i + 2] + 0];
+    int f0 = sides[i + 0];
+    int f1 = sides[i + 1];
+    int f2 = sides[i + 2];
+    ++times[f0]; ++times[f1]; ++times[f2];
+    f0 *= 3; f1 *= 3; f2 *= 3;
+    float cx = vertices[f0 + 0];
+    float x1 = cx - vertices[f1 + 0];
+    float x2 = cx - vertices[f2 + 0];
 
-    float cy = vertices[3 * sides[i + 0] + 1];
-    float y1 = cy - vertices[3 * sides[i + 1] + 1];
-    float y2 = cy - vertices[3 * sides[i + 2] + 1];
+    float cy = vertices[f0 + 1];
+    float y1 = cy - vertices[f1 + 1];
+    float y2 = cy - vertices[f2 + 1];
 
-    float cz = vertices[3 * sides[i + 0] + 2];
-    float z1 = cz - vertices[3 * sides[i + 1] + 2];
-    float z2 = cz - vertices[3 * sides[i + 2] + 2];
+    float cz = vertices[f0 + 2];
+    float z1 = cz - vertices[f1 + 2];
+    float z2 = cz - vertices[f2 + 2];
 
-    float nx = y1 * z2 - z1 * y2;
-    float ny = z1 * x2 - x1 * z2;
-    float nz = x1 * y2 - y1 * x2;
-    float md = sqrt(nx * nx + ny * ny + nz * nz);
-    normals[i + 0] = nx / md;
-    normals[i + 1] = ny / md;
-    normals[i + 2] = nz / md;
+    float mx = y1 * z2 - z1 * y2;
+    float my = z1 * x2 - x1 * z2;
+    float mz = x1 * y2 - y1 * x2;
+    float md = sqrt(mx * mx + my * my + mz * mz);
+
+    float nx = mx / md;
+    float ny = my / md;
+    float nz = mz / md;
+
+    normals.insert(normals.end(), {nx, ny, nz});
+    normal_vertices[f0 + 0] += nx; normal_vertices[f0 + 1] += ny; normal_vertices[f0 + 2] += nz;
+    normal_vertices[f1 + 1] += nx; normal_vertices[f1 + 1] += ny; normal_vertices[f1 + 2] += nz;
+    normal_vertices[f2 + 2] += nx; normal_vertices[f2 + 1] += ny; normal_vertices[f2 + 2] += nz;
+  }
+
+  for(int i = 0; i < mds; ++i){
+    int total = times[i];
+    normal_vertices[i * 3 + 0] /= total; normal_vertices[i * 3 + 1] /= total; normal_vertices[i * 3 + 2] /= total;
   }
 };
 
@@ -167,7 +211,8 @@ void Object3D::new_object(){
   position.new_object();
   rotation.new_object();
   scale = 1.f;
-  chess = false;
+  material_type = GL_AMBIENT_AND_DIFFUSE;
+  has_texture = false;
 };
 
 /* Empty contructor */
