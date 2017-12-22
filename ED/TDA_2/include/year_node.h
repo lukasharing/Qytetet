@@ -7,8 +7,8 @@ class YearNode{
     int year = 0;
     std::vector<std::string> events;
     void copy(const YearNode& c){
-      year = y.year;
-      events = y.events;
+      year = c.year;
+      events = c.events;
     };
   public:
     /** Iterators **/
@@ -43,7 +43,7 @@ class YearNode{
      * @param ninguno
      * @return Un entero con la cantidad de eventos.
     */
-    inline int empty() const;
+    inline bool empty() const;
 
     /**
      * @brief Devuelve el año del evento/eventos
@@ -63,7 +63,7 @@ class YearNode{
      * @brief Añadir eventos
      * @param Una cadena que cuenta un poco acerca del evento
     */
-    void addEvent(std::string);
+    void add_event(const std::string&);
 
     /**
      * @brief Busca un evento que contenga una palabra/varias.
@@ -95,7 +95,7 @@ class YearNode{
 };
 
 /* Constructors */
-YearNode(const YearNode& y){
+YearNode::YearNode(const YearNode& y){
   copy(y);
 };
 
@@ -108,10 +108,12 @@ inline bool YearNode::empty() const{ return (events.size() == 0); };
 inline int YearNode::getYear() const{ return year; };
 std::string YearNode::getEvent(int i){ return events.at(i); };
 
-void YearNode::addEvent(std::string event_info){ events.push_back(event_info); };
+void YearNode::add_event(const std::string& event_info){
+  events.push_back(event_info);
+};
 
 YearNode YearNode::findByTags(std::string tags){
-  YearNode result;
+  YearNode result(year);
   std::vector<std::string>::iterator it;
   for(it = events.begin(); it != events.end(); it++){
     bool exist = true;
@@ -125,7 +127,7 @@ YearNode YearNode::findByTags(std::string tags){
     }
 
     if(exist){
-      result.addEvent(*it);
+      result.add_event(*it);
     }
   }
   return result;

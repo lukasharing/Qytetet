@@ -15,14 +15,15 @@ class Object3D{
     std::vector<float> vertices;// Vertices
     std::vector<float> normal_vertices;// normals
     std::vector<unsigned int> sides; // Sides
-    std::vector<float> colors;
     std::vector<float> texture;
     bool has_texture = false;
 
-    float color[4] = {0.5f, 0.3f, 0.4f, 1.0f};
+    GLfloat color[4] = {0.5f, 0.3f, 0.4f, 1.0f};
     int covers;
 
     // Properties
+    bool back;
+    bool front;
     GLuint texture_id;
     GLenum material_type;
     GLenum draw_type;
@@ -32,11 +33,15 @@ class Object3D{
     Vector3D position; // Posicion
     Vector3D rotation; // Rotacion
   public:
-    void setColor(float r, float g, float b){ color[0]=r; color[1]=g; color[2]=b; }
+    void setColor(GLfloat r, GLfloat g, GLfloat b){ color[0]=r; color[1]=g; color[2]=b; };
+    void setMaterial(GLenum m){ material_type = m; };
+    void setVisibility(float a, float b){ back = a; front = b; };
     // PLY
     void load_ply(std::string);
 
+    // Draw
     virtual void draw(long int);
+    void draw_normals();
 
     // Transformaciones
     float getScale() const;
@@ -88,52 +93,63 @@ std::string Object3D::getName(){ return name; };
 /* Draw method, need 1 parameter, the camera */
 void Object3D::draw(long int delta){
   if(sides.size() > 0){
+    // Enabling
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
-  	glEnable(GL_CULL_FACE);
-
+    //glEnable(GL_COLOR_MATERIAL); If not light
+    // CULLING
+    if(front ^ back){
+      glEnable(GL_CULL_FACE);
+      glCullFace(front ? GL_BACK : GL_FRONT);
+    }
     // Buffers
     glNormalPointer(GL_FLOAT, 0, &normals[0]);
     glVertexPointer(3, GL_FLOAT, 0, &vertices[0]);
     if(has_texture){
       glEnable(GL_TEXTURE_2D);
-      glBindTexture(GL_TEXTURE_2D, texture_id);
       glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+      glBindTexture(GL_TEXTURE_2D, texture_id);
       glTexCoordPointer(2, GL_FLOAT, 0, &texture[0]);
     	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
       glMatrixMode(GL_TEXTURE);
+
       glLoadIdentity();
       glTranslatef(0.5,0.5,0.0);
       glRotatef(delta,0.0,0.0,1.0);
       glTranslatef(-0.5,-0.5,0.0);
       glMatrixMode(GL_MODELVIEW);
+    }else{ // Then it has a color
+      glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, color);
+      //glColorMaterial( GL_FRONT_AND_BACK, GL_EMISSION);
     }
-
-    glMaterialfv(GL_FRONT_AND_BACK, material_type, color);
     glPushMatrix();
       glTranslated(position.getX(), position.getY(), position.getZ());
       glScalef(scale, scale, scale);
-      glPolygonMode(GL_FRONT, draw_type);
+      glPolygonMode(GL_FRONT_AND_BACK, draw_type);
       glDrawElements(GL_TRIANGLES, sides.size() - covers, GL_UNSIGNED_INT, &sides[0] + covers);
-
-      // for(int i = 0; i < sides.size(); i += 3){
-      //   float cx = vertices[i + 0];
-      //   float cy = vertices[i + 1];
-      //   float cz = vertices[i + 2];
-      //
-      //   glBegin(GL_LINES);
-      //   glVertex3f(cx, cy, cz);
-      //   glVertex3f(cx + normal_vertices[i + 0], cy + normal_vertices[i + 1], cz + normal_vertices[i + 2]);
-      //   glEnd();
-      // }
+      //draw_normals();
     glPopMatrix();
-    if(has_texture){
-      glDisable(GL_TEXTURE_2D);
-      glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-    }
+
+    // Disabling
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_TEXTURE_2D);
+    //glDisable(GL_COLOR_MATERIAL);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
+  }
+};
+
+void Object3D::draw_normals(){
+  for(int i = 0; i < sides.size(); i += 3){
+    float cx = vertices[i + 0];
+    float cy = vertices[i + 1];
+    float cz = vertices[i + 2];
+
+    glBegin(GL_LINES);
+    glVertex3f(cx, cy, cz);
+    glVertex3f(cx + normal_vertices[i + 0], cy + normal_vertices[i + 1], cz + normal_vertices[i + 2]);
+    glEnd();
   }
 };
 
@@ -207,6 +223,8 @@ void Object3D::console_faces(){
 /* New object method */
 void Object3D::new_object(){
   covers = 0;
+  back = false;
+  front = true;
   draw_type = GL_FILL;
   position.new_object();
   rotation.new_object();
@@ -271,13 +289,12 @@ void Object3D::load_ply(std::string name){
     }
   }
   ply_object.close();
-}
+};
 
 /* Destructor. */
 Object3D::~Object3D(){
   normals.clear();// normals
   vertices.clear();// Vertices
   sides.clear(); // Sides
-  colors.clear();
 };
 #endif

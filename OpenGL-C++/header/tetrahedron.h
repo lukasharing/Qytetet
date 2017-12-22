@@ -21,19 +21,12 @@ Tetrahedron::Tetrahedron(){
 
   // Assigning Sides
   int _s[12]{
-  	2,1,0,
+  	0,1,2,
     3,1,0,
     2,3,0,
-    1,2,3
+    3,2,1
   };
   sides.assign(_s, _s + 12);
-
-  float _c[12]{
-  	0.f,1.f,0.f,	0.f,1.f,0.f,
-  	0.f,1.f,0.f,	1.f,0.f,1.f,
-  };
-  colors.assign(_c, _c + 12);
-
 
   // Normal Calculation
   normal_calculation();

@@ -1,0 +1,25 @@
+In file included from D:\Lukas H�ring\Documents\GitHub\University_Projects\ED\TDA_2\src\main.cpp:5:0:
+d:\lukas h�ring\documents\github\university_projects\ed\tda_2\include\encyclopedia.h: In member function 'Encyclopedia Encyclopedia::interval(int, int)':
+d:\lukas h�ring\documents\github\university_projects\ed\tda_2\include\encyclopedia.h:200:35: error: request for member 'create_node' in 'result', which is of non-class type 'Encyclopedia()'
+   cent_list::iterator ti = result.create_node(c);
+                                   ^~~~~~~~~~~
+d:\lukas h�ring\documents\github\university_projects\ed\tda_2\include\encyclopedia.h:204:19: error: request for member 'create_node' in 'result', which is of non-class type 'Encyclopedia()'
+       ti = result.create_node(c);
+                   ^~~~~~~~~~~
+d:\lukas h�ring\documents\github\university_projects\ed\tda_2\include\encyclopedia.h:206:41: error: no matching function for call to 'CenturyNode::century_union(const std::_List_iterator<YearNode>&)'
+     ti->century_union(getYear(i)->second);
+                                         ^
+In file included from d:\lukas h�ring\documents\github\university_projects\ed\tda_2\include\encyclopedia.h:12:0,
+                 from D:\Lukas H�ring\Documents\GitHub\University_Projects\ED\TDA_2\src\main.cpp:5:
+d:\lukas h�ring\documents\github\university_projects\ed\tda_2\include\century_node.h:155:6: note: candidate: void CenturyNode::century_union(const CenturyNode&)
+ void CenturyNode::century_union(const CenturyNode& c){
+      ^~~~~~~~~~~
+d:\lukas h�ring\documents\github\university_projects\ed\tda_2\include\century_node.h:155:6: note:   no known conversion for argument 1 from 'const std::_List_iterator<YearNode>' to 'const CenturyNode&'
+In file included from D:\Lukas H�ring\Documents\GitHub\University_Projects\ED\TDA_2\src\main.cpp:5:0:
+d:\lukas h�ring\documents\github\university_projects\ed\tda_2\include\encyclopedia.h:208:10: error: could not convert 'result' from 'Encyclopedia()' to 'Encyclopedia'
+   return result;
+          ^~~~~~
+d:\lukas h�ring\documents\github\university_projects\ed\tda_2\include\encyclopedia.h: In function 'Encyclopedia encyclopedia_union(const Encyclopedia&, const Encyclopedia&)':
+d:\lukas h�ring\documents\github\university_projects\ed\tda_2\include\encyclopedia.h:216:46: error: 'Encyclopedia::iterator {aka struct std::_Rb_tree_const_iterator<std::pair<int, std::_List_iterator<CenturyNode> > >}' has no member named 'end'
+     cent_list::iterator centi = century_node.end();
+                                              ^~~

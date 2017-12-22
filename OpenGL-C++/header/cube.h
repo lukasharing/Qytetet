@@ -71,18 +71,6 @@ Cube::Cube(){
   };
   sides.assign(_e, _e + size * 6);
 
-  float _c[36]{
-  	1.f,0.f,1.f,	1.f,0.f,1.f,
-  	1.f,0.f,1.f,	1.f,0.f,1.f,
-
-    1.f,0.f,1.f,	1.f,0.f,1.f,
-  	1.f,0.f,1.f,	1.f,0.f,1.f,
-
-  	1.f,0.f,1.f,	1.f,0.f,1.f,
-  	1.f,0.f,1.f,	1.f,0.f,1.f,
-  };
-  colors.assign(_c, _c + 36);
-
   // Normal Calculation
   normal_calculation();
 };
