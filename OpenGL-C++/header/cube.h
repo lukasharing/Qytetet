@@ -8,8 +8,6 @@ class Cube : public Object3D{
 };
 
 Cube::Cube(){
-  position.new_object();
-  rotation.new_object();
   new_object();
   // Assigning Vertices
   float _v[48]{

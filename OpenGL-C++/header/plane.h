@@ -8,8 +8,6 @@ class Plane : public Object3D{
 };
 
 Plane::Plane(float s){
-  position.new_object();
-  rotation.new_object();
   new_object();
 
   setColor(0.0, 0.0, 1.0);

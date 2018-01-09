@@ -3,7 +3,7 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 #include <vector>
-
+#include <typeinfo>
 // Library
 #include "../libs/JpegLoader.h"
 #include "../libs/FpsTimer.h"
@@ -34,14 +34,16 @@
 // Boolean keycontrol array.
 bool keys_ascii[256] = {0};
 std::vector<Object3D*> objects;
-Hierarchy* model;
-Object3D* currentVisible = model;
+Bomb* mario_bomb;
+Object3D* currentVisible = mario_bomb;
 Revolution* pawn;
 Plane* plane;
 FpsTimer* fpsTimer;
 
 // Prevents from redrawing more times than needed.
 bool cam_blocked = false;
+bool scan_method = true;
+
 int initial_time = 20;
 int time_transition = initial_time;
 long int delta = 0;
@@ -52,25 +54,6 @@ int camera_index = 0;
 Camera* camera;
 Camera helper;
 
-// // Draws a coordinate axis (NOT USED)
-void draw_axis(int size){
-	glBegin(GL_LINES);
-		// Color Rojo (Eje X)
-		glColor3f(1.f, 0.f, 0.f);
-		glVertex3f(-size, 0.f, 0.f);
-		glVertex3f(+size, 0.f, 0.f);
-
-		// Color verde (Eje Y)
-		glColor3f(0.f, 1.f, 0.f);
-		glVertex3f(0.f, -size, 0.f);
-		glVertex3f(0.f, +size, 0.f);
-		// eje Z, color azul
-		glColor3f(0.f, 0.f, 1.f);
-		glVertex3f(0.f, 0.f, -size);
-		glVertex3f(0.f, 0.f, +size);
-	glEnd();
-}
-
 // MOUSE METHOD
 void mouse(int button, int state, int x, int y){
 	if(!cam_blocked){
@@ -78,7 +61,23 @@ void mouse(int button, int state, int x, int y){
 		//float my = 2.f * y / camera->getHeight() - 1.f;
 		switch (button) {
 			case 0:
-				//camera->getOldPosition().set(mx, my, 0.0);
+				if(scan_method){
+					unsigned char res[4];
+					GLint viewport[4];
+					glGetIntegerv(GL_VIEWPORT, viewport);
+					glReadPixels(x, viewport[3] - y, 1,1,GL_RGBA, GL_UNSIGNED_BYTE, &res);
+
+					bool found = false;
+					int i;
+					for(i = 0; i < objects.size() && !found; ++i){
+						if(objects[i]->sameIntColor(res)){
+							found = true;
+						}
+					}
+					if(i < objects.size()){
+						std::cout << typeid(*objects[i-1]).name() << std::endl;
+					}
+				}
 			break;
 			case 3: // Wheel Up
 				camera->zoom(0.98);
@@ -96,11 +95,25 @@ const float r_light = 10.f;
 void draw_objects(){
 	float x_r = (float)(keys_ascii['d'] - keys_ascii['a']) * 0.4f;
 	float y_r = (float)(keys_ascii['w'] - keys_ascii['s']) * 0.4f;
-	camera->getPosition().addX(x_r);
-	camera->getPosition().addY(y_r);
+	if(mario_bomb != currentVisible){
+		camera->getPosition().addX(x_r);
+		camera->getPosition().addY(y_r);
+	}else{
+		mario_bomb->getVelocity().add(-x_r, 0.0, y_r);
+		cameras[2]->setLookAt(mario_bomb->getPosition());
+		cameras[2]->getPosition().add(-x_r, 0.0, y_r);
+	}
 
-	plane->draw(delta);
-  currentVisible->draw(delta);
+	if(scan_method){
+		glDisable(GL_DITHER);
+		glDisable(GL_LIGHTING);
+		glDisable(GL_TEXTURE_2D);
+	}else{
+		glEnable(GL_DITHER);
+		glEnable(GL_LIGHTING);
+	}
+	plane->draw(delta, scan_method);
+  currentVisible->draw(delta, scan_method);
 }
 
 // Draw cameras
@@ -111,6 +124,7 @@ void draw_cameras(){
 			Vector3D* vc = &(*it)->getPosition();
 			glPushMatrix();
 			glTranslatef(vc->getX(), vc->getY(), vc->getZ());
+			glColor3ub(255, 255, 255);
 			glutSolidSphere(1.0, 50, 50);
 			glPopMatrix();
 		}
@@ -175,15 +189,10 @@ void key_unpressed(unsigned char key, int x, int y){
 		bool modify = false;
 		GLenum type;
 		switch(key){
-			case 'p': type = GL_POINT;break;
+			case 'q': scan_method = !scan_method; break;
+			case 'p': type = GL_POINT; break;
 			case 'l': type = GL_LINE; break;
 			case 'f': type = GL_FILL; break;
-			case 'z': model->setLibertyValue(0, -0.1f); break;
-			case 'x': model->setLibertyValue(1, -0.1f); break;
-			case 'c': model->setLibertyValue(2, -0.1f); break;
-			case 'b': model->setLibertyValue(0, 0.1f); break;
-			case 'n': model->setLibertyValue(1, 0.1f); break;
-			case 'm': model->setLibertyValue(2, 0.1f); break;
 			default: type = GL_FILL; break;
 		}
     if(!modify){
@@ -216,17 +225,16 @@ void init(){
 	plane->setVisibility(true, true);
 
 	Tetrahedron* tetrahedron = new Tetrahedron();
-	tetrahedron->getPosition().set(0.0, 1.0, 0.0);
+	tetrahedron->setColor(0.10, 0.50, 0.50);
 	objects.push_back(tetrahedron);
 	currentVisible = tetrahedron;
 
 	Cube* cube = new Cube();
-	cube->getPosition().set(0.0, 1.0, 0.0);
+	cube->setColor(0.3, 0.4, 0.2);
 	cube->setTexture(idTex);
 	objects.push_back(cube);
 
 	pawn = new Revolution("../models/peon.ply", 4, 1);
-	pawn->setScale(3.f);
 	objects.push_back(pawn);
 
   /* Revolution from points */
@@ -241,24 +249,21 @@ void init(){
   };
   int slices = 4;
   Revolution* rev = new Revolution(points, number, slices, 0);
-	rev->getPosition().set(0.0, 1.0, 0.0);
-	rev->setScale(1.f);
+	rev->setColor(0.8, 0.4, 0.0);
   rev->setCover(6 * slices);
 	objects.push_back(rev);
 
-  Bomb* mario_bomb = new Bomb();
-  mario_bomb->setScale(3.f);
-	objects.push_back(model = mario_bomb);
+  mario_bomb = new Bomb();
+	objects.push_back(mario_bomb);
 
 	Object3D* obj = new Object3D("../models/beethoven.ply");
-	obj->getPosition().set(0.0, 6.2, 0.0);
-	obj->setScale(1.f);
+	obj->setColor(0.1, 0.8, 0.1);
 	objects.push_back(obj);
 
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.f);
-	glEnable(GL_LIGHTING);
 	GLfloat ca1[4] = { 1.0, 1.0, 1.0, 1.0 };
+	glEnable(GL_LIGHTING);
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ca1);
 	glEnable (GL_LIGHT0);
 	//float ca2[4] = { 0.0, 1.0, 1.0, 1.0 };

@@ -44,6 +44,7 @@ class Camera{
     Vector3D& getPosition();
     Vector3D& getOldPosition();
     Vector3D& getLookAt();
+    void setLookAt(const Vector3D&);
     Vector3D& getTopVector();
 
     // Planes
@@ -82,6 +83,7 @@ void  Camera::setFov(float f){ fov = f; };
 Vector3D& Camera::getPosition(){ return position; };
 Vector3D& Camera::getOldPosition(){ return old_position; };
 Vector3D& Camera::getLookAt(){ return look; };
+void Camera::setLookAt(const Vector3D& _v){ look = _v; };
 Vector3D& Camera::getTopVector(){ return top; };
 
 // Planes

@@ -28,6 +28,8 @@ class Vector3D{
     Vector3D(float, float, float);
     Vector3D(float*);
 
+    void operator += (const Vector3D& v){ x += v.x; y += v.y; z += v.z; };
+    void operator *= (float a){ x *= a; y *= a; z *= a; };
     Vector3D* operator = (const Vector3D& v){
       if(this != &v){
         x = v.x;

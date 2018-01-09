@@ -16,6 +16,7 @@ class Hierarchy : public Object3D{
     void setDrawType(GLenum) override;
     void setLibertyValue(int, float);
     float getLibertyValue(int);
+    bool sameIntColor(unsigned char[4]);
 };
 
 void Hierarchy::setLibertyValue(int d, float v){ if(d >= liberty.size()){ liberty.push_back(v); } else { liberty[d] += v; }; };
@@ -26,9 +27,21 @@ void Hierarchy::add_element(std::string name, Object3D* object){ models[name] = 
 Object3D* Hierarchy::get_element(std::string name){ return models[name]; };
 
 void Hierarchy::setDrawType(GLenum t){
-  for (std::map<std::string, Object3D*>::iterator it = models.begin(); it != models.end(); ++it){
+  std::map<std::string, Object3D*>::iterator it;
+  for(it = models.begin(); it != models.end(); ++it){
     it->second->setDrawType(t);
   }
+};
+
+bool Hierarchy::sameIntColor(unsigned char c[4]){
+  bool exist = false;
+  std::map<std::string, Object3D*>::iterator it;
+  for(it = models.begin(); it != models.end() && !exist; ++it){
+    if(it->second->sameIntColor(c)){
+      exist = true;
+    }
+  }
+  return exist;
 };
 
 #endif

@@ -27,31 +27,23 @@ class Object3D{
     GLuint texture_id;
     GLenum material_type;
     GLenum draw_type;
-
-    // Transformations
-    float scale;
-    Vector3D position; // Posicion
-    Vector3D rotation; // Rotacion
   public:
     void setColor(GLfloat r, GLfloat g, GLfloat b){ color[0]=r; color[1]=g; color[2]=b; };
     void setMaterial(GLenum m){ material_type = m; };
     void setVisibility(float a, float b){ back = a; front = b; };
+    virtual bool sameIntColor(unsigned char c[4]){
+      return ((c[0] == (int)(color[0] * 255)) && (c[1] == (int)(color[1] * 255)) && (c[2] == (int)(color[2] * 255)));
+    };
     // PLY
     void load_ply(std::string);
 
     // Draw
-    virtual void draw(long int);
+    virtual void draw(long int, bool);
     void draw_normals();
-
-    // Transformaciones
-    float getScale() const;
-    void setScale(float);
-    void setTexture(GLuint);
-    Vector3D& getPosition();
-    Vector3D& getRotation();
 
     // Drawing type
     virtual void setDrawType(GLenum);
+    void setTexture(GLuint);
 
     // console
     void console_vertices();
@@ -75,14 +67,10 @@ class Object3D{
 
 
 /* Get and Set Methods (No explanation needed). */
-float Object3D::getScale() const{  return scale; };
-void Object3D::setScale(float _scale){ scale = _scale; };
 void Object3D::setTexture(GLuint u){
   has_texture = true;
   texture_id = u;
 };
-Vector3D& Object3D::getPosition(){ return position; };
-Vector3D& Object3D::getRotation(){ return rotation; };
 
 void Object3D::setDrawType(GLenum t){ draw_type = t; };
 
@@ -91,7 +79,7 @@ std::string Object3D::getName(){ return name; };
 
 
 /* Draw method, need 1 parameter, the camera */
-void Object3D::draw(long int delta){
+void Object3D::draw(long int delta, bool ex){
   if(sides.size() > 0){
     // Enabling
     glEnableClientState(GL_VERTEX_ARRAY);
@@ -105,26 +93,30 @@ void Object3D::draw(long int delta){
     // Buffers
     glNormalPointer(GL_FLOAT, 0, &normals[0]);
     glVertexPointer(3, GL_FLOAT, 0, &vertices[0]);
-    if(has_texture){
-      glEnable(GL_TEXTURE_2D);
-      glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-      glBindTexture(GL_TEXTURE_2D, texture_id);
-      glTexCoordPointer(2, GL_FLOAT, 0, &texture[0]);
-    	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-      glMatrixMode(GL_TEXTURE);
+    if(ex){
+      glColor3ub((int)(255 * color[0]),
+                 (int)(255 * color[1]),
+                 (int)(255 * color[2]));
+    }else{
+      if(has_texture){
+		    glEnable(GL_TEXTURE_2D);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        glBindTexture(GL_TEXTURE_2D, texture_id);
+        glTexCoordPointer(2, GL_FLOAT, 0, &texture[0]);
+      	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glMatrixMode(GL_TEXTURE);
 
-      glLoadIdentity();
-      glTranslatef(0.5,0.5,0.0);
-      glRotatef(delta,0.0,0.0,1.0);
-      glTranslatef(-0.5,-0.5,0.0);
-      glMatrixMode(GL_MODELVIEW);
-    }else{ // Then it has a color
-      glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, color);
-      //glColorMaterial( GL_FRONT_AND_BACK, GL_EMISSION);
+        glLoadIdentity();
+        glTranslatef(0.5,0.5,0.0);
+        glRotatef(delta,0.0,0.0,1.0);
+        glTranslatef(-0.5,-0.5,0.0);
+        glMatrixMode(GL_MODELVIEW);
+      }else{ // Then it has a color
+        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, color);
+        //glColorMaterial( GL_FRONT_AND_BACK, GL_EMISSION);
+      }
     }
     glPushMatrix();
-      glTranslated(position.getX(), position.getY(), position.getZ());
-      glScalef(scale, scale, scale);
       glPolygonMode(GL_FRONT_AND_BACK, draw_type);
       glDrawElements(GL_TRIANGLES, sides.size() - covers, GL_UNSIGNED_INT, &sides[0] + covers);
       //draw_normals();
@@ -132,7 +124,6 @@ void Object3D::draw(long int delta){
 
     // Disabling
     glDisable(GL_CULL_FACE);
-    glDisable(GL_TEXTURE_2D);
     //glDisable(GL_COLOR_MATERIAL);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
@@ -226,9 +217,6 @@ void Object3D::new_object(){
   back = false;
   front = true;
   draw_type = GL_FILL;
-  position.new_object();
-  rotation.new_object();
-  scale = 1.f;
   material_type = GL_AMBIENT_AND_DIFFUSE;
   has_texture = false;
 };
