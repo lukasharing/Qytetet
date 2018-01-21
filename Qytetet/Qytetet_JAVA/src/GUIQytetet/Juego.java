@@ -1,4 +1,4 @@
-package interfazTextualQytetet;
+package GUIQytetet;
 
 public class Juego {
 	private static ControladorQytetet juego = new ControladorQytetet();

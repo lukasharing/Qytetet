@@ -3,6 +3,10 @@ package modeloqytetet;
 import java.util.ArrayList;
 
 public class Jugador {
+	static int FACTOR_ESPECULADOR = 1;
+	public int getFactorEspeculador(){ return FACTOR_ESPECULADOR; };
+	
+	
     public ArrayList <TituloPropiedad> propiedades;
     private Casilla casillaActual;
     private Sorpresa cartaLibertad;
@@ -10,6 +14,7 @@ public class Jugador {
     private boolean encarcelado = false;
     private String nombre;
     private int saldo = 0;
+    public int getSaldo() { return saldo; };
     
     public Jugador(String nombre){
         this.nombre = nombre;
@@ -17,31 +22,46 @@ public class Jugador {
         this.cartaLibertad = null;
     };
     
+    protected Jugador(Jugador jugador) {
+    	this.saldo = jugador.saldo;
+    	this.cartaLibertad = jugador.cartaLibertad;
+    	this.casillaActual = jugador.casillaActual;
+    	this.propiedades = jugador.propiedades;
+    	this.nombre = jugador.nombre;
+    	this.saldo = jugador.saldo;
+    	this.encarcelado = jugador.encarcelado;
+    };
+    
+    protected Especulador convertirme(int fianza) {
+    	return new Especulador(this, fianza);
+    };
+    
+    protected void pagarImpuestos(int cantidad) { this.modificarSaldo(cantidad); };
+    
     public Casilla getCasillaActual(){ return casillaActual; };
     public boolean getEncarcelado(){ return encarcelado; };
     public String getNombre() { return nombre; };
     public boolean tengoPropiedades(){ return (this.propiedades.size() > 0); };
 
     
-    boolean actualizarPosicion(Casilla casilla){
+    protected boolean actualizarPosicion(Casilla casilla){
         boolean tienePropietario = true;
     	if(casilla.getNumeroCasilla() < casillaActual.getNumeroCasilla()){
         	this.modificarSaldo(Qytetet.SALDO_SALIDA);
         }
         this.setCasillaActual(casilla);
-        if(casilla.soyEdificable()) {
-        	boolean tengoPropietario = casilla.tengoPropietario();
+        if(casilla instanceof Calle) {
+        	boolean tengoPropietario = ((Calle)casilla).tengoPropietario();
         	tienePropietario = tengoPropietario;
         	if(tengoPropietario) {
-        		boolean encarcelado = casilla.propietarioEncarcelado();
+        		boolean encarcelado = ((Calle)casilla).propietarioEncarcelado();
         		if(!encarcelado) {
-        			int costeAlquiler = casilla.cobrarAlquiler();
+        			int costeAlquiler = ((Calle)casilla).cobrarAlquiler();
         			this.modificarSaldo(-costeAlquiler);
         		}
         	}
-        }else if(casilla.getTipo() == TipoCasilla.IMPUESTO) {
-        	int coste = casilla.getCoste();
-        	this.modificarSaldo(-coste);
+        }else if(((OtraCasilla)(casilla)).getTipo() == TipoCasilla.IMPUESTO) {
+        	this.pagarImpuestos(-casilla.getCoste());
         }
         return tienePropietario;
     };
@@ -50,12 +70,12 @@ public class Jugador {
     
     boolean comprarTitulo(){
     	boolean puedoComprar = false;
-    	if(casillaActual.soyEdificable()) {
-    		boolean tengoPropietario = casillaActual.tengoPropietario();
+    	if(casillaActual instanceof Calle) {
+    		boolean tengoPropietario = ((Calle)casillaActual).tengoPropietario();
     		if(!tengoPropietario) {
     			int costeCompra = casillaActual.getCoste();
     			if(costeCompra <= saldo) {
-    				TituloPropiedad titulo = casillaActual.asignarPropietario(this);
+    				TituloPropiedad titulo = ((Calle)casillaActual).asignarPropietario(this);
     				propiedades.add(titulo);
     				puedoComprar = true;
     				this.modificarSaldo(-costeCompra);
@@ -107,9 +127,9 @@ public class Jugador {
     	}
     	return tengoSaldo;
     };
-    boolean puedoEdificarCasa(Casilla casilla){
+    boolean puedoEdificarCasa(Calle casilla){
     	boolean esMia = this.esDeMipropiedad(casilla);
-    	if(esMia) {
+    	if(!esMia) {
     		int costeEdificarCasa = casilla.getPrecioEdificar();
     		boolean tengoSaldo = tengoSaldo(costeEdificarCasa);
     		return tengoSaldo;
@@ -117,9 +137,9 @@ public class Jugador {
     	return false;
     };
     
-    boolean puedoEdificarHotel(Casilla casilla){
+    boolean puedoEdificarHotel(Calle casilla){
     	boolean esMia = this.esDeMipropiedad(casilla);
-    	if(esMia) {
+    	if(!esMia) {
     		int costeEdificarHotel= casilla.getPrecioEdificar();
     		boolean tengoSaldo = tengoSaldo(costeEdificarHotel);
     		return tengoSaldo;
@@ -127,15 +147,14 @@ public class Jugador {
     	return false;
     };
     
-    boolean puedoHipotecar(Casilla casilla){
-    	boolean esMia = this.esDeMipropiedad(casilla);
-    	return esMia;
+    boolean puedoHipotecar(Calle casilla){
+    	return this.esDeMipropiedad(casilla);
     };
     boolean puedoPagarHipoteca(Casilla casilla){
     	// No se especifica NADA
     	return true;
     };
-    boolean puedoVenderPropiedad(Casilla casilla){
+    boolean puedoVenderPropiedad(Calle casilla){
     	boolean esMia = esDeMipropiedad(casilla);
     	boolean hipotecada = casilla.estaHipotecada();
     	boolean puedoVender = esMia && !hipotecada;
@@ -146,7 +165,7 @@ public class Jugador {
     void setEncarcelado(boolean encarcelado){ this.encarcelado = encarcelado; };
     boolean tengoCartaLibertad(){ return cartaLibertad != null; };
     
-    void venderPropiedad(Casilla casilla){
+    void venderPropiedad(Calle casilla){
     	int precioVenta = casilla.venderTitulo();
     	this.modificarSaldo(precioVenta);
     	this.eliminarDeMisPropiedades(casilla);
@@ -159,7 +178,7 @@ public class Jugador {
         }
         return total;
     };
-    private void eliminarDeMisPropiedades(Casilla casilla){
+    private void eliminarDeMisPropiedades(Calle casilla){
         int k = 0; boolean econtrado = false;
         for(; k < propiedades.size() && !econtrado; k++){
             if(propiedades.get(k).equals(casilla.getTitulo())){
@@ -168,11 +187,11 @@ public class Jugador {
         }
         propiedades.remove(k - 1);
     };
-    private boolean esDeMipropiedad(Casilla casilla){
+    private boolean esDeMipropiedad(Calle casilla){
         boolean esMia = propiedades.contains(casilla.getTitulo());
         return esMia;
     };
-    private boolean tengoSaldo(int cantidad){ return (saldo >= cantidad); };
+    protected boolean tengoSaldo(int cantidad){ return (saldo >= cantidad); };
     
     @Override
     public String toString(){

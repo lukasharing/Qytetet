@@ -1,4 +1,4 @@
-package interfazTextualQytetet;
+package GUIQytetet;
 import modeloqytetet.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,12 +19,7 @@ public class ControladorQytetet {
 	public void desarrolloJuego() {
 		boolean puedeJugar = true, finalizado = false;
 		vista.mostrar("------------------------------------");
-		String rs = "Es el turno de " + jugador.getNombre() + ", actualmente se encuentra en la casilla " + casilla.getNumeroCasilla();
-		if(casilla.getTipo() == TipoCasilla.CALLE) {
-			rs += " con nombre " + casilla.getTitulo().getNombre();
-		}else {
-			rs += " de tipo " + casilla.getTipo();
-		}
+		String rs = "Es el turno de " + jugador.getNombre() + ", actualmente se encuentra en: \n" + casilla.toString();
 		vista.mostrar(rs);
 		
 		if(jugador.getEncarcelado()) {
@@ -41,26 +36,13 @@ public class ControladorQytetet {
 		if(puedeJugar){
 			  boolean noTienePropietario = juego.jugar();
 			  Casilla desplazamiento = jugador.getCasillaActual();
-			  String ra = "Tras lanzar el dado, el jugador se desplazo hacia ";
-			  if(desplazamiento.getTipo() == TipoCasilla.CALLE) {
-				  ra += desplazamiento.getTitulo().getNombre();
-			  }else {
-				  ra += " la casilla de tipo " + desplazamiento.getTipo();
-			  }
-			  vista.mostrar(ra + " (" + desplazamiento.getNumeroCasilla() + ").");
+			  String ra = "Tras lanzar el dado, el jugador se desplazo hacia: \n" + desplazamiento.toString();
 
 			  if(jugador.estaBancarrota()) {
 				  finalizado = true;
 			  }else if(!jugador.getEncarcelado()) {
-				  switch(desplazamiento.getTipo()) {
-				  	case SORPRESA:
-				  		vista.mostrar("Se trata de una carta sorpresa " + desplazamiento.getTipo() + " -> " + juego.getCartaActual().getDescripcion());
+				  if(desplazamiento instanceof OtraCasilla) {
 				  		noTienePropietario = juego.aplicarSorpresa();
-				  	break;
-				  	case CALLE:
-				  		vista.mostrar(desplazamiento.toString());
-			  		break;
-				  	default:break;
 				  }
 				  if(!jugador.getEncarcelado()) {
 					  if(!noTienePropietario){
@@ -68,7 +50,7 @@ public class ControladorQytetet {
 						  if(comprar) {
 							  boolean compra = juego.comprarTituloPropiedad();
 							  if(compra) {
-								  vista.mostrar("El usuario compró " + desplazamiento.getTitulo().getNombre());	  
+								  vista.mostrar("El usuario compró " + ((Calle)desplazamiento).getTitulo().getNombre());	  
 							  }else {
 								  vista.mostrar("No se pudo realizar la compra.");
 							  }
@@ -81,18 +63,14 @@ public class ControladorQytetet {
 					  }else if(jugador.tengoPropiedades()) {
 						  int opcion = vista.menuGestionInmobiliaria();
 						  while(opcion != 0) {
-							  ArrayList<Casilla> casillas = new ArrayList<Casilla>();
-							  for(TituloPropiedad titulo : jugador.propiedades) {
-								  casillas.add(titulo.casilla);
-							  }
-							  casilla = this.elegirPropiedad(casillas);
+							  Calle calle = this.elegirPropiedad(jugador.propiedades);
 							  boolean posible = true;
 							  switch(opcion) {
-							  	case 1: posible = juego.edificarCasa(casilla); break;
-							  	case 2: posible = juego.edificarHotel(casilla); break;
-							  	case 3: posible = juego.venderPropiedad(casilla); break;
-							  	case 4: posible = juego.hipotecarPropiedad(casilla); break;
-							  	case 5: posible = juego.cancelarHipoteca(casilla); break;
+							  	case 1: posible = juego.edificarCasa(calle); break;
+							  	case 2: posible = juego.edificarHotel(calle); break;
+							  	case 3: posible = juego.venderPropiedad(calle); break;
+							  	case 4: posible = juego.hipotecarPropiedad(calle); break;
+							  	//case 5: posible = juego.cancelarHipoteca(calle); break;
 							  	default:break;
 							  }
 							  if(!posible) {
@@ -127,13 +105,13 @@ public class ControladorQytetet {
 		}
 	};
 	
-	private Casilla elegirPropiedad(ArrayList<Casilla> propiedades) {
+	private Calle elegirPropiedad(ArrayList<TituloPropiedad> propiedades) {
 	  ArrayList<String> nombres = new ArrayList<String>();
-	  for(Casilla casilla : propiedades) {
-		  nombres.add(casilla.getTitulo().getNombre());
+	  for(TituloPropiedad titulo : propiedades) {
+		  nombres.add(titulo.getNombre());
 	  }
 	  int opcion = vista.menuElegirPropiedad(nombres);
-	  return propiedades.get(opcion);
+	  return propiedades.get(opcion).casilla;
 	};
 	
 	public void inicializacionJuego() {

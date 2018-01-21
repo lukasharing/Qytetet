@@ -5,5 +5,6 @@ public enum TipoSorpresa {
     IRACASILLA,
     PORCASAHOTEL,
     PORJUGADOR,
-    SALIRCARCEL
+    SALIRCARCEL,
+    CONVERTIRME
 }

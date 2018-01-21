@@ -10,7 +10,7 @@ package modeloqytetet;
 
 public class TituloPropiedad {
     private Jugador propietario;
-    public Casilla casilla;
+    public Calle casilla;
     
     private final   String nombre;
     private boolean hipotecada;
@@ -43,10 +43,11 @@ public class TituloPropiedad {
     float getFactorRevalorizacion(){ return factorRevalorizacion; };
     int getHipotecaBase(){ return hipotecaBase; };
     int getPrecioEdificar(){ return precioEdificar; };
+    Jugador getPropietario(){ return propietario; };
     
     void setHipotecada(boolean _hipotecada){ this.hipotecada = _hipotecada; };
     void setPropietario(Jugador _propietario){ this.propietario = _propietario; };
-    void setCasilla(Casilla casilla){ this.casilla = casilla; };
+    void setCasilla(Calle casilla){ this.casilla = casilla; };
     
     boolean tengoPropietario(){ return this.propietario != null; };
     void cobrarAlquiler(int costeAlquiler){
