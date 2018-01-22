@@ -433,6 +433,25 @@ public class VistaQytetet {
 							}
 						}
 						g2.drawImage(draw, 0, 0, null);
+						if(casilla instanceof Calle) {
+							for(int k = 0; k < ((Calle)casilla).getNumHoteles(); ++k){
+								int pi = (k % 2) * 20;
+								int pj = (k / 2) * 20;
+								g2.setColor(Color.RED);
+								g2.fillRect(pi, pj, 20, 20);
+								g2.setColor(Color.BLACK);
+								g2.drawRect(pi-1, pj-1, 20, 20);
+							}
+							
+							for(int k = 0; k < ((Calle)casilla).getNumCasas(); ++k){
+								int pi = (k % 2) * 20;
+								int pj = (k / 2) * 20;
+								g2.setColor(Color.GREEN);
+								g2.fillRect(pi, 85 - pj, 20, 20);
+								g2.setColor(Color.BLACK);
+								g2.drawRect(pi-1, 85 - pj-1, 20, 20);
+							}
+						}
 						g2.dispose();
 						// Draw Text
 						if(casilla instanceof Calle) {
@@ -510,19 +529,20 @@ public class VistaQytetet {
 			public void actionPerformed(ActionEvent arg0) {
 				Calle calle = jugador.propiedades.get(choice.getSelectedIndex()).casilla;
 				int opcion = group.getSelection().getMnemonic() - 'A';
-				System.out.println(opcion);
-				System.out.println((char)opcion);
 				boolean posible = true;
 				switch(opcion) {
-					case 1: posible = juego.edificarCasa(calle); break;
-					case 2: posible = juego.edificarHotel(calle); break;
-					case 3: posible = juego.venderPropiedad(calle); break;
-					case 4: posible = juego.hipotecarPropiedad(calle); break;
-					case 5: posible = juego.cancelarHipoteca(calle); break;
+					case 0: posible = juego.edificarCasa(calle); break;
+					case 1: posible = juego.edificarHotel(calle); break;
+					case 2: posible = juego.venderPropiedad(calle); break;
+					case 3: posible = juego.hipotecarPropiedad(calle); break;
+					case 4: posible = juego.cancelarHipoteca(calle); break;
 				}
 				if(posible) {
-					operation_pannel.setVisible(false);
-					pasar_turno(false);
+				  game_display.revalidate();
+				  game_display.repaint();
+				  actualizar_saldo();
+				  operation_pannel.setVisible(false);
+				  pasar_turno(false);
 				}else {
 					JOptionPane.showMessageDialog(frame, "No se pudo realizar la compra.");
 				}

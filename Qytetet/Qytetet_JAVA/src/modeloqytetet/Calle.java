@@ -18,8 +18,8 @@ public class Calle extends Casilla {
 	// Precio
     
     // Edificaciones
-    int getNumCasas(){ return numCasas; };
-    int getNumHoteles(){ return numHoteles; };
+    public int getNumCasas(){ return numCasas; };
+    public int getNumHoteles(){ return numHoteles; };
     void setNumHoteles(int a){ numHoteles = a; };
     void setNumCasas(int a){ numCasas = a; };
     int getPrecioEdificar(){ return titulo.getPrecioEdificar(); };

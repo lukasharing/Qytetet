@@ -16,7 +16,7 @@ public class Tablero {
         casillas = new ArrayList<Casilla>();
         casillas.add(new OtraCasilla(TipoCasilla.SALIDA, 0, 0));
         TituloPropiedad casilla0 = new TituloPropiedad("Av. del pan duro", 50, 10f, 150, 250);
-        casillas.add(new Calle(casilla0, 1, 100)); 
+        casillas.add(new Calle(casilla0, 1, 100));
         TituloPropiedad casilla1 = new TituloPropiedad("Calle de la magdalena", 54, 10.8f, 220, 290);
         casillas.add(new Calle(casilla1, 2, 150));
         TituloPropiedad casilla2 = new TituloPropiedad("Calle de pizza con piña", 58, 11.6f, 290, 330);
@@ -46,6 +46,11 @@ public class Tablero {
         casillas.add(new Calle(casilla10, 18, 600)); 
         TituloPropiedad casilla11 = new TituloPropiedad("Av. del postre caro", 94, 18.8f, 920, 690);
         casillas.add(new Calle(casilla11, 19, 650));
+        for(Casilla c : casillas) {
+        	if(c instanceof Calle) {
+        		((Calle)c).getTitulo().setCasilla((Calle)c);
+        	}
+        }
     };
     
     public OtraCasilla getCarcel(){ return carcel; };

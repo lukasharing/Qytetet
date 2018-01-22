@@ -129,7 +129,7 @@ public class Jugador {
     };
     boolean puedoEdificarCasa(Calle casilla){
     	boolean esMia = this.esDeMipropiedad(casilla);
-    	if(!esMia) {
+    	if(esMia) {
     		int costeEdificarCasa = casilla.getPrecioEdificar();
     		boolean tengoSaldo = tengoSaldo(costeEdificarCasa);
     		return tengoSaldo;
@@ -139,7 +139,7 @@ public class Jugador {
     
     boolean puedoEdificarHotel(Calle casilla){
     	boolean esMia = this.esDeMipropiedad(casilla);
-    	if(!esMia) {
+    	if(esMia) {
     		int costeEdificarHotel= casilla.getPrecioEdificar();
     		boolean tengoSaldo = tengoSaldo(costeEdificarHotel);
     		return tengoSaldo;
