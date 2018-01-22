@@ -180,7 +180,7 @@ public class Jugador {
     };
     private void eliminarDeMisPropiedades(Calle casilla){
         int k = 0; boolean econtrado = false;
-        for(; k < propiedades.size() && !econtrado; k++){
+        for(; k < propiedades.size() && !econtrado; ++k){
             if(propiedades.get(k).equals(casilla.getTitulo())){
                 econtrado = true;
             }

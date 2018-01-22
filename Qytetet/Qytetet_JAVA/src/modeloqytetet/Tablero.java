@@ -3,6 +3,8 @@ import java.util.ArrayList;
 
 public class Tablero {
     private ArrayList<Casilla> casillas;
+    public Casilla getCasilla(int i) { return casillas.get(i); } 
+    
     private OtraCasilla carcel;
     
     Tablero(){
@@ -17,7 +19,7 @@ public class Tablero {
         casillas.add(new Calle(casilla0, 1, 100)); 
         TituloPropiedad casilla1 = new TituloPropiedad("Calle de la magdalena", 54, 10.8f, 220, 290);
         casillas.add(new Calle(casilla1, 2, 150));
-        TituloPropiedad casilla2 = new TituloPropiedad("Calle de pizza con piÃ±a", 58, 11.6f, 290, 330);
+        TituloPropiedad casilla2 = new TituloPropiedad("Calle de pizza con piña", 58, 11.6f, 290, 330);
         casillas.add(new Calle(casilla2, 3, 200));
         casillas.add(new OtraCasilla(TipoCasilla.SORPRESA, 4, 0));
         casillas.add(new OtraCasilla(TipoCasilla.JUEZ, 5, 0));
@@ -40,7 +42,7 @@ public class Tablero {
         casillas.add(new OtraCasilla(TipoCasilla.SORPRESA, 16, 0));
         TituloPropiedad casilla9 = new TituloPropiedad("Calle Te Paquistani", 86, 17.2f, 780, 610);
         casillas.add(new Calle(casilla9, 17, 550)); 
-        TituloPropiedad casilla10 = new TituloPropiedad("Calle galletas MarÃ­a", 90, 18f, 850, 650);
+        TituloPropiedad casilla10 = new TituloPropiedad("Calle galletas María", 90, 18f, 850, 650);
         casillas.add(new Calle(casilla10, 18, 600)); 
         TituloPropiedad casilla11 = new TituloPropiedad("Av. del postre caro", 94, 18.8f, 920, 690);
         casillas.add(new Calle(casilla11, 19, 650));

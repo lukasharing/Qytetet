@@ -10,6 +10,7 @@ public class Calle extends Casilla {
 		super(numero, coste);
 		this.numCasas = 0;
 		this.numHoteles = 0;
+		this.titulo = titulo;
 	};
 	
 	// GETTER / SETTER
@@ -93,8 +94,7 @@ public class Calle extends Casilla {
     
     @Override
     public String toString() {
-        String resultado = "La casilla ("+ this.getNumeroCasilla() + ") " + this.getTitulo().getNombre() + " y valorada en " + this.getCoste() + " tiene " + this.numCasas + " casas y " + this.numHoteles + " hoteles.";
-        return resultado;
+        return this.getTitulo().getNombre();
     };
     
     //int cancelarHipoteca(){ return 0; };

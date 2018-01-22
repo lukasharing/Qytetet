@@ -13,7 +13,6 @@ public class OtraCasilla extends Casilla {
     
 	
 	public String toString() {
-        String resultado = "La casilla ("+ this.getNumeroCasilla() + ") es de tipo " + this.tipo;
-        return resultado;
+        return (""+this.tipo);
     };
 }

@@ -9,7 +9,7 @@ package modeloqytetet;
  */
 
 public class TituloPropiedad {
-    private Jugador propietario;
+    public Jugador propietario;
     public Calle casilla;
     
     private final   String nombre;
@@ -49,7 +49,7 @@ public class TituloPropiedad {
     void setPropietario(Jugador _propietario){ this.propietario = _propietario; };
     void setCasilla(Calle casilla){ this.casilla = casilla; };
     
-    boolean tengoPropietario(){ return this.propietario != null; };
+    public boolean tengoPropietario(){ return this.propietario != null; };
     void cobrarAlquiler(int costeAlquiler){
     	propietario.modificarSaldo(-costeAlquiler);
     };

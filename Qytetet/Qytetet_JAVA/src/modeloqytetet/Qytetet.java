@@ -21,9 +21,10 @@ public class Qytetet {
     
     private ArrayList<Sorpresa> mazo = new ArrayList<Sorpresa>();
     private Tablero tablero;
+    public Tablero getTablero() { return tablero; };
     private ArrayList<Jugador> jugadores;
     private int jugadorActual;
-    public int jugador_actual() { return jugadorActual; }
+    public int jugador_actual() { return jugadorActual; };
     private Sorpresa cartaActual;
     
     public void inicializarJuego(ArrayList<String> nombres){
@@ -82,7 +83,7 @@ public class Qytetet {
     public Jugador getJugadorActual(){ return jugadores.get(jugadorActual); };
     
     
-    public void siguienteJugador(){ jugadorActual = (jugadorActual + 1) % jugadores.size(); };
+    public void siguienteJugador(){ jugadorActual = (++jugadorActual) % jugadores.size(); };
     
     public void salidaJugadores(){
         for(Jugador jugador : jugadores){
@@ -169,7 +170,7 @@ public class Qytetet {
     	switch (metodo) {
 			case TIRANDODADO:
 				int valorDado = Dado.getInstance().tirar();
-				libre = valorDado > 5;
+				libre = valorDado == 6;
 			break;
 			case PAGANDOLIBERTAD:
 				boolean tengoSaldo = this.getJugadorActual().pagarLibertad(Qytetet.PRECIO_LIBERTAD);
@@ -234,7 +235,7 @@ public class Qytetet {
     	return puedoVender;
     };
     
-    //public boolean cancelarHipoteca(Casilla casilla) { return false; };
+    public boolean cancelarHipoteca(Casilla casilla) { return false; };
     
     public boolean hipotecarPropiedad(Calle casilla) {
     	boolean puedoEdificar = false;
