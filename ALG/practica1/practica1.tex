@@ -1,0 +1,182 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+
+% graphics
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+% date
+\usepackage{datetime}
+\newdateformat{specialdate}{\THEYEAR-\twodigit{\THEMONTH}-\twodigit{\THEDAY}}
+\date{\specialdate\today}
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset
+{ %Formatting for code in appendix
+	language=Matlab,
+	basicstyle=\footnotesize,
+	numbers=left,
+	stepnumber=1,
+	showstringspaces=false,
+	tabsize=2,
+	breaklines=true,
+	breakatwhitespace=false,
+}
+\usepackage[miktex]{gnuplottex}  %% I am using miktex
+
+% table of contents
+\usepackage{tocloft}
+
+%new commands
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+\newcommand{\mychapter}[2]{
+	\setcounter{chapter}{#1}
+	\setcounter{section}{0}
+	\chapter*{#2}
+	\addcontentsline{toc}{chapter}{#2}
+}
+
+%renew commands
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+\addto\captionsenglish{% Replace "english" with the language you use
+	\renewcommand{\contentsname}%
+	{Tabla de contenidos}%
+}
+
+\begin{document}
+	\begin{titlepage}
+		\centering
+		\includegraphics[width=0.2\textwidth]{logo-ugr.png}\\*
+		{\scshape\LARGE Universidad de Granada \par}
+		{\large \date{\specialdate\today}\par}
+		\vspace{1cm}
+		{\LARGE\bfseries Algoritmos de Ordenación con estructuras jerárquicas\par}
+		\vspace{1.5cm}
+		{\scshape\large Algorítmica\par}
+		\vspace{2cm}
+		{\Large\itshape Lukas Häring García 2ºD\par}
+	\end{titlepage}
+	\tableofcontents
+	\mychapter{0}{Árbol binario de búsqueda}
+	\section{Código}
+	\begin{lstlisting}[language=c++]
+using namespace std;
+	
+int main(int argc, char * argv[])
+{
+	int n = atoi(argv[1]);
+	int* A = new int[n];
+	ABB<int> ab_bus;
+	srand(time(0));
+	// Introducimos
+	for (int i = 0; i < n; i++){
+		ab_bus.Insertar(rand());
+	}
+	
+	ABB<int>::nodo k;
+	int m = 0;
+	clock_t t_antes = clock();
+	
+	/*
+		Generar codigo O(1) que el compilador no va a eliminar o
+		desenrrollar.
+	*/
+	for (k = ab_bus.begin(); k != ab_bus.end(); ++k){
+		 
+		A[m++] = *k;
+	}
+	clock_t t_despues = clock();
+	cout << n << "  " << ((double)(t_despues - t_antes)) / CLOCKS_PER_SEC << endl;
+	
+	return 0;
+};
+	\end{lstlisting}
+	\newpage
+	\section{Eficiencia}
+	\subsection{Teórica}
+		Para analizar el código, debemos suponer cuál es la forma de dicha estructura tras introducir datos, a simple vista, este parece tener $O(n)$, pero en realidad, hay que observar el operador incremento y el método end(Tras observar el código, vemos que es O(1)):
+		\begin{enumerate}
+			\item \textbf{El peor caso}. La altura del árbol es la misma que el número de elementos: Por tanto, este deberá bajar hasta la última posición, coste $O(n)$ y luego recorrerlo hacia atrás, por lo que también sería $O(n)$.
+			\item \textbf{El mejor caso}. Esto ocurre cuando hay números en diferentes alturas, este tendrá que bajar como máximo a una altura ${log}_2(d)$ donde $d$ es la altura, pero al tener que recorrer todos los elementos, $O({log}_2(n) + n) \in O(n)$
+		\end{enumerate}
+		Concluimos que su eficiencia es $\Theta(n)$ pues ambos (peor y mejor caso) coinciden.
+	\subsection{Empírica}
+	Realizando el algoritmo de ordenación por inserción desde 0 dando pasos de 100 hasta 10000 elementos y realizando un ajuste con gnuplot, calculando las variables ocultas, obtenemos una eficiencias de:\\*
+	$$f(n)=-1.51427\cdot 10^{-9}\cdot n + 2.73733\cdot 10^{-5}\in \Theta(n)$$
+	\newpage
+	\section{Gráficas}
+	\subsection{Teórica}
+	\begin{figure}[h!]
+		\begin{gnuplot}[terminal=pdf,terminaloptions=color]
+			plot [0:10] x title 'Orden Θ'
+		\end{gnuplot}
+	\end{figure}
+	\subsection{Empírica}
+	\begin{figure}[h!]
+		\begin{gnuplot}[terminal=pdf,terminaloptions=color]
+			f(x)=-1.51427e-009*x+2.73733e-005
+			plot "./graph-data/tree_abb.dat" title 'Orden Empírico Θ', f(x) title 'adjustment'
+		\end{gnuplot}
+	\end{figure}
+
+	\mychapter{1}{Árbol parcialmente ordenado}
+	\section{Código}
+	\begin{lstlisting}[language=c++]
+int main(int argc, char * argv[])
+{
+	int n = atoi(argv[1]);
+	int* A = new int[n];
+	APO<int> apo_tree;
+	srand(time(0));
+	// Introducimos
+	for (int i = 0; i < n; i++){
+		apo_tree.insertar(rand());
+	}
+	
+	int m = 0;
+	clock_t t_antes = clock();
+	while(!apo_tree.vacio()){
+		apo_tree.borrar_minimo();
+	}
+	clock_t t_despues = clock();
+	cout << n << "  " << ((double)(t_despues - t_antes)) / CLOCKS_PER_SEC << endl;
+	
+	return 0;
+};
+	\end{lstlisting}
+	\newpage
+	\section{Eficiencia}
+	\subsection{Teórica}
+	De la misma forma, el recorrer el arbol es $O(n)$, pero quién tiene importancia son los métodos insertar, que son más complejos.
+	\subsection{Empírica}
+	Realizando el algoritmo de ordenación por selección desde 0 dando pasos de 100 hasta 10000 elementos y realizando un ajuste con gnuplot, calculando las variables ocultas, obtenemos una eficiencias de:
+	$$f(n)=1.5138\cdot 10^{-7}\cdot n + 0.000529994 \in \Theta(n)$$
+	\newpage
+	\section{Gráficas}
+	\subsection{Teórica}
+	\begin{figure}[h!]
+		\begin{gnuplot}[terminal=pdf,terminaloptions=color]
+			plot [0:10] x title 'Orden Θ'
+		\end{gnuplot}
+	\end{figure}
+	\subsection{Empírica}
+	\begin{figure}[h!]
+		\begin{gnuplot}[terminal=pdf,terminaloptions=color]
+			f(x)=1.5138e-007*x+0.000529994
+			plot "./graph-data/tree_apo.dat" title 'Orden Empírico Θ', f(x) title 'adjustment'
+		\end{gnuplot}
+	\end{figure}
+
+	\mychapter{3}{Especificaciones}
+	\begin{enumerate}
+		\item Windows 10.0.14393
+		\item Procesador Intel(R) Core(TM) i7-7800X CPU @ 3.50GHz, 3504 Mhz
+		\item 6 procesadores principales.
+		\item 12 procesadores lógicos.
+		\item Memoria física instalada (RAM) 8,00 GB x 2
+		\item Compilador MinGW.
+	\end{enumerate}
+
+\end{document}

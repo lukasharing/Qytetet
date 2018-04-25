@@ -1,0 +1,390 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+%math
+\usepackage{amsmath}
+\usepackage{mathtools}
+\providecommand{\myceil}[1]{\left \lceil #1 \right \rceil }
+\providecommand{\myfloor}[1]{\left \lfloor #1 \right \rfloor }
+
+% graphics
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+% date
+\usepackage{datetime}
+\newdateformat{specialdate}{\THEYEAR-\twodigit{\THEMONTH}-\twodigit{\THEDAY}}
+\date{\specialdate\today}
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset
+{ %Formatting for code in appendix
+	language=Matlab,
+	basicstyle=\footnotesize,
+	numbers=left,
+	stepnumber=1,
+	showstringspaces=false,
+	tabsize=2,
+	breaklines=true,
+	breakatwhitespace=false,
+}
+\usepackage[miktex]{gnuplottex}  %% I am using miktex
+
+% table of contents
+\usepackage{tocloft}
+
+%new commands
+\usepackage{sectsty}
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+\newcommand{\mychapter}[2]{
+	\setcounter{chapter}{#1}
+	\setcounter{section}{0}
+	\chapter*{#2}
+	\addcontentsline{toc}{chapter}{#2}
+}
+\chaptertitlefont{\LARGE}
+
+%renew commands
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+\addto\captionsenglish{% Replace "english" with the language you use
+	\renewcommand{\contentsname}%
+	{Tabla de contenidos}%
+}
+
+\begin{document}
+	\begin{titlepage}
+		\centering
+		\includegraphics[width=0.2\textwidth]{logo-ugr.png}\\*
+		{\scshape\LARGE Universidad de Granada \par}
+		{\large \date{\specialdate\today}\par}
+		\vspace{1cm}
+		{\LARGE\bfseries Divide y Vencerás\par}
+		\vspace{1.5cm}
+		{\scshape\large Algorítmica\par}
+		\vspace{2cm}
+		{\Large\itshape Lukas Häring García 2ºD\par}
+	\end{titlepage}
+	\tableofcontents
+	\mychapter{0}{Máximo y mínimo en un vector}
+	\section{Código}
+	\begin{lstlisting}[language=c++]
+#include<utility>
+#include<limits>
+#include<cmath>
+// Suponemos que n > 0
+// PAR RESULTANTE: (MAX, MIN)
+std::pair<int, int> Max_Min(int* v, int n){
+	std::pair<int, int> result(*v, *v);
+	// Si solo hay un elemento, entonces ese es el minimo y maximo
+	if(n == 1){
+		return result;
+	}
+	// Si hay dos elementos, entonces el min y el max son ambos.
+	if(n == 2){
+		if(*(v + 0) < *(v + 1)){
+			result.first = *(v + 1);
+		}else{
+			result.second = *(v + 1);
+		}
+		return result;
+	}
+	// Calculamos las particiones (Segun sea par o impar).
+	int bt = floor(n / 2.0), tp = ceil(n / 2.0);
+	// Particion izquierda.
+	std::pair<int, int> left = Max_Min(v, bt);
+	// Particion derecha.
+	std::pair<int, int> right = Max_Min(v + bt, tp);
+	
+	// max{max0, max1}, min{min0, min1}
+	result.first = std::max(left.first, right.first);
+	result.second = std::min(left.second, right.second);
+	// Devolvemos el resultado.
+	return result;
+}
+	\end{lstlisting}
+	\newpage
+	\section{Eficiencia (n = Tamaño de la muestra)}
+	\[   
+		T(n) = 
+		\begin{cases}
+			1 & n = 1, 2\\
+			T\left(\myfloor{\dfrac{n}{2}}\right) + T\left(\myceil{\dfrac{n}{2}}\right) + 1 & n \ge 3 \\
+		\end{cases}
+	\]
+	Realizando la siguiente sustitución, $n=2^k$.\\*
+	$$T(2^k)=T(\myfloor{2^{k - 1}}) + T(\myceil{2^{k - 1}}) + 1=2\cdot T(2^{k-1}) + 1$$
+	\begin{enumerate}
+		\item La parte \textbf{homogénea} es: $T(2^k)-2\cdot T(2^{k-1})$.
+		\item La parte \textbf{no homogénea} es: $1=1\cdot 1^k$.
+	\end{enumerate}
+	Por lo que resolviendo las ecuaciones, obtenemos que:
+	\begin{enumerate}
+		\item De la parte \textbf{homogénea} es: $k-2=0\Rightarrow k=2$.
+		\item De la parte \textbf{no homogénea}: $k=1$.
+	\end{enumerate}
+	Obtenemos la ecuación no recurrente.\\*
+	$$T(2^k)=2^k\cdot c_1+1^k\cdot c_2=n\cdot c_1+c_2=T(n)\Rightarrow O(T(n))=O(n\cdot c_1 + c_2)\in O(n)$$
+	\section{Gráfica}
+	\begin{figure}[h!]
+		\begin{gnuplot}[terminal=pdf,terminaloptions=color]
+			f(x)=3.31988e-008*x-8.77114e-005
+			plot "./datos/maximominimo.dat" title 'Orden Empírico', f(x) title 'adjustment'
+		\end{gnuplot}
+	\end{figure}
+	\mychapter{1}{Mínimo y máximo en una matriz}
+	\section{Código}
+	\begin{lstlisting}[language=c++]
+#include<utility>
+#include<limits>
+#include<cmath>
+// PAR RESULTANTE: (MAX, MIN)
+std::pair<int,int> Max_Min(int** v,int ii,int jj,int n){
+	std::pair<int, int> result;
+	if(n == 2){ // Matriz 2 x 2
+		int max = std::numeric_limits<int>::min();
+		int min = std::numeric_limits<int>::max();
+		for(int j = jj; j < jj + n; ++j){
+			for(int i = ii; i < ii + n; ++i){
+				min = std::min(v[j][i], min);
+				max = std::max(v[j][i], max);
+			}
+		}
+		result.first = max;
+		result.second = min;
+		return result;
+	}
+	// Calculamos la la siguiente particion.
+	int k = n % 2, tp = ceil(n / 2.0);
+	int rr = tp - k;
+	std::pair<int,int> tl = Max_Min(v, ii     , jj     , tp);
+	std::pair<int,int> tr = Max_Min(v, ii + rr, jj     , tp);
+	std::pair<int,int> bl = Max_Min(v, ii     , jj + rr, tp);
+	std::pair<int,int> br = Max_Min(v, ii + rr, jj + rr, tp);
+	//max,min{(max0, min0),(max1, min1),(max2, min2),(max3, min3)}
+	result.first = std::max(std::max(tl.first, tr.first),
+	std::max(bl.first, br.first));
+	result.second = std::min(std::min(tl.second, tr.second),
+	std::min(bl.second, br.second));
+	// Devolvemos el resultado.
+	return result;
+}
+		\end{lstlisting}
+		\newpage
+		\section{Eficiencia ($n^2$ = Tamaño de la matriz)}
+		\[   
+			T(n^2) = 
+			\begin{cases}
+			1 & n = 2\\
+			4\cdot T\left(\dfrac{n^2}{4}\right) + 1 & n \ge 3 \\
+			\end{cases}
+		\]
+		Realizando la siguiente sustitución, $n^2=2^k$.\\*
+		$$T(2^k)=4\cdot T(2^{k-2}) + 1=0\cdot T(2^{k-1}) + 4\cdot T(2^{k-2}) + 1$$
+		\begin{enumerate}
+			\item La parte \textbf{homogénea} es: $T(2^k) - 4\cdot T(2^{k-2})$.
+			\item La parte \textbf{no homogénea} es: $1=1\cdot 1^k$.
+		\end{enumerate}
+		Por lo que resolviendo las ecuaciones, obtenemos que:
+		\begin{enumerate}
+			\item De la parte \textbf{homogénea} es: $k^2-4=0\Rightarrow k=\sqrt{4}=2$.
+			\item De la parte \textbf{no homogénea}: $k=1$.
+		\end{enumerate}
+		Obtenemos la ecuación no recurrente (Conociendo que $2^k = n^2$).\\*
+		$$T(2^k)=2^k\cdot c_1+1^k\cdot c_2=T(n^2)\Rightarrow O(T(n^2))=O(n^2\cdot c_1 + c_2)\in O(n^2)$$
+		\section{Gráfica}
+		\begin{figure}[h!]
+			\begin{gnuplot}[terminal=pdf,terminaloptions=color]
+				f(x)=3.61796e-008*x*x+-8.95664e-005*x+0.122892
+				plot "./datos/maximominimomatriz.dat" title 'Orden Empírico', f(x) title 'adjustment'
+			\end{gnuplot}
+		\end{figure}
+	
+		\mychapter{2}{Zapatos con sus pies}
+		\section{Código}
+		\begin{lstlisting}[language=c++]
+#include<iostream>
+#include<utility>
+#include <ctime>
+
+// Realiza el swap de dos valores en un vector.
+void swap(int* v, int i, int j){
+	int h = *(v + i);
+	*(v + i) = *(v + j);
+	*(v + j) = h;
+}
+
+// Desplaza los elementos desde la posicion i de un vector v 
+// e introduce en la posicion i, el valor k
+void shift(int* v, int i, int n, int k){
+	for(int j = n - 1; j > i; --j){
+		*(v + j) = *(v + j - 1);
+	}
+	*(v + i) = k;
+}
+\end{lstlisting}
+\newpage
+\begin{lstlisting}[language=c++]
+void Zapatos_Pies(int* shoes, int* toes, int n){
+	if(n <= 1){
+		return;
+	}
+	// Pivote (i) para los pies del ultimo zapato
+	int i = 0;
+	// Buscamos el pivote en para los pies.
+	for(i = 0; *(toes + i) != *(shoes + n - 1); ++i);
+	// Hacemos swap del pie pivote con el ultimo
+	swap(toes, i, n - 1);
+
+	int m, w;
+	/* MOVEMOS LOS PIES */
+	m = -1;
+	w = 0;
+	while(w < n){
+		// Comparamos el elemento con el pivote de los pies
+		// Si este es menor, intercambiamos el muro con el actual.
+		if(*(toes + w) < *(shoes + n - 1)){
+			++m;
+			swap(toes, m, w);
+		}
+		++w;
+	}
+	// Movemos los elementos a la derecha.
+	shift(toes, ++m, n, *(shoes + n - 1));
+
+	/* MOVEMOS LOS ZAPATOS */
+	m = -1;
+	w = 0;
+	while(w < n){
+		// Comparamos el elemento con el pivote de los pies
+		// Si este es menor, intercambiamos el muro con el actual.
+		if(*(shoes + w) < *(toes + n - 1)){
+			++m;
+			swap(shoes, m, w);
+		}
+		++w;
+	}
+	// Movemos los elementos a la derecha.
+	shift(shoes, ++m, n, *(toes + n - 1));
+	
+	// Ahora los nuevos pivotes son m0, m1
+	// Repetimos el algoritmo
+	Zapatos_Pies(shoes, toes, m);
+	Zapatos_Pies(shoes + m, toes, n - m);
+}
+		\end{lstlisting}
+		\newpage
+		\section{Eficiencia}
+		La eficiencia de los métodos \textit{swap} y \textit{shift} son $O(1)$ y $O(n)$, respectivamente.
+		Realizamos un quicksort para cada conjunto, para los pies y para los zapatos, como referencia el pivote del conjunto opuesto.
+		Definimos como $n$ el total de pies/niños y $k$ cantidad de elementos mayores al pivote.
+		\[   
+		T(n) = 
+		\begin{cases}
+		1 & n \le 1\\
+		n + T(n-k-1) + T(k) & n \ge 2 \wedge 0 \le k \le n \\
+		\end{cases}
+		\]
+		Según la regla de simetría. \[k=0,n-1\Rightarrow T(n-0-1)+T(0)=T(n-(n-1)-1)+T(n-1)=T(0)+T(n-1)\]
+		Aplicando lo dicho, 
+		\[
+			T(n)=n+T(0)+T(n-1)=n+1+T(n-1)
+		\]
+		\[
+			T(n)-T(n-1)=0\Rightarrow x-1=0, 1^n(n+1)
+		\]
+		El polinomio resultante y por la regla de simetría:
+		\[
+			T(n)=1^n(n^2c_1+nc_2+c_3)\Rightarrow \Theta(T(n))=\Theta(n^2c_1+nc_2+c_3)\in \Theta(n^2)
+		\]
+		\section{Gráfica}
+		\begin{figure}[h!]
+			\begin{gnuplot}[terminal=pdf,terminaloptions=color]
+				f(x)=5.26918e-009*x*x-3.93483e-008*x+8.30631e-005
+				plot "./datos/zapatospies.dat" title 'Orden Empírico', f(x) title 'adjustment'
+			\end{gnuplot}
+		\end{figure}
+	
+	\mychapter{3}{Moda de un conjunto de enteros}
+	\section{Código}
+	\begin{lstlisting}[language=c++]
+std::pair<int, int> Mayor_Frecuencia(int* set, int n){
+	int* ht0 = new int[n];
+	int* ht1 = new int[n];
+	int p = set[0]; // PIVOTE (Elemento inicial al vector).
+	int h0 = 0, h1 = 0, m = 1;
+	// Si el tamanio es <= 1
+	if(n <= 1){
+		return std::pair<int, int>(m, p);
+	}
+	// Metemos segun la homogeneidad de los elementos.
+	for(int i = 1; i < n; ++i){
+		int df = p - set[i];
+		if(df > 0){
+			ht0[h0] = set[i];
+			++h0;
+		}else if(df < 0){
+			ht1[h1] = set[i];
+			++h1;
+		}else{
+			++m;
+		}
+	}
+	std::pair<int, int> v0 = Mayor_Frecuencia(ht0, h0);
+	std::pair<int, int> v1 = Mayor_Frecuencia(ht1, h1);
+	delete[] ht0;
+	delete[] ht1;
+	// Buscamos en los dos conjuntos heterogeneos (Aquel mayor).
+	if(m > v0.first && m > v1.first){
+		return std::pair<int, int>(n, p);
+	}else if(v0.first > m && v0.first > v1.first){
+		return v0;
+	}else{
+		return v1;
+	}
+}
+	\end{lstlisting}
+	\newpage
+	\section{Eficiencia}
+	Donde $n$ es el tamaño de la muestra, $k$ las repeticiones al pivote y $d$ los elementos mayores al pivote.
+	\[   
+	T(n) = 
+	\begin{cases}
+	1 & n \le 1\\
+	T(n-k-d) + T(d) + n & n \ge 2 \wedge 1 \le d < k \le n \\
+	\end{cases}
+	\]
+	Diferenciamos dos casos
+	\begin{enumerate}
+		\item Cuando todos los elementos solo se repiten una vez y no se divide.
+		\[
+			k=1, d=0\Rightarrow T(n)=T(n-1)+T(0)+n=T(n-1)+1+n
+		\]
+		Es parecida al ejercicio anterior, por lo que será $O(n^2)$.
+		\item $k=n$ Cuando no hay elementos mayores y las repeticiones como n.
+		\[
+		k=n, d=0\Rightarrow T(n)=T(n-n-0)+T(0)+n=2T(0)+n=n\in \Omega(n)
+		\]
+		
+	\end{enumerate}
+	
+	\section{Gráfica}
+	\begin{figure}[h!]
+		\begin{gnuplot}[terminal=pdf,terminaloptions=color]
+			f(x)=-4.57096e-014*x*x+3.33947e-008*x+0.000106985+0.0001
+			g(x)=3.20187e-008*x+0.000113866-0.0001
+			plot "./datos/mayorfreq.dat" title 'Orden Empírico Θ', f(x) title 'Upper bound', g(x) title 'Lower bound'
+		\end{gnuplot}
+	\end{figure}
+
+	\mychapter{3}{Especificaciones}
+	\begin{enumerate}
+		\item Windows 10.0.14393
+		\item Procesador Intel(R) Core(TM) i7-7800X CPU @ 3.50GHz, 3504 Mhz
+		\item 6 procesadores principales.
+		\item 12 procesadores lógicos.
+		\item Memoria física instalada (RAM) 8,00 GB x 2
+		\item Compilador MinGW.
+	\end{enumerate}
+
+\end{document}

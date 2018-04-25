@@ -1,0 +1,4 @@
+D:\Lukas H�ring\Desktop\Algoritmica\practica2\formas\src\test_imagen.cpp:1:20: fatal error: imagen.h: No such file or directory
+ #include "imagen.h"
+                    ^
+compilation terminated.

@@ -1,0 +1,38 @@
+
+
+*******************************************************************************
+Mon Apr 16 04:09:10 2018
+
+
+FIT:    data read from 'maximominimomatriz.dat'
+        format = z
+        #datapoints = 86
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*x*x+b*x+c
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 9.6869637503e+16  0.00e+00 1.94e+07  1.000000e+00  1.000000e+00  1.000000e+00
+  10 1.4189292372e+01 -6.72e-02 1.94e-03  3.617965e-08 -8.956643e-05  1.228917e-01
+
+After 10 iterations the fit converged.
+final sum of squares of residuals : 14.1893
+rel. change during last iteration : -6.72469e-007
+
+degrees of freedom    (FIT_NDF)                        : 83
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.413467
+variance of residuals (reduced chisquare) = WSSR/ndf   : 0.170955
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 3.61796e-008     +/- 8.091e-009   (22.36%)
+b               = -8.95664e-005    +/- 7.264e-005   (81.11%)
+c               = 0.122892         +/- 0.1369       (111.4%)
+
+correlation matrix of the fit parameters:
+                a      b      c      
+a               1.000 
+b              -0.969  1.000 
+c               0.754 -0.872  1.000 
