@@ -1,0 +1,109 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{amsfonts}
+%math
+\usepackage{amsmath}
+\usepackage{mathtools}
+\providecommand{\myceil}[1]{\left \lceil #1 \right \rceil }
+\providecommand{\myfloor}[1]{\left \lfloor #1 \right \rfloor }
+
+% graphics
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+% date
+\usepackage{datetime}
+\newdateformat{specialdate}{\THEYEAR-\twodigit{\THEMONTH}-\twodigit{\THEDAY}}
+\date{\specialdate\today}
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset
+{ %Formatting for code in appendix
+	language=Matlab,
+	basicstyle=\footnotesize,
+	numbers=left,
+	stepnumber=1,
+	showstringspaces=false,
+	tabsize=2,
+	breaklines=true,
+	breakatwhitespace=false,
+}
+\usepackage[miktex]{gnuplottex}  %% I am using miktex
+
+% table of contents
+\usepackage{tocloft}
+
+%new commands
+\usepackage{sectsty}
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+\newcommand{\mychapter}[2]{
+	\setcounter{chapter}{#1}
+	\setcounter{section}{0}
+	\chapter*{#2}
+	\addcontentsline{toc}{chapter}{#2}
+}
+\chaptertitlefont{\LARGE}
+
+%renew commands
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+\addto\captionsenglish{% Replace "english" with the language you use
+	\renewcommand{\contentsname}%
+	{Tabla de contenidos}%
+}
+
+\begin{document}
+	\begin{titlepage}
+		\centering
+		\includegraphics[width=0.2\textwidth]{logo-ugr.png}\\*
+		{\scshape\LARGE Universidad de Granada \par}
+		{\large \date{\specialdate\today}\par}
+		\vspace{1cm}
+		{\LARGE\bfseries Divide y Vencerás\par}
+		\vspace{1.5cm}
+		{\scshape\large Algorítmica\par}
+		\vspace{2cm}
+		{\Large\itshape Lukas Häring García 2ºD\par}
+	\end{titlepage}
+	\tableofcontents
+	
+	\mychapter{0}{Suma hasta un número}
+	Se trata de un ejercicio de obtener un sub-conjunto cuya suma de los elementos sumen el número que buscamos, la definición matemática es la siguiente.\\*\\*
+	Sea $\textbf{S} = \{a_1, a_2, \dots a_n\}$ y $\textbf{M}$ como el sumando total.\\*
+	Definimos el conjunto $\textbf{K}$ como aquél formado por todos los subconjuntos tal que sus elementos sumen $\textbf{M}$ 
+	\[
+		K = \left\{\{b_1,b_2,\dots, b_k\}\subseteq S \mid \sum_{i=1}^{k}b_i=M \right\}
+	\]
+	Ahora bien, pueden ocurrir dos casos:
+	\begin{enumerate}
+		\item No tenga solución el problema, es decir $K=\emptyset$.\\*
+		Entonces devolvemos aquel subconjunto que supone el elemento minimal al problema.
+		\[
+			G = \left\{\exists G_1\forall G_2 \subseteq \mathcal{P}(S) \mid G_1\neq G_2 \wedge \left( \vert M - \sum_{x\in G_1}x \vert < \vert M-\sum_{y\in G_2}y \vert \right) \right\}
+		\]
+		\textit{$\mathcal{P}$ es denotado como el "conjunto potencia" de un conjunto}.
+		\item Si tiene solución, es decir $\vert K \vert \ge 1$, devolvemos aquel subconjunto de $K$ que nuestro algoritmo encontró primero, puede o no ser con operadores mínimos.
+	\end{enumerate}
+	\newpage
+	\section{Eficiencia}
+	Para cada elemento en el conjunto de los números S, le asignamos "si" o "no" si queremos que se sume o no, esto equivale a multiplicar por 1 o 0 (respectivamente), denotemos $c_k$ para el elemento $a_k\in S$.
+	\begin{center}
+		
+		\begin{tabular}{ | p{1cm} | p{1cm} | p{1cm} | p{4.5cm} | p{1cm} | p{1cm} | p{1cm} | }\hline
+		\centering	$c_1$ &\centering $c_2$ &\centering $c_3$ &\centering  ... &\centering $c_{n-2}$ &\centering $c_{n-1}$ & \centering $c_n$\arraybackslash  \\\hline
+		\end{tabular}
+	\end{center}
+	Definimos $f\colon S \rightarrow \mathbb{B}_2$, una asignación a cada elemento de $S$ un único elemento de $\mathbb{B}_2=\{0,1\}$, esta por tanto, es una aplicación inyectiva, cuyo número de aplicaciones es $\vert \mathbb{B}_2\vert^{\vert S\vert}=2^{\vert S\vert}$, por lo que el algoritmo usado será \textbf{exponencial} de la forma $O(2^n)$, dónde $n=\vert S \vert$.
+	\mychapter{3}{Especificaciones}
+	\begin{enumerate}
+		\item Windows 10.0.14393
+		\item Procesador Intel(R) Core(TM) i7-7800X CPU @ 3.50GHz, 3504 Mhz
+		\item 6 procesadores principales.
+		\item 12 procesadores lógicos.
+		\item Memoria física instalada (RAM) 8,00 GB x 2
+		\item Compilador MinGW.
+	\end{enumerate}
+
+\end{document}

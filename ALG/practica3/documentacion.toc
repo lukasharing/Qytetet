@@ -1,0 +1,4 @@
+\select@language {english}
+\contentsline {chapter}{Suma hasta un n\IeC {\'u}mero}{2}{chapter*.1}
+\contentsline {section}{\numberline {0.1}Eficiencia}{3}{section.0.1}
+\contentsline {chapter}{Especificaciones}{4}{chapter*.2}

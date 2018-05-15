@@ -1,0 +1,188 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+%math
+\usepackage{amsmath}
+\usepackage{mathtools}
+\providecommand{\myceil}[1]{\left \lceil #1 \right \rceil }
+\providecommand{\myfloor}[1]{\left \lfloor #1 \right \rfloor }
+
+% graphics
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+% date
+\usepackage{datetime}
+\newdateformat{specialdate}{\THEYEAR-\twodigit{\THEMONTH}-\twodigit{\THEDAY}}
+\date{\specialdate\today}
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset
+{ %Formatting for code in appendix
+	language=Matlab,
+	basicstyle=\footnotesize,
+	numbers=left,
+	stepnumber=1,
+	showstringspaces=false,
+	tabsize=2,
+	breaklines=true,
+	breakatwhitespace=false,
+}
+\usepackage[miktex]{gnuplottex}  %% I am using miktex
+
+% table of contents
+\usepackage{tocloft}
+
+%new commands
+\usepackage{sectsty}
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+\newcommand{\mychapter}[2]{
+	\setcounter{chapter}{#1}
+	\setcounter{section}{0}
+	\chapter*{#2}
+	\addcontentsline{toc}{chapter}{#2}
+}
+\chaptertitlefont{\LARGE}
+
+%renew commands
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+\addto\captionsenglish{% Replace "english" with the language you use
+	\renewcommand{\contentsname}%
+	{Tabla de contenidos}%
+}
+
+\begin{document}
+	\begin{titlepage}
+		\centering
+		\includegraphics[width=0.2\textwidth]{logo-ugr.png}\\*
+		{\scshape\LARGE Universidad de Granada \par}
+		{\large \date{\specialdate\today}\par}
+		\vspace{1cm}
+		{\LARGE\bfseries Divide y Vencerás\par}
+		\vspace{1.5cm}
+		{\scshape\large Algorítmica\par}
+		\vspace{2cm}
+		{\Large\itshape Lukas Häring García 2ºD\par}
+	\end{titlepage}
+	\tableofcontents
+	\mychapter{0}{Ejercicio 1}
+	Sea $a[1..n]$, $n\ge1$, un vector de enteros diferentes y ordenados crecientemente, tal que algunos de los
+	valores pueden ser negativos. Diseñar un algoritmo que devuelva un índice natural k, $1\le k\le n$,
+	talque $a[k]=k$, siempre que tal índice exista. El coste del algoritmo debeser $O(\log{n})$ en el caso peor.
+	Se pide diseñar el algoritmo dando todo lujo de detalles. Justificar que funciona correctamente y el
+	coste. Repetir el problema pero para un vector de n enteros posiblemente repetidos y ordenado
+	decrecientemente.
+	
+	\begin{lstlisting}[language=c++]
+int abs(int k){ return (k < 0 ? -k : k); }
+int sign(int k){ return(k == 0 ? 0 : (k / abs(k))); }
+int k_posicion_k(int* v, int a, int b){
+	if(b < a) return -1;
+	
+	int m = (a + b) / 2, l = v[m];
+	// Miramos en uno de los dos lados.
+	switch(sign(m - l)){
+		case 1:  m = k_posicion_k(v, m + 1, b); break;
+		case -1: m = k_posicion_k(v, a, m - 1); break;
+	}
+	return m;
+}
+	\end{lstlisting}
+	\newpage
+	\mychapter{1}{Ejercicio 2}
+	Dados n enteros cualesquiera $a_1,a_2,...,a_n$, necesitamos encontrar el valor de la expresión:
+	\[
+		\max_{0\le i\le j<n}{\sum_{k=i}^{j}a_k}
+	\]
+	que calcula el máximo de las sumas parciales de elementos consecutivos.
+	Deseamos implementar un algoritmo Divide y Vencerás de complejidad $n\log n$ que resuelva el
+	problema. ¿Existe algún otro algoritmo que lo resuelva en menor tiempo?
+
+	\newpage
+	\mychapter{2}{Ejercicio 4}
+	Se dispone de un conjunto de $n$ tornillos de diferente tamaño y sus correspondientes $n$ tuercas, de
+	forma que cada tornillo encaja perfectamente con una y sólo una tuerca. Dado un tornillo y una
+	tuerca, uno es capaz de determinar si el tornillo es menor que la tuerca, mayor, o encaja
+	exactamente. Sin embargo, no hay forma de comparar dos tornillos o dos tuercas entre ellos para
+	decidir un orden. Se desea ordenar los dos conjuntos de forma que los elementos que ocupan la
+	misma posición en los dos conjuntos emparejen entre sí.
+	
+\begin{lstlisting}[language=c++]
+// Realiza el swap de dos valores en un vector.
+void s(int* v,int i,int j){int h=*(v+i);*(v+i)=*(v+j);*(v+j)=h;}
+void shift(int* v, int i, int n, int k){
+	for(int j=n-1;j>i;--j){*(v+j)=*(v+j-1);}*(v+i)=k;}
+void Tornillos_Tuercas(int* tornillos, int* tuercas, int n){
+	if(n <= 1){ return; }
+	int i = 0;
+	for(i = 0; *(tuercas + i) != *(tornillos + n - 1); ++i);
+	s(tuercas, i, n - 1);//SWAP
+	int m = -1, w = 0;
+	while(w < n){ /* MOVEMOS LAS TUERCAS */
+		if(*(tuercas + w) < *(tornillos + n - 1)){
+			++m;
+			s(tuercas, m, w);//SWAP
+		}++w;
+	}
+	shift(tuercas, ++m, n, *(tornillos + n - 1));
+	m = -1; w = 0;
+	while(w < n){ /* MOVEMOS LOS TORNILLOS */
+		if(*(tornillos + w) < *(tuercas + n - 1)){
+			s(tornillos, m++, w);//SWAP
+		}++w;
+	}
+	shift(tornillos, ++m, n, *(tuercas + n - 1));
+	Tornillos_Tuercas(tornillos, tuercas, m);
+	Tornillos_Tuercas(tornillos + m, tuercas, n - m);
+}
+\end{lstlisting}
+\newpage
+\mychapter{5}{Ejercicio 5}
+Dado un vector de números enteros positivos y negativos, encontrar el subvector de casillas
+contiguas que contenga la secuencia en orden creciente no monótono de longitud máxima. Por
+ejemplo, dado el vector \{2, -1, 3, 3, 8, 7, 6, -2, 5\}, la secuencia creciente no monótona de longitud
+máxima es $\{-1, 3, 3, 8\}$. En caso de que haya dos secuencias distintas con el mismo tamaño,
+bastaría con obtener una de ellas
+
+\begin{lstlisting}[language=c++]
+int* mayor_serie(int* v, int a, int b){
+	int diff = b - a + 1;
+	int* res = NULL;
+	switch(diff){
+		case 1: res = new int[1]{ v[a] }; break;
+		case 2:
+			if(v[a] >= v[b]){ res = new int[2]{ v[a], v[b] }; }
+		break;
+		default:
+			int m = (a + b) / 2;
+			int* s1 = mayor_serie(v, a, m - 1);
+			int* s2 = mayor_serie(v, m, b);
+			if(s1 != NULL && s2 != NULL){
+				if(s1[m - 1 - a] <= s2[0]){
+					res = new int[diff];
+					for(int i = 0; i < (m - 1 - a); ++i){
+						res[i] = s1[i];
+					}
+					for(int i = 0; i < (b - m); ++i){
+						res[m + i] = s2[i];
+					}
+				}
+				delete[] s1, s2;
+			}else if(s1 != NULL){ delete[] s2; res = s1; 
+			}else(s2 != NULL){ delete[] s1; res = s2; }
+		break;
+	}
+	return res;
+}
+\end{lstlisting}
+	\mychapter{3}{Especificaciones}
+	\begin{enumerate}
+		\item Windows 10.0.14393
+		\item Procesador Intel(R) Core(TM) i7-7800X CPU @ 3.50GHz, 3504 Mhz
+		\item 6 procesadores principales.
+		\item 12 procesadores lógicos.
+		\item Memoria física instalada (RAM) 8,00 GB x 2
+		\item Compilador MinGW.
+	\end{enumerate}
+\end{document}
