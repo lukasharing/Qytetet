@@ -1,0 +1,18 @@
+package model;
+
+import java.util.ArrayList;
+
+public class Function1 extends Function {
+	
+	public Function1() {
+		arguments_intervals = new ArrayList<Pair>();
+		arguments_intervals.add(new Pair(-3.0, +12.1));
+		arguments_intervals.add(new Pair(+4.1, +5.8));
+	};
+	
+	double function(Double... args) {
+		return 21.5 + args[0] * Math.sin(4 * Math.PI * args[0]) + 
+				args[1] * Math.sin(20 * Math.PI * args[1]);
+	};
+	
+}
