@@ -1,0 +1,180 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+%math
+\usepackage{amsmath}
+\usepackage{mathtools}
+\providecommand{\myceil}[1]{\left \lceil #1 \right \rceil }
+\providecommand{\myfloor}[1]{\left \lfloor #1 \right \rfloor }
+
+% graphics
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+% date
+\usepackage{datetime}
+\newdateformat{specialdate}{\THEYEAR-\twodigit{\THEMONTH}-\twodigit{\THEDAY}}
+\date{\specialdate\today}
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset
+{ %Formatting for code in appendix
+	language=Matlab,
+	basicstyle=\footnotesize,
+	numbers=left,
+	stepnumber=1,
+	showstringspaces=false,
+	tabsize=2,
+	breaklines=true,
+	breakatwhitespace=false,
+}
+\usepackage[miktex]{gnuplottex}  %% I am using miktex
+
+% table of contents
+\usepackage{tocloft}
+
+%new commands
+\usepackage{sectsty}
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+\newcommand{\mychapter}[2]{
+	\setcounter{chapter}{#1}
+	\setcounter{section}{0}
+	\chapter*{#2}
+	\addcontentsline{toc}{chapter}{#2}
+}
+\chaptertitlefont{\LARGE}
+
+%renew commands
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+\addto\captionsenglish{% Replace "english" with the language you use
+	\renewcommand{\contentsname}%
+	{Tabla de contenidos}%
+}
+
+\begin{document}
+	\begin{titlepage}
+		\centering
+		\includegraphics[width=0.2\textwidth]{logo-ugr.png}\\*
+		{\scshape\LARGE Universidad de Granada \par}
+		{\large \date{\specialdate\today}\par}
+		\vspace{1cm}
+		{\LARGE\bfseries Divide y Vencerás\par}
+		\vspace{1.5cm}
+		{\scshape\large Algorítmica\par}
+		\vspace{2cm}
+		{\Large\itshape Lukas Häring García 2ºD\par}
+	\end{titlepage}
+	\tableofcontents
+	\mychapter{0}{Ejercicio 1}
+	Deseamos almacenar en una cinta magnética de longitud L un conjunto de $n$ programas ${P_1, P_2, \dots , P_n}$. Sabemos que cada $P_i$ necesita un espacio $a_i$ de la cinta y que $(\sum a_i) > L$, $1\le i \le n$. Construir un
+	algoritmo que seleccione aquel subconjunto de programas que hace que el número de programas almacenado en la cinta sea máximo.
+	\begin{enumerate}
+		\item \textbf{Conjunto de Candidatos}.\newline
+		Todos los programas.
+		\item \textbf{Función de Selección}.\newline
+		Seleccionamos aquel proceso que ocupe menos.
+		\item \textbf{Función Factible}.\newline
+		Si el espacio anteriormente ocupado $ + a_k \le L$. 
+		\item \textbf{Objetivo}.\newline
+		Maximizar el número de procesos que entran en la cinta.
+		\item \textbf{Solución}.\newline
+		Se devuelve un vector $V=\{i_1, \cdots, i_k\}$ con todos los índices (sin importar el orden) de cada uno de los procesos.
+	\end{enumerate}
+	En el peor de los caso, cuando el vector de procesos no está ordenado por tamaño, la eficiencia tiende a un orden $O(n^2)$ tras tener que comprar cada elemento con el anterior.\newline
+	\textbf{Formulación matemática}.
+	\[
+		\max\left\{\sum^k_{j=1}P_{i_k}\right\}\le L
+	\]
+	\newpage
+	\mychapter{1}{Ejercicio 3}
+	Se han de procesar $n$ tareas con instantes de terminación $t_i$ y tiempo de proceso $p_i$. Se dispone de
+	un procesador y las tareas no son interrumpibles. Una solución factible planifica todas las tareas de
+	modo que terminan en, o antes de, su instante asignado. Diseñar un algoritmo voraz para encontrar
+	la solución. 
+	\begin{enumerate}
+		\item \textbf{Conjunto de Candidatos}.\newline
+		Todas las tareas.
+		\item \textbf{Función de Selección}.\newline
+		La tarea que tenga menor tiempo de ejecución y sea factible.
+		\item \textbf{Función Factible}.\newline
+		Comprueba que si en el instante actual $a$ y el tiempo que tarda en ejecutarse el proceso $p_i$ es menor al tiempo de terminación $a + p_i < t_i$.
+		\item \textbf{Objetivo}.\newline
+		Ejecutar el máximo de tareas antes del instante asignado.
+		\item \textbf{Solución}.\newline
+		Un vector $V=\{i_1, \cdots, i_k\}$ que contiene el índice de la tarea a asignar (Cola).
+	\end{enumerate}
+	La eficiencia del algoritmo es $O(n^2)$ ya que debe buscar todo aquel tiempo de proceso mínimo y que el instante actual sea inferior al de terminación más el de ejecución.\newline
+	\textbf{Formulación matemática}.
+	
+	
+	\newpage
+	\mychapter{1}{Ejercicio 4}
+	Dado un conjunto de $n$ cintas cuyo contenido está ordenado y con ni registros cada una, se han de
+	mezclar por pares hasta lograr una única cinta ordenada. La secuencia en que se haga la mezcla
+	determina la eficiencia del proceso. Diseñar un algoritmo voraz que minimice el número de movimientos.
+	\begin{enumerate}
+		\item \textbf{Conjunto de Candidatos}.\newline
+		Todas las cintas.
+		\item \textbf{Función Factible}.\newline
+		No tiene.
+		\item \textbf{Función de Selección}.\newline
+		Se selecciona aquella cinta no utilizada anteriormente y menor a todas las demás que tampoco han sido utilizadas. 
+		\item \textbf{Objetivo}.\newline
+		Minimizar el número de movimientos entre las cintas.
+		\item \textbf{Solución}.\newline
+		Una cola ordenada según que elemento se coge y el siguiente es aquel que se vierte.
+	\end{enumerate}
+	Como hay insertar todo aquel elemento maximal a los insertados anteriormente, su eficiencia es $O(n^2)$.
+
+	\newpage
+	\mychapter{2}{Ejercicio 5}
+	Un automovilista ha de ir con su vehículo desde la población A hasta la población B siguiendo una
+	ruta prefijada (por ejemplo la carretera N-340). Con el depósito completamente lleno puede hacer
+	$X$ km. El conductor conoce de antemano en qué lugares de la carretera existen gasolineras (la
+	distancia entre dos gasolineras consecutivas es inferior a $X$ km.). Diseñar un algoritmo que permita
+	que el automovilista vaya de A a B repostando el mínimo número de veces posible (se supone que
+	parte de A con el depósito lleno y que el coche no se averiará, ni tendrá un accidente, ni será
+	abducido, etc. durante el trayecto).Indicar el coste del algoritmo
+	\begin{enumerate}
+		\item \textbf{Candidatos}.\newline
+		Todas aquellas gasolineras que están en el camino del automovilista.
+		\item \textbf{Función de Selección}.\newline
+		Seleccionamos aquella gasolinera que está más lejos de las demás alcanzables por el coche y en la dirección correcta.
+		\item \textbf{Función Factible}.\newline
+		Verifica si la gasolinera es alcanzable con la gasolina restante.
+		\item \textbf{Objetivo}.\newline
+		Pasar por el mínimo número de gasolineras.
+		\item \textbf{Solución}.\newline
+		Un vector de gasolineras por donde el conductor debe pasar.
+	\end{enumerate}
+	Si existen $n$ gasolineras y cada una está a la distancia $(X - 1)$km de la anterior, por lo que debemos pasar por todas las ellas, es decir, $O(n)$.
+\newpage
+\mychapter{5}{Ejercicio 7}
+Dado un grafo $G=<N,A>$ siendo $N$ el conjunto de vértices y $A$ el conjunto de aristas. Se pide
+colorear el grafo de forma que si dos vértices están unidos por una arista los colores asignados a
+estos vértices tienen que ser distintos. El objetivo en este problema es usar el menor numero de
+colores para colorear todos los vértices del grafo. 
+	\begin{enumerate}
+		\item \textbf{Conjunto de Candidatos}.\newline
+		Todos los vértices del grafo.
+		\item \textbf{Función de Selección}.\newline
+		Se seleccionan un vértice no coloreado, cualquiera.
+		\item \textbf{Función Factible}.\newline
+		Verifica si el color asignado no coincide con los que tienen sus vecinos.
+		\item \textbf{Objetivo}.\newline
+		Usar el menor número de colores.
+		\item \textbf{Solución}.\newline
+		Un vector de colores para cada vértice, tal que el vértice $v_i$ tiene un color $c_i$.
+	\end{enumerate}
+	Cuando el grafo (de $n$ vértices) tiene el mismo número de vértices que de vecinos (esto ocurre cuando es un grafo completo $K_n$), se debe comprobar el color con el de los vecinos. La eficiencia tiende a $O(n^2)$.
+	\mychapter{3}{Especificaciones}
+	\begin{enumerate}
+		\item Windows 10.0.14393
+		\item Procesador Intel(R) Core(TM) i7-7800X CPU @ 3.50GHz, 3504 Mhz
+		\item 6 procesadores principales.
+		\item 12 procesadores lógicos.
+		\item Memoria física instalada (RAM) 8,00 GB x 2
+		\item Compilador MinGW.
+	\end{enumerate}
+\end{document}

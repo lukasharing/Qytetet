@@ -1,0 +1,7 @@
+\babel@toc {english}{}
+\contentsline {chapter}{Ejercicio 1}{2}{chapter*.1}
+\contentsline {chapter}{Ejercicio 3}{3}{chapter*.2}
+\contentsline {chapter}{Ejercicio 4}{4}{chapter*.3}
+\contentsline {chapter}{Ejercicio 5}{5}{chapter*.4}
+\contentsline {chapter}{Ejercicio 7}{6}{chapter*.5}
+\contentsline {chapter}{Especificaciones}{7}{chapter*.6}

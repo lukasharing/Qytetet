@@ -1,0 +1,26 @@
+
+// Tipos
+bool = (B|b)(O|o)(O|o)(L|l)
+num = (N|n)(U|u)(M|m)
+abstracto = ([a-z]|[A-Z])+
+
+// Valor de Tipos
+?? Bool =>
+ true = (T|t)(R|r)(U|u)(E|e)
+ false = (F|f)(A|a)(L|l)(S|s)(E|e)
+?? Num =>
+Natural = [0-9]+
+Entero = (\+|\-)?Natural
+Decimal = [0-9]+
+Exponencial = (e|E)Entero
+Real = Entero(.Decimal|Exponencial|.Decimal( )?Exponencial)
+
+// Variable
+expresion=[]
+variable = (bool, num, abstracto)+ ([a-z], [A-Z])+([0-9], [a-z], [A-Z], _)*( )?=( )?expresion
+
+
+
+
+literal_entero = [0-9]+
+[0-9]+(.)?
