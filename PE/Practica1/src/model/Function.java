@@ -3,6 +3,8 @@ package model;
 import java.util.List;
 
 public abstract class Function {
+	
+	
 	public class Pair{
 
 		  public final Double first;
@@ -25,7 +27,7 @@ public abstract class Function {
 	// Returns nth Interval.
 	public Pair getInterval(int i) { return arguments_intervals.get(i); };
 	
-	@SuppressWarnings("unchecked")
+
 	double function(Double... args) {
 		return 0.0;
 	};

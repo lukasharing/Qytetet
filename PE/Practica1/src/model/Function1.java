@@ -3,7 +3,7 @@ package model;
 import java.util.ArrayList;
 
 public class Function1 extends Function {
-	
+		
 	public Function1() {
 		arguments_intervals = new ArrayList<Pair>();
 		arguments_intervals.add(new Pair(-3.0, +12.1));
