@@ -100,7 +100,8 @@ output:
 \node[state] (P) at(6.5, -5.0) {PNT};
 \node[state] (EX) at(3.5, -7.0) {EXP};
 \node[state,accepting] (DC) at(6.5, -7.5) {DEC};
-\node[state,accepting] (XE) at(0.5, -7.0) {EXE};
+\node[state] (SG) at(0.5, -7.0) {SGN};
+\node[state,accepting] (XE) at(-2.5, -7.0) {EXE};
 
 \path[->]
       (A) edge [left]  node [align=center]  {\&} (B)
@@ -129,7 +130,8 @@ output:
 			(P) edge [left]  node [align=center]  {[0-9]} (DC)
 			(DC) edge [loop below]  node [align=center]  {[0-9]} (DC)
 			(DC) edge [above]  node [align=center]  {e|E} (EX)
-			(EX) edge [above]  node [align=center]  {[0-9]} (XE)
-			(XE) edge [loop left]  node [align=center]  {[0-9]} (XE)
+			(EX) edge [above]  node [align=center]  {+|-} (SG)
+			(SG) edge [above]  node [align=center]  {[0-9]} (XE)
+			(XE) edge [loop above]  node [align=center]  {[0-9]} (XE)
 			(EN) edge [above]  node [align=center]  {.} (P);
 \end{tikzpicture}
