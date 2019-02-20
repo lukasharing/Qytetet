@@ -1,15 +1,14 @@
-package AG;
+package model;
 
 import java.util.List;
 
-import model.Chromosome;
-import model.Function;
-
 public class GeneticAlgorithm<T> {
-	private List<Chromosome<T>> chromosomes; //Population
+	private Class<T> typeArgumentClass;
+	
+	private List<T> chromosomes; //Population
 	private int maxGenerations;
 	private int maxPopulationSize;
-	private Chromosome<T> bestChromosome;
+	private T bestChromosome;
 	private int posBestChromosome;
 	private double crossoverProbability;
 	private double mutationProbability; 
@@ -25,12 +24,14 @@ public class GeneticAlgorithm<T> {
 		this.precision = precision;
 		this.evaluationFunction = evaluationFunction;
 		GATerminated = false;
-	}
+	};
 	
 	public void run() {
 		int currentGeneration = 0;
 		
-		if(!this.createInitialPopulation(this.maxPopulationSize, this.evaluationFunction)) { 
+		try{
+			this.createInitialPopulation(this.maxPopulationSize, this.evaluationFunction);
+		}catch(Exception ex) {
 			System.exit(0); 
 		}
 		
@@ -43,21 +44,26 @@ public class GeneticAlgorithm<T> {
 			this.mutation(this.mutationProbability);
 			this.evaluation(evaluationFunction, chromosomes);
 		}
-	}
+	};
 	
-	public boolean createInitialPopulation(int maxPopulationSize, Function evaluationFunction) {
+	public void createInitialPopulation(int maxPopulationSize, Function evaluationFunction) throws Exception{
+			
+		Class[] cArg = new Class[1];
+		cArg[0] = Function.class;
 		
-		for(int i=0; i<maxPopulationSize; i++) {
-			//chromosomes.add(Añadir cromosomas a la lista)); FALTA POR ACABAR
+		for(int i = 0; i < maxPopulationSize; ++i) {
+			chromosomes.add(
+				typeArgumentClass.getDeclaredConstructor(cArg).newInstance(evaluationFunction)
+			);
 		}
-		
-		return true;
 	}
 	
-	private boolean evaluation(Function func, List<Chromosome<T>> chromosomes) {
-		
-		//Locate the best chromosome and save it into bestChromosome
-		return true;
+	private void evaluation(Function func, List<T> chromosomes) {
+		for(T chromosome : chromosomes) {
+			Double value = evaluationFunction.evaluate(
+				((Chromosome)chromosome).getFenotypes()
+			);
+		}
 	}
 	
 	private boolean selection() {

@@ -28,7 +28,7 @@ public abstract class Function {
 	public Pair getInterval(int i) { return arguments_intervals.get(i); };
 	
 
-	double function(Double... args) {
+	public double evaluate(Double... args) {
 		return 0.0;
 	};
 	

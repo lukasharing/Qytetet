@@ -10,7 +10,7 @@ public class Function1 extends Function {
 		arguments_intervals.add(new Pair(+4.1, +5.8));
 	};
 	
-	double function(Double... args) {
+	public double evaluate(Double... args) {
 		return 21.5 + args[0] * Math.sin(4 * Math.PI * args[0]) + 
 				args[1] * Math.sin(20 * Math.PI * args[1]);
 	};
