@@ -1,10 +1,12 @@
----
-header-includes:
-- \usepackage{graphicx}
-- \usepackage{tikz}
-output:
-    pdf_document
----
+\documentclass{article}
+
+%packages
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+
+\begin{document}
 
 \usetikzlibrary{automata,arrows, positioning}
 \renewcommand{\contentsname}{Tabla de contenidos}
@@ -30,50 +32,59 @@ output:
 
 \tableofcontents
 
+
+\section{Introducción}
 \newpage
 
-# 1. Introducción
-
-
-
-# 2. Definición
-
-## 2. 1. Clases Auxiliares.
+\section{Definición}
+\subsection{Clases Auxiliares}
 \begin{center}
-    \begin{tabular}{ | l | p{5cm} | p{3cm} |}
+    \begin{tabular}{ | p{2cm} | p{5cm} | p{4cm} |}
     \hline
-    Auxiliares & Clases Léxicas & Expresión Regular \\ \hline
-    Monday & 11C & 1\\ \hline
-    Tuesday & 9C & 1 \\ \hline
-    Wednesday & 10C & 1 \\ \hline
+    Auxiliares & Definición Natural & Expresión Regular \\ \hline
+    Letra & Carácter del alfabeto mayúsculas o minúsculas  & [a-z,A-Z]\\ \hline
+    Dígito & Número entero de 0 a 9 & [0-9] \\ \hline
+    Natural & Número entero positivo & Dígito* \\ \hline
+    INT & Número entero & (+$\mid$ -)?Natural \\ \hline
+    DEC & Parte decimal &  .Natural \\ \hline
+    EXE & Parte exponencial  & (e$\mid$ E)(+$\mid$ -)?INT  \\ \hline
     \end{tabular}
 \end{center}
-
-## 2. 2. Clases Léxicas.
+\subsection{Clases Léxicas}
 \begin{center}
-    \begin{tabular}{ | l | p{5cm} | p{3cm} |}
+    \begin{tabular}{ | p{2cm} | p{5cm} | p{4cm} |}
     \hline
-    Auxiliares & Clases Léxicas & Expresión Regular \\ \hline
-    Monday & 11C & 1\\ \hline
-    Tuesday & 9C & 1 \\ \hline
-    Wednesday & 10C & 1 \\ \hline
+     Clases Léxicas & Definición Natural & Expresión Regular \\ \hline
+     ID & Identificador & Letra(Letra$\mid$Dígito$\mid$\_)$*$ \\ \hline
+     PLS & Signo más & + \\ \hline
+     MNS & Signo menos & - \\ \hline
+     MUL & Signo multiplicación & * \\ \hline
+     DIV & Signo división & / \\ \hline
+     PAO & Paréntesis abierto & ( \\ \hline
+      PCE & Paréntesis cerrado & ) \\ \hline
+      GT & Signo mayor que & $>$\\ \hline
+      GE & Signo mayor igual que & $>=$ \\ \hline
+      LS & Signo menor que & $<$\\ \hline
+      LG & Signo menor igual que & $<=$ \\ \hline
+      EQ & Signo de asignación & = \\ \hline
+      BE & Signo de comparación & == \\ \hline
+      NE & Signo de desigualdad & !=  \\ \hline
+			SEP & Separador de definición y inicialización & \&\& \\ \hline
+			PYC & Separador de variables y asignación de variables & $;$ \\ \hline
     \end{tabular}
 \end{center}
-
-## 2. 3. Clases Ignorables.
+\subsection{Clases Ignorables}
 \begin{center}
-    \begin{tabular}{ | l | p{5cm} | p{3cm} |}
+    \begin{tabular}{ | p{2cm} | p{5cm} | p{4cm} |}
     \hline
-    Auxiliares & Clases Léxicas & Expresión Regular \\ \hline
-    Monday & 11C & 1\\ \hline
-    Tuesday & 9C & 1 \\ \hline
-    Wednesday & 10C & 1 \\ \hline
+    Clases Ignorables & Definición Natural & Expresión Regular \\ \hline
+    VAC & Carácteres ignorables & EOL$\mid \emptyset$ \\ \hline
     \end{tabular}
 \end{center}
 
 \newpage
 
-# 3. Diagrama de transiciones.
+\section{Diagrama de transiciones}
 
 \begin{tikzpicture}[>=stealth',shorten >=0.5pt,auto,node distance=5 cm, scale = 1, transform shape]
 
@@ -102,6 +113,8 @@ output:
 \node[state,accepting] (DC) at(6.5, -7.5) {DEC};
 \node[state] (SG) at(0.5, -7.0) {SGN};
 \node[state,accepting] (XE) at(-2.5, -7.0) {EXE};
+\node[state,accepting] (PY) at(0.0, -5.0) {PYC};
+\node[state,accepting] (EOF) at(-1.5, -5.0) {EOF};
 
 \path[->]
       (A) edge [left]  node [align=center]  {\&} (B)
@@ -109,8 +122,8 @@ output:
 			(A) edge [left]   node [align=center]  {$($} (C)
       (A) edge [left]  node [align=center]  {$/$} (D)
 			(A) edge [left]  node [align=center]  {$* $} (M)
-			(A) edge [above]  node [align=center]  {[a-z], [A-Z]} (E)
-			(E) edge [loop below]  node [align=center]  {[a-z], [A-Z], [0-9], \_} (E)
+			(A) edge [above]  node [align=center]  {[a-z,A-Z]} (E)
+			(E) edge [loop below]  node [align=center]  {([a-z,A-Z,0-9]|\_)} (E)
 			(A) edge [above left]  node [align=center]  {$)$} (F)
 			(A) edge [above left]  node [align=center]  {$>$} (H1)
 			(A) edge [above left]  node [align=center]  {$<$} (H2)
@@ -133,5 +146,9 @@ output:
 			(EX) edge [above]  node [align=center]  {+|-} (SG)
 			(SG) edge [above]  node [align=center]  {[0-9]} (XE)
 			(XE) edge [loop above]  node [align=center]  {[0-9]} (XE)
-			(EN) edge [above]  node [align=center]  {.} (P);
+			(EN) edge [above]  node [align=center]  {.} (P)
+      (A) edge [left]  node [align=center]  {;} (PY)
+			(A) edge [left]  node [align=center]  {EOF} (EOF)
+			(A) edge [out=200,in=238,looseness=30]  node [align=center]  {$\emptyset \mid$ EOL} (A);
 \end{tikzpicture}
+\end{document}
