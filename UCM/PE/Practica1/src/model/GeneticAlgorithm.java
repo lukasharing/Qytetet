@@ -1,66 +1,91 @@
 package model;
 
-import java.util.List;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 public class GeneticAlgorithm<T> {
-	private Class<T> typeArgumentClass;
+	private ArrayList<T> chromosomes; //Population
 	
-	private List<T> chromosomes; //Population
-	private int maxGenerations;
-	private int maxPopulationSize;
-	private T bestChromosome;
-	private int posBestChromosome;
-	private double crossoverProbability;
-	private double mutationProbability; 
-	private double precision;
-	boolean GATerminated;
-	private Function evaluationFunction;
+	private Class<T> class_type;
 	
+	// Function
+	private Function evaluation = null;
 	
-	public GeneticAlgorithm(int maxGenerations, double crossoverProbability, double mutationProbability, double precision, Function evaluationFunction){
-		this.maxGenerations = maxGenerations;
-		this.crossoverProbability = crossoverProbability;
-		this.mutationProbability = mutationProbability;
-		this.precision = precision;
-		this.evaluationFunction = evaluationFunction;
-		GATerminated = false;
+	// Child and parents
+	private int initial_population = 0;
+	private int total_generations = 0;
+	private double gene_precision = 0.0;
+	
+	// Probabilities
+	private double crossing_prob = 0.0;
+	private double mutation_prob = 0.0;
+	
+	// Constructor
+	public GeneticAlgorithm(Class<T> class_type, int population, int generations, double crossoverProbability, double mutationProbability, double precision, Function evaluationFunction){
+		this.class_type = class_type;
+		this.initial_population = population;
+		this.total_generations = generations;
+		this.gene_precision = precision;
+		
+		this.crossing_prob = crossoverProbability;
+		this.mutation_prob = mutationProbability;
+		this.evaluation = evaluationFunction;
+		
+		chromosomes = new ArrayList<>();
+		
+		try{
+			this.createInitialPopulation();
+		}catch(Exception ex) {
+			System.err.println(ex.getMessage());
+			System.exit(0); 
+		}
 	};
 	
+	public void test() {
+		for(T chromosme : chromosomes) {
+			System.out.println(chromosme.toString());
+		}
+	};
+	
+	// Iterate
 	public void run() {
 		int currentGeneration = 0;
 		
-		try{
-			this.createInitialPopulation(this.maxPopulationSize, this.evaluationFunction);
-		}catch(Exception ex) {
-			System.exit(0); 
-		}
+		this.evaluation();
 		
-		this.evaluation(evaluationFunction, chromosomes);
-		
-		while(!GATerminated && (currentGeneration < maxGenerations)) {
+		while(currentGeneration < total_generations) {
 			currentGeneration++;
 			this.selection();
-			this.crossover(this.crossoverProbability);
-			this.mutation(this.mutationProbability);
-			this.evaluation(evaluationFunction, chromosomes);
+			this.crossover();
+			this.mutation();
+			this.evaluation();
 		}
 	};
 	
-	public void createInitialPopulation(int maxPopulationSize, Function evaluationFunction) throws Exception{
-			
-		Class[] cArg = new Class[1];
-		cArg[0] = Function.class;
+	
+	// Init population
+	public void createInitialPopulation() throws Exception{
+		// Creationf Binary Chromosomes
+		if(class_type.getName().contains("BinaryChromosome")) {
 		
-		for(int i = 0; i < maxPopulationSize; ++i) {
-			chromosomes.add(
-				typeArgumentClass.getDeclaredConstructor(cArg).newInstance(evaluationFunction)
-			);
+			for(int i = 0; i < initial_population; ++i) {
+				chromosomes.add((T) BinaryChromosome.newBinary(evaluation, gene_precision));
+			}
+		
+		// Creation of Real Chromosomes
+		}else if(class_type.getName().contains("RealChromosome")) {
+			for(int i = 0; i < initial_population; ++i) {
+				//chromosomes.add((T) BinaryChromosome.newBinary(evaluation, gene_precision));
+			}
 		}
+			
 	}
 	
-	private void evaluation(Function func, List<T> chromosomes) {
+	// Evaluate Population
+	private void evaluation() {
 		for(T chromosome : chromosomes) {
-			Double value = evaluationFunction.evaluate(
+			Double value = evaluation.evaluate(
 				((Chromosome)chromosome).getFenotypes()
 			);
 		}
@@ -70,12 +95,14 @@ public class GeneticAlgorithm<T> {
 		return true;
 	}
 	
-	private boolean crossover(double crossoverProbability) {
+	private boolean crossover() {
 		return true;
 	}
 	
-	private boolean mutation(double mutationProbability) {
-		return true;
-	}
+	private void mutation() {
+		for(T chromosome : chromosomes) {
+			((Chromosome) chromosome).randomMutation(mutation_prob);
+		}
+	};
 	
 }

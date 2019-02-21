@@ -7,14 +7,24 @@ public abstract class Chromosome<T> {
 	
 	protected List<T> genes;
 	protected Function func;
+	protected double prec = 0.0;
 	
 	public List<T> getGenes(){ return genes; };
 	
-	public Chromosome(Function f) {
+	public Chromosome(Function f, double p) {
+		prec = p;
 		func = f;
 		genes = new ArrayList<T>(f.getTotalArguments());
 	};
 	
-	//public mutate(MutationType mutation, g)
 	public Double[] getFenotypes(){ return null; };
+	public void randomMutation(double prob) {};
+	
+	protected static BinaryChromosome newBinary (Function f, Double p) { return null; };
+	//protected RealChromosome newReal (Function f, Double p) { return null; };
+
+	@Override
+	public String toString() {
+		return genes.toString();
+	}
 }
