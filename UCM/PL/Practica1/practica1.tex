@@ -110,7 +110,7 @@
 \node[state,accepting] (MNS) at(1.5, -5.0) {MNS};
 \node[state] (P) at(6.5, -5.0) {PNT};
 \node[state] (EX) at(3.5, -7.0) {EXP};
-\node[state,accepting] (DC) at(6.5, -7.5) {DEC};
+\node[state,accepting] (DC) at(6.5, -7.0) {DEC};
 \node[state] (SG) at(0.5, -7.0) {SGN};
 \node[state,accepting] (XE) at(-2.5, -7.0) {EXE};
 \node[state,accepting] (PY) at(0.0, -5.0) {PYC};
@@ -139,11 +139,11 @@
 			(MNS) edge [bend right]  node [align=center]  {[0-9]} (EN)
 			(EN) edge [loop above]  node [align=center]  {[0-9]} (EN)
 			(A) edge [right]  node [align=center]  {[0-9]} (EN)
-			(EN) edge [right]  node [align=center]  {e|E} (EX)
+			(EN) edge [right]  node [align=center]  {e$\mid$E} (EX)
 			(P) edge [left]  node [align=center]  {[0-9]} (DC)
-			(DC) edge [loop below]  node [align=center]  {[0-9]} (DC)
-			(DC) edge [above]  node [align=center]  {e|E} (EX)
-			(EX) edge [above]  node [align=center]  {+|-} (SG)
+			(DC) edge [loop right]  node [align=center]  {[0-9]} (DC)
+			(DC) edge [above]  node [align=center]  {e$\mid$E} (EX)
+			(EX) edge [above]  node [align=center]  {+$\mid$-} (SG)
 			(SG) edge [above]  node [align=center]  {[0-9]} (XE)
 			(XE) edge [loop above]  node [align=center]  {[0-9]} (XE)
 			(EN) edge [above]  node [align=center]  {.} (P)
@@ -151,4 +151,18 @@
 			(A) edge [left]  node [align=center]  {EOF} (EOF)
 			(A) edge [out=200,in=238,looseness=30]  node [align=center]  {$\emptyset \mid$ EOL} (A);
 \end{tikzpicture}
+\begin{center}
+    \begin{tabular}{ | p{5cm} | p{5cm} |}
+    \hline
+    Identificador & Valor devuelto \\ \hline
+		\textbf{num} & Devuelve numero \\ \hline
+		\textbf{bool} & Devuelve booleano \\ \hline
+		\textbf{and} & Devuelve operador binario and \\ \hline
+		\textbf{or} & Devuelve operador binario or \\ \hline
+		\textbf{not} & Devuelve operador unario not\\ \hline
+		\textbf{true} & Devuelve verdadero \\ \hline
+		\textbf{false} & Devuelve falso \\ \hline
+
+    \end{tabular}
+\end{center}
 \end{document}
