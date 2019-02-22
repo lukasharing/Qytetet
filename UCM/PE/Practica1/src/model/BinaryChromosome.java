@@ -39,8 +39,8 @@ public class BinaryChromosome extends Chromosome<Integer> {
 		return interval.first + genes.get(n) * (interval.second - interval.first) / (double)((1 << max_gene_size.get(n)) - 1);
 	};
 	
-	public Double[] getFenotypes(){
-		Double[] result = new Double[genes.size()];
+	public double[] getFenotypes(){
+		double[] result = new double[genes.size()];
 		for(int i = 0; i < genes.size(); ++i) {
 			result[i] = getFenotype(i);
 		}
@@ -53,12 +53,14 @@ public class BinaryChromosome extends Chromosome<Integer> {
 	public void randomMutation(double prob) {
 		for(int k = 0; k < genes.size(); ++k){
 			int gen = genes.get(k), gsize = max_gene_size.get(k);
+			int tgen = genes.get(k);
 			for(int t = 0; t < gsize; ++t) {
 				if(Math.random() <= prob) {
-					genes.set(k, gen & ~(0x1 << t));
-					genes.set(k, gen | (((gen >> t) & 0x1) ^ 0x1) << t);
+					gen &= ~(0x1 << t);
+					gen |= ~tgen & (0x1 << t);
 				}
 			}
+			genes.set(k, gen);
 		}
 	};
 	

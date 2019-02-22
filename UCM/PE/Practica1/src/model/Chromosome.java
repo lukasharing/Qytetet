@@ -17,7 +17,7 @@ public abstract class Chromosome<T> {
 		genes = new ArrayList<T>(f.getTotalArguments());
 	};
 	
-	public Double[] getFenotypes(){ return null; };
+	public double[] getFenotypes(){ return null; };
 	public void randomMutation(double prob) {};
 	
 	protected static BinaryChromosome newBinary (Function f, Double p) { return null; };
@@ -25,6 +25,11 @@ public abstract class Chromosome<T> {
 
 	@Override
 	public String toString() {
+		/*String result = "[";
+		for(T gene : genes) {
+			result += Integer.toBinaryString((int)gene) + ",";
+		}
+		result += "]";*/
 		return genes.toString();
 	}
 }

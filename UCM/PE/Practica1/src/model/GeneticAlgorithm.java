@@ -3,9 +3,11 @@ package model;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GeneticAlgorithm<T> {
 	private ArrayList<T> chromosomes; //Population
+	private T best_chromosome;
 	
 	private Class<T> class_type;
 	
@@ -44,7 +46,11 @@ public class GeneticAlgorithm<T> {
 	
 	public void test() {
 		for(T chromosme : chromosomes) {
-			System.out.println(chromosme.toString());
+			System.out.println(Arrays.toString(((Chromosome) chromosme).getFenotypes()));
+			System.out.println("Mutate");
+			((Chromosome)chromosme).randomMutation(this.mutation_prob);
+			System.out.println(Arrays.toString(((Chromosome) chromosme).getFenotypes()));
+			System.out.println("---------------");
 		}
 	};
 	
@@ -84,11 +90,21 @@ public class GeneticAlgorithm<T> {
 	
 	// Evaluate Population
 	private void evaluation() {
-		for(T chromosome : chromosomes) {
-			Double value = evaluation.evaluate(
-				((Chromosome)chromosome).getFenotypes()
+		int c1 = 0;
+		double v1 = evaluation.evaluate(((Chromosome)chromosomes.get(0)).getFenotypes());
+		for(int i = 1; i < chromosomes.size(); ++i) {
+
+			double v2 = evaluation.evaluate(
+				((Chromosome)chromosomes.get(i)).getFenotypes()
 			);
+			
+			if(v1 < v2) {
+				c1 = i;
+				v1 = v2;
+			}
 		}
+		
+		best_chromosome = chromosomes.get(c1);
 	}
 	
 	private boolean selection() {

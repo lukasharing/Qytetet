@@ -11,7 +11,7 @@ public class Function4 extends Function {
 		}
 	};
 	
-	public double evaluate(Double... args) {
+	public double evaluate(double... args) {
 		double xisin = 0.0;
 		for(int i = 0; i < args.length; ++i) {
 			xisin += Math.sin(args[i]) *
