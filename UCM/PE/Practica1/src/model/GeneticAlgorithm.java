@@ -45,12 +45,13 @@ public class GeneticAlgorithm<T> {
 	};
 	
 	public void test() {
+		this.selection();
 		for(T chromosme : chromosomes) {
-			System.out.println(Arrays.toString(((Chromosome) chromosme).getFenotypes()));
-			System.out.println("Mutate");
-			((Chromosome)chromosme).randomMutation(this.mutation_prob);
-			System.out.println(Arrays.toString(((Chromosome) chromosme).getFenotypes()));
-			System.out.println("---------------");
+			//System.out.println(Arrays.toString(((Chromosome) chromosme).getFenotypes()));
+			//System.out.println("Mutate");
+			//((Chromosome)chromosme).randomMutation(this.mutation_prob);
+			//System.out.println(Arrays.toString(((Chromosome) chromosme).getFenotypes()));
+			//System.out.println("---------------");
 		}
 	};
 	
@@ -85,7 +86,7 @@ public class GeneticAlgorithm<T> {
 				//chromosomes.add((T) BinaryChromosome.newBinary(evaluation, gene_precision));
 			}
 		}
-			
+		
 	}
 	
 	// Evaluate Population
@@ -107,8 +108,16 @@ public class GeneticAlgorithm<T> {
 		best_chromosome = chromosomes.get(c1);
 	}
 	
-	private boolean selection() {
-		return true;
+	private void selection() {
+		int size = chromosomes.size();
+
+		double division = 1.0 / size;
+		double[] prob = new double[size];
+		prob[0] = Math.random() * division;
+		for(int i = 1; i < size; ++i) {
+			prob[i] = prob[i - 1] + Math.min(division, (1.0 - prob[i - 1]) * Math.random());
+		}
+		System.out.println(Arrays.toString(prob));
 	}
 	
 	private boolean crossover() {
