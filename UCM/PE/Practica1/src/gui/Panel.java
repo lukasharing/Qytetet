@@ -79,7 +79,8 @@ public class Panel extends JFrame {
 
 		barraizq.add(start);
 		barraizq.add(restart);
-
+				
+		barraizq.setBorder(BorderFactory.createEmptyBorder(30, 30, 0, 30));
 		add(barraizq, BorderLayout.LINE_START);
 		add(new JLabel("Realizado por Lukas Haring y Raúl Torrijos", SwingConstants.RIGHT), BorderLayout.PAGE_END);
 		setVisible(true);
