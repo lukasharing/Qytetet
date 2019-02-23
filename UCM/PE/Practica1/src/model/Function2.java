@@ -4,7 +4,8 @@ import java.util.ArrayList;
 
 public class Function2 extends Function {
 		
-	public Function2() {
+	public Function2(FunctionType type) {
+		super(type);
 		arguments_intervals = new ArrayList<Pair>();
 		arguments_intervals.add(new Pair(-512.0, +512.0));
 		arguments_intervals.add(new Pair(-512.0, +512.0));

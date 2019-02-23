@@ -4,6 +4,8 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.function.Supplier;
+import java.util.stream.DoubleStream;
 
 public class GeneticAlgorithm<T> {
 	private ArrayList<T> chromosomes; //Population
@@ -12,7 +14,7 @@ public class GeneticAlgorithm<T> {
 	private Class<T> class_type;
 	
 	// Function
-	private Function evaluation = null;
+	private Function function = null;
 	
 	// Child and parents
 	private int initial_population = 0;
@@ -32,7 +34,7 @@ public class GeneticAlgorithm<T> {
 		
 		this.crossing_prob = crossoverProbability;
 		this.mutation_prob = mutationProbability;
-		this.evaluation = evaluationFunction;
+		this.function = evaluationFunction;
 		
 		chromosomes = new ArrayList<>();
 		
@@ -45,28 +47,29 @@ public class GeneticAlgorithm<T> {
 	};
 	
 	public void test() {
-		this.selection();
-		for(T chromosme : chromosomes) {
-			//System.out.println(Arrays.toString(((Chromosome) chromosme).getFenotypes()));
-			//System.out.println("Mutate");
-			//((Chromosome)chromosme).randomMutation(this.mutation_prob);
-			//System.out.println(Arrays.toString(((Chromosome) chromosme).getFenotypes()));
-			//System.out.println("---------------");
-		}
+		this.selection(SelectionType.ROULETTE, this.evaluation(false));
+		/*for(T chromosme : chromosomes) {
+			System.out.println(Arrays.toString(((Chromosome) chromosme).getFenotypes()));
+			System.out.println("Mutate");
+			((Chromosome)chromosme).randomMutation(this.mutation_prob);
+			System.out.println(Arrays.toString(((Chromosome) chromosme).getFenotypes()));
+			System.out.println("---------------");
+		}*/
 	};
 	
 	// Iterate
 	public void run() {
 		int currentGeneration = 0;
 		
-		this.evaluation();
+		
+		double[] eval_result = this.evaluation(false);
 		
 		while(currentGeneration < total_generations) {
 			currentGeneration++;
-			this.selection();
+			this.selection(SelectionType.ROULETTE, eval_result);
 			this.crossover();
 			this.mutation();
-			this.evaluation();
+			eval_result = this.evaluation(false);
 		}
 	};
 	
@@ -77,7 +80,7 @@ public class GeneticAlgorithm<T> {
 		if(class_type.getName().contains("BinaryChromosome")) {
 		
 			for(int i = 0; i < initial_population; ++i) {
-				chromosomes.add((T) BinaryChromosome.newBinary(evaluation, gene_precision));
+				chromosomes.add((T) BinaryChromosome.newBinary(function, gene_precision));
 			}
 		
 		// Creation of Real Chromosomes
@@ -90,34 +93,49 @@ public class GeneticAlgorithm<T> {
 	}
 	
 	// Evaluate Population
-	private void evaluation() {
-		int c1 = 0;
-		double v1 = evaluation.evaluate(((Chromosome)chromosomes.get(0)).getFenotypes());
-		for(int i = 1; i < chromosomes.size(); ++i) {
-
-			double v2 = evaluation.evaluate(
-				((Chromosome)chromosomes.get(i)).getFenotypes()
-			);
-			
-			if(v1 < v2) {
-				c1 = i;
-				v1 = v2;
-			}
+	private double[] evaluation(boolean elitism) {
+		int size = chromosomes.size();
+		double[] eval_results = new double[size];
+		for(int i = 0; i < size; ++i) {
+			eval_results[i] = function.evaluate(((Chromosome)chromosomes.get(i)).getFenotypes());
 		}
 		
-		best_chromosome = chromosomes.get(c1);
+		
+		DoubleStream map1 = Arrays.stream(eval_results);
+		double max = map1.max().getAsDouble();
+		DoubleStream map2 = Arrays.stream(eval_results).map((e) -> max - e);
+		double total_sum = map2.sum();
+		DoubleStream map3 = Arrays.stream(eval_results).map((e) -> (max - e) / total_sum);
+		return map3.toArray();
 	}
 	
-	private void selection() {
-		int size = chromosomes.size();
-
-		double division = 1.0 / size;
-		double[] prob = new double[size];
-		prob[0] = Math.random() * division;
-		for(int i = 1; i < size; ++i) {
-			prob[i] = prob[i - 1] + Math.min(division, (1.0 - prob[i - 1]) * Math.random());
+	private void selection(SelectionType type, double[] evaluations) {
+		ArrayList<T> result = new ArrayList<>(initial_population);
+		System.out.println(Arrays.toString(evaluations));
+		switch(type){
+			case ROULETTE:
+				
+				for(int i = 1; i < evaluations.length; ++i) {
+					evaluations[i] += evaluations[i - 1];
+				}
+				
+				ArrayList<T> generation = new ArrayList<>();
+				for(int i = 0; i < initial_population; ++i) {
+					double roulette = Math.random();
+					int throul = 0;
+					boolean end = false;
+					
+					// Buscamos el siguiente elemento en el que supera el valor de la ruleta
+					while(!end) {
+						end = roulette <= evaluations[throul++];
+					}
+					
+					// Nos quedamos con el anterior.
+					generation.add(chromosomes.get(throul - 1));
+				}
+				
+			break;
 		}
-		System.out.println(Arrays.toString(prob));
 	}
 	
 	private boolean crossover() {

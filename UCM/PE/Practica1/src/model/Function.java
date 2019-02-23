@@ -16,13 +16,17 @@ public abstract class Function {
 		  }
 	}
 	
+	public FunctionType maxmin;
+	
 	// Number of intervals == number of arguments
 	protected List<Pair> arguments_intervals;
 	
 	int getTotalArguments() { return arguments_intervals.size(); };
 	
 	// Constructor
-	public Function() {};
+	public Function(FunctionType type) {
+		maxmin = type;
+	};
 	
 	// Returns nth Interval.
 	public Pair getInterval(int i) { return arguments_intervals.get(i); };
