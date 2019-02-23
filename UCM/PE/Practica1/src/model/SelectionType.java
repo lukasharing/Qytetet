@@ -1,5 +1,5 @@
 package model;
 
 public enum SelectionType {
-	ROULETTE
+	ROULETTE, DETE_TOURNAMENT, PRB_TOURNAMENT
 };

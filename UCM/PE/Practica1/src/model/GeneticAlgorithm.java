@@ -8,6 +8,10 @@ import java.util.function.Supplier;
 import java.util.stream.DoubleStream;
 
 public class GeneticAlgorithm<T> {
+	
+	private final int TOURNAMENT_SET = 3;
+	private final double TOURNAMENT_PROB = 0.60;
+	
 	private ArrayList<T> chromosomes; //Population
 	private T best_chromosome;
 	
@@ -49,10 +53,10 @@ public class GeneticAlgorithm<T> {
 	public void test() {
 		this.selection(SelectionType.ROULETTE, this.evaluation(false));
 		/*for(T chromosme : chromosomes) {
-			System.out.println(Arrays.toString(((Chromosome) chromosme).getFenotypes()));
+			System.out.println(((Chromosome) chromosme).toString());
 			System.out.println("Mutate");
 			((Chromosome)chromosme).randomMutation(this.mutation_prob);
-			System.out.println(Arrays.toString(((Chromosome) chromosme).getFenotypes()));
+			System.out.println(((Chromosome) chromosme).toString());
 			System.out.println("---------------");
 		}*/
 	};
@@ -61,13 +65,12 @@ public class GeneticAlgorithm<T> {
 	public void run() {
 		int currentGeneration = 0;
 		
-		
 		double[] eval_result = this.evaluation(false);
 		
 		while(currentGeneration < total_generations) {
 			currentGeneration++;
 			this.selection(SelectionType.ROULETTE, eval_result);
-			this.crossover();
+			this.crossover(2);
 			this.mutation();
 			eval_result = this.evaluation(false);
 		}
@@ -80,13 +83,13 @@ public class GeneticAlgorithm<T> {
 		if(class_type.getName().contains("BinaryChromosome")) {
 		
 			for(int i = 0; i < initial_population; ++i) {
-				chromosomes.add((T) BinaryChromosome.newBinary(function, gene_precision));
+				chromosomes.add((T) BinaryChromosome.newInstance(function, gene_precision));
 			}
 		
 		// Creation of Real Chromosomes
 		}else if(class_type.getName().contains("RealChromosome")) {
 			for(int i = 0; i < initial_population; ++i) {
-				//chromosomes.add((T) BinaryChromosome.newBinary(evaluation, gene_precision));
+				//chromosomes.add((T) BinaryChromosome.newInstance(evaluation, gene_precision));
 			}
 		}
 		
@@ -107,40 +110,93 @@ public class GeneticAlgorithm<T> {
 		double total_sum = map2.sum();
 		DoubleStream map3 = Arrays.stream(eval_results).map((e) -> (max - e) / total_sum);
 		return map3.toArray();
-	}
+	};
 	
 	private void selection(SelectionType type, double[] evaluations) {
-		ArrayList<T> result = new ArrayList<>(initial_population);
-		System.out.println(Arrays.toString(evaluations));
+		ArrayList<T> generation = new ArrayList<>();
 		switch(type){
 			case ROULETTE:
 				
 				for(int i = 1; i < evaluations.length; ++i) {
 					evaluations[i] += evaluations[i - 1];
 				}
-				
-				ArrayList<T> generation = new ArrayList<>();
 				for(int i = 0; i < initial_population; ++i) {
+					// Lanzamos y buscamos el siguiente elemento el cual supere el valor de la ruleta
 					double roulette = Math.random();
 					int throul = 0;
-					boolean end = false;
-					
-					// Buscamos el siguiente elemento en el que supera el valor de la ruleta
-					while(!end) {
-						end = roulette <= evaluations[throul++];
-					}
+					while(evaluations[throul++] < roulette);
 					
 					// Nos quedamos con el anterior.
-					generation.add(chromosomes.get(throul - 1));
+					generation.add(chromosomes.get(--throul));
 				}
 				
+				
+			break;
+			case DETE_TOURNAMENT: case PRB_TOURNAMENT:
+				
+				
+				for(int i = 0; i < initial_population; ++i) {
+					// Select random chromosome (Suppose it is the best).
+					int first = (int)(Math.random() * initial_population);
+					Chromosome best_cr = ((Chromosome) chromosomes.get(first));
+					Chromosome worst_cr = best_cr;
+					double best = function.evaluate(best_cr.getFenotypes());
+					double worst = best;
+					
+					// Generate n more and compare.
+					for(int j = 0; j < TOURNAMENT_SET; ++j) {
+						int random = (int)(Math.random() * initial_population);
+						Chromosome chromosme  = (Chromosome) chromosomes.get(random);
+						// Check if better than the best.
+						if(function.compare(best, chromosme.getFenotypes())) {
+							best = function.evaluate(chromosme.getFenotypes());
+							best_cr = chromosme;
+						}else {
+							// Check if it is worse than the worst.
+							if(function.compare(worst, chromosme.getFenotypes())) {
+								best = function.evaluate(chromosme.getFenotypes());
+								worst_cr = chromosme;
+							}
+						}
+					}
+					
+					if(type == SelectionType.DETE_TOURNAMENT) {
+						generation.add((T) best_cr);
+					}else {
+						if(Math.random() <= TOURNAMENT_PROB) {
+							generation.add((T) best_cr);
+						}else {
+							generation.add((T) worst_cr);
+						}
+					}
+				}
+				
+				this.chromosomes = generation;
 			break;
 		}
+		this.chromosomes = generation;
 	}
 	
-	private boolean crossover() {
-		return true;
-	}
+	private void crossover(int n) {
+		
+		ArrayList<Integer> quieren_cruzarse = new ArrayList<>();
+		for(int i = 0; i < initial_population; ++i) {
+			if(Math.random() <= this.crossing_prob) {
+				quieren_cruzarse.add(i);
+			}
+		}
+		
+		// Convertir en par
+		int size = quieren_cruzarse.size() & ~0x1;
+		
+		for(int i = 0; i < size; i += 2) {
+			Chromosome chr1 = (Chromosome)chromosomes.get(quieren_cruzarse.get(i + 0));
+			Chromosome chr2 = (Chromosome)chromosomes.get(quieren_cruzarse.get(i + 1));
+			
+			chr1.cross(chr2, n); // Symmetric
+		}
+		
+	};
 	
 	private void mutation() {
 		for(T chromosome : chromosomes) {

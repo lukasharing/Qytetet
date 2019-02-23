@@ -36,4 +36,13 @@ public abstract class Function {
 		return 0.0;
 	};
 	
+
+	public boolean compare(double v1, double... args) {
+		if(maxmin.equals(FunctionType.MAXIMIZE)) {
+			return (evaluate(args) > v1);
+		}else {
+			return (evaluate(args) < v1);
+		}
+	};
+	
 }

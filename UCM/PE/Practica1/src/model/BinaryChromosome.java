@@ -5,25 +5,35 @@ import java.util.ArrayList;
 import model.Function.Pair;
 
 public class BinaryChromosome extends Chromosome<Integer> {
-
-	private ArrayList<Integer> max_gene_size;
 	
 	public BinaryChromosome(Function f, double p) {
 		super(f, p);
 		
 		int number_arguments = f.getTotalArguments();
-		max_gene_size = new ArrayList<>(number_arguments);
-		
-		for(int i = 0; i < number_arguments; ++i) {
-			max_gene_size.add(getGeneSize(f.getInterval(i)));
-		}
 		
 		// Random Values.
+		
 		for(int i = 0; i < number_arguments; ++i) {
-			genes.add((int)(Math.random() * (1 << max_gene_size.get(i))));
+			int interval = getGeneSize(f.getInterval(i));
+			ArrayList<Integer> gen = new ArrayList<>(interval);
+			for(int j = 0; j < interval; ++j) {
+				gen.add(j, (int)(Math.random() * 2));
+			}
+			genes.add(i, gen);
 		}
 		
+		
 	};
+
+	// Returns the gene in decimal
+	private Integer getGene(int n){
+		ArrayList<Integer> gene = genes.get(n);
+		int result = 0x0;
+		for(int i = 0; i < gene.size(); i++){
+			result |= gene.get(i) << i;
+		}
+		return result;
+	}
 
 	// Returns number of bits needed for a given interval
 	private Integer getGeneSize(Pair interval) {
@@ -36,7 +46,7 @@ public class BinaryChromosome extends Chromosome<Integer> {
 	// returns a point in the value.
 	private Double getFenotype(Integer n) {
 		Pair interval = func.getInterval(n);
-		return interval.first + genes.get(n) * (interval.second - interval.first) / (double)((1 << max_gene_size.get(n)) - 1);
+		return interval.first + getGene(n) * (interval.second - interval.first) / (double)((1 << genes.get(n).size()) - 1);
 	};
 	
 	public double[] getFenotypes(){
@@ -51,13 +61,13 @@ public class BinaryChromosome extends Chromosome<Integer> {
 	// - Mutations
 	
 	public void randomMutation(double prob) {
+		boolean muted = false;
 		for(int k = 0; k < genes.size(); ++k){
-			int gen = genes.get(k), gsize = max_gene_size.get(k);
-			int tgen = genes.get(k);
-			for(int t = 0; t < gsize; ++t) {
+			ArrayList<Integer> gen = genes.get(k);
+			for(int t = 0; t < gen.size(); ++t) {
 				if(Math.random() <= prob) {
-					gen &= ~(0x1 << t);
-					gen |= ~tgen & (0x1 << t);
+					gen.set(t, gen.get(t) ^ 0x1);
+					muted = true;
 				}
 			}
 			genes.set(k, gen);
@@ -65,7 +75,7 @@ public class BinaryChromosome extends Chromosome<Integer> {
 	};
 	
 	
-	public static BinaryChromosome newBinary (Function f, Double p) {
+	public static BinaryChromosome newInstance (Function f, Double p) {
 		return new BinaryChromosome(f, p);
 	};
 }
