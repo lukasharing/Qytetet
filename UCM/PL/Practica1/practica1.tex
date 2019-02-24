@@ -23,6 +23,7 @@
 	{\huge\bfseries Primera Fase. \par}
 	\vspace{2cm}
 	{\Large\itshape Kyle Tan \& Lukas Häring\par}
+	{\large Grupo 9\par}
 	\vfill
 	\vfill
 
@@ -34,6 +35,8 @@
 
 
 \section{Introducción}
+En esta práctica vamos a realizar un analizador léxico sencillo, un lenguaje inventado, donde solo existen dos tipos, \textbf{num} y \textbf{bool}, por un lado, los números pueden ser enteros con signo o reales (tanto decimales como exponenciales) (estos números pueden estár precedidos de ilimitado número de ceros). Las operaciones básicas: multiplicación, división, adición y substracció; Operaciones de comparación, como son menor, mayor, menor igual y mayor igual. Por otro lado los booleanos, pueden ser o \textbf{true} o \textbf{false}, sus operadores característicos son el \textit{and}, \textit{or} y el \textit{not}. Siendo todo lo anteriormente dicho, palabras reservadas. Los operadores aceptan paréntesis para alterar las precedencias.
+
 \newpage
 
 \section{Definición}
@@ -45,9 +48,6 @@
     Letra & Carácter del alfabeto mayúsculas o minúsculas  & [a-z,A-Z]\\ \hline
     Dígito & Número entero de 0 a 9 & [0-9] \\ \hline
     Natural & Número entero positivo & Dígito* \\ \hline
-    INT & Número entero & (+$\mid$ -)?Natural \\ \hline
-    DEC & Parte decimal &  .Natural \\ \hline
-    EXE & Parte exponencial  & (e$\mid$ E)(+$\mid$ -)?INT  \\ \hline
     \end{tabular}
 \end{center}
 \subsection{Clases Léxicas}
@@ -56,6 +56,9 @@
     \hline
      Clases Léxicas & Definición Natural & Expresión Regular \\ \hline
      ID & Identificador & Letra(Letra$\mid$Dígito$\mid$\_)$*$ \\ \hline
+     INT & Número entero & (+$\mid$-)?Natural \\ \hline
+     DEC & Número decimal &  INT.Natural \\ \hline
+     EXE & Número exponencial  & (INT$\mid$DEC)(e$\mid$E)?INT  \\ \hline
      PLS & Signo más & + \\ \hline
      MNS & Signo menos & - \\ \hline
      MUL & Signo multiplicación & * \\ \hline
@@ -69,7 +72,7 @@
       EQ & Signo de asignación & = \\ \hline
       BE & Signo de comparación & == \\ \hline
       NE & Signo de desigualdad & !=  \\ \hline
-			SEP & Separador de definición y inicialización & \&\& \\ \hline
+			SEP & Separador de definición e inicialización & \&\& \\ \hline
 			PYC & Separador de variables y asignación de variables & $;$ \\ \hline
     \end{tabular}
 \end{center}
@@ -99,8 +102,8 @@
 \node[state,accepting]  (F) at(0.0, 5.5)      {PCE};
 \node[state,accepting] (H1) at(3.0, 4.5) {GT};
 \node[state,accepting] (GE) at(5.0, 4.5) {GE};
-\node[state,accepting] (H2) at(4.0, 3.5) {LS};
-\node[state,accepting] (LG) at(6.0, 3.5) {LG};
+\node[state,accepting] (H2) at(4.0, 3.5) {LT};
+\node[state,accepting] (LG) at(6.0, 3.5) {LE};
 \node[state,accepting] (EQ) at(5.0, 2.5) {EQ};
 \node[state,accepting] (BE) at(7.0, 2.5) {BE};
 \node[state] (N) at(5.5, 1.5) {N};
@@ -123,7 +126,7 @@
       (A) edge [left]  node [align=center]  {$/$} (D)
 			(A) edge [left]  node [align=center]  {$* $} (M)
 			(A) edge [above]  node [align=center]  {[a-z,A-Z]} (E)
-			(E) edge [loop below]  node [align=center]  {([a-z,A-Z,0-9]|\_)} (E)
+			(E) edge [loop below]  node [align=center]  {([a-z,A-Z,0-9]$\mid$\_)} (E)
 			(A) edge [above left]  node [align=center]  {$)$} (F)
 			(A) edge [above left]  node [align=center]  {$>$} (H1)
 			(A) edge [above left]  node [align=center]  {$<$} (H2)
@@ -149,6 +152,7 @@
 			(EN) edge [above]  node [align=center]  {.} (P)
       (A) edge [left]  node [align=center]  {;} (PY)
 			(A) edge [left]  node [align=center]  {EOF} (EOF)
+			(EX) edge [bend left]  node [align=center]  {[0-9]} (XE)
 			(A) edge [out=200,in=238,looseness=30]  node [align=center]  {$\emptyset \mid$ EOL} (A);
 \end{tikzpicture}
 \begin{center}
