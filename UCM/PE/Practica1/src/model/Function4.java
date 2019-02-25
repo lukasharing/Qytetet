@@ -6,9 +6,9 @@ public class Function4 extends Function {
 		
 	public Function4(int n, FunctionType type) {
 		super(type);
-		arguments_intervals = new ArrayList<Pair>(n);
+		arguments_intervals = new ArrayList<Pair>();
 		for(int i = 0; i < n; ++i) {
-			arguments_intervals.set(i, new Pair(0.0, Math.PI));
+			arguments_intervals.add(new Pair(0.0, Math.PI));
 		}
 	};
 	

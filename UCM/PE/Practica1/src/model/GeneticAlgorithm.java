@@ -67,14 +67,16 @@ public class GeneticAlgorithm<T> {
 
 		double[] eval_result = this.evaluation(false);
 		report.add((Double) Arrays.stream(eval_result).max().getAsDouble());
-
+		System.out.println(eval_result);
 		while (currentGeneration < total_generations) {
 			currentGeneration++;
 			this.selection(SelectionType.ROULETTE, eval_result);
-			this.crossover(2);
+			this.crossover(1);
 			this.mutation();
 			eval_result = this.evaluation(false);
 			report.add((Double) Arrays.stream(eval_result).max().getAsDouble());
+			
+			System.out.println(Arrays.toString(eval_result));
 		}
 		System.out.println("END");
 		return report;
