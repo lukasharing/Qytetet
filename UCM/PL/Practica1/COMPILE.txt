@@ -1,1 +1,0 @@
-pandoc --mathjax criptografia.md -o practica.pdf
