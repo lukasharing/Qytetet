@@ -83,4 +83,6 @@ public abstract class Chromosome<T> {
 		}
 		return result;
 	}
+
+	public Chromosome clone() { return null; };
 }

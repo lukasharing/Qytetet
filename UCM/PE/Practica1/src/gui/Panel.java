@@ -7,11 +7,13 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.math.plot.*;
 
 import model.BinaryChromosome;
+import model.Chromosome;
 import model.Function;
 import model.Function1;
 import model.Function2;
@@ -25,7 +27,7 @@ import javax.swing.*;
 public class Panel extends JFrame {
 
 	private static final long serialVersionUID = 2569879142816556337L;
-
+	
 	Plot2DPanel plot;
 
 	private JTextField size_population;
@@ -53,12 +55,8 @@ public class Panel extends JFrame {
 		setTitle("Práctica 1");
 		this.setMinimumSize(new Dimension(1200, 700));
 
-		double[] x = { 1, 2, 3, 4, 5, 6, 7 };
-		double[] y = { 45, 89, 6, 32, 63, 12, 45 };
-
 		this.plot = new Plot2DPanel();
 		plot.addLegend("SOUTH");
-		plot.addLinePlot("Mejor de la generación", x, y);
 		add(plot, BorderLayout.CENTER);
 
 		// Components
@@ -116,7 +114,7 @@ public class Panel extends JFrame {
 		add(barraizq, BorderLayout.LINE_START);
 		add(new JLabel("Realizado por Lukas Haring y Raúl Torrijos", SwingConstants.RIGHT), BorderLayout.PAGE_END);
 		setVisible(true);
-
+		
 		start.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				/*
@@ -124,34 +122,40 @@ public class Panel extends JFrame {
 				 * y = new double[Integer.parseInt(num_generations.getText())];
 				 */
 				Function f = new Function1(null);
-
-				switch ((String) function_sel.getSelectedItem()) {
-				case "Función 1":
-					System.out.println("f1");
-					f = new Function1(FunctionType.MAXIMIZE);
+				String function_name = (String) function_sel.getSelectedItem();
+				System.out.println(function_name);
+				switch (function_name) {
+					case "Función 1":
+						f = new Function1(FunctionType.MAXIMIZE);
 					break;
-				case "Función 2":
-					System.out.println("f2");
-					f = new Function2(FunctionType.MINIMIZE);
+					case "Función 2":
+						f = new Function2(FunctionType.MINIMIZE);
 					break;
-
-				case "Función 3":
-					System.out.println("f3");
-					f = new Function3(FunctionType.MINIMIZE);
+					case "Función 3":
+						f = new Function3(FunctionType.MINIMIZE);
 					break;
-
-				case "Función 4":
-					System.out.println("f4");
-					f = new Function4(3, FunctionType.MINIMIZE);
+					case "Función 4":
+						f = new Function4(1, FunctionType.MINIMIZE);
 					break;
 				}
-
+				
+				int num_gen = Integer.parseInt(num_generations.getText());
 				ga = new GeneticAlgorithm<BinaryChromosome>(BinaryChromosome.class,
-						Integer.parseInt(size_population.getText()), Integer.parseInt(num_generations.getText()),
+						Integer.parseInt(size_population.getText()), num_gen,
 						Double.parseDouble(crossover_perc.getText()), Double.parseDouble(mutation_perc.getText()),
 						Double.parseDouble(prec.getText()), f);
-
-				System.out.println(ga.run());
+				
+				List<double[]> best_chromosomes = ga.run();
+				
+				double[] generations = new double[num_gen];
+				for(int i = 0; i < num_gen; ++i) generations[i] = i;
+				plot.addLinePlot("Mejor absoluto"        , generations, best_chromosomes.get(0));
+				plot.addLinePlot("Mejor de la generación", generations, best_chromosomes.get(1));
+				plot.addLinePlot("Media de la generación", generations, best_chromosomes.get(2));
+				
+				/*for(Chromosome chr : best_chromosomes) {
+					System.out.println(Arrays.toString(chr.getFenotypes()));
+				}*/
 
 			}
 		});

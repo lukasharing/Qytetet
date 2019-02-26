@@ -78,4 +78,7 @@ public class BinaryChromosome extends Chromosome<Integer> {
 	public static BinaryChromosome newInstance (Function f, Double p) {
 		return new BinaryChromosome(f, p);
 	};
+	
+
+	public Chromosome clone() { return new BinaryChromosome(this.func, this.prec); };
 }
