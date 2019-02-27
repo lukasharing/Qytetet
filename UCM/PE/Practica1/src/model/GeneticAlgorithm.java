@@ -80,8 +80,8 @@ public class GeneticAlgorithm<T> {
 		currentGeneration = 1;
 		while (currentGeneration < total_generations) {
 			this.selection(SelectionType.ROULETTE, eval_result);
-			this.crossover(1);
-			this.mutation();
+			//this.crossover(1);
+			//this.mutation();
 			eval_result = this.evaluation(false);
 
 			/*

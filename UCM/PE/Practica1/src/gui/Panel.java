@@ -39,13 +39,10 @@ public class Panel extends JFrame {
 	private JComboBox<String> function_sel;
 	private JButton start;
 	private JButton restart;
-	private JCheckBox elitism = new JCheckBox("Elitismo");
+	private JCheckBox elitism;
 	private Dimension size;
 	private GeneticAlgorithm<BinaryChromosome> ga;
 
-	/*
-	 * double[] x; double[] y;
-	 */
 	public Panel() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
 			UnsupportedLookAndFeelException {
 
@@ -66,6 +63,7 @@ public class Panel extends JFrame {
 		this.mutation_perc = new JTextField("0.05", 12);
 		this.prec = new JTextField("0.0001", 12);
 		this.function_sel = new JComboBox<>(function_sel_ops);
+		this.elitism = new JCheckBox("Elitismo");
 		start = new JButton("Iniciar");
 		restart = new JButton("Restablecer");
 		JCheckBox elitism = new JCheckBox("Elitismo");
