@@ -81,6 +81,7 @@ public abstract class Chromosome<T> {
 		for(ArrayList<T> gene : genes) {
 			result += gene + ", \n";
 		}
+		result += "Evaluation: " + func.evaluate(this.getFenotypes()) + "\n";
 		return result;
 	}
 

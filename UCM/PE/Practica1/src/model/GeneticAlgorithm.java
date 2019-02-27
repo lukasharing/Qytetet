@@ -11,7 +11,6 @@ public class GeneticAlgorithm<T> {
 	private final double TOURNAMENT_PROB = 0.60;
 
 	private ArrayList<Chromosome> chromosomes; // Population
-	private Chromosome best_chromosome;
 
 	private Class<T> class_type;
 
@@ -36,6 +35,7 @@ public class GeneticAlgorithm<T> {
 		this.total_generations = generations;
 		this.gene_precision = precision;
 		this.elitism = num_elitism;
+		this.elitism = 0;
 
 		this.crossing_prob = crossoverProbability;
 		this.mutation_prob = mutationProbability;
@@ -55,79 +55,63 @@ public class GeneticAlgorithm<T> {
 	public List<double[]> run() {
 		int currentGeneration = 0;
 		List<double[]> report = new ArrayList<>();
-		
-		
+
 		double[] generation_best_abs = new double[total_generations];
 		double[] generation_mean = new double[total_generations];
 		double[] generation_best = new double[total_generations];
-		
+
 		report.add(generation_best_abs);
 		report.add(generation_best);
 		report.add(generation_mean);
 
 		// 1s Generation
-		double[] eval_result = this.evaluation(false);
+		double[] eval_result = this.evaluation();
 		ArrayList<Chromosome> best = getBest(this.elitism);
-		
-		generation_best[0] = function.evaluate(this.best_chromosome.getFenotypes());
+
+
+		Chromosome best_absolute = getBest(1).get(0);
+		generation_best[0] = function.evaluate(best_absolute.getFenotypes());
 		generation_best_abs[0] = generation_best[0];
-		
+
 		// Mean
 		double mean = 0.0;
-		for(Chromosome chr : chromosomes) {
+		for (Chromosome chr : chromosomes) {
 			mean += function.evaluate(chr.getFenotypes());
 		}
 		generation_mean[0] = mean / initial_population;
-		
-		Chromosome best_absolute = best_chromosome;
 
-		
+
 		currentGeneration = 1;
 		while (currentGeneration < total_generations) {
+			best = getBest(this.elitism);
+			
 			this.selection(SelectionType.ROULETTE, eval_result);
 			this.crossover(1);
 			this.mutation();
-			eval_result = this.evaluation(false);
-			/*
-			System.out.println("----------------------------");
-			for(Chromosome chr : chromosomes) {
-				System.out.println("Chromosome " +  i);
-				System.out.println("Arguments:" + Arrays.toString(chr.getFenotypes()));
-				System.out.println("Function Evaluation " + function.evaluate(chr.getFenotypes()));
-				++i;
-			}
-
-			System.out.println("---------RESULT");
-			System.out.println("Arguments " + Arrays.toString(this.best_chromosome.getFenotypes()));
-			System.out.println("Function Evaluation " + function.evaluate(this.best_chromosome.getFenotypes()));
-			*/
+			eval_result = this.evaluation();
 			
-			if(function.compare(
-			     function.evaluate(best_absolute.getFenotypes()), 
-			     this.best_chromosome.getFenotypes()
-			  )
-			) {
-				best_absolute = this.best_chromosome;
+			ArrayList<Chromosome> best_no_elitism = getBest(initial_population - this.elitism);
+			best_no_elitism.addAll(best);
+			this.chromosomes = best_no_elitism;
+			
+			Chromosome best_chr = getBest(1).get(0);
+			if (function.compare(function.evaluate(best_absolute.getFenotypes()),
+					best_chr.getFenotypes()) > 0) {
+				best_absolute = best_chr;
 			}
 			
-			generation_best[currentGeneration] = function.evaluate(this.best_chromosome.getFenotypes());
+			generation_best[currentGeneration] = function.evaluate(best_chr.getFenotypes());
 			generation_best_abs[currentGeneration] = function.evaluate(best_absolute.getFenotypes());
 			// Mean
 			mean = 0.0;
-			for(Chromosome chr : chromosomes) {
+			for (Chromosome chr : chromosomes) {
 				mean += function.evaluate(chr.getFenotypes());
 			}
 			generation_mean[currentGeneration] = mean / initial_population;
-			
-			
+
 			currentGeneration++;
 		}
-		
-		System.out.println("------- BEST ABSOLUTE");
-		System.out.println(Arrays.toString(best_absolute.getFenotypes()));
-		System.out.println("BEST EVALUATION : " + function.evaluate(best_absolute.getFenotypes()));
-		System.out.println("END");
-		
+
 		return report;
 	};
 
@@ -149,53 +133,50 @@ public class GeneticAlgorithm<T> {
 		}
 
 	};
-	
-	private ArrayList<Chromosome> getBest(int subsize){
-		
+
+	private ArrayList<Chromosome> getBest(int subsize) {
+
 		ArrayList<Pair<Chromosome, Double>> pares = new ArrayList<>();
-		
-		for(Chromosome chr : chromosomes) {
+		for (Chromosome chr : chromosomes) {
 			pares.add(new Pair<Chromosome, Double>(chr, function.evaluate(chr.getFenotypes())));
 		}
+
+		pares.sort((a, b) -> function.compare(a.second, b.first.getFenotypes()));
 		
-		pares.sort((a, b) -> function.compare(a.second, b.first.getFenotypes()) ? 1 : -1);
-		
-		//System.out.println(pares);
+		// System.out.println(pares);
 		ArrayList<Chromosome> result = new ArrayList<>();
-		for(int i = 0; i < subsize; ++i) {
+		for (int i = 0; i < subsize; ++i) {
 			result.add(pares.get(i).first);
 		}
-		
+
 		return result;
 	}
 
 	// Evaluate Population
-	private double[] evaluation(boolean elitism) {
+	private double[] evaluation() {
 		int size = chromosomes.size();
 		double[] eval_results = new double[size];
-		
+
 		Chromosome first_chromosome = chromosomes.get(0);
 		double maxmin_value = function.evaluate((first_chromosome).getFenotypes());
 		double minmax_value = maxmin_value;
-		best_chromosome = first_chromosome;
 		eval_results[0] = maxmin_value;
-		
+
 		for (int i = 1; i < size; ++i) {
 			Chromosome current = chromosomes.get(i);
 			double[] fenotypes = (current).getFenotypes();
 			eval_results[i] = function.evaluate(fenotypes);
-			if(function.compare(minmax_value, fenotypes)) {
+			if (function.compare(minmax_value, fenotypes) > 0) {
 				minmax_value = eval_results[i];
-				best_chromosome = current;
 			} else {
-				if(function.compare(maxmin_value, fenotypes)) {
+				if (function.compare(maxmin_value, fenotypes) > 0) {
 					maxmin_value = eval_results[i];
 				}
 			}
 		}
-		
+
 		final double value = (function.maxmin == FunctionType.MAXIMIZE ? -1 : 1) * maxmin_value;
-		
+
 		DoubleStream map2 = Arrays.stream(eval_results).map((e) -> value - e);
 		double total_sum = map2.sum();
 		DoubleStream map3 = Arrays.stream(eval_results).map((e) -> (value - e) / total_sum);
@@ -210,13 +191,14 @@ public class GeneticAlgorithm<T> {
 			for (int i = 1; i < evaluations.length; ++i) {
 				evaluations[i] += evaluations[i - 1];
 			}
-			
+
 			for (int i = 0; i < initial_population; ++i) {
 				// Lanzamos y buscamos el siguiente elemento el cual supere el
 				// valor de la ruleta
 				double roulette = Math.random();
 				int throul = 0;
-				while (evaluations[throul++] < roulette);
+				while (evaluations[throul++] < roulette)
+					;
 
 				// Nos quedamos con el anterior.
 				generation.add(chromosomes.get(--throul).clone());
@@ -239,30 +221,32 @@ public class GeneticAlgorithm<T> {
 					int random = (int) (Math.random() * initial_population);
 					Chromosome chromosme = chromosomes.get(random);
 					// Check if better than the best.
-					if (function.compare(best, chromosme.getFenotypes())) {
+					if (function.compare(best, chromosme.getFenotypes()) > 0) {
 						best = function.evaluate(chromosme.getFenotypes());
 						best_cr = chromosme;
 					} else {
 						// Check if it is worse than the worst.
-						if (function.compare(worst, chromosme.getFenotypes())) {
-							best = function.evaluate(chromosme.getFenotypes());
+						if (function.compare(worst, chromosme.getFenotypes()) > 0) {
+							worst = function.evaluate(chromosme.getFenotypes());
 							worst_cr = chromosme;
 						}
 					}
 				}
 
 				if (type == SelectionType.DETE_TOURNAMENT) {
-					generation.add(best_cr);
+					generation.add(best_cr.clone());
 				} else {
 					if (Math.random() <= TOURNAMENT_PROB) {
-						generation.add(best_cr);
+						generation.add(best_cr.clone());
 					} else {
-						generation.add(worst_cr);
+						generation.add(worst_cr.clone());
 					}
 				}
 			}
 
-			this.chromosomes = generation;
+			break;
+			case RANKING:
+				
 			break;
 		}
 		this.chromosomes = generation;
@@ -276,9 +260,9 @@ public class GeneticAlgorithm<T> {
 				quieren_cruzarse.add(i);
 			}
 		}
-		
+
 		// Convertir en par
-		int size = quieren_cruzarse.size() & ~0x1; 
+		int size = quieren_cruzarse.size() & ~0x1;
 
 		for (int i = 0; i < size; i += 2) {
 			Chromosome chr1 = chromosomes.get(quieren_cruzarse.get(i + 0));

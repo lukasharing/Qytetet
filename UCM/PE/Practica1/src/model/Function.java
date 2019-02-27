@@ -24,11 +24,13 @@ public abstract class Function {
 		return 0.0;
 	};
 	
-	public boolean compare(double v1, double... args) {
+	public int compare(double v1, double... args) {
+		if(evaluate(args) == v1) return 0;
+		
 		if(maxmin.equals(FunctionType.MAXIMIZE)) {
-			return (evaluate(args) > v1);
+			return (evaluate(args) > v1) ? 1 : -1;
 		}else {
-			return (evaluate(args) < v1);
+			return (evaluate(args) < v1) ? 1 : -1;
 		}
 	};
 	

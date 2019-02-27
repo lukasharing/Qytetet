@@ -133,7 +133,7 @@ public class Panel extends JFrame {
 						f = new Function3(FunctionType.MINIMIZE);
 					break;
 					case "Función 4":
-						f = new Function4(1, FunctionType.MINIMIZE);
+						f = new Function4(3, FunctionType.MINIMIZE);
 					break;
 				}
 				
@@ -160,13 +160,9 @@ public class Panel extends JFrame {
 
 		restart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				plot = new Plot2DPanel();
+				
 
 			}
 		});
-	}
-
-	public void plotUpdate() {
-		plot.update(getGraphics());
 	}
 }
