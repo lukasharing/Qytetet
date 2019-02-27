@@ -8,7 +8,7 @@ public class Function4 extends Function {
 		super(type);
 		arguments_intervals = new ArrayList<Pair>();
 		for(int i = 0; i < n; ++i) {
-			arguments_intervals.add(new Pair(0.0, Math.PI));
+			arguments_intervals.add(new Pair<Double, Double>(0.0, Math.PI));
 		}
 	};
 	

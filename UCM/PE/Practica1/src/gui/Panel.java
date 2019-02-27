@@ -141,7 +141,7 @@ public class Panel extends JFrame {
 				ga = new GeneticAlgorithm<BinaryChromosome>(BinaryChromosome.class,
 						Integer.parseInt(size_population.getText()), num_gen,
 						Double.parseDouble(crossover_perc.getText()), Double.parseDouble(mutation_perc.getText()),
-						Double.parseDouble(prec.getText()), f);
+						Double.parseDouble(prec.getText()), 1, f);
 				
 				List<double[]> best_chromosomes = ga.run();
 				

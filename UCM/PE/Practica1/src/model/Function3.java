@@ -7,8 +7,8 @@ public class Function3 extends Function {
 	public Function3(FunctionType type) {
 		super(type);
 		arguments_intervals = new ArrayList<Pair>();
-		arguments_intervals.add(new Pair(-10.0, +10.0));
-		arguments_intervals.add(new Pair(-10.0, +10.0));
+		arguments_intervals.add(new Pair<Double, Double>(-10.0, +10.0));
+		arguments_intervals.add(new Pair<Double, Double>(-10.0, +10.0));
 	};
 	
 	public double evaluate(double... args) {

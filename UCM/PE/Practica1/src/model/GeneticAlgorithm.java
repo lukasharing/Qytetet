@@ -22,6 +22,7 @@ public class GeneticAlgorithm<T> {
 	private int initial_population = 0;
 	private int total_generations = 0;
 	private double gene_precision = 0.0;
+	private int elitism = 0;
 
 	// Probabilities
 	private double crossing_prob = 0.0;
@@ -29,11 +30,12 @@ public class GeneticAlgorithm<T> {
 
 	// Constructor
 	public GeneticAlgorithm(Class<T> class_type, int population, int generations, double crossoverProbability,
-			double mutationProbability, double precision, Function evaluationFunction) {
+			double mutationProbability, double precision, int num_elitism, Function evaluationFunction) {
 		this.class_type = class_type;
 		this.initial_population = population;
 		this.total_generations = generations;
 		this.gene_precision = precision;
+		this.elitism = num_elitism;
 
 		this.crossing_prob = crossoverProbability;
 		this.mutation_prob = mutationProbability;
@@ -54,8 +56,6 @@ public class GeneticAlgorithm<T> {
 		int currentGeneration = 0;
 		List<double[]> report = new ArrayList<>();
 		
-		// 1s Generation
-		double[] eval_result = this.evaluation(false);
 		
 		double[] generation_best_abs = new double[total_generations];
 		double[] generation_mean = new double[total_generations];
@@ -64,6 +64,10 @@ public class GeneticAlgorithm<T> {
 		report.add(generation_best_abs);
 		report.add(generation_best);
 		report.add(generation_mean);
+
+		// 1s Generation
+		double[] eval_result = this.evaluation(false);
+		ArrayList<Chromosome> best = getBest(this.elitism);
 		
 		generation_best[0] = function.evaluate(this.best_chromosome.getFenotypes());
 		generation_best_abs[0] = generation_best[0];
@@ -77,13 +81,13 @@ public class GeneticAlgorithm<T> {
 		
 		Chromosome best_absolute = best_chromosome;
 
+		
 		currentGeneration = 1;
 		while (currentGeneration < total_generations) {
 			this.selection(SelectionType.ROULETTE, eval_result);
-			//this.crossover(1);
-			//this.mutation();
+			this.crossover(1);
+			this.mutation();
 			eval_result = this.evaluation(false);
-
 			/*
 			System.out.println("----------------------------");
 			for(Chromosome chr : chromosomes) {
@@ -144,6 +148,25 @@ public class GeneticAlgorithm<T> {
 			}
 		}
 
+	};
+	
+	private ArrayList<Chromosome> getBest(int subsize){
+		
+		ArrayList<Pair<Chromosome, Double>> pares = new ArrayList<>();
+		
+		for(Chromosome chr : chromosomes) {
+			pares.add(new Pair<Chromosome, Double>(chr, function.evaluate(chr.getFenotypes())));
+		}
+		
+		pares.sort((a, b) -> function.compare(a.second, b.first.getFenotypes()) ? 1 : -1);
+		
+		//System.out.println(pares);
+		ArrayList<Chromosome> result = new ArrayList<>();
+		for(int i = 0; i < subsize; ++i) {
+			result.add(pares.get(i).first);
+		}
+		
+		return result;
 	}
 
 	// Evaluate Population
@@ -187,6 +210,7 @@ public class GeneticAlgorithm<T> {
 			for (int i = 1; i < evaluations.length; ++i) {
 				evaluations[i] += evaluations[i - 1];
 			}
+			
 			for (int i = 0; i < initial_population; ++i) {
 				// Lanzamos y buscamos el siguiente elemento el cual supere el
 				// valor de la ruleta
@@ -252,9 +276,9 @@ public class GeneticAlgorithm<T> {
 				quieren_cruzarse.add(i);
 			}
 		}
-
+		
 		// Convertir en par
-		int size = quieren_cruzarse.size() & ~0x1;
+		int size = quieren_cruzarse.size() & ~0x1; 
 
 		for (int i = 0; i < size; i += 2) {
 			Chromosome chr1 = chromosomes.get(quieren_cruzarse.get(i + 0));

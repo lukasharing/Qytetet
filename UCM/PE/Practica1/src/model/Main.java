@@ -8,6 +8,7 @@ public class Main {
 
 	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
 		System.out.println("Algoritmo Genético.");
+		
 		new Panel();
 	}
 }

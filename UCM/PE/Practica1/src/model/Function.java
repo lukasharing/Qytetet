@@ -4,18 +4,6 @@ import java.util.List;
 
 public abstract class Function {
 	
-	
-	public class Pair{
-
-		  public final Double first;
-		  public final Double second;
-		  
-		  public Pair(Double left, Double right) {
-		    this.first = left;
-		    this.second = right;
-		  }
-	}
-	
 	public FunctionType maxmin;
 	
 	// Number of intervals == number of arguments

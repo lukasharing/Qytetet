@@ -2,8 +2,6 @@ package model;
 
 import java.util.ArrayList;
 
-import model.Function.Pair;
-
 public class BinaryChromosome extends Chromosome<Integer> {
 	
 	public BinaryChromosome(Function f, double p) {
@@ -22,7 +20,13 @@ public class BinaryChromosome extends Chromosome<Integer> {
 			genes.add(i, gen);
 		}
 		
-		
+	};
+	
+	public BinaryChromosome(Function f, double p, ArrayList<ArrayList<Integer>> cloning_genes) {
+		super(f, p);
+		for(ArrayList<Integer> gen : cloning_genes) {
+			genes.add((ArrayList<Integer>)gen.clone());
+		}
 	};
 
 	// Returns the gene in decimal
@@ -36,9 +40,9 @@ public class BinaryChromosome extends Chromosome<Integer> {
 	}
 
 	// Returns number of bits needed for a given interval
-	private Integer getGeneSize(Pair interval) {
+	private Integer getGeneSize(Pair<Double, Double> interval) {
 		return (int)Math.ceil(
-				Math.log(1 + (interval.second - interval.first) / prec)/Math.log(2)
+				Math.log(1 + ((Double)interval.second - (Double)interval.first) / prec)/Math.log(2)
 			   );
 	};
 	
@@ -46,7 +50,7 @@ public class BinaryChromosome extends Chromosome<Integer> {
 	// returns a point in the value.
 	private Double getFenotype(Integer n) {
 		Pair interval = func.getInterval(n);
-		return interval.first + getGene(n) * (interval.second - interval.first) / (double)((1 << genes.get(n).size()) - 1);
+		return (Double)interval.first + getGene(n) * ((Double)interval.second - (Double)interval.first) / (double)((1 << genes.get(n).size()) - 1);
 	};
 	
 	public double[] getFenotypes(){
@@ -80,5 +84,5 @@ public class BinaryChromosome extends Chromosome<Integer> {
 	};
 	
 
-	public Chromosome clone() { return new BinaryChromosome(this.func, this.prec); };
+	public Chromosome clone() { return new BinaryChromosome(this.func, this.prec, this.genes); };
 }
