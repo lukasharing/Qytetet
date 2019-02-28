@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -21,6 +22,7 @@ import model.FunctionType;
 import model.GeneticAlgorithm;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 public class Panel extends JFrame {
 
@@ -48,13 +50,16 @@ public class Panel extends JFrame {
 
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
+		
+		setResizable(false);
+		
 		setTitle("Práctica 1");
 		this.setMinimumSize(new Dimension(1200, 700));
 
 		// Components
 		plot = new Plot2DPanel();
 		plot.addLegend("SOUTH");
+		plot.setBorder(BorderFactory.createLineBorder(Color.red));
 		add(plot, BorderLayout.CENTER);
 		this.size_population = new JTextField("100", 12);
 		this.num_generations = new JTextField("100", 12);
@@ -65,6 +70,7 @@ public class Panel extends JFrame {
 		this.func4_params = new JSpinner();
 		this.elitism = new JCheckBox("Elitismo");
 		this.elitism_amount = new JTextField("5", 6);
+		this.elitism_amount.setEnabled(false);
 		start = new JButton("Iniciar");
 		restart = new JButton("Restablecer");
 		elitism = new JCheckBox("Elitismo");
@@ -92,7 +98,9 @@ public class Panel extends JFrame {
 		JPanel barraizq = new JPanel();
 
 		barraizq.setLayout(new GridLayout(20, 2, 10, 10));
-
+		
+		barraizq.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		
 		barraizq.add(new JLabel("Tamaño población:"));
 		barraizq.add(size_population);
 		barraizq.add(new JLabel("Número generaciones:"));
@@ -104,11 +112,10 @@ public class Panel extends JFrame {
 		barraizq.add(new JLabel("Precisión:"));
 		barraizq.add(prec);
 		barraizq.add(elitism);
-		elitism_amount.setVisible(false);
 		barraizq.add(elitism_amount);
 
 		barraizq.add(function_sel);
-		func4_params.setVisible(false);
+		func4_params.setEnabled(false);
 		barraizq.add(func4_params);
 		func4_params.setValue(3);
 
@@ -117,7 +124,10 @@ public class Panel extends JFrame {
 
 		barraizq.setBorder(BorderFactory.createEmptyBorder(30, 30, 0, 30));
 		add(barraizq, BorderLayout.LINE_START);
-		add(new JLabel("Realizado por Lukas Haring y Raúl Torrijos", SwingConstants.RIGHT), BorderLayout.PAGE_END);
+		
+		JLabel footer = new JLabel("Realizado por Lukas Haring y Raúl Torrijos", SwingConstants.CENTER);
+		footer.setBorder(new EmptyBorder(10,10,10,10));
+		add(footer, BorderLayout.PAGE_END);
 		setVisible(true);
 
 		start.addActionListener(new ActionListener() {
@@ -173,11 +183,7 @@ public class Panel extends JFrame {
 		elitism.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				if (e.getStateChange() == ItemEvent.SELECTED) {
-					elitism_amount.setVisible(true);
-				} else {
-					elitism_amount.setVisible(false);
-				}
+				elitism_amount.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
 			}
 		});
 
@@ -189,11 +195,7 @@ public class Panel extends JFrame {
 
 				// The item affected by the event.
 				Object item = event.getItem();
-				if ((event.getStateChange() == ItemEvent.SELECTED) && (item.toString().equals(function_sel_ops[3]))) {
-					func4_params.setVisible(true);
-				} else {
-					func4_params.setVisible(false);
-				}
+				func4_params.setEnabled((event.getStateChange() == ItemEvent.SELECTED) && (item.toString().equals(function_sel_ops[3])));
 
 			}
 		});

@@ -123,8 +123,7 @@ public class GeneticAlgorithm<T> {
 			// Creation of Real Chromosomes
 		} else if (class_type.getName().contains("RealChromosome")) {
 			for (int i = 0; i < initial_population; ++i) {
-				// chromosomes.add((T) BinaryChromosome.newInstance(evaluation,
-				// gene_precision));
+				chromosomes.add(RealChromosome.newInstance(function));
 			}
 		}
 
@@ -193,8 +192,7 @@ public class GeneticAlgorithm<T> {
 				// valor de la ruleta
 				double roulette = Math.random();
 				int throul = 0;
-				while (evaluations[throul++] < roulette)
-					;
+				while (evaluations[throul++] < roulette);
 
 				// Nos quedamos con el anterior.
 				generation.add(chromosomes.get(--throul).clone());
@@ -242,7 +240,7 @@ public class GeneticAlgorithm<T> {
 
 			break;
 		case RANKING:
-
+			
 			break;
 		}
 		this.chromosomes = generation;

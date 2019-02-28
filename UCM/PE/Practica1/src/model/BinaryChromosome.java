@@ -1,8 +1,10 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class BinaryChromosome extends Chromosome<Integer> {
+public class BinaryChromosome extends Chromosome<ArrayList<Integer>, Integer> {
 	
 	public BinaryChromosome(Function f, double p) {
 		super(f, p);
@@ -83,6 +85,10 @@ public class BinaryChromosome extends Chromosome<Integer> {
 		return new BinaryChromosome(f, p);
 	};
 	
-
+	public List<Integer> plain(){
+		return genes.stream().flatMap(List::stream).collect(Collectors.toList());
+	};
+	
+	
 	public Chromosome clone() { return new BinaryChromosome(this.func, this.prec, this.genes); };
 }

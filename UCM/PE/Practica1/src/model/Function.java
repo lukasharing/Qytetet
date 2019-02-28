@@ -17,7 +17,7 @@ public abstract class Function {
 	};
 	
 	// Returns nth Interval.
-	public Pair getInterval(int i) { return arguments_intervals.get(i); };
+	public Pair<Double, Double> getInterval(int i) { return arguments_intervals.get(i); };
 	
 
 	public double evaluate(double... args) {
