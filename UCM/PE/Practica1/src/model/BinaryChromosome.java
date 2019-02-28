@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BinaryChromosome extends Chromosome<ArrayList<Integer>, Integer> {
+public class BinaryChromosome extends Chromosome<ArrayList<Integer>> {
 	
 	public BinaryChromosome(Function f, double p) {
 		super(f, p);
@@ -80,13 +80,61 @@ public class BinaryChromosome extends Chromosome<ArrayList<Integer>, Integer> {
 		}
 	};
 	
+	//-------------------------------------------------
+	// Crossing
+	protected void cross(BinaryChromosome chr1, int n) {
+		// Put all genes in one line
+		List<Integer> unroll0 = this.genes.stream().flatMap(List::stream).collect(Collectors.toList());
+		
+		List<Integer> unroll1 = chr1.genes.stream().flatMap(List::stream).collect(Collectors.toList());
+		
+		List<Integer> cross0 = new ArrayList<>();
+		List<Integer> cross1 = new ArrayList<>();
+
+		int d0 = 0, d1 = unroll0.size();
+		for(int k = 0; k < n; ++k) {
+			int division = (int)(1 + (Math.random() * (d1 / (n - k) - 1)));
+			
+			List<Integer> sub0 = unroll0.subList(d0, d0 + division);
+			List<Integer> sub1 = unroll1.subList(d0, d0 + division);
+			if((k & 0x1) == 0x1) {
+				cross0.addAll(sub1);
+				cross1.addAll(sub0);
+			}else {
+				cross0.addAll(sub0);
+				cross1.addAll(sub1);
+			}
+			
+			d0 += division;
+			d1 -= division;
+		}
+		
+		if((n & 0x1) == 0x1) {
+			cross0.addAll(unroll1.subList(d0, unroll0.size()));
+			cross1.addAll(unroll0.subList(d0, unroll0.size()));
+		}else {
+			cross0.addAll(unroll0.subList(d0, unroll0.size()));
+			cross1.addAll(unroll1.subList(d0, unroll0.size()));
+		}
+		
+		// Divide into genes
+		ArrayList<ArrayList<Integer>> rs0 = new ArrayList<>();
+		ArrayList<ArrayList<Integer>> rs1 = new ArrayList<>();
+		
+		for(int i = 0, r0 = 0; i < genes.size(); ++i) {
+			int lgt = genes.get(i).size();
+			rs0.add(new ArrayList<Integer>(cross0.subList(r0, r0 + lgt)));
+			rs1.add(new ArrayList<Integer>(cross1.subList(r0, r0 + lgt)));
+			r0 += lgt;
+		}
+		
+		this.genes = rs0;
+		chr1.genes = rs1;
+	};
+	
 	
 	public static BinaryChromosome newInstance (Function f, Double p) {
 		return new BinaryChromosome(f, p);
-	};
-	
-	public List<Integer> plain(){
-		return genes.stream().flatMap(List::stream).collect(Collectors.toList());
 	};
 	
 	

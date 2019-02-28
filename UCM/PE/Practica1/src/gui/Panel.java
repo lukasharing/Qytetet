@@ -82,7 +82,7 @@ public class Panel extends JFrame {
 		restart = new JButton("Restablecer");
 		elitism = new JCheckBox("Elitismo");
 		this.size = new Dimension(200, 20);
-
+		
 		function_sel.setPreferredSize(new Dimension(200, 25));
 
 		function_sel.setMaximumSize(function_sel.getPreferredSize());
@@ -113,7 +113,8 @@ public class Panel extends JFrame {
 		titulo.setFont(titulo.getFont().deriveFont(16.0f));
 
 		barraizq.add(titulo);
-		barraizq.add(new JLabel("Tipo de cromosoma:"));
+		JLabel lb1 = new JLabel("Tipo de cromosoma:");
+		barraizq.add(lb1);
 		barraizq.add(chrtype_sel);
 		barraizq.add(new JLabel("Tamaño población:"));
 		barraizq.add(size_population);
