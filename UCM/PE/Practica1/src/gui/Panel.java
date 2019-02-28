@@ -115,6 +115,7 @@ public class Panel extends JFrame {
 		barraizq.add(titulo);
 		JLabel lb1 = new JLabel("Tipo de cromosoma:");
 		barraizq.add(lb1);
+		chrtype_sel.setEnabled(false);
 		barraizq.add(chrtype_sel);
 		barraizq.add(new JLabel("Tamaño población:"));
 		barraizq.add(size_population);
@@ -251,9 +252,16 @@ public class Panel extends JFrame {
 		function_sel.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent event) {
 				Object item = event.getItem();
-				func4_params.setEnabled((event.getStateChange() == ItemEvent.SELECTED)
-						&& (item.toString().equals(function_sel_ops[3])));
-
+				func4_params.setEnabled((event.getStateChange() == ItemEvent.SELECTED) && (item.toString().equals(function_sel_ops[3])));
+				
+				if((event.getStateChange() == ItemEvent.SELECTED) && (item.toString().equals(function_sel_ops[3]))){
+					func4_params.setEnabled(true);
+					chrtype_sel.setEnabled(true);
+				} else {
+					func4_params.setEnabled(false);
+					chrtype_sel.setSelectedItem(chrtype_sel_ops[0]);
+					chrtype_sel.setEnabled(false);
+				}
 			}
 		});
 
