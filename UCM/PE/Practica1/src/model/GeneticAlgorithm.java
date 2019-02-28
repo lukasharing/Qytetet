@@ -35,7 +35,6 @@ public class GeneticAlgorithm<T> {
 		this.total_generations = generations;
 		this.gene_precision = precision;
 		this.elitism = num_elitism;
-		this.elitism = 0;
 
 		this.crossing_prob = crossoverProbability;
 		this.mutation_prob = mutationProbability;
@@ -68,7 +67,6 @@ public class GeneticAlgorithm<T> {
 		double[] eval_result = this.evaluation();
 		ArrayList<Chromosome> best = getBest(this.elitism);
 
-
 		Chromosome best_absolute = getBest(1).get(0);
 		generation_best[0] = function.evaluate(best_absolute.getFenotypes());
 		generation_best_abs[0] = generation_best[0];
@@ -80,26 +78,24 @@ public class GeneticAlgorithm<T> {
 		}
 		generation_mean[0] = mean / initial_population;
 
-
 		currentGeneration = 1;
 		while (currentGeneration < total_generations) {
 			best = getBest(this.elitism);
-			
+
 			this.selection(SelectionType.ROULETTE, eval_result);
 			this.crossover(1);
 			this.mutation();
 			eval_result = this.evaluation();
-			
+
 			ArrayList<Chromosome> best_no_elitism = getBest(initial_population - this.elitism);
 			best_no_elitism.addAll(best);
 			this.chromosomes = best_no_elitism;
-			
+
 			Chromosome best_chr = getBest(1).get(0);
-			if (function.compare(function.evaluate(best_absolute.getFenotypes()),
-					best_chr.getFenotypes()) > 0) {
+			if (function.compare(function.evaluate(best_absolute.getFenotypes()), best_chr.getFenotypes()) > 0) {
 				best_absolute = best_chr;
 			}
-			
+
 			generation_best[currentGeneration] = function.evaluate(best_chr.getFenotypes());
 			generation_best_abs[currentGeneration] = function.evaluate(best_absolute.getFenotypes());
 			// Mean
@@ -142,7 +138,7 @@ public class GeneticAlgorithm<T> {
 		}
 
 		pares.sort((a, b) -> function.compare(a.second, b.first.getFenotypes()));
-		
+
 		// System.out.println(pares);
 		ArrayList<Chromosome> result = new ArrayList<>();
 		for (int i = 0; i < subsize; ++i) {
@@ -245,8 +241,8 @@ public class GeneticAlgorithm<T> {
 			}
 
 			break;
-			case RANKING:
-				
+		case RANKING:
+
 			break;
 		}
 		this.chromosomes = generation;

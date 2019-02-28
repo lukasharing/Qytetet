@@ -1,19 +1,17 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.List;
 
 import org.math.plot.*;
 
 import model.BinaryChromosome;
-import model.Chromosome;
 import model.Function;
 import model.Function1;
 import model.Function2;
@@ -27,7 +25,7 @@ import javax.swing.*;
 public class Panel extends JFrame {
 
 	private static final long serialVersionUID = 2569879142816556337L;
-	
+
 	Plot2DPanel plot;
 
 	private JTextField size_population;
@@ -37,9 +35,11 @@ public class Panel extends JFrame {
 	private JTextField prec;
 	private String[] function_sel_ops = { "Función 1", "Función 2", "Función 3", "Función 4" };
 	private JComboBox<String> function_sel;
+	private JSpinner func4_params;
 	private JButton start;
 	private JButton restart;
 	private JCheckBox elitism;
+	private JTextField elitism_amount;
 	private Dimension size;
 	private GeneticAlgorithm<BinaryChromosome> ga;
 
@@ -52,21 +52,22 @@ public class Panel extends JFrame {
 		setTitle("Práctica 1");
 		this.setMinimumSize(new Dimension(1200, 700));
 
-		this.plot = new Plot2DPanel();
+		// Components
+		plot = new Plot2DPanel();
 		plot.addLegend("SOUTH");
 		add(plot, BorderLayout.CENTER);
-
-		// Components
 		this.size_population = new JTextField("100", 12);
 		this.num_generations = new JTextField("100", 12);
 		this.crossover_perc = new JTextField("0.6", 12);
 		this.mutation_perc = new JTextField("0.05", 12);
 		this.prec = new JTextField("0.0001", 12);
 		this.function_sel = new JComboBox<>(function_sel_ops);
+		this.func4_params = new JSpinner();
 		this.elitism = new JCheckBox("Elitismo");
+		this.elitism_amount = new JTextField("5", 6);
 		start = new JButton("Iniciar");
 		restart = new JButton("Restablecer");
-		JCheckBox elitism = new JCheckBox("Elitismo");
+		elitism = new JCheckBox("Elitismo");
 		this.size = new Dimension(200, 20);
 
 		function_sel.setPreferredSize(new Dimension(200, 25));
@@ -103,7 +104,13 @@ public class Panel extends JFrame {
 		barraizq.add(new JLabel("Precisión:"));
 		barraizq.add(prec);
 		barraizq.add(elitism);
+		elitism_amount.setVisible(false);
+		barraizq.add(elitism_amount);
+
 		barraizq.add(function_sel);
+		func4_params.setVisible(false);
+		barraizq.add(func4_params);
+		func4_params.setValue(3);
 
 		barraizq.add(start);
 		barraizq.add(restart);
@@ -112,57 +119,99 @@ public class Panel extends JFrame {
 		add(barraizq, BorderLayout.LINE_START);
 		add(new JLabel("Realizado por Lukas Haring y Raúl Torrijos", SwingConstants.RIGHT), BorderLayout.PAGE_END);
 		setVisible(true);
-		
+
 		start.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				/*
-				 * x = new double[Integer.parseInt(num_generations.getText())];
-				 * y = new double[Integer.parseInt(num_generations.getText())];
-				 */
+
+				restartPlot();
+
 				Function f = new Function1(null);
 				String function_name = (String) function_sel.getSelectedItem();
-				System.out.println(function_name);
 				switch (function_name) {
-					case "Función 1":
-						f = new Function1(FunctionType.MAXIMIZE);
+				case "Función 1":
+					f = new Function1(FunctionType.MAXIMIZE);
 					break;
-					case "Función 2":
-						f = new Function2(FunctionType.MINIMIZE);
+				case "Función 2":
+					f = new Function2(FunctionType.MINIMIZE);
 					break;
-					case "Función 3":
-						f = new Function3(FunctionType.MINIMIZE);
+				case "Función 3":
+					f = new Function3(FunctionType.MINIMIZE);
 					break;
-					case "Función 4":
-						f = new Function4(3, FunctionType.MINIMIZE);
+				case "Función 4":
+					f = new Function4((Integer) func4_params.getValue(), FunctionType.MINIMIZE);
 					break;
 				}
-				
+
+				int elitism_am = 0;
+				if (elitism.isSelected()) {
+					elitism_am = Integer.parseInt(elitism_amount.getText());
+				}
+
 				int num_gen = Integer.parseInt(num_generations.getText());
 				ga = new GeneticAlgorithm<BinaryChromosome>(BinaryChromosome.class,
 						Integer.parseInt(size_population.getText()), num_gen,
 						Double.parseDouble(crossover_perc.getText()), Double.parseDouble(mutation_perc.getText()),
-						Double.parseDouble(prec.getText()), 1, f);
-				
+						Double.parseDouble(prec.getText()), elitism_am, f);
+
 				List<double[]> best_chromosomes = ga.run();
-				
+
 				double[] generations = new double[num_gen];
-				for(int i = 0; i < num_gen; ++i) generations[i] = i;
-				plot.addLinePlot("Mejor absoluto"        , generations, best_chromosomes.get(0));
-				plot.addLinePlot("Mejor de la generación", generations, best_chromosomes.get(1));
-				plot.addLinePlot("Media de la generación", generations, best_chromosomes.get(2));
-				
-				/*for(Chromosome chr : best_chromosomes) {
-					System.out.println(Arrays.toString(chr.getFenotypes()));
-				}*/
+				for (int i = 0; i < num_gen; ++i)
+					generations[i] = i;
+
+				addPlotLines(generations, best_chromosomes);
 
 			}
 		});
 
 		restart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				restartPlot();
+			}
+		});
+
+		elitism.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					elitism_amount.setVisible(true);
+				} else {
+					elitism_amount.setVisible(false);
+				}
+			}
+		});
+
+		function_sel.addItemListener(new ItemListener() {
+			// Listening if a new items of the combo box has been selected.
+			public void itemStateChanged(ItemEvent event) {
+				@SuppressWarnings("rawtypes")
+				JComboBox comboBox = (JComboBox) event.getSource();
+
+				// The item affected by the event.
+				Object item = event.getItem();
+				if ((event.getStateChange() == ItemEvent.SELECTED) && (item.toString().equals(function_sel_ops[3]))) {
+					func4_params.setVisible(true);
+				} else {
+					func4_params.setVisible(false);
+				}
 
 			}
 		});
+
+	}
+
+	void restartPlot() {
+		remove(plot);
+		plot = new Plot2DPanel();
+		plot.addLegend("SOUTH");
+		add(plot, BorderLayout.CENTER);
+		repaint();
+		validate();
+	}
+
+	void addPlotLines(double[] generations, List<double[]> best_chromosomes) {
+		plot.addLinePlot("Mejor absoluto", generations, best_chromosomes.get(0));
+		plot.addLinePlot("Mejor de la generación", generations, best_chromosomes.get(1));
+		plot.addLinePlot("Media de la generación", generations, best_chromosomes.get(2));
 	}
 }
