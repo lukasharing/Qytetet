@@ -22,6 +22,7 @@ public class GeneticAlgorithm<T> {
 	private int total_generations = 0;
 	private double gene_precision = 0.0;
 	private int elitism = 0;
+	private Chromosome best_chr;
 
 	// Probabilities
 	private double crossing_prob = 0.0;
@@ -58,10 +59,12 @@ public class GeneticAlgorithm<T> {
 		double[] generation_best_abs = new double[total_generations];
 		double[] generation_mean = new double[total_generations];
 		double[] generation_best = new double[total_generations];
+		double[] fenotypes_result = new double[20];
 
 		report.add(generation_best_abs);
 		report.add(generation_best);
 		report.add(generation_mean);
+		report.add(fenotypes_result);
 
 		// 1s Generation
 		double[] eval_result = this.evaluation();
@@ -91,13 +94,14 @@ public class GeneticAlgorithm<T> {
 			best_no_elitism.addAll(best);
 			this.chromosomes = best_no_elitism;
 
-			Chromosome best_chr = getBest(1).get(0);
+			best_chr = getBest(1).get(0);
 			if (function.compare(function.evaluate(best_absolute.getFenotypes()), best_chr.getFenotypes()) > 0) {
 				best_absolute = best_chr;
 			}
 
 			generation_best[currentGeneration] = function.evaluate(best_chr.getFenotypes());
 			generation_best_abs[currentGeneration] = function.evaluate(best_absolute.getFenotypes());
+
 			// Mean
 			mean = 0.0;
 			for (Chromosome chr : chromosomes) {
@@ -108,6 +112,7 @@ public class GeneticAlgorithm<T> {
 			currentGeneration++;
 		}
 
+		fenotypes_result = best_absolute.getFenotypes();
 		return report;
 	};
 
@@ -192,7 +197,8 @@ public class GeneticAlgorithm<T> {
 				// valor de la ruleta
 				double roulette = Math.random();
 				int throul = 0;
-				while (evaluations[throul++] < roulette);
+				while (evaluations[throul++] < roulette)
+					;
 
 				// Nos quedamos con el anterior.
 				generation.add(chromosomes.get(--throul).clone());
@@ -240,7 +246,7 @@ public class GeneticAlgorithm<T> {
 
 			break;
 		case RANKING:
-			
+
 			break;
 		}
 		this.chromosomes = generation;
@@ -272,5 +278,9 @@ public class GeneticAlgorithm<T> {
 			chromosome.randomMutation(mutation_prob);
 		}
 	};
+
+	public Chromosome getBest_chr() {
+		return best_chr;
+	}
 
 }

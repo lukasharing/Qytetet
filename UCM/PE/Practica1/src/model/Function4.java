@@ -16,7 +16,7 @@ public class Function4 extends Function {
 		double xisin = 0.0;
 		for(int i = 0; i < args.length; ++i) {
 			xisin += Math.sin(args[i]) *
-					 Math.pow(Math.sin((i+1)*Math.pow(args[i], 2.0)/Math.PI), 20.0);
+					Math.pow(Math.sin((i+1)*Math.pow(args[i], 2.0)/Math.PI), 20.0);
 		}
 		return -xisin;
 	};
