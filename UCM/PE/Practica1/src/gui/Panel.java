@@ -21,6 +21,7 @@ import model.Function3;
 import model.Function4;
 import model.FunctionType;
 import model.GeneticAlgorithm;
+import model.RealChromosome;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -30,7 +31,9 @@ public class Panel extends JFrame {
 	private static final long serialVersionUID = 2569879142816556337L;
 
 	Plot2DPanel plot;
-
+	
+	private JComboBox<String> chrtype_sel;
+	private String[] chrtype_sel_ops = { "Binario" , "Real" };
 	private JTextField size_population;
 	private JTextField num_generations;
 	private JTextField crossover_perc;
@@ -45,7 +48,7 @@ public class Panel extends JFrame {
 	private JTextField elitism_amount;
 	private Dimension size;
 
-	private GeneticAlgorithm<BinaryChromosome> ga;
+	private GeneticAlgorithm<?> ga;
 
 	public Panel() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
 			UnsupportedLookAndFeelException {
@@ -63,6 +66,8 @@ public class Panel extends JFrame {
 		plot.addLegend("SOUTH");
 		plot.setBorder(BorderFactory.createLineBorder(new Color(141, 179, 214)));
 		add(plot, BorderLayout.CENTER);
+		
+		this.chrtype_sel = new JComboBox<>(chrtype_sel_ops);
 		this.size_population = new JTextField("100", 12);
 		this.num_generations = new JTextField("100", 12);
 		this.crossover_perc = new JTextField("0.6", 12);
@@ -100,7 +105,7 @@ public class Panel extends JFrame {
 		JPanel barraizq = new JPanel();
 		JPanel barradcha = new JPanel();
 
-		barraizq.setLayout(new GridLayout(20, 2, 10, 10));
+		barraizq.setLayout(new GridLayout(19, 2, 10, 10));
 
 		barraizq.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
@@ -108,6 +113,8 @@ public class Panel extends JFrame {
 		titulo.setFont(titulo.getFont().deriveFont(16.0f));
 
 		barraizq.add(titulo);
+		barraizq.add(new JLabel("Tipo de cromosoma:"));
+		barraizq.add(chrtype_sel);
 		barraizq.add(new JLabel("Tamaño población:"));
 		barraizq.add(size_population);
 		barraizq.add(new JLabel("Número generaciones:"));
@@ -187,12 +194,24 @@ public class Panel extends JFrame {
 				if (elitism.isSelected()) {
 					elitism_am = Integer.parseInt(elitism_amount.getText());
 				}
+				
+				
 
 				int num_gen = Integer.parseInt(num_generations.getText());
-				ga = new GeneticAlgorithm<BinaryChromosome>(BinaryChromosome.class,
-						Integer.parseInt(size_population.getText()), num_gen,
-						Double.parseDouble(crossover_perc.getText()), Double.parseDouble(mutation_perc.getText()),
-						Double.parseDouble(prec.getText()), elitism_am, f);
+				
+				
+				if(chrtype_sel.getSelectedItem().equals(chrtype_sel_ops[0])){
+					ga = new GeneticAlgorithm<BinaryChromosome>(BinaryChromosome.class,
+							Integer.parseInt(size_population.getText()), num_gen,
+							Double.parseDouble(crossover_perc.getText()), Double.parseDouble(mutation_perc.getText()),
+							Double.parseDouble(prec.getText()), elitism_am, f);
+				} else {
+					ga = new GeneticAlgorithm<RealChromosome>(RealChromosome.class,
+							Integer.parseInt(size_population.getText()), num_gen,
+							Double.parseDouble(crossover_perc.getText()), Double.parseDouble(mutation_perc.getText()),
+							Double.parseDouble(prec.getText()), elitism_am, f);
+				}
+			
 
 				List<double[]> best_chromosomes = ga.run();
 
