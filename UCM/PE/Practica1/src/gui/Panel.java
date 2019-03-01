@@ -143,7 +143,7 @@ public class Panel extends JFrame {
 
 		/* Number Elitism */
 		this.elitism_amount = new JSpinner();
-		elitism_amount.setValue(3);
+		elitism_amount.setValue(5);
 		this.elitism_amount.setEnabled(false);
 		JPanel p9 = new JPanel(new GridLayout(2, 1));
 		p9.add(new JLabel("Número Elitismo:"));
