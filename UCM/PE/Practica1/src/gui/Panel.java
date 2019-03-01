@@ -3,6 +3,7 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,7 +46,7 @@ public class Panel extends JFrame {
 	private JButton start;
 	private JButton restart;
 	private JCheckBox elitism;
-	private JTextField elitism_amount;
+	private JSpinner elitism_amount;
 	private Dimension size;
 
 	private GeneticAlgorithm<?> ga;
@@ -67,78 +68,103 @@ public class Panel extends JFrame {
 		plot.setBorder(BorderFactory.createLineBorder(new Color(141, 179, 214)));
 		add(plot, BorderLayout.CENTER);
 		
-		this.chrtype_sel = new JComboBox<>(chrtype_sel_ops);
-		this.size_population = new JTextField("100", 12);
-		this.num_generations = new JTextField("100", 12);
-		this.crossover_perc = new JTextField("0.6", 12);
-		this.mutation_perc = new JTextField("0.05", 12);
-		this.prec = new JTextField("0.0001", 12);
-		this.function_sel = new JComboBox<>(function_sel_ops);
-		this.func4_params = new JSpinner();
-		this.elitism = new JCheckBox("Elitismo");
-		this.elitism_amount = new JTextField("5", 6);
-		this.elitism_amount.setEnabled(false);
-		start = new JButton("Iniciar");
-		restart = new JButton("Restablecer");
-		elitism = new JCheckBox("Elitismo");
-		this.size = new Dimension(200, 20);
-		
-		function_sel.setPreferredSize(new Dimension(200, 25));
-
-		function_sel.setMaximumSize(function_sel.getPreferredSize());
-
-		size_population.setPreferredSize(size);
-		size_population.setMaximumSize(size_population.getPreferredSize());
-
-		num_generations.setPreferredSize(size);
-		num_generations.setMaximumSize(size_population.getPreferredSize());
-
-		crossover_perc.setPreferredSize(size);
-		crossover_perc.setMaximumSize(size_population.getPreferredSize());
-
-		mutation_perc.setPreferredSize(size);
-		mutation_perc.setMaximumSize(size_population.getPreferredSize());
-
-		prec.setPreferredSize(size);
-		prec.setMaximumSize(size_population.getPreferredSize());
 
 		JPanel barraizq = new JPanel();
-		JPanel barradcha = new JPanel();
+		barraizq.setLayout(new BoxLayout(barraizq, BoxLayout.Y_AXIS));
 
-		barraizq.setLayout(new GridLayout(19, 2, 10, 10));
+		/* Titulo */
+		JLabel titulo = new JLabel("PARÁMETROS.");
+		JPanel ptitle = new JPanel(new GridLayout(1, 1));
+		titulo.setFont(titulo.getFont().deriveFont(16.0f));
+		ptitle.add(titulo);
+		barraizq.add(ptitle);
+		
+		/* Chromosome Type Selection */
+		this.chrtype_sel = new JComboBox<>(chrtype_sel_ops);
+		JPanel p0 = new JPanel(new GridLayout(2, 1));
+		p0.add(new JLabel("Tipo de cromosoma:"));
+		p0.add(chrtype_sel);
+		barraizq.add(p0);
+		
+		/* Size Population */
+		this.size_population = new JTextField("100", 12);
+		JPanel p1 = new JPanel(new GridLayout(2, 1));
+		p1.add(new JLabel("Tamaño población:"));
+		p1.add(size_population);
+		barraizq.add(p1);
+		
+		/* Number Generations */
+		this.num_generations = new JTextField("100", 12);
+		JPanel p2 = new JPanel(new GridLayout(2, 1));
+		p2.add(new JLabel("Número generaciones:"));
+		p2.add(num_generations);
+		barraizq.add(p2);
+		
+		/* Crossing Percentage */
+		this.crossover_perc = new JTextField("0.6", 12);
+		JPanel p3 = new JPanel(new GridLayout(2, 1));
+		p3.add(new JLabel("Porcentaje de cruces:"));
+		p3.add(crossover_perc);
+		barraizq.add(p3);
+		
+		/* Mutation Percentage */
+		this.mutation_perc = new JTextField("0.05", 12);
+		JPanel p4 = new JPanel(new GridLayout(2, 1));
+		p4.add(new JLabel("Porcentaje de mutación:"));
+		p4.add(mutation_perc);
+		barraizq.add(p4);
+		
+		/* Precition */
+		this.prec = new JTextField("0.0001", 12);
+		JPanel p5 = new JPanel(new GridLayout(2, 1));
+		p5.add(new JLabel("Precisión:"));
+		p5.add(prec);
+		barraizq.add(p5);
+		
+		/* Function Selection*/
+		this.function_sel = new JComboBox<>(function_sel_ops);
+		JPanel p6 = new JPanel(new GridLayout(2, 1));
+		p6.add(new JLabel("Función:"));
+		p6.add(function_sel);
+		barraizq.add(p6);
+		
+		
+		/* Number Parameters */
+		this.func4_params = new JSpinner();
+		func4_params.setValue(3);
+		func4_params.setEnabled(false);
+		JPanel p7 = new JPanel(new GridLayout(2, 1));
+		p7.add(new JLabel("Número Argumentos:"));
+		p7.add(func4_params);
+		barraizq.add(p7);
+		
+		/* Has Elitism */
+		this.elitism = new JCheckBox("Elitismo");
+		JPanel p8 = new JPanel(new GridLayout(1, 1));
+		p8.add(elitism);
+		barraizq.add(p8);
+
+		/* Number Elitism */
+		this.elitism_amount = new JSpinner();
+		elitism_amount.setValue(3);
+		this.elitism_amount.setEnabled(false);
+		JPanel p9 = new JPanel(new GridLayout(2, 1));
+		p9.add(new JLabel("Número Elitismo:"));
+		p9.add(elitism_amount);
+		barraizq.add(p9);
+		
+		/* Buttons */
+		JPanel p10 = new JPanel(new GridLayout(2, 1));
+		start = new JButton("Iniciar");
+		restart = new JButton("Restablecer");
+		p10.add(start);
+		p10.add(restart);
+		barraizq.add(p10);
 
 		barraizq.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-		JLabel titulo = new JLabel("PARÁMETROS:");
-		titulo.setFont(titulo.getFont().deriveFont(16.0f));
-
-		barraizq.add(titulo);
-		JLabel lb1 = new JLabel("Tipo de cromosoma:");
-		barraizq.add(lb1);
-		barraizq.add(chrtype_sel);
-		barraizq.add(new JLabel("Tamaño población:"));
-		barraizq.add(size_population);
-		barraizq.add(new JLabel("Número generaciones:"));
-		barraizq.add(num_generations);
-		barraizq.add(new JLabel("Porcentaje de cruces:"));
-		barraizq.add(crossover_perc);
-		barraizq.add(new JLabel("Porcentaje de mutación:"));
-		barraizq.add(mutation_perc);
-		barraizq.add(new JLabel("Precisión:"));
-		barraizq.add(prec);
-		barraizq.add(elitism);
-		barraizq.add(elitism_amount);
-
-		barraizq.add(function_sel);
-		func4_params.setEnabled(false);
-		barraizq.add(func4_params);
-		func4_params.setValue(3);
-
-		
-		barraizq.add(start);
-		barraizq.add(restart);
-
-		barraizq.setBorder(BorderFactory.createEmptyBorder(8, 24, 0, 15));
+		/* Footer */
+		barraizq.setBorder(BorderFactory.createEmptyBorder(8, 15, 0, 15));
 		add(barraizq, BorderLayout.LINE_START);
 
 		JLabel footer = new JLabel("Realizado por Lukas Haring y Raúl Torrijos", SwingConstants.CENTER);
@@ -147,6 +173,7 @@ public class Panel extends JFrame {
 		setVisible(true);
 
 		// OUTPUT
+		JPanel barradcha = new JPanel();
 
 		barradcha.setLayout(new BorderLayout());
 		barradcha.setBorder(BorderFactory.createEmptyBorder(8, 24, 0, 15));
@@ -193,7 +220,7 @@ public class Panel extends JFrame {
 
 				int elitism_am = 0;
 				if (elitism.isSelected()) {
-					elitism_am = Integer.parseInt(elitism_amount.getText());
+					elitism_am = ((Integer)elitism_amount.getValue());
 				}
 				
 				
