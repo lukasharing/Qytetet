@@ -80,7 +80,8 @@ public class GeneticAlgorithm<T> {
 
 		// Mean
 		double mean = 0.0;
-		for (@SuppressWarnings("rawtypes") Chromosome chr : chromosomes) {
+		for (@SuppressWarnings("rawtypes")
+		Chromosome chr : chromosomes) {
 			mean += function.evaluate(chr.getFenotypes());
 		}
 		generation_mean[0] = mean / initial_population;
@@ -109,7 +110,8 @@ public class GeneticAlgorithm<T> {
 
 			// Mean
 			mean = 0.0;
-			for (@SuppressWarnings("rawtypes") Chromosome chr : chromosomes) {
+			for (@SuppressWarnings("rawtypes")
+			Chromosome chr : chromosomes) {
 				mean += function.evaluate(chr.getFenotypes());
 			}
 			generation_mean[currentGeneration] = mean / initial_population;
@@ -257,9 +259,6 @@ public class GeneticAlgorithm<T> {
 			}
 
 			break;
-		case RANKING:
-
-			break;
 		}
 		this.chromosomes = generation;
 	}
@@ -289,7 +288,8 @@ public class GeneticAlgorithm<T> {
 	};
 
 	private void mutation() {
-		for (@SuppressWarnings("rawtypes") Chromosome chromosome : chromosomes) {
+		for (@SuppressWarnings("rawtypes")
+		Chromosome chromosome : chromosomes) {
 			chromosome.randomMutation(mutation_prob);
 		}
 	};

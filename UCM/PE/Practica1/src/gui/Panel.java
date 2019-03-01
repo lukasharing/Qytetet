@@ -32,7 +32,7 @@ public class Panel extends JFrame {
 	Plot2DPanel plot;
 
 	private JComboBox<String> chrtype_sel;
-	private String[] chrtype_sel_ops = { "Binario" , "Real" };
+	private String[] chrtype_sel_ops = { "Binario", "Real" };
 	private JTextField size_population;
 	private JTextField num_generations;
 	private JTextField crossover_perc;
@@ -63,7 +63,6 @@ public class Panel extends JFrame {
 		plot.addLegend("SOUTH");
 		plot.setBorder(BorderFactory.createLineBorder(new Color(141, 179, 214)));
 		add(plot, BorderLayout.CENTER);
-
 
 		JPanel barraizq = new JPanel();
 		barraizq.setLayout(new BoxLayout(barraizq, BoxLayout.Y_AXIS));
@@ -100,14 +99,14 @@ public class Panel extends JFrame {
 		/* Crossing Percentage */
 		this.crossover_perc = new JTextField("0.6", 12);
 		JPanel p3 = new JPanel(new GridLayout(2, 1));
-		p3.add(new JLabel("Porcentaje de cruces:"));
+		p3.add(new JLabel("Probabilidad de cruce:"));
 		p3.add(crossover_perc);
 		barraizq.add(p3);
 
 		/* Mutation Percentage */
 		this.mutation_perc = new JTextField("0.05", 12);
 		JPanel p4 = new JPanel(new GridLayout(2, 1));
-		p4.add(new JLabel("Porcentaje de mutación:"));
+		p4.add(new JLabel("Probabilidad de mutación:"));
 		p4.add(mutation_perc);
 		barraizq.add(p4);
 
@@ -118,13 +117,12 @@ public class Panel extends JFrame {
 		p5.add(prec);
 		barraizq.add(p5);
 
-		/* Function Selection*/
+		/* Function Selection */
 		this.function_sel = new JComboBox<>(function_sel_ops);
 		JPanel p6 = new JPanel(new GridLayout(2, 1));
 		p6.add(new JLabel("Función:"));
 		p6.add(function_sel);
 		barraizq.add(p6);
-
 
 		/* Number Parameters */
 		this.func4_params = new JSpinner();
@@ -217,15 +215,12 @@ public class Panel extends JFrame {
 
 				int elitism_am = 0;
 				if (elitism.isSelected()) {
-					elitism_am = ((Integer)elitism_amount.getValue());
+					elitism_am = ((Integer) elitism_amount.getValue());
 				}
-
-
 
 				int num_gen = Integer.parseInt(num_generations.getText());
 
-
-				if(chrtype_sel.getSelectedItem().equals(chrtype_sel_ops[0])){
+				if (chrtype_sel.getSelectedItem().equals(chrtype_sel_ops[0])) {
 					ga = new GeneticAlgorithm<BinaryChromosome>(BinaryChromosome.class,
 							Integer.parseInt(size_population.getText()), num_gen,
 							Double.parseDouble(crossover_perc.getText()), Double.parseDouble(mutation_perc.getText()),
@@ -236,7 +231,6 @@ public class Panel extends JFrame {
 							Double.parseDouble(crossover_perc.getText()), Double.parseDouble(mutation_perc.getText()),
 							Double.parseDouble(prec.getText()), elitism_am, f);
 				}
-
 
 				List<double[]> best_chromosomes = ga.run();
 
@@ -275,9 +269,10 @@ public class Panel extends JFrame {
 		function_sel.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent event) {
 				Object item = event.getItem();
-				func4_params.setEnabled((event.getStateChange() == ItemEvent.SELECTED) && (item.toString().equals(function_sel_ops[3])));
+				func4_params.setEnabled((event.getStateChange() == ItemEvent.SELECTED)
+						&& (item.toString().equals(function_sel_ops[3])));
 
-				if((event.getStateChange() == ItemEvent.SELECTED) && (item.toString().equals(function_sel_ops[3]))){
+				if ((event.getStateChange() == ItemEvent.SELECTED) && (item.toString().equals(function_sel_ops[3]))) {
 					func4_params.setEnabled(true);
 					chrtype_sel.setEnabled(true);
 				} else {
