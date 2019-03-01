@@ -32,7 +32,7 @@ public class Panel extends JFrame {
 	private static final long serialVersionUID = 2569879142816556337L;
 
 	Plot2DPanel plot;
-	
+
 	private JComboBox<String> chrtype_sel;
 	private String[] chrtype_sel_ops = { "Binario" , "Real" };
 	private JTextField size_population;
@@ -40,7 +40,7 @@ public class Panel extends JFrame {
 	private JTextField crossover_perc;
 	private JTextField mutation_perc;
 	private JTextField prec;
-	private String[] function_sel_ops = { "Función 1", "Función 2", "Función 3", "Función 4" };
+	private String[] function_sel_ops = { "Funciï¿½n 1", "Funciï¿½n 2", "Funciï¿½n 3", "Funciï¿½n 4" };
 	private JComboBox<String> function_sel;
 	private JSpinner func4_params;
 	private JButton start;
@@ -59,7 +59,7 @@ public class Panel extends JFrame {
 
 		setResizable(false);
 
-		setTitle("Práctica 1");
+		setTitle("Prï¿½ctica 1");
 		this.setMinimumSize(new Dimension(1300, 700));
 
 		// Components
@@ -67,77 +67,77 @@ public class Panel extends JFrame {
 		plot.addLegend("SOUTH");
 		plot.setBorder(BorderFactory.createLineBorder(new Color(141, 179, 214)));
 		add(plot, BorderLayout.CENTER);
-		
+
 
 		JPanel barraizq = new JPanel();
 		barraizq.setLayout(new BoxLayout(barraizq, BoxLayout.Y_AXIS));
 
 		/* Titulo */
-		JLabel titulo = new JLabel("PARÁMETROS.");
+		JLabel titulo = new JLabel("PARï¿½METROS.");
 		JPanel ptitle = new JPanel(new GridLayout(1, 1));
 		titulo.setFont(titulo.getFont().deriveFont(16.0f));
 		ptitle.add(titulo);
 		barraizq.add(ptitle);
-		
+
 		/* Chromosome Type Selection */
 		this.chrtype_sel = new JComboBox<>(chrtype_sel_ops);
 		JPanel p0 = new JPanel(new GridLayout(2, 1));
 		p0.add(new JLabel("Tipo de cromosoma:"));
 		p0.add(chrtype_sel);
 		barraizq.add(p0);
-		
+
 		/* Size Population */
 		this.size_population = new JTextField("100", 12);
 		JPanel p1 = new JPanel(new GridLayout(2, 1));
-		p1.add(new JLabel("Tamaño población:"));
+		p1.add(new JLabel("Tamaï¿½o poblaciï¿½n:"));
 		p1.add(size_population);
 		barraizq.add(p1);
-		
+
 		/* Number Generations */
 		this.num_generations = new JTextField("100", 12);
 		JPanel p2 = new JPanel(new GridLayout(2, 1));
-		p2.add(new JLabel("Número generaciones:"));
+		p2.add(new JLabel("Nï¿½mero generaciones:"));
 		p2.add(num_generations);
 		barraizq.add(p2);
-		
+
 		/* Crossing Percentage */
 		this.crossover_perc = new JTextField("0.6", 12);
 		JPanel p3 = new JPanel(new GridLayout(2, 1));
 		p3.add(new JLabel("Porcentaje de cruces:"));
 		p3.add(crossover_perc);
 		barraizq.add(p3);
-		
+
 		/* Mutation Percentage */
 		this.mutation_perc = new JTextField("0.05", 12);
 		JPanel p4 = new JPanel(new GridLayout(2, 1));
-		p4.add(new JLabel("Porcentaje de mutación:"));
+		p4.add(new JLabel("Porcentaje de mutaciï¿½n:"));
 		p4.add(mutation_perc);
 		barraizq.add(p4);
-		
+
 		/* Precition */
 		this.prec = new JTextField("0.0001", 12);
 		JPanel p5 = new JPanel(new GridLayout(2, 1));
-		p5.add(new JLabel("Precisión:"));
+		p5.add(new JLabel("Precisiï¿½n:"));
 		p5.add(prec);
 		barraizq.add(p5);
-		
+
 		/* Function Selection*/
 		this.function_sel = new JComboBox<>(function_sel_ops);
 		JPanel p6 = new JPanel(new GridLayout(2, 1));
-		p6.add(new JLabel("Función:"));
+		p6.add(new JLabel("Funciï¿½n:"));
 		p6.add(function_sel);
 		barraizq.add(p6);
-		
-		
+
+
 		/* Number Parameters */
 		this.func4_params = new JSpinner();
 		func4_params.setValue(3);
 		func4_params.setEnabled(false);
 		JPanel p7 = new JPanel(new GridLayout(2, 1));
-		p7.add(new JLabel("Número Argumentos:"));
+		p7.add(new JLabel("Nï¿½mero Argumentos:"));
 		p7.add(func4_params);
 		barraizq.add(p7);
-		
+
 		/* Has Elitism */
 		this.elitism = new JCheckBox("Elitismo");
 		JPanel p8 = new JPanel(new GridLayout(1, 1));
@@ -149,10 +149,10 @@ public class Panel extends JFrame {
 		elitism_amount.setValue(3);
 		this.elitism_amount.setEnabled(false);
 		JPanel p9 = new JPanel(new GridLayout(2, 1));
-		p9.add(new JLabel("Número Elitismo:"));
+		p9.add(new JLabel("Nï¿½mero Elitismo:"));
 		p9.add(elitism_amount);
 		barraizq.add(p9);
-		
+
 		/* Buttons */
 		JPanel p10 = new JPanel(new GridLayout(2, 1));
 		start = new JButton("Iniciar");
@@ -167,7 +167,7 @@ public class Panel extends JFrame {
 		barraizq.setBorder(BorderFactory.createEmptyBorder(8, 15, 0, 15));
 		add(barraizq, BorderLayout.LINE_START);
 
-		JLabel footer = new JLabel("Realizado por Lukas Haring y Raúl Torrijos", SwingConstants.CENTER);
+		JLabel footer = new JLabel("Realizado por Lukas Haring y Raï¿½l Torrijos", SwingConstants.CENTER);
 		footer.setBorder(new EmptyBorder(10, 10, 10, 10));
 		add(footer, BorderLayout.PAGE_END);
 		setVisible(true);
@@ -189,7 +189,7 @@ public class Panel extends JFrame {
 		JPanel barradchaftr = new JPanel();
 		barradcha.add(barradchaftr, BorderLayout.PAGE_END);
 		barradchaftr.setLayout(new BoxLayout(barradchaftr, BoxLayout.Y_AXIS));
-		barradchaftr.add(new JLabel("Mejor evaluación:"), BorderLayout.PAGE_END);
+		barradchaftr.add(new JLabel("Mejor evaluaciï¿½n:"), BorderLayout.PAGE_END);
 		JLabel best_ev = new JLabel(" ");
 		barradchaftr.add(best_ev);
 
@@ -204,16 +204,16 @@ public class Panel extends JFrame {
 				Function f = new Function1(null);
 				String function_name = (String) function_sel.getSelectedItem();
 				switch (function_name) {
-				case "Función 1":
+				case "Funciï¿½n 1":
 					f = new Function1(FunctionType.MAXIMIZE);
 					break;
-				case "Función 2":
+				case "Funciï¿½n 2":
 					f = new Function2(FunctionType.MINIMIZE);
 					break;
-				case "Función 3":
+				case "Funciï¿½n 3":
 					f = new Function3(FunctionType.MINIMIZE);
 					break;
-				case "Función 4":
+				case "Funciï¿½n 4":
 					f = new Function4((Integer) func4_params.getValue(), FunctionType.MINIMIZE);
 					break;
 				}
@@ -222,12 +222,12 @@ public class Panel extends JFrame {
 				if (elitism.isSelected()) {
 					elitism_am = ((Integer)elitism_amount.getValue());
 				}
-				
-				
+
+
 
 				int num_gen = Integer.parseInt(num_generations.getText());
-				
-				
+
+
 				if(chrtype_sel.getSelectedItem().equals(chrtype_sel_ops[0])){
 					ga = new GeneticAlgorithm<BinaryChromosome>(BinaryChromosome.class,
 							Integer.parseInt(size_population.getText()), num_gen,
@@ -239,7 +239,7 @@ public class Panel extends JFrame {
 							Double.parseDouble(crossover_perc.getText()), Double.parseDouble(mutation_perc.getText()),
 							Double.parseDouble(prec.getText()), elitism_am, f);
 				}
-			
+
 
 				List<double[]> best_chromosomes = ga.run();
 
@@ -278,9 +278,16 @@ public class Panel extends JFrame {
 		function_sel.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent event) {
 				Object item = event.getItem();
-				func4_params.setEnabled((event.getStateChange() == ItemEvent.SELECTED)
-						&& (item.toString().equals(function_sel_ops[3])));
+				func4_params.setEnabled((event.getStateChange() == ItemEvent.SELECTED) && (item.toString().equals(function_sel_ops[3])));
 
+				if((event.getStateChange() == ItemEvent.SELECTED) && (item.toString().equals(function_sel_ops[3]))){
+					func4_params.setEnabled(true);
+					chrtype_sel.setEnabled(true);
+				} else {
+					func4_params.setEnabled(false);
+					chrtype_sel.setSelectedItem(chrtype_sel_ops[0]);
+					chrtype_sel.setEnabled(false);
+				}
 			}
 		});
 
@@ -306,7 +313,7 @@ public class Panel extends JFrame {
 
 	void addPlotLines(double[] generations, List<double[]> best_chromosomes) {
 		plot.addLinePlot("Mejor absoluto", generations, best_chromosomes.get(0));
-		plot.addLinePlot("Mejor de la generación", generations, best_chromosomes.get(1));
-		plot.addLinePlot("Media de la generación", generations, best_chromosomes.get(2));
+		plot.addLinePlot("Mejor de la generaciï¿½n", generations, best_chromosomes.get(1));
+		plot.addLinePlot("Media de la generaciï¿½n", generations, best_chromosomes.get(2));
 	}
 }
