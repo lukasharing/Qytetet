@@ -24,6 +24,7 @@ public class BinaryChromosome extends Chromosome<ArrayList<Integer>> {
 		
 	};
 	
+	@SuppressWarnings("unchecked")
 	public BinaryChromosome(Function f, double p, ArrayList<ArrayList<Integer>> cloning_genes) {
 		super(f, p);
 		for(ArrayList<Integer> gen : cloning_genes) {
@@ -51,6 +52,7 @@ public class BinaryChromosome extends Chromosome<ArrayList<Integer>> {
 	// Bijective Function that given the id of the interval and (binary chain = number)
 	// returns a point in the value.
 	private Double getFenotype(Integer n) {
+		@SuppressWarnings("rawtypes")
 		Pair interval = func.getInterval(n);
 		return (Double)interval.first + getGene(n) * ((Double)interval.second - (Double)interval.first) / (double)((1 << genes.get(n).size()) - 1);
 	};
@@ -67,13 +69,11 @@ public class BinaryChromosome extends Chromosome<ArrayList<Integer>> {
 	// - Mutations
 	
 	public void randomMutation(double prob) {
-		boolean muted = false;
 		for(int k = 0; k < genes.size(); ++k){
 			ArrayList<Integer> gen = genes.get(k);
 			for(int t = 0; t < gen.size(); ++t) {
 				if(Math.random() <= prob) {
 					gen.set(t, gen.get(t) ^ 0x1);
-					muted = true;
 				}
 			}
 			genes.set(k, gen);
@@ -138,5 +138,6 @@ public class BinaryChromosome extends Chromosome<ArrayList<Integer>> {
 	};
 	
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Chromosome clone() { return new BinaryChromosome(this.func, this.prec, this.genes); };
 }

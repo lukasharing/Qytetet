@@ -7,6 +7,7 @@ public abstract class Function {
 	public FunctionType maxmin;
 	
 	// Number of intervals == number of arguments
+	@SuppressWarnings("rawtypes")
 	protected List<Pair> arguments_intervals;
 	
 	int getTotalArguments() { return arguments_intervals.size(); };
@@ -17,6 +18,7 @@ public abstract class Function {
 	};
 	
 	// Returns nth Interval.
+	@SuppressWarnings("unchecked")
 	public Pair<Double, Double> getInterval(int i) { return arguments_intervals.get(i); };
 	
 

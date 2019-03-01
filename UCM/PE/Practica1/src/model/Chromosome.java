@@ -1,9 +1,6 @@
 package model;
 
 import java.util.*;
-import java.util.stream.Collectors;
-
-import sun.nio.cs.ext.GB18030;
 
 public abstract class Chromosome<T> {
 
@@ -20,9 +17,6 @@ public abstract class Chromosome<T> {
 	
 	public double[] getFenotypes(){ return null; };
 	public void randomMutation(double prob) {};
-	
-	//protected static BinaryChromosome newBinary (Function f, Double p) { return null; };
-	//protected RealChromosome newReal (Function f, Double p) { return null; };
 
 	@Override
 	public String toString() {
@@ -34,7 +28,7 @@ public abstract class Chromosome<T> {
 		return result;
 	}
 	
-	protected void cross(Chromosome chr1, int n) {};
+	protected void cross(Chromosome<T> chr1, int n) {};
 	
-	public Chromosome clone() { return null; };
+	public Chromosome<T> clone() { return null; };
 }

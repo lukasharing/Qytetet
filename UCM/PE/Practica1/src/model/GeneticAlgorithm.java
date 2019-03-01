@@ -10,6 +10,7 @@ public class GeneticAlgorithm<T> {
 	private final int TOURNAMENT_SET = 3;
 	private final double TOURNAMENT_PROB = 0.60;
 
+	@SuppressWarnings("rawtypes")
 	private ArrayList<Chromosome> chromosomes; // Population
 
 	private Class<T> class_type;
@@ -22,6 +23,7 @@ public class GeneticAlgorithm<T> {
 	private int total_generations = 0;
 	private double gene_precision = 0.0;
 	private int elitism = 0;
+	@SuppressWarnings("rawtypes")
 	private Chromosome best_chr;
 
 	// Probabilities
@@ -68,15 +70,17 @@ public class GeneticAlgorithm<T> {
 
 		// 1s Generation
 		double[] eval_result = this.evaluation();
+		@SuppressWarnings("rawtypes")
 		ArrayList<Chromosome> best = getBest(this.elitism);
 
+		@SuppressWarnings("rawtypes")
 		Chromosome best_absolute = getBest(1).get(0);
 		generation_best[0] = function.evaluate(best_absolute.getFenotypes());
 		generation_best_abs[0] = generation_best[0];
 
 		// Mean
 		double mean = 0.0;
-		for (Chromosome chr : chromosomes) {
+		for (@SuppressWarnings("rawtypes") Chromosome chr : chromosomes) {
 			mean += function.evaluate(chr.getFenotypes());
 		}
 		generation_mean[0] = mean / initial_population;
@@ -90,6 +94,7 @@ public class GeneticAlgorithm<T> {
 			this.mutation();
 			eval_result = this.evaluation();
 
+			@SuppressWarnings("rawtypes")
 			ArrayList<Chromosome> best_no_elitism = getBest(initial_population - this.elitism);
 			best_no_elitism.addAll(best);
 			this.chromosomes = best_no_elitism;
@@ -104,7 +109,7 @@ public class GeneticAlgorithm<T> {
 
 			// Mean
 			mean = 0.0;
-			for (Chromosome chr : chromosomes) {
+			for (@SuppressWarnings("rawtypes") Chromosome chr : chromosomes) {
 				mean += function.evaluate(chr.getFenotypes());
 			}
 			generation_mean[currentGeneration] = mean / initial_population;
@@ -134,6 +139,7 @@ public class GeneticAlgorithm<T> {
 
 	};
 
+	@SuppressWarnings({ "rawtypes" })
 	private ArrayList<Chromosome> getBest(int subsize) {
 
 		ArrayList<Pair<Chromosome, Double>> pares = new ArrayList<>();
@@ -157,12 +163,14 @@ public class GeneticAlgorithm<T> {
 		int size = chromosomes.size();
 		double[] eval_results = new double[size];
 
+		@SuppressWarnings("rawtypes")
 		Chromosome first_chromosome = chromosomes.get(0);
 		double maxmin_value = function.evaluate((first_chromosome).getFenotypes());
 		double minmax_value = maxmin_value;
 		eval_results[0] = maxmin_value;
 
 		for (int i = 1; i < size; ++i) {
+			@SuppressWarnings("rawtypes")
 			Chromosome current = chromosomes.get(i);
 			double[] fenotypes = (current).getFenotypes();
 			eval_results[i] = function.evaluate(fenotypes);
@@ -184,6 +192,7 @@ public class GeneticAlgorithm<T> {
 	};
 
 	private void selection(SelectionType type, double[] evaluations) {
+		@SuppressWarnings("rawtypes")
 		ArrayList<Chromosome> generation = new ArrayList<>();
 		switch (type) {
 		case ROULETTE:
@@ -211,7 +220,9 @@ public class GeneticAlgorithm<T> {
 			for (int i = 0; i < initial_population; ++i) {
 				// Select random chromosome (Suppose it is the best).
 				int first = (int) (Math.random() * initial_population);
+				@SuppressWarnings("rawtypes")
 				Chromosome best_cr = chromosomes.get(first);
+				@SuppressWarnings("rawtypes")
 				Chromosome worst_cr = best_cr;
 				double best = function.evaluate(best_cr.getFenotypes());
 				double worst = best;
@@ -219,6 +230,7 @@ public class GeneticAlgorithm<T> {
 				// Generate n more and compare.
 				for (int j = 0; j < TOURNAMENT_SET; ++j) {
 					int random = (int) (Math.random() * initial_population);
+					@SuppressWarnings("rawtypes")
 					Chromosome chromosme = chromosomes.get(random);
 					// Check if better than the best.
 					if (function.compare(best, chromosme.getFenotypes()) > 0) {
@@ -252,6 +264,7 @@ public class GeneticAlgorithm<T> {
 		this.chromosomes = generation;
 	}
 
+	@SuppressWarnings("unchecked")
 	private void crossover(int n) {
 
 		ArrayList<Integer> quieren_cruzarse = new ArrayList<>();
@@ -265,7 +278,9 @@ public class GeneticAlgorithm<T> {
 		int size = quieren_cruzarse.size() & ~0x1;
 
 		for (int i = 0; i < size; i += 2) {
+			@SuppressWarnings("rawtypes")
 			Chromosome chr1 = chromosomes.get(quieren_cruzarse.get(i + 0));
+			@SuppressWarnings("rawtypes")
 			Chromosome chr2 = chromosomes.get(quieren_cruzarse.get(i + 1));
 
 			chr1.cross(chr2, n); // Symmetric
@@ -274,11 +289,12 @@ public class GeneticAlgorithm<T> {
 	};
 
 	private void mutation() {
-		for (Chromosome chromosome : chromosomes) {
+		for (@SuppressWarnings("rawtypes") Chromosome chromosome : chromosomes) {
 			chromosome.randomMutation(mutation_prob);
 		}
 	};
 
+	@SuppressWarnings("rawtypes")
 	public Chromosome getBest_chr() {
 		return best_chr;
 	}

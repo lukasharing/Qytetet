@@ -3,13 +3,11 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.Arrays;
 import java.util.List;
 
 import org.math.plot.*;
@@ -47,8 +45,6 @@ public class Panel extends JFrame {
 	private JButton restart;
 	private JCheckBox elitism;
 	private JSpinner elitism_amount;
-	private Dimension size;
-
 	private GeneticAlgorithm<?> ga;
 
 	public Panel() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
@@ -73,7 +69,7 @@ public class Panel extends JFrame {
 		barraizq.setLayout(new BoxLayout(barraizq, BoxLayout.Y_AXIS));
 
 		/* Titulo */
-		JLabel titulo = new JLabel("PARÁMETROS.");
+		JLabel titulo = new JLabel("PARÁMETROS:");
 		JPanel ptitle = new JPanel(new GridLayout(1, 1));
 		titulo.setFont(titulo.getFont().deriveFont(16.0f));
 		ptitle.add(titulo);

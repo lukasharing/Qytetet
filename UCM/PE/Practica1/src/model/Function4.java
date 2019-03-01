@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Function4 extends Function {
 		
+	@SuppressWarnings("rawtypes")
 	public Function4(int n, FunctionType type) {
 		super(type);
 		arguments_intervals = new ArrayList<Pair>();

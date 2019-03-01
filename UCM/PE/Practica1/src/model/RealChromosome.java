@@ -2,7 +2,6 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class RealChromosome extends Chromosome<Double> {
 	
@@ -21,6 +20,7 @@ public class RealChromosome extends Chromosome<Double> {
 		
 	};
 	
+	@SuppressWarnings("unchecked")
 	public RealChromosome(Function f, double p, ArrayList<Double> cloning_genes) {
 		super(f, p);
 		mutation = MutationType.UNIFORM;
@@ -28,6 +28,7 @@ public class RealChromosome extends Chromosome<Double> {
 	};
 
 	// Returns number of bits needed for a given interval
+	@SuppressWarnings("unused")
 	private Integer getGeneSize(Pair<Double, Double> interval) {
 		return (int)Math.ceil(
 				Math.log(1 + ((Double)interval.second - (Double)interval.first) / prec)/Math.log(2)
@@ -76,7 +77,6 @@ public class RealChromosome extends Chromosome<Double> {
 			break;
 		
 		}
-		boolean muted = false;
 		
 		
 	};
@@ -86,7 +86,8 @@ public class RealChromosome extends Chromosome<Double> {
 		return new RealChromosome(f);
 	};
 	
-	protected void cross(Chromosome chr1, int n) {
+	@SuppressWarnings("unchecked")
+	protected void cross(@SuppressWarnings("rawtypes") Chromosome chr1, int n) {
 		// Put all genes in one line
 		List<Double> unroll0 = this.genes;
 		List<Double> unroll1 = chr1.genes;
@@ -124,5 +125,6 @@ public class RealChromosome extends Chromosome<Double> {
 		chr1.genes = cross1;
 	};
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Chromosome clone() { return new RealChromosome(this.func, this.prec, this.genes); };
 }
