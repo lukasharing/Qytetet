@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6630 64-bit) (preloaded format=pdflatex 2018.6.3)  1 MAR 2019 01:38
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6630 64-bit) (preloaded format=pdflatex 2018.6.3)  1 MAR 2019 08:22
 entering extended mode
 **./practica1.tex
 (practica1.tex
@@ -837,15 +837,15 @@ File: pgflibraryarrows.code.tex 2013/09/23 v3.0.1a (rcs-revision 1.16)
 r\tikz\libraries\tikzlibrarypositioning.code.tex"
 File: tikzlibrarypositioning.code.tex 2008/10/06 v3.0.1a (rcs-revision 1.7)
 )
-<escudo.jpg, id=4, 142.3719pt x 163.0893pt>
-File: escudo.jpg Graphic file (type jpg)
-<use escudo.jpg>
-Package pdftex.def Info: escudo.jpg  used on input line 16.
+<./images/escudo.jpg, id=4, 142.3719pt x 163.0893pt>
+File: ./images/escudo.jpg Graphic file (type jpg)
+<use ./images/escudo.jpg>
+Package pdftex.def Info: ./images/escudo.jpg  used on input line 16.
 (pdftex.def)             Requested size: 142.37154pt x 163.08888pt.
  [1
 
-{C:/Users/lukas/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <./escudo.jp
-g>] (practica1.toc
+{C:/Users/lukas/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <./images/es
+cudo.jpg>] (practica1.toc
 LaTeX Font Info:    Try loading font information for U+msa on input line 3.
 
 ("D:\Users\lukas\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd"
@@ -859,53 +859,81 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 \openout4 = `practica1.toc'.
 
  [1]
-Overfull \hbox (3.9803pt too wide) in paragraph at lines 45--52
- [] 
+<./images/graph1_bin.png, id=19, 793.96625pt x 498.86375pt>
+File: ./images/graph1_bin.png Graphic file (type png)
+<use ./images/graph1_bin.png>
+Package pdftex.def Info: ./images/graph1_bin.png  used on input line 47.
+(pdftex.def)             Requested size: 396.98215pt x 249.43126pt.
+
+Overfull \hbox (51.98215pt too wide) in paragraph at lines 47--49
+[]
  []
 
+<./images/graph2_bin.png, id=21, 793.96625pt x 498.86375pt>
+File: ./images/graph2_bin.png Graphic file (type png)
+<use ./images/graph2_bin.png>
+Package pdftex.def Info: ./images/graph2_bin.png  used on input line 51.
+(pdftex.def)             Requested size: 396.98215pt x 249.43126pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 57--57
-[]\OT1/cmr/m/n/10 Clases
- []
-
-
-Overfull \hbox (3.9803pt too wide) in paragraph at lines 55--78
- [] 
- []
-
-
-Overfull \hbox (3.9803pt too wide) in paragraph at lines 81--86
- [] 
- []
-
-[2]
-Overfull \hbox (9.6515pt too wide) in paragraph at lines 157--158
+Overfull \hbox (51.98215pt too wide) in paragraph at lines 51--52
 [] 
  []
 
-[3] (practica1.aux) ) 
+[2 <./images/graph1_bin.png>]
+<./images/graph3_bin.png, id=26, 793.96625pt x 498.86375pt>
+File: ./images/graph3_bin.png Graphic file (type png)
+<use ./images/graph3_bin.png>
+Package pdftex.def Info: ./images/graph3_bin.png  used on input line 54.
+(pdftex.def)             Requested size: 396.98215pt x 249.43126pt.
+
+Overfull \hbox (51.98215pt too wide) in paragraph at lines 54--55
+[] 
+ []
+
+[3 <./images/graph2_bin.png>]
+<./images/graph4_bin.png, id=31, 793.96625pt x 498.86375pt>
+File: ./images/graph4_bin.png Graphic file (type png)
+<use ./images/graph4_bin.png>
+Package pdftex.def Info: ./images/graph4_bin.png  used on input line 57.
+(pdftex.def)             Requested size: 396.98215pt x 249.43126pt.
+
+Overfull \hbox (51.98215pt too wide) in paragraph at lines 57--59
+[]
+ []
+
+[4 <./images/graph3_bin.png>]
+<./images/graph1_eli.png, id=36, 793.96625pt x 498.86375pt>
+File: ./images/graph1_eli.png Graphic file (type png)
+<use ./images/graph1_eli.png>
+Package pdftex.def Info: ./images/graph1_eli.png  used on input line 61.
+(pdftex.def)             Requested size: 396.98215pt x 249.43126pt.
+
+Overfull \hbox (51.98215pt too wide) in paragraph at lines 61--63
+[]
+ []
+
+[5 <./images/graph4_bin.png>] [6 <./images/graph1_eli.png>] (practica1.aux) ) 
 Here is how much of TeX's memory you used:
- 13303 strings out of 493305
- 281782 string characters out of 3129803
- 342814 words of memory out of 3000000
- 16603 multiletter control sequences out of 15000+200000
+ 13031 strings out of 493305
+ 277287 string characters out of 3129803
+ 295464 words of memory out of 3000000
+ 16324 multiletter control sequences out of 15000+200000
  9059 words of font info for 34 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 55i,9n,68p,796b,873s stack positions out of 5000i,500n,10000p,200000b,50000s
-<D:/Users/lukas/AppData/Local/Programs/MiKTeX 2.9/fonts/ty
-pe1/public/amsfonts/cm/cmbx10.pfb><D:/Users/lukas/AppData/Local/Programs/MiKTeX
- 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><D:/Users/lukas/AppData/Local/Pr
-ograms/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><D:/Users/lukas/Ap
-pData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><D:/U
-sers/lukas/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr
-10.pfb><D:/Users/lukas/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/ams
-fonts/cm/cmr12.pfb><D:/Users/lukas/AppData/Local/Programs/MiKTeX 2.9/fonts/type
-1/public/amsfonts/cm/cmsy10.pfb><D:/Users/lukas/AppData/Local/Programs/MiKTeX 2
-.9/fonts/type1/public/amsfonts/cm/cmti10.pfb><D:/Users/lukas/AppData/Local/Prog
-rams/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on practica1.pdf (4 pages, 398997 bytes).
+ 55i,5n,66p,1186b,167s stack positions out of 5000i,500n,10000p,200000b,50000s
+<D
+:/Users/lukas/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/
+cmbx10.pfb><D:/Users/lukas/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public
+/amsfonts/cm/cmbx12.pfb><D:/Users/lukas/AppData/Local/Programs/MiKTeX 2.9/fonts
+/type1/public/amsfonts/cm/cmcsc10.pfb><D:/Users/lukas/AppData/Local/Programs/Mi
+KTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><D:/Users/lukas/AppData/Local
+/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><D:/Users/lukas/A
+ppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb><D:/
+Users/lukas/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cm
+ti12.pfb>
+Output written on practica1.pdf (7 pages, 504826 bytes).
 PDF statistics:
- 55 PDF objects out of 1000 (max. 8388607)
+ 69 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 18 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 43 words of extra memory for PDF output out of 10000 (max. 10000000)
 

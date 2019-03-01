@@ -13,7 +13,7 @@
 
 \begin{titlepage}
 	\begin{center}
-		\includegraphics{escudo.jpg}
+		\includegraphics{./images/escudo.jpg}
 	\end{center}
 	\centering
 	{\scshape\LARGE Complutense de Madrid \par}
@@ -35,138 +35,30 @@
 
 
 \section{Introducción}
-En esta práctica vamos a realizar un analizador léxico sencillo, un lenguaje inventado, donde solo existen dos tipos, \textbf{num} y \textbf{bool}, por un lado, los números pueden ser enteros con signo o reales (tanto decimales como exponenciales) (estos números pueden estár precedidos de ilimitado número de ceros). Las operaciones básicas: multiplicación, división, adición y substracció; Operaciones de comparación, como son menor, mayor, menor igual y mayor igual. Por otro lado los booleanos, pueden ser o \textbf{true} o \textbf{false}, sus operadores característicos son el \textit{and}, \textit{or} y el \textit{not}. Siendo todo lo anteriormente dicho, palabras reservadas. Los operadores aceptan paréntesis para alterar las precedencias.
+En esta práctica vamos a realizar una búsqueda de mínimo/máximos utilizando una técnica evolutiva basada en chromosomas . Los chromosomas pueden ser \textit{binarios}, basados en vectores de 0s y 1s para los genes, o \textit{reales}, basados en elementos Doble (Valores de coma flotante). Constan de 4 etapas (\textit{GeneticAlgorithm.java}), \textbf{evaluación}, dónde los chromosomas se evalúan, utilizando las técnicas vistas en los pdf; \textbf{selección}, dónde se elige utilizando un criterio a los descendientes, en nuestra práctica, \textit{Ruleta}, \textit{Torneo Determinista} y \textit{Torneo Probabilista}; \textbf{Cruce}, de los candidatos elegidos, algunos se "mezclarán" (dos a dos) y crearán dos chromosomas distintos (dando mayor variabilidad); \textbf{Mutación}, muta aleatoriamente, en el caso de ser un chromosoma \textit{Binario}, bits del vector, si este es \textit{Real} existen dos tipos de mutación, una mutación de mínimo desplazamiento, se elige la bola más próxima al extremo y se genera un número aleatorio, o una mutación aleatoria, dónde un gen es reemplazado por otro valor distinto al que había.
+
+En la práctica podemos seleccionar el elitismo, es decir, asegurarnos de que un subconjunto de cromosomas con mejor evaluación siempre son tambíen descendientes puros (Sin modificarse).
 
 \newpage
 
-\section{Definición}
-\subsection{Clases Auxiliares}
-\begin{center}
-    \begin{tabular}{ | p{2cm} | p{5cm} | p{4cm} |}
-    \hline
-    Auxiliares & Definición Natural & Expresión Regular \\ \hline
-    Letra & Carácter del alfabeto mayúsculas o minúsculas  & [a-z,A-Z]\\ \hline
-    Dígito & Número entero de 0 a 9 & [0-9] \\ \hline
-    Natural & Número entero positivo & Dígito* \\ \hline
-    \end{tabular}
-\end{center}
-\subsection{Clases Léxicas}
-\begin{center}
-    \begin{tabular}{ | p{2cm} | p{5cm} | p{4cm} |}
-    \hline
-     Clases Léxicas & Definición Natural & Expresión Regular \\ \hline
-     ID & Identificador & Letra(Letra$\mid$Dígito$\mid$\_)$*$ \\ \hline
-     INT & Número entero & (+$\mid$-)?Natural \\ \hline
-     DEC & Número decimal &  INT.Natural \\ \hline
-     EXE & Número exponencial  & (INT$\mid$DEC)(e$\mid$E)?INT  \\ \hline
-     PLS & Signo más & + \\ \hline
-     MNS & Signo menos & - \\ \hline
-     MUL & Signo multiplicación & * \\ \hline
-     DIV & Signo división & / \\ \hline
-     PAO & Paréntesis abierto & ( \\ \hline
-      PCE & Paréntesis cerrado & ) \\ \hline
-      GT & Signo mayor que & $>$\\ \hline
-      GE & Signo mayor igual que & $>=$ \\ \hline
-      LS & Signo menor que & $<$\\ \hline
-      LG & Signo menor igual que & $<=$ \\ \hline
-      EQ & Signo de asignación & = \\ \hline
-      BE & Signo de comparación & == \\ \hline
-      NE & Signo de desigualdad & !=  \\ \hline
-			SEP & Separador de definición e inicialización & \&\& \\ \hline
-			PYC & Separador de variables y asignación de variables & $;$ \\ \hline
-    \end{tabular}
-\end{center}
-\subsection{Clases Ignorables}
-\begin{center}
-    \begin{tabular}{ | p{2cm} | p{5cm} | p{4cm} |}
-    \hline
-    Clases Ignorables & Definición Natural & Expresión Regular \\ \hline
-    VAC & Carácteres ignorables & EOL$\mid \emptyset$ \\ \hline
-    \end{tabular}
-\end{center}
+\section{Ejemplos}
+Todos estos ejemplos se han realizado con los siguientes valores: un \textbf{Tamaño de población} de \textbf{100}; un \textbf{Número de generaciones} de \textbf{100}; un \textbf{60\%} de \textbf{Cruces}; un \textbf{5\%} de \textbf{Mutaciones} y una precisión para los chromosomas binarios de \textbf{0.0001}.
+\subsection{Función 1}
+\includegraphics[scale=0.5]{./images/graph1_bin.png}
+Los valores de
 
-\newpage
+\subsection{Función 2}
+\includegraphics[scale=0.5]{./images/graph2_bin.png}
 
-\section{Diagrama de transiciones}
+\subsection{Función 3}
+\includegraphics[scale=0.5]{./images/graph3_bin.png}
 
-\begin{tikzpicture}[>=stealth',shorten >=0.5pt,auto,node distance=5 cm, scale = 0.85, transform shape]
+\subsection{Función 4}
+\includegraphics[scale=0.5]{./images/graph4_bin.png}
+Como podemos ver, se puede cambiar el número de argumentos a través del panel de control.
 
+\subsection{Elitismo}
+\includegraphics[scale=0.5]{./images/graph1_eli.png}
+Como podemos ver, el mejor absoluto coincide con el mejor de la generación, esto es ya que siempre nos aseguramos que el mejor de la generación anterior siempre desciende o mejora, por lo que siempre va a estar ahí.
 
-\node[initial,state]    (A) at (0,0) {INICIO};
-\node[state]  (B) at(1.5, 5.0) {AND};
-\node[state,accepting]  (B1) at(4.0, 5.5) {SEP};
-\node[state,accepting]  (C) at(-1.5, 5.0) {PAO};
-\node[state,accepting]  (D) at(-3.0, 4.5) {DIV};
-\node[state,accepting]  (M) at(-4.0, 3.5) {MUL};
-\node[state,accepting]  (E) at(6.0, 0.0) {ID};
-\node[state,accepting]  (F) at(0.0, 5.5)      {PCE};
-\node[state,accepting] (H1) at(3.0, 4.5) {GT};
-\node[state,accepting] (GE) at(5.0, 4.5) {GE};
-\node[state,accepting] (H2) at(4.0, 3.5) {LT};
-\node[state,accepting] (LG) at(6.0, 3.5) {LE};
-\node[state,accepting] (EQ) at(5.0, 2.5) {EQ};
-\node[state,accepting] (BE) at(7.0, 2.5) {BE};
-\node[state] (N) at(5.5, 1.5) {N};
-\node[state,accepting] (NE) at(7.5, 1.5) {NE};
-\node[state,accepting] (PLS) at(5.0, -2.5) {PLS};
-\node[state,accepting] (EN) at(3.5, -4.0) {INT};
-\node[state,accepting] (MNS) at(1.5, -5.0) {MNS};
-\node[state] (P) at(6.5, -5.0) {PNT};
-\node[state] (EX) at(3.5, -7.0) {EXP};
-\node[state,accepting] (DC) at(6.5, -7.0) {DEC};
-\node[state] (SG) at(0.5, -7.0) {SGN};
-\node[state,accepting] (XE) at(-2.5, -7.0) {EXE};
-\node[state,accepting] (PY) at(0.0, -5.0) {PYC};
-\node[state,accepting] (EOF) at(-1.5, -5.0) {EOF};
-
-\path[->]
-      (A) edge [left]  node [align=center]  {\&} (B)
-      (B) edge [above]  node [align=center]  {\&} (B1)
-			(A) edge [left]   node [align=center]  {$($} (C)
-      (A) edge [left]  node [align=center]  {$/$} (D)
-			(A) edge [left]  node [align=center]  {$* $} (M)
-			(A) edge [above]  node [align=center]  {[a-z,A-Z]} (E)
-			(E) edge [loop below]  node [align=center]  {([a-z,A-Z,0-9]$\mid$\_)} (E)
-			(A) edge [above left]  node [align=center]  {$)$} (F)
-			(A) edge [above left]  node [align=center]  {$>$} (H1)
-			(A) edge [above left]  node [align=center]  {$<$} (H2)
-			(H1) edge [above]  node [align=center]  {$=$} (GE)
-			(H2) edge [above]  node [align=center]  {$=$} (LG)
-			(A) edge [above]  node [align=center]  {$=$} (EQ)
-			(EQ) edge [above]  node [align=center]  {$=$} (BE)
-			(A) edge [above]  node [align=center]  {$!$} (N)
-			(N) edge [above]  node [align=center]  {$=$} (NE)
-			(A) edge [right]  node [align=center]  {$+$} (PLS)
-			(PLS) edge [bend left]  node [align=center]  {[0-9]} (EN)
-			(A) edge [right]  node [align=center]  {$-$} (MNS)
-			(MNS) edge [bend right]  node [align=center]  {[0-9]} (EN)
-			(EN) edge [loop above]  node [align=center]  {[0-9]} (EN)
-			(A) edge [right]  node [align=center]  {[0-9]} (EN)
-			(EN) edge [right]  node [align=center]  {e$\mid$E} (EX)
-			(P) edge [left]  node [align=center]  {[0-9]} (DC)
-			(DC) edge [loop right]  node [align=center]  {[0-9]} (DC)
-			(DC) edge [above]  node [align=center]  {e$\mid$E} (EX)
-			(EX) edge [above]  node [align=center]  {+$\mid$-} (SG)
-			(SG) edge [above]  node [align=center]  {[0-9]} (XE)
-			(XE) edge [loop above]  node [align=center]  {[0-9]} (XE)
-			(EN) edge [above]  node [align=center]  {.} (P)
-      (A) edge [left]  node [align=center]  {;} (PY)
-			(A) edge [left]  node [align=center]  {EOF} (EOF)
-			(EX) edge [bend left]  node [align=center]  {[0-9]} (XE)
-			(A) edge [out=200,in=238,looseness=30]  node [align=center]  {$\emptyset \mid$ EOL} (A);
-\end{tikzpicture}
-\begin{center}
-    \begin{tabular}{ | p{5cm} | p{5cm} |}
-    \hline
-    Identificador & Valor devuelto \\ \hline
-		\textbf{num} & Devuelve numero \\ \hline
-		\textbf{bool} & Devuelve booleano \\ \hline
-		\textbf{and} & Devuelve operador binario and \\ \hline
-		\textbf{or} & Devuelve operador binario or \\ \hline
-		\textbf{not} & Devuelve operador unario not\\ \hline
-		\textbf{true} & Devuelve verdadero \\ \hline
-		\textbf{false} & Devuelve falso \\ \hline
-
-    \end{tabular}
-\end{center}
 \end{document}
