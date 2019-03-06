@@ -19,8 +19,7 @@ public abstract class Chromosome<T> {
 		return null;
 	};
 
-	public void randomMutation(double prob) {
-	};
+	public void mutate(MutationType mut, double prob) {};
 
 	@Override
 	public String toString() {
@@ -32,7 +31,7 @@ public abstract class Chromosome<T> {
 		return result;
 	}
 
-	protected void cross(Chromosome<T> chr1, int n) {
+	protected void cross(Chromosome<T> chr1, CrossType t) {
 	};
 
 	public Chromosome<T> clone() {

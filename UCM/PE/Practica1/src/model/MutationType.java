@@ -1,5 +1,5 @@
 package model;
 
 public enum MutationType {
-	UNIFORM, NONUNIFORM
+	RANDOM, UNIFORM, NONUNIFORM
 }

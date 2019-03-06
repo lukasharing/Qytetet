@@ -15,6 +15,10 @@ public class GeneticAlgorithm<T> {
 
 	private Class<T> class_type;
 
+	private SelectionType selection;
+	private CrossType cross;
+	private MutationType mute;
+	
 	// Function
 	private Function function = null;
 
@@ -32,8 +36,11 @@ public class GeneticAlgorithm<T> {
 
 	// Constructor
 	public GeneticAlgorithm(Class<T> class_type, int population, int generations, double crossoverProbability,
-			double mutationProbability, double precision, int num_elitism, Function evaluationFunction) {
+			double mutationProbability, double precision, int num_elitism, SelectionType sel_type, CrossType cross_type, MutationType mut_type, Function evaluationFunction) {
 		this.class_type = class_type;
+		this.selection = sel_type;
+		this.cross = cross_type;
+		this.mute = mut_type;
 		this.initial_population = population;
 		this.total_generations = generations;
 		this.gene_precision = precision;
@@ -90,8 +97,8 @@ public class GeneticAlgorithm<T> {
 		while (currentGeneration < total_generations) {
 			best = getBest(this.elitism);
 
-			this.selection(SelectionType.ROULETTE, eval_result);
-			this.crossover(1);
+			this.selection(eval_result);
+			this.crossover();
 			this.mutation();
 			eval_result = this.evaluation();
 
@@ -193,11 +200,11 @@ public class GeneticAlgorithm<T> {
 		return map3.toArray();
 	};
 
-	private void selection(SelectionType type, double[] evaluations) {
+	private void selection(double[] evaluations) {
 		@SuppressWarnings("rawtypes")
 		ArrayList<Chromosome> generation = new ArrayList<>();
-		switch (type) {
-		case ROULETTE:
+		switch (selection) {
+			case ROULETTE:
 
 			for (int i = 1; i < evaluations.length; ++i) {
 				evaluations[i] += evaluations[i - 1];
@@ -208,8 +215,7 @@ public class GeneticAlgorithm<T> {
 				// valor de la ruleta
 				double roulette = Math.random();
 				int throul = 0;
-				while (evaluations[throul++] < roulette)
-					;
+				while (evaluations[throul++] < roulette);
 
 				// Nos quedamos con el anterior.
 				generation.add(chromosomes.get(--throul).clone());
@@ -247,7 +253,7 @@ public class GeneticAlgorithm<T> {
 					}
 				}
 
-				if (type == SelectionType.DETE_TOURNAMENT) {
+				if (selection.equals(SelectionType.DETE_TOURNAMENT)) {
 					generation.add(best_cr.clone());
 				} else {
 					if (Math.random() <= TOURNAMENT_PROB) {
@@ -264,7 +270,7 @@ public class GeneticAlgorithm<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void crossover(int n) {
+	private void crossover() {
 
 		ArrayList<Integer> quieren_cruzarse = new ArrayList<>();
 		for (int i = 0; i < initial_population; ++i) {
@@ -275,22 +281,21 @@ public class GeneticAlgorithm<T> {
 
 		// Convertir en par
 		int size = quieren_cruzarse.size() & ~0x1;
-
+		
 		for (int i = 0; i < size; i += 2) {
 			@SuppressWarnings("rawtypes")
 			Chromosome chr1 = chromosomes.get(quieren_cruzarse.get(i + 0));
 			@SuppressWarnings("rawtypes")
 			Chromosome chr2 = chromosomes.get(quieren_cruzarse.get(i + 1));
 
-			chr1.cross(chr2, n); // Symmetric
+			chr1.cross(chr2, cross); // Symmetric
 		}
 
 	};
 
 	private void mutation() {
-		for (@SuppressWarnings("rawtypes")
-		Chromosome chromosome : chromosomes) {
-			chromosome.randomMutation(mutation_prob);
+		for (@SuppressWarnings("rawtypes") Chromosome chromosome : chromosomes) {
+			chromosome.mutate(mute, mutation_prob);
 		}
 	};
 

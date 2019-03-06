@@ -68,24 +68,78 @@ public class BinaryChromosome extends Chromosome<ArrayList<Integer>> {
 	// -----------------------------------------------
 	// - Mutations
 
-	public void randomMutation(double prob) {
-		for (int k = 0; k < genes.size(); ++k) {
-			ArrayList<Integer> gen = genes.get(k);
-			for (int t = 0; t < gen.size(); ++t) {
-				if (Math.random() <= prob) {
-					gen.set(t, gen.get(t) ^ 0x1);
+	public void mutate(MutationType mut, double prob) {
+		switch(mut) {
+			case RANDOM:
+				for (int k = 0; k < genes.size(); ++k) {
+					ArrayList<Integer> gen = genes.get(k);
+					for (int t = 0; t < gen.size(); ++t) {
+						if (Math.random() <= prob) {
+							gen.set(t, gen.get(t) ^ 0x1);
+						}
+					}
+					genes.set(k, gen);
 				}
-			}
-			genes.set(k, gen);
+			break;
+		default:
+			break;
 		}
+		
 	};
 
 	// -------------------------------------------------
 	// Crossing
-	protected void cross(BinaryChromosome chr1, int n) {
+	protected void cross(BinaryChromosome chr1, CrossType type) {
+
+		switch(type) {
+			case MONOPOINT:
+				this.crossTemp(chr1, 1);
+			break;
+			case MULTIPOINT:
+				this.crossTemp(chr1, 3);
+			break;
+			case UNIFORM:
+				
+
+				List<Integer> unroll0 = this.genes.stream().flatMap(List::stream).collect(Collectors.toList());
+				List<Integer> unroll1 = chr1.genes.stream().flatMap(List::stream).collect(Collectors.toList());
+				
+				List<Integer> cross0 = new ArrayList<>();
+				List<Integer> cross1 = new ArrayList<>();
+				
+				for(int i = 0; i < this.genes.size(); ++i) {
+					if(Math.random() < 0.5) {
+						cross0.add(unroll0.get(i));
+						cross1.add(unroll1.get(i));
+					}else {
+						cross0.add(unroll1.get(i));
+						cross1.add(unroll0.get(i));
+					}
+				}
+
+				// Divide into genes
+				ArrayList<ArrayList<Integer>> rs0 = new ArrayList<>();
+				ArrayList<ArrayList<Integer>> rs1 = new ArrayList<>();
+
+				for (int i = 0, r0 = 0; i < genes.size(); ++i) {
+					int lgt = genes.get(i).size();
+					rs0.add(new ArrayList<Integer>(cross0.subList(r0, r0 + lgt)));
+					rs1.add(new ArrayList<Integer>(cross1.subList(r0, r0 + lgt)));
+					r0 += lgt;
+				}
+
+				this.genes = rs0;
+				chr1.genes = rs1;
+			break;
+		}
+		
+		
+		
+	};
+	
+	private void crossTemp (BinaryChromosome chr1, int n) {
 		// Put all genes in one line
 		List<Integer> unroll0 = this.genes.stream().flatMap(List::stream).collect(Collectors.toList());
-
 		List<Integer> unroll1 = chr1.genes.stream().flatMap(List::stream).collect(Collectors.toList());
 
 		List<Integer> cross0 = new ArrayList<>();
@@ -130,7 +184,7 @@ public class BinaryChromosome extends Chromosome<ArrayList<Integer>> {
 
 		this.genes = rs0;
 		chr1.genes = rs1;
-	};
+	}
 
 	public static BinaryChromosome newInstance(Function f, Double p) {
 		return new BinaryChromosome(f, p);

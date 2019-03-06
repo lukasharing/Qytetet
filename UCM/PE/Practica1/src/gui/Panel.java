@@ -13,6 +13,7 @@ import java.util.List;
 import org.math.plot.*;
 
 import model.BinaryChromosome;
+import model.CrossType;
 import model.Function;
 import model.Function1;
 import model.Function2;
@@ -20,7 +21,9 @@ import model.Function3;
 import model.Function4;
 import model.FunctionType;
 import model.GeneticAlgorithm;
+import model.MutationType;
 import model.RealChromosome;
+import model.SelectionType;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -39,11 +42,17 @@ public class Panel extends JFrame {
 	private JTextField mutation_perc;
 	private JTextField prec;
 	private String[] function_sel_ops = { "Función 1", "Función 2", "Función 3", "Función 4" };
+	private String[] selection_type = { "Ruleta", "Torneo Determinista", "Torneo Probabilístico" };
+	private String[] mutation_type = { "Aleatoria (Binario)", "Uniforme (Reales)", "No uniforme (Reales)" };
+	private String[] cross_type = { "Monopunto", "Multipunto", "Uniforme (Binario)" };
 	private JComboBox<String> function_sel;
+	private JComboBox<String> selection_sel;
+	private JComboBox<String> mutation_sel;
+	private JComboBox<String> cross_sel;
 	private JSpinner func4_params;
 	private JButton start;
 	private JButton restart;
-	private JCheckBox elitism;
+	//private JCheckBox elitism;
 	private JSpinner elitism_amount;
 	private GeneticAlgorithm<?> ga;
 
@@ -123,7 +132,7 @@ public class Panel extends JFrame {
 		p6.add(new JLabel("Función:"));
 		p6.add(function_sel);
 		barraizq.add(p6);
-
+		
 		/* Number Parameters */
 		this.func4_params = new JSpinner();
 		func4_params.setValue(3);
@@ -132,17 +141,38 @@ public class Panel extends JFrame {
 		p7.add(new JLabel("Número Argumentos:"));
 		p7.add(func4_params);
 		barraizq.add(p7);
+		
+		/* Selection Selection */
+		this.selection_sel = new JComboBox<>(selection_type);
+		JPanel p11 = new JPanel(new GridLayout(2, 1));
+		p11.add(new JLabel("Selección:"));
+		p11.add(selection_sel);
+		barraizq.add(p11);
+		
+		/* Mutation Selection */
+		this.mutation_sel = new JComboBox<>(mutation_type);
+		JPanel p12 = new JPanel(new GridLayout(2, 1));
+		p12.add(new JLabel("Mutación:"));
+		p12.add(mutation_sel);
+		barraizq.add(p12);
+		
+		/* Cross Selection */
+		this.cross_sel = new JComboBox<>(cross_type);
+		JPanel p13 = new JPanel(new GridLayout(2, 1));
+		p13.add(new JLabel("Cruce:"));
+		p13.add(cross_sel);
+		barraizq.add(p13);
+
 
 		/* Has Elitism */
-		this.elitism = new JCheckBox("Elitismo");
+		/*this.elitism = new JCheckBox("Elitismo");
 		JPanel p8 = new JPanel(new GridLayout(1, 1));
 		p8.add(elitism);
-		barraizq.add(p8);
+		barraizq.add(p8);*/
 
 		/* Number Elitism */
 		this.elitism_amount = new JSpinner();
 		elitism_amount.setValue(5);
-		this.elitism_amount.setEnabled(false);
 		JPanel p9 = new JPanel(new GridLayout(2, 1));
 		p9.add(new JLabel("Número Elitismo:"));
 		p9.add(elitism_amount);
@@ -214,22 +244,65 @@ public class Panel extends JFrame {
 				}
 
 				int elitism_am = 0;
-				if (elitism.isSelected()) {
+				//if (elitism.isSelected()) {
 					elitism_am = ((Integer) elitism_amount.getValue());
-				}
+				//}
 
 				int num_gen = Integer.parseInt(num_generations.getText());
 
+				model.SelectionType type_sel = SelectionType.ROULETTE;
+				String selection_name = (String) selection_sel.getSelectedItem();
+				switch (selection_name) {
+					case "Ruleta":
+						type_sel = SelectionType.ROULETTE;
+					break;
+					case "Torneo Determinista":
+						type_sel = SelectionType.DETE_TOURNAMENT;
+					break;
+					case "Torneo Probabilístico":
+						type_sel = SelectionType.PRB_TOURNAMENT;
+					break;
+				}
+				
+				model.MutationType type_mut = MutationType.RANDOM;
+				String mute_name = (String) mutation_sel.getSelectedItem();
+				switch (mute_name) {
+					case "Aleatoria (Binario)":
+						type_mut = MutationType.RANDOM;
+					break;
+					case "Uniforme (Reales)":
+						type_mut = MutationType.UNIFORM;
+					break;
+					case "No uniforme (Reales)":
+						type_mut = MutationType.NONUNIFORM;
+					break;
+				}
+
+				model.CrossType type_cross = CrossType.MONOPOINT;
+				String cross_name = (String) cross_sel.getSelectedItem();
+				switch(cross_name) {
+					case "Monopunto":
+						type_cross = CrossType.MONOPOINT;
+					break;
+					case "Multipunto":
+						type_cross = CrossType.MULTIPOINT;
+					break;
+					case "Uniforme (Binario)":
+						type_cross = CrossType.UNIFORM;
+					break;
+				}
+				
+				
 				if (chrtype_sel.getSelectedItem().equals(chrtype_sel_ops[0])) {
 					ga = new GeneticAlgorithm<BinaryChromosome>(BinaryChromosome.class,
 							Integer.parseInt(size_population.getText()), num_gen,
 							Double.parseDouble(crossover_perc.getText()), Double.parseDouble(mutation_perc.getText()),
-							Double.parseDouble(prec.getText()), elitism_am, f);
+							Double.parseDouble(prec.getText()), elitism_am, type_sel, type_cross, type_mut, f);
 				} else {
 					ga = new GeneticAlgorithm<RealChromosome>(RealChromosome.class,
 							Integer.parseInt(size_population.getText()), num_gen,
 							Double.parseDouble(crossover_perc.getText()), Double.parseDouble(mutation_perc.getText()),
-							Double.parseDouble(prec.getText()), elitism_am, f);
+							Double.parseDouble(prec.getText()), elitism_am, type_sel, type_cross, type_mut, f);
 				}
 
 				List<double[]> best_chromosomes = ga.run();
@@ -259,12 +332,12 @@ public class Panel extends JFrame {
 			}
 		});
 
-		elitism.addItemListener(new ItemListener() {
+		/*elitism.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				elitism_amount.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
 			}
-		});
+		});*/
 
 		function_sel.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent event) {

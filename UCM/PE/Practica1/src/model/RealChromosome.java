@@ -5,12 +5,10 @@ import java.util.List;
 
 public class RealChromosome extends Chromosome<Double> {
 
-	private MutationType mutation;
 
 	public RealChromosome(Function f) {
 		super(f, 0.0);
 
-		mutation = MutationType.NONUNIFORM;
 		int number_arguments = f.getTotalArguments();
 
 		// Random Values.
@@ -21,9 +19,8 @@ public class RealChromosome extends Chromosome<Double> {
 	};
 
 	@SuppressWarnings("unchecked")
-	public RealChromosome(Function f, double p, ArrayList<Double> cloning_genes) {
-		super(f, p);
-		mutation = MutationType.UNIFORM;
+	public RealChromosome(Function f, ArrayList<Double> cloning_genes) {
+		super(f, 0.0);
 		this.genes = (ArrayList<Double>) cloning_genes.clone();
 	};
 
@@ -54,8 +51,8 @@ public class RealChromosome extends Chromosome<Double> {
 
 	// -----------------------------------------------
 	// - Mutations
-	public void randomMutation(double prob) {
-
+	public void mutate(MutationType mutation, double prob) {
+		
 		switch (mutation) {
 		case UNIFORM:
 			for (int k = 0; k < genes.size(); ++k) {
@@ -74,6 +71,8 @@ public class RealChromosome extends Chromosome<Double> {
 				}
 			}
 			break;
+		default:
+			break;
 
 		}
 
@@ -84,7 +83,21 @@ public class RealChromosome extends Chromosome<Double> {
 	};
 
 	@SuppressWarnings("unchecked")
-	protected void cross(@SuppressWarnings("rawtypes") Chromosome chr1, int n) {
+	protected void cross(@SuppressWarnings("rawtypes") Chromosome chr1, CrossType type) {
+		switch(type) {
+			case MONOPOINT:
+				this.crossTemp(chr1, 1);
+			break;
+			case MULTIPOINT:
+				this.crossTemp(chr1, 3);
+			break;
+			case UNIFORM:break;
+		}
+
+	};
+	
+	@SuppressWarnings("unchecked")
+	protected void crossTemp(@SuppressWarnings("rawtypes") Chromosome chr1, int n) {
 		// Put all genes in one line
 		List<Double> unroll0 = this.genes;
 		List<Double> unroll1 = chr1.genes;
@@ -124,6 +137,6 @@ public class RealChromosome extends Chromosome<Double> {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Chromosome clone() {
-		return new RealChromosome(this.func, this.prec, this.genes);
+		return new RealChromosome(this.func, this.genes);
 	};
 }
