@@ -1,0 +1,90 @@
+// PRACTICA 1 ----------------------------
+
+Unidades Léxicas. 
+Identificadores (Id).
+Palabras reservadas (Boolean, True, False, &&)
+Símbolos [ +, -, (, ), =, Números]
+Operadores Infijos (Operaciones de comparación, Operaciones Aritméticas, Operaciones Boleanas)
+
+Id
+----
+ID:        letra+(digit|letra|_)*
+
+Palabras reservadas
+----
+RES_NUM:   num
+RES_BOOL:  bool
+RES_TRUE:  true
+RES_FALSE: false
+RES_AND:   and
+RES_OR:    or
+RES_NOT:   not
+
+Simbólos
+-----
+S_MENOS:          -
+SEPARADOR:      &&
+ENTERO:         entero
+REAL:           real
+EOF:            EOF
+
+
+Operadores Infijos
+-------
+MAS:            +
+MENOS:          -
+DIVISION:       /
+MULTIPLICACION: *
+IGUAL:          =
+MAYOR:          >
+MAYOR_IGUAL     >=
+MENOR:          <
+MENOR_IGUAL:    <=
+IGUAL:          ==
+DESIGUAL:       !=
+
+Definiciones auxiliares
+-------------
+letra: ([a-z]|[A-Z])
+digit: [0-9]
+natural:     digit+
+entero:      (\+|\-)?natural
+decimal:     digit+
+exponencial: .(e|E)entero
+real:        entero(decimal|exponencial|decimal()?exponencial)
+
+
+// PRACTICA N -----------------------------
+
+
+// Tipos
+abstracto = ([a-z]|[A-Z])+
+
+// Valor de Tipos
+?? Num =>
+natural = [0-9]+
+whole = (\+|\-)?natural
+decimal = .natural
+exponencial = (e|E)entero
+real = entero(decimal|exponencial|decimal()?exponencial)
+
+// Variable
+arithmetics = (\+|\-|/|\*)
+comparativos = (<=|>=|<|>|==|!=)
+
+boolean = (true|false)
+number = (natural|whole|real)
+
+boolean_op = (not boolean|boolean( )?(and|or)( )?boolean)
+number_op = (-number|number( )?arithmetics( )?number)
+comp_op = (number( )?comparativos( )?number,boolean( )?comparativos( )?boolean)
+
+
+expresion1= (boolean_op|number_op|comp_op )
+expresion=( |(\(expresion1\)|expresion1))
+expresion_rec = 
+
+
+variable = (bool,num,abstracto)+ ([a-z],[A-Z])+([0-9],[a-z],[A-Z],_)*( )?=( )?expresion
+
+

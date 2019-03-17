@@ -1,0 +1,343 @@
+\documentclass{article}
+
+%packages
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage{listings}
+\begin{document}
+
+\usetikzlibrary{automata,arrows, positioning}
+\renewcommand{\contentsname}{Tabla de contenidos}
+
+\begin{titlepage}
+	\begin{center}
+		\includegraphics{escudo.jpg}
+	\end{center}
+	\centering
+	{\scshape\LARGE Complutense de Madrid \par}
+	\vspace{1cm}
+	{\scshape\Large Práctica Procesadores de Lenguajes.\par}
+	\vspace{1.5cm}
+	{\huge\bfseries Segunda Fase. \par}
+	\vspace{2cm}
+	{\Large\itshape Kyle Tan \& Lukas Häring\par}
+	{\large Grupo 9\par}
+	\vfill
+	\vfill
+
+% Bottom of the page
+	{\large \today\par}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+\section{Diagrama sintáctico}
+
+\tikzstyle{b} = [rectangle, draw, text width=5em, text centered, minimum height=3em]
+\tikzstyle{more} = [rectangle, draw, text width=8em, text centered, minimum height=3em, dashed]
+\tikzstyle{ini} = [circle, draw, fill=black]
+\tikzstyle{l} = [draw, -latex']
+
+\begin{tikzpicture}[>=stealth',shorten >=0.5pt,auto,node distance=5 cm, scale = 0.85, transform shape]
+
+\node[ini]   (initial) at(0.5, 0.0) {};
+\node[state] (LIT) at(7.0, 0.0) {LIT};
+\node[state] (+) at(7.0, -1.5) {+};
+\node[state] (-) at(7.0, -3.0) {-};
+\node[state] (*) at(7.0, -4.5) {*};
+\node[state] (/) at(7.0, -6.0) {/};
+\node[state] (not) at(4.0, -9.0) {not};
+\node[state] (mns) at(4.0, -10.5) {-};
+\node[more] (rel) at(7.0, -7.5) {Operadores Relacionales};
+\node [b]    (exp1) at(3.5, -4.5) {exp};
+\node [b]    (exp2) at(10.5, -4.5) {exp};
+\node [b]    (exp3) at(9.5, -9.75) {exp};
+\node[ini]    (final) at(13.5, 0.0) {};
+\node[state] (POP) at(3.5, -12.0) {(};
+\node[state] (PCL) at(10.5, -12.0) {)};
+\node [b]    (exp4) at(7.0, -12.0) {exp};
+
+
+\draw[black, dashed] (0.0, 0.5) rectangle (14,-12.5);
+\node[align=center,text width=0.5cm] at (0.5, 0.3) {exp};
+
+% Initial
+\path [l] (initial)  -- (LIT);
+\path [l] (initial)  -- (1.0, 0.0) -- (1.0, -4.5) -- (exp1);
+\path [l] (initial)  -- (1.0, 0.0) -- (1.0, -9.75) -- (2.5, -9.75) -- (2.5, -9.0) -- (not);
+\path [l] (initial)  -- (1.0, 0.0) -- (1.0, -9.75) -- (2.5, -9.75) -- (2.5, -10.5) -- (mns);
+\path [l] (initial)  -- (1.0, 0.0) -- (1.0, -12.0) -- (POP);
+
+\path [l] (exp1)  -- (5.0, -4.5) -- (5.0, -1.5) -- (+);
+\path [l] (exp1)  -- (5.0, -4.5) -- (5.0, -3.0) -- (-);
+\path [l] (exp1)  -- (5.0, -4.5) -- (5.0, -4.5) -- (*);
+\path [l] (exp1)  -- (5.0, -4.5) -- (5.0, -6.0) -- (/);
+\path [l] (exp1)  -- (5.0, -4.5) -- (5.0, -7.5) -- (rel);
+\path [l] (+)  -- (9.0, -1.5) -- (9.0, -4.5) -- (exp2);
+\path [l] (-)  -- (9.0, -3.0) -- (9.0, -4.5) -- (exp2);
+\path [l] (*)  -- (9.0, -4.5) -- (9.0, -4.5) -- (exp2);
+\path [l] (/)  -- (9.0, -6.0) -- (9.0, -4.5) -- (exp2);
+\path [l] (rel) -- (9.0, -7.5) -- (9.0, -4.5) -- (exp2);
+\path [l] (not)  -- (5.5, -9.0) -- (5.5, -9.75) -- (exp3);
+\path [l] (mns)  -- (5.5, -10.5) -- (5.5, -9.75) -- (exp3);
+\path [l] (POP) -- (exp4);
+\path [l] (exp4) -- (PCL);
+
+% Final 
+\path [l] (LIT)  -- (final);
+\path [l] (exp2) -- (12.5, -4.5) -- (12.5, 0.0) -- (final);
+\path [l] (exp3) -- (12.5, -9.75) -- (12.5, 0.0) -- (final);
+\path [l] (PCL) -- (12.5, -12.0) -- (12.5, 0.0) -- (final);
+
+\end{tikzpicture}
+\newline
+\begin{tikzpicture}[>=stealth',shorten >=0.5pt,auto,node distance=5 cm, scale = 0.85, transform shape]
+
+\node[ini]   (initial) at(0.5, -0.75) {};
+\node [state]    (num) at(5.5, 0.0) {num};
+\node [state]    (bool) at(5.5, -1.5) {bool};
+\node [state]    (PYC) at(6.5, -3.0) {;};
+\node [state]    (id) at(10.5, -0.75) {ID};
+\node[ini]    (final) at(13.5, -0.75) {};
+
+
+\draw[black, dashed] (0.0, 0.5) rectangle (14,-3.5);
+\node[align=center,text width=2.2cm] at (1.2, 0.0) {bloque inicialización};
+
+\path [l] (num)  -- (8.5, 0.0) -- (8.5, -0.75) -- (id);
+\path [l] (bool)  -- (8.5, -1.5) -- (8.5, -0.75) -- (id);
+
+\path [l] (initial)  -- (2.5, -0.75) -- (2.5, 0.0) -- (num);
+\path [l] (initial)  -- (2.5, -0.75) -- (2.5, -1.5) -- (bool);
+
+
+\path [l] (12.0, -0.75) -- (12.0, -3.00) -- (PYC);
+\path [l] (PYC) -- (1.5, -3.00) -- (1.5, -0.75);
+
+
+
+\path [l] (id)  -- (final);
+
+\end{tikzpicture}
+\newline
+\begin{tikzpicture}[>=stealth',shorten >=0.5pt,auto,node distance=5 cm, scale = 0.85, transform shape]
+
+\node[ini]   (initial) at(0.5, 0.0) {};
+\node [state]    (num) at(3.5, 0.0) {ID};
+\node [state]    (EQ) at(7.0, 0.0) {=};
+\node [state]    (PYC) at(7.0, -1.5) {;};
+\node [state]    (id) at(10.5, 0.0) {exp};
+\node[ini]    (final) at(13.5, 0.0) {};
+
+
+\draw[black, dashed] (0.0, 0.75) rectangle (14,-2.0);
+\node[align=center,text width=2.75cm] at (1.5, 0.52) {bloque asignación};
+
+\path [l] (num) -- (EQ);
+\path [l] (EQ) -- (id);
+
+\path [l] (initial) -- (num);
+
+\path [l] (12.0, 0.0) -- (12.0, -1.50) -- (PYC);
+\path [l] (PYC) -- (1.5, -1.50) -- (1.5, 0.0);
+
+\path [l] (id)  -- (final);
+
+\end{tikzpicture}
+\newline
+\begin{tikzpicture}[>=stealth',shorten >=0.5pt,auto,node distance=5 cm, scale = 0.85, transform shape]
+
+\node[ini]   (initial) at(0.5, 0.0) {};
+\node [b]    (num) at(3.5, 0.0) {bloque inicialización};
+\node [state]    (EQ) at(7.0, 0.0) {\&\&};
+\node [b]    (id) at(10.5, 0.0) {bloque asignación};
+\node[ini]    (final) at(13.5, 0.0) {};
+
+
+\draw[black, dashed] (0.0, 0.75) rectangle (14,-0.75);
+\node[align=center,text width=1cm] at (0.75, 0.52) {Programa};
+
+\path [l] (num) -- (EQ);
+\path [l] (EQ) -- (id);
+
+\path [l] (initial) -- (num);
+
+\path [l] (id)  -- (final);
+
+\end{tikzpicture}
+\newpage
+
+\section{Gramática Incontextual con prioridades}
+
+$
+\begin{array}{lcl}
+	E_0 & \rightarrow & E_0\quad O_0\quad E_1 \\
+	E_0 & \rightarrow & E_1 \\
+	O_0 & \rightarrow & + \\
+	O_0 & \rightarrow & -\quad (binario) \\
+	E_1 & \rightarrow & E_2\quad O_{11}\quad E_1 \\
+	E_1 & \rightarrow & E_2\quad O_{12}\quad E_2 \\
+	E_1 & \rightarrow & E_2 \\
+	O_{11} & \rightarrow & and \\
+	O_{12} & \rightarrow & or \\
+	E_2 & \rightarrow & E_3\quad O_2\quad E_3 \\
+	E_2 & \rightarrow & E_3 \\
+	O_2 & \rightarrow & Operadores\quad Relacionales \\
+	E_3 & \rightarrow & E_3\quad O_3\quad E_4 \\
+	E_3 & \rightarrow & E_4 \\
+	O_3 & \rightarrow & * \\
+	O_3 & \rightarrow & / \\
+	E_4 & \rightarrow & -\quad O_{41}\quad E_4 \\
+	E_4 & \rightarrow & -\quad O_{42}\quad E_5 \\
+	E_4 & \rightarrow & (\quad E_0\quad ) \\
+	E_4 & \rightarrow & Literal \\
+	O_{41} & \rightarrow & -\quad (unario) \\
+	O_{42} & \rightarrow & not \\
+\end{array}
+$
+
+\newpage
+
+\section{Gramática LL(1)}
+
+$
+\begin{array}{lcl}
+E_0 & \rightarrow & E_1\quad E_0'  \\
+E_0' & \rightarrow & \epsilon \\
+E_0' & \rightarrow & O_o\quad E1\quad E_0' \\
+O_0 & \rightarrow & + \\
+O_0 & \rightarrow & -\quad (binario) \\
+E_1 & \rightarrow & E_2\quad E_1' \\
+E_1' & \rightarrow & \epsilon \\
+E_1' & \rightarrow & O_{11}\quad E_{1}\\
+E_1' & \rightarrow & O_{12}\quad E_{2}\\
+O_{11} & \rightarrow & and \\
+O_{12} & \rightarrow & or \\
+E_2 & \rightarrow & E_3\quad E_2'\\
+E_2' & \rightarrow & \epsilon \\
+E_2' & \rightarrow & O_2\quad E_3 \\
+O_2 & \rightarrow & Operadores\quad relacionales \\
+E_3 & \rightarrow & E_4\quad E_3' \\
+E_3' & \rightarrow & O_3\quad E_4\quad E_3'\\
+E_3' & \rightarrow & \epsilon \\
+O_3 & \rightarrow & * \\
+O_3 & \rightarrow & / \\
+E_4 & \rightarrow & O_{41}\quad E_4 \\
+E_4 & \rightarrow & O_{42}\quad E_5 \\
+O_{41} & \rightarrow & - \\
+O_{42} & \rightarrow & not \\
+E_4 & \rightarrow & E_5 \\
+E_5 & \rightarrow & (\quad E_5 \quad) \\
+E_5 & \rightarrow & Literal \\
+\end{array}
+$
+
+\newpage 
+
+\section{Primeros y siguientes}
+
+Podemos obtener los "primeros y siguientes" utilizando la herramienta \textbf{Proletool}. Para ello hemos escrito el siguiente código.
+
+\lstset{frame=tb,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	basicstyle={\small\ttfamily},
+	numbers=none,
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=3
+}
+
+\begin{lstlisting}
+grammar recursiva_der
+{
+	nonterminal E0, E0p;
+	nonterminal E1, E1p;
+	nonterminal E2, E2p;
+	nonterminal E3, E3p;
+	nonterminal E4;
+	nonterminal E5;
+	nonterminal O0, O11, O12, O2, O3, O41, O42; 
+	
+	terminal literal;
+	terminal operadores_relacionadas; 
+	terminal and, or, not;
+	
+	E0  := E1 E0p; 
+	E0p  := O0 E1 E0p |  ; 
+	O0 := '+' | '-'; 
+	
+	E1 := E2 E1p; 	
+	E1p := O11 E1 | O12 E2 |  ; 
+	O11 := and; 
+	O12 := or;
+	
+	E2 := E3 E2p; 
+	E2p := O2 E3 |  ; 
+	O2 := operadores_relacionadas; 
+	
+	E3 := E4 E3p; 
+	E3p := O3 E4 E3p |  ; 
+	O3 := '*' | '/'; 
+	
+	E4 := O41 E4 | O42 E5 | E5; 
+	O41 := '-'; 	
+	O42 := not; 
+	
+	E5 := '(' E0 ')' | literal; 
+} 
+\end{lstlisting}
+
+\newpage
+\subsection{Primeros}
+\begin{tabular}{|l|l|}
+	\hline
+	\multicolumn{1}{|c|}{No terminal} & \multicolumn{1}{c|}{Iniciales} \\ \hline
+O0 &	+ -\\ \hline
+E2p &	operadores\_relacionadas\\ \hline
+O2 &	operadores\_relacionadas\\ \hline
+E3p &	* /\\ \hline
+E0p &	+ -\\ \hline
+O3 &	* /\\ \hline
+E1p &	or and\\ \hline
+E0 &	not ( - literal\\ \hline
+E1 &	not ( - literal\\ \hline
+O42 &	not\\ \hline
+E2 &	not ( - literal\\ \hline
+O41 &	-\\ \hline
+O11 &	and\\ \hline
+E3 &	not ( - literal\\ \hline
+E4 &	not ( - literal\\ \hline
+E5 &	( literal\\ \hline
+O12 &	or\\ \hline
+\end{tabular}
+
+\subsection{Siguientes}
+
+\begin{tabular}{|l|l|}
+	\hline
+	\multicolumn{1}{|c|}{No terminal} & \multicolumn{1}{c|}{Seguidores} \\ \hline
+	O0 &	not ( - literal \\ \hline
+	E2p &	or \$ and ) + - \\ \hline
+	O2 &	not ( - literal \\ \hline
+	E3p &	operadores\_relacionadas or \$ and ) + - \\ \hline
+	E0p &	\$ ) \\ \hline
+	O3 &	not ( - literal \\ \hline
+	E1p &	\$ ) + - \\ \hline
+	E0 &	\$ ) \\ \hline
+	E1 &	\$ ) + - \\ \hline
+	O42 &	( literal \\ \hline
+	E2 &	or \$ and ) + - \\ \hline
+	O41 &	not ( - literal \\ \hline
+	O11 &	not ( - literal \\ \hline
+	E3 &	operadores\_relacionadas or \$ and ) + - \\ \hline
+	E4 &	operadores\_relacionadas or \$ and ) * + - / \\ \hline
+	E5 &	operadores\_relacionadas or \$ and ) * + - / \\ \hline
+	O12 &	not ( - literal \\ \hline
+\end{tabular}
+
+\end{document}
