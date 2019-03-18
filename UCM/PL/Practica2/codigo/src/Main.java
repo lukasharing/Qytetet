@@ -6,7 +6,7 @@ import java.io.Reader;
 public class Main {
 	
 	public static void main(String arg[]) throws IOException {
-		Reader input = new InputStreamReader(new FileInputStream("./input/equation.txt"));
+		Reader input = new InputStreamReader(new FileInputStream("./input/code_3_error.txt"));
 		
 		// COMENTARIO:
 		// Se nos ha olvidado la inicialización, asignación y el programa, las expresiones funcionan.

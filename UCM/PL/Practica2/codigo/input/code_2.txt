@@ -3,5 +3,5 @@ num cuenta;
 bool tengo_dinero
 &&
 dinero = (12.0000 * 10) - 20.0000 - 15.50;
-cuenta = 1.0e2 + 1e1 + 10.2
+cuenta = 1.0e2 + 1e1 + 10.2;
 tengo_dinero = not ( dinero <= cuenta )

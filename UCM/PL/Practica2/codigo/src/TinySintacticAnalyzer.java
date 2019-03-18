@@ -53,14 +53,15 @@ public class TinySintacticAnalyzer {
    };
    
    private void AP() {
-      switch(anticipo.clase()) {
+     switch(anticipo.clase()) {
+      case EOF: break;
       case PYC:
     	  PYC();
     	  A();
-     break;
+      break;
       default:
-    	  errores.errorSintactico(anticipo.fila(),anticipo.clase(), ClaseLexica.ID);
-      }
+    	  errores.errorSintactico(anticipo.fila(),anticipo.clase(), ClaseLexica.PYC);
+     }
    };
    
    private void OA() {
@@ -88,12 +89,12 @@ public class TinySintacticAnalyzer {
 
    private void BP() {
       switch(anticipo.clase()) {
+      case SEP: break;
+      case EOF: break;
       case PYC:
     	PYC();
     	B();
       break;
-      case SEP: break;
-      case EOF: break;
       default:
     	  errores.errorSintactico(anticipo.fila(),anticipo.clase(), ClaseLexica.PYC);
       }
@@ -128,10 +129,11 @@ public class TinySintacticAnalyzer {
    
    private void E0() {
       switch(anticipo.clase()) {
-        case SEP: case EOF: break;
-	    case PAO: case MNS: case INT: case REAL: case EXE: case NOT:
+        //case SEP: case EOF: break;
+	    case PAO: case MNS: case INT: case REAL: case EXE: case ID: case NOT:
 	      E1();
 	      E0P();
+	    break;
 	    default:
 	      errores.errorSintactico(anticipo.fila(),anticipo.clase(), ClaseLexica.PAO, ClaseLexica.MNS, ClaseLexica.INT, ClaseLexica.REAL, ClaseLexica.EXE, ClaseLexica.ID, ClaseLexica.NOT);
       }
@@ -140,13 +142,14 @@ public class TinySintacticAnalyzer {
    private void E0P() {
 
 	   switch(anticipo.clase()) {
+	      case EOF: break;
+	      
 	      case PCE: case PYC: break;
 	      case PLS: case MNS:
 	    	  O0();
 	    	  E1();
 	    	  E0P();
     	  break;
-	      case EOF: break;
 	      default:
 	    	  errores.errorSintactico(anticipo.fila(),anticipo.clase(), ClaseLexica.PLS, ClaseLexica.MNS);
 	   }
@@ -167,6 +170,8 @@ public class TinySintacticAnalyzer {
    
    private void E1P() {
 	  switch (anticipo.clase()) {
+	    case EOF: break;
+	    
 	    case PYC: break;
 	    case PCE: break;
 	    case PLS: break;
@@ -179,7 +184,6 @@ public class TinySintacticAnalyzer {
 	    	O12();
 	    	E2();
     	break;
-	    case EOF: break;
 	    default:
 		  errores.errorSintactico(anticipo.fila(),anticipo.clase(), ClaseLexica.OR, ClaseLexica.AND);
 		break;
@@ -200,12 +204,13 @@ public class TinySintacticAnalyzer {
    
    private void E2P() {
 	   switch (anticipo.clase()) {
+	    case EOF: break;
+	    
 	    case PCE: case PLS: case MNS: case AND: case OR: case PYC: break;
 	    case BE: case NE: case GT: case GE: case LE: case LT:
 	    	O2();
 	    	E3();
 	    break;
-	    case EOF: break;
 	    default:
 		  errores.errorSintactico(anticipo.fila(),anticipo.clase(), ClaseLexica.BE, ClaseLexica.NE, ClaseLexica.GT, ClaseLexica.GE, ClaseLexica.LE, ClaseLexica.LT);
 		break;
@@ -217,6 +222,7 @@ public class TinySintacticAnalyzer {
 	    case PAO: case MNS: case INT: case REAL: case EXE: case ID: case NOT:
 	    	E4();
 	    	E3P();
+	    break;
 	    default:
 		  errores.errorSintactico(anticipo.fila(),anticipo.clase(), ClaseLexica.PAO, ClaseLexica.MNS, ClaseLexica.INT, ClaseLexica.REAL, ClaseLexica.EXE, ClaseLexica.ID);
 		break;
@@ -235,29 +241,29 @@ public class TinySintacticAnalyzer {
 	    break;
 	    default:
 		  errores.errorSintactico(anticipo.fila(),anticipo.clase(), ClaseLexica.DIV, ClaseLexica.MUL);
-		break;
 	  }
    };
    
    private void E4() {
 	   switch (anticipo.clase()) {
-		   case PAO: case INT: case REAL: case EXE: case ID: E5(); break;
-		   case MNS: case NOT:
-			   O42();
-			   E5();
-		   break;
-		   default:
-			errores.errorSintactico(anticipo.fila(),anticipo.clase(), ClaseLexica.PAO, ClaseLexica.MNS, ClaseLexica.INT, ClaseLexica.REAL, ClaseLexica.EXE, ClaseLexica.NOT, ClaseLexica.ID);
-		   break;
+	    case PAO: case INT: case REAL: case EXE: case ID:
+		   E5();
+ 	    break;
+	    case MNS: case NOT:
+		   O42();
+		   E5();
+	    break;
+	    default:
+		errores.errorSintactico(anticipo.fila(),anticipo.clase(), ClaseLexica.PAO, ClaseLexica.MNS, ClaseLexica.INT, ClaseLexica.REAL, ClaseLexica.EXE, ClaseLexica.NOT, ClaseLexica.ID);
 	  }
    };
    
    private void E5() {
 	   switch (anticipo.clase()) {
 	    case PAO:
-	    	empareja(ClaseLexica.PAO);
-            E0(); 
-            empareja(ClaseLexica.PCE);
+	    	O51();
+            E0();
+	    	O52();
         break;
         case INT: empareja(ClaseLexica.INT); break;
         case REAL: empareja(ClaseLexica.REAL); break; 
@@ -339,6 +345,23 @@ public class TinySintacticAnalyzer {
 	  }
    };
    
+   private void O51() {
+	   switch (anticipo.clase()) {
+	    case PAO: empareja(ClaseLexica.PAO); break;
+	    default:
+		  errores.errorSintactico(anticipo.fila(),anticipo.clase(), ClaseLexica.PAO);
+		break;
+	  }
+   };
+   
+   private void O52() {
+	   switch (anticipo.clase()) {
+	    case PCE: empareja(ClaseLexica.PCE); break;
+	    default:
+		  errores.errorSintactico(anticipo.fila(),anticipo.clase(), ClaseLexica.PCE);
+		break;
+	  }
+   };
    
    private void empareja(ClaseLexica claseEsperada) {
       if (anticipo.clase() == claseEsperada)
@@ -356,8 +379,7 @@ public class TinySintacticAnalyzer {
    }
    
    public void Sp() {
-	   //PROGRAM();
-	   E0();
+	   PROGRAM();
 	   empareja(ClaseLexica.EOF);
    };
    

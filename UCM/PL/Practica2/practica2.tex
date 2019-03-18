@@ -128,7 +128,7 @@
 \node [state]    (num) at(3.5, 0.0) {ID};
 \node [state]    (EQ) at(7.0, 0.0) {=};
 \node [state]    (PYC) at(7.0, -1.5) {;};
-\node [state]    (id) at(10.5, 0.0) {exp};
+\node [b]    (id) at(10.5, 0.0) {exp};
 \node[ini]    (final) at(13.5, 0.0) {};
 
 
@@ -173,6 +173,7 @@
 
 $
 \begin{array}{lcl}
+	
 	E_0 & \rightarrow & E_0\quad O_0\quad E_1 \\
 	E_0 & \rightarrow & E_1 \\
 	O_0 & \rightarrow & + \\
@@ -189,8 +190,8 @@ $
 	E_3 & \rightarrow & E_4 \\
 	O_3 & \rightarrow & * \\
 	O_3 & \rightarrow & / \\
-	E_4 & \rightarrow & -\quad O_{41}\quad E_4 \\
-	E_4 & \rightarrow & -\quad O_{42}\quad E_5 \\
+	E_4 & \rightarrow & O_{41}\quad E_4 \\
+	E_4 & \rightarrow & O_{42}\quad E_5 \\
 	E_4 & \rightarrow & (\quad E_0\quad ) \\
 	E_4 & \rightarrow & Literal \\
 	O_{41} & \rightarrow & -\quad (unario) \\
@@ -204,6 +205,16 @@ $
 
 $
 \begin{array}{lcl}
+PROGRAM & \rightarrow & A\quad O_p\quad B \\
+O_p & \rightarrow & \&\quad \& \\
+A & \rightarrow & A_b\quad Literal\quad A' \\
+A_b & \rightarrow & bool \\
+A_b & \rightarrow & num \\
+A' & \rightarrow & ;\quad  A\\
+A' & \rightarrow & \epsilon\\
+B & \rightarrow & Literal\quad =\quad E0\quad B' \\
+B' & \rightarrow & ;\quad  B\\
+B' & \rightarrow & \epsilon\\
 E_0 & \rightarrow & E_1\quad E_0'  \\
 E_0' & \rightarrow & \epsilon \\
 E_0' & \rightarrow & O_o\quad E1\quad E_0' \\
@@ -226,9 +237,9 @@ O_3 & \rightarrow & * \\
 O_3 & \rightarrow & / \\
 E_4 & \rightarrow & O_{41}\quad E_4 \\
 E_4 & \rightarrow & O_{42}\quad E_5 \\
+E_4 & \rightarrow & E_5 \\
 O_{41} & \rightarrow & - \\
 O_{42} & \rightarrow & not \\
-E_4 & \rightarrow & E_5 \\
 E_5 & \rightarrow & (\quad E_5 \quad) \\
 E_5 & \rightarrow & Literal \\
 \end{array}
@@ -241,8 +252,6 @@ $
 Podemos obtener los "primeros y siguientes" utilizando la herramienta \textbf{Proletool}. Para ello hemos escrito el siguiente código.
 
 \lstset{frame=tb,
-	aboveskip=3mm,
-	belowskip=3mm,
 	showstringspaces=false,
 	columns=flexible,
 	basicstyle={\small\ttfamily},
@@ -253,43 +262,50 @@ Podemos obtener los "primeros y siguientes" utilizando la herramienta \textbf{Pr
 }
 
 \begin{lstlisting}
-grammar recursiva_der
+grammar recursiva_der  
 {
-	nonterminal E0, E0p;
-	nonterminal E1, E1p;
-	nonterminal E2, E2p;
-	nonterminal E3, E3p;
-	nonterminal E4;
-	nonterminal E5;
-	nonterminal O0, O11, O12, O2, O3, O41, O42; 
+	nonterminal PROGRAM, B, OB, Bp, A, OA, Ap;
+	nonterminal E0, E0p, E1, E1p, E2, E2p, E3, E3p, E4, E5, O0, O11, O12, O2, O3, O41, O42, O51, O52;
+	nonterminal PYC, separator;
+	terminal bool, num;
+	terminal not, and, or, operadores_relacionadas;
+	terminal id, entero, real, exponencial;
 	
-	terminal literal;
-	terminal operadores_relacionadas; 
-	terminal and, or, not;
+	PYC := ';';
+	separator := '&' '&';
+	B := OB id Bp; 
+	OB := bool | num;
+	Bp := PYC  B | ;
+	A := id OA E0 Ap;  
+	OA := '=';
+	Ap := PYC  A | ;
+	PROGRAM := B separator A;
 	
-	E0  := E1 E0p; 
-	E0p  := O0 E1 E0p |  ; 
-	O0 := '+' | '-'; 
+	E0  := E1 E0p;
+	E0p  := O0 E1 E0p |  ;
+	O0 := '+' | '-';  
 	
-	E1 := E2 E1p; 	
-	E1p := O11 E1 | O12 E2 |  ; 
-	O11 := and; 
+	E1 := E2 E1p;  
+	E1p := O11 E1 | O12 E2 |  ;
+	O11 := and;
 	O12 := or;
 	
-	E2 := E3 E2p; 
-	E2p := O2 E3 |  ; 
-	O2 := operadores_relacionadas; 
+	E2 := E3 E2p;
+	E2p := O2 E3 |  ;
+	O2 := operadores_relacionadas;  
 	
-	E3 := E4 E3p; 
-	E3p := O3 E4 E3p |  ; 
-	O3 := '*' | '/'; 
+	E3 := E4 E3p;  
+	E3p := O3 E4 E3p |  ;  
+	O3 := '*' | '/';
 	
-	E4 := O41 E4 | O42 E5 | E5; 
-	O41 := '-'; 	
-	O42 := not; 
+	E4 := O41 E4 | O42 E5 | E5;
+	O41 := '-'; 
+	O42 := not;
 	
-	E5 := '(' E0 ')' | literal; 
-} 
+	E5 := O51 E0 O52 | id | entero | real | exponencial;  
+	O51 := '(';
+	O52 := ')';
+}  
 \end{lstlisting}
 
 \newpage
@@ -297,23 +313,34 @@ grammar recursiva_der
 \begin{tabular}{|l|l|}
 	\hline
 	\multicolumn{1}{|c|}{No terminal} & \multicolumn{1}{c|}{Iniciales} \\ \hline
-O0 &	+ -\\ \hline
-E2p &	operadores\_relacionadas\\ \hline
-O2 &	operadores\_relacionadas\\ \hline
-E3p &	* /\\ \hline
-E0p &	+ -\\ \hline
-O3 &	* /\\ \hline
-E1p &	or and\\ \hline
-E0 &	not ( - literal\\ \hline
-E1 &	not ( - literal\\ \hline
-O42 &	not\\ \hline
-E2 &	not ( - literal\\ \hline
-O41 &	-\\ \hline
-O11 &	and\\ \hline
-E3 &	not ( - literal\\ \hline
-E4 &	not ( - literal\\ \hline
-E5 &	( literal\\ \hline
-O12 &	or\\ \hline
+A	&	id \\ \hline
+O0	&	+ - \\ \hline
+B	&	bool num \\ \hline
+E2p	&	operadores\_relacionadas \\ \hline
+O2	&	operadores\_relacionadas \\ \hline
+E0p	&	+ - \\ \hline
+O3	&	* / \\ \hline
+E0	&	not exponencial ( entero id real - \\ \hline
+E1	&	not exponencial ( entero id real - \\ \hline
+O42	&	not \\ \hline
+E2	&	not exponencial ( entero id real - \\ \hline
+O41	&	- \\ \hline
+E3	&	not exponencial ( entero id real - \\ \hline
+Ap	&	; \\ \hline
+E4	&	not exponencial ( entero id real - \\ \hline
+E5	&	exponencial ( entero id real \\ \hline
+OA	&	= \\ \hline
+OB	&	bool num \\ \hline
+PYC	&	; \\ \hline
+E3p	&	* / \\ \hline
+E1p	&	or and \\ \hline
+O51	&	( \\ \hline
+separator	& \&\& \\ \hline
+O52	&	) \\ \hline
+Bp	&	; \\ \hline
+O11	&	and \\ \hline
+O12	&	or \\ \hline
+PROGRAM	&	bool num \\ \hline
 \end{tabular}
 
 \subsection{Siguientes}
@@ -321,23 +348,34 @@ O12 &	or\\ \hline
 \begin{tabular}{|l|l|}
 	\hline
 	\multicolumn{1}{|c|}{No terminal} & \multicolumn{1}{c|}{Seguidores} \\ \hline
-	O0 &	not ( - literal \\ \hline
-	E2p &	or \$ and ) + - \\ \hline
-	O2 &	not ( - literal \\ \hline
-	E3p &	operadores\_relacionadas or \$ and ) + - \\ \hline
-	E0p &	\$ ) \\ \hline
-	O3 &	not ( - literal \\ \hline
-	E1p &	\$ ) + - \\ \hline
-	E0 &	\$ ) \\ \hline
-	E1 &	\$ ) + - \\ \hline
-	O42 &	( literal \\ \hline
-	E2 &	or \$ and ) + - \\ \hline
-	O41 &	not ( - literal \\ \hline
-	O11 &	not ( - literal \\ \hline
-	E3 &	operadores\_relacionadas or \$ and ) + - \\ \hline
-	E4 &	operadores\_relacionadas or \$ and ) * + - / \\ \hline
-	E5 &	operadores\_relacionadas or \$ and ) * + - / \\ \hline
-	O12 &	not ( - literal \\ \hline
+A	 & 	\\ \hline
+O0	 & 	not exponencial ( entero id real -\\ \hline
+B	 & 	\$ \&\\ \hline
+E2p	 & 	or \$ and \& ) + ; -\\ \hline
+O2	 & 	not exponencial ( entero id real -\\ \hline
+E0p	 & 	\$ \& ) ;\\ \hline
+O3	 & 	not exponencial ( entero id real -\\ \hline
+E0	 & 	\$ \& ) ;\\ \hline
+E1	 & 	\$ \& ) + ; -\\ \hline
+O42	 & 	exponencial ( entero id real\\ \hline
+E2	 & 	or \$ and \& ) + ; -\\ \hline
+O41	 & 	not exponencial ( entero id real -\\ \hline
+E3	 & 	operadores\_relacionadas or \$ and \& ) + ; -\\ \hline
+Ap	 & 	\\ \hline
+E4	 & 	operadores\_relacionadas or \$ and \& ) * + ; - /\\ \hline
+E5	 & 	operadores\_relacionadas or \$ and \& ) * + ; - /\\ \hline
+OA	 & 	not exponencial ( entero id real -\\ \hline
+OB	 & 	not exponencial ( entero id real -\\ \hline
+PYC	 & 	bool num id\\ \hline
+E3p	 & 	operadores\_relacionadas or \$ and \& ) + ; -\\ \hline
+E1p	 & 	\$ \& ) + ; -\\ \hline
+O51	 & 	not exponencial ( entero id real -\\ \hline
+separator	 & 	id\\ \hline
+O52	 & 	operadores\_relacionadas or \$ and \& ) * + ; - /\\ \hline
+Bp	 & 	\$ \&\\ \hline
+O11	 & 	not exponencial ( entero id real -\\ \hline
+O12	 & 	not exponencial ( entero id real -\\ \hline
+PROGRAM	 & \\ \hline
 \end{tabular}
 
 \end{document}

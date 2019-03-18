@@ -1,6 +1,6 @@
 bool exp1;
 bool exp2;
-bool exp
+exp
 &&
 exp1 = true or false;
 exp2 = false and true;
