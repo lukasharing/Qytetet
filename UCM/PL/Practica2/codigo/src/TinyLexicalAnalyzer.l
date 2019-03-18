@@ -25,7 +25,7 @@
 
 letra  = ([A-Z]|[a-z])
 digito = [0-9]
-natural = {digito}*
+natural = {digito}{digito}*
 saltables = [ \t\r\b\n]
 
 not = not
