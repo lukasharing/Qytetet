@@ -356,7 +356,8 @@ public class TinySintacticAnalyzer {
    }
    
    public void Sp() {
-	   PROGRAM();
+	   //PROGRAM();
+	   E0();
 	   empareja(ClaseLexica.EOF);
    };
    
