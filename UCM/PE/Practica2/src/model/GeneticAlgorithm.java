@@ -144,6 +144,10 @@ public class GeneticAlgorithm<T> {
 			for (int i = 0; i < initial_population; ++i) {
 				chromosomes.add(RealChromosome.newInstance(function));
 			}
+		} else if (class_type.getName().contains("CitiesChromosome")) {
+			for (int i = 0; i < initial_population; ++i) {
+				chromosomes.add(CitiesChromosome.newInstance(function));
+			}
 		}
 
 	};

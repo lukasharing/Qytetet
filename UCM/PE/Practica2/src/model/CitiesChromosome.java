@@ -83,95 +83,7 @@ public class CitiesChromosome extends Chromosome<Integer> {
 	public String toString() {
 		String result = "\t\n Chromosome: \n";
 		for (Integer gene : genes) {
-			
-			switch(gene) {
-				case 0:	
-					result += "Albacete->";
-					break;
-				case 1:	
-					result += "Alicante->";
-					break;
-				case 2:	
-					result += "Almería->";
-					break;
-				case 3:	
-					result += "Ávila->";
-					break;
-				case 4:	
-					result += "Badajoz->";
-					break;
-				case 5:	
-					result += "Barcelona->";
-					break;
-				case 6:	
-					result += "Bilbao->";
-					break;
-				case 7:	
-					result += "Burgos->";
-					break;
-				case 8:	
-					result += "Cáceres->";
-					break;
-				case 9:	
-					result += "Cádiz->";
-					break;
-				case 10:	
-					result += "Castellón->";
-					break;
-				case 11:	
-					result += "Ciudad Real->";
-					break;
-				case 12:	
-					result += "Córdoba->";
-					break;
-				case 13:	
-					result += "A Coruña->";
-					break;
-				case 14:	
-					result += "Cuenca->";
-					break;
-				case 15:	
-					result += "Gerona->";
-					break;
-				case 16:	
-					result += "Granada->";
-					break;
-				case 17:	
-					result += "Guadalajara->";
-					break;
-				case 18:	
-					result += "Huelva->";
-					break;
-				case 19:	
-					result += "Huesca->";
-					break;
-				case 20:	
-					result += "Jaén->";
-					break;
-				case 21:	
-					result += "León->";
-					break;
-				case 22:	
-					result += "Lérida->";
-					break;
-				case 23:	
-					result += "Logroño->";
-					break;
-				case 24:	
-					result += "Lugo->";
-					break;
-				case 25:	
-					result += "Madrid->";
-					break;
-				case 26:	
-					result += "Málaga->";
-					break;
-				default:	
-					result += "Unknown city (" + gene + ")";
-					break;
-					
-			}
-			
+			result += parseCity(gene) + "->";			
 		}
 		
 		//Elimina la flechita de la ultima ciudad
@@ -180,4 +92,67 @@ public class CitiesChromosome extends Chromosome<Integer> {
 		result += "\nEvaluation: " + func.evaluate(this.getFenotypes()) + "\n";
 		return result;
 	}
+	
+	public static String parseCity(int n){
+		switch(n) {
+		case 0:	
+			return "Albacete";
+		case 1:	
+			return "Alicante";
+		case 2:	
+			return "Almería";
+		case 3:	
+			return "Ávila";
+		case 4:	
+			return "Badajoz";
+		case 5:	
+			return "Barcelona";
+		case 6:	
+			return "Bilbao";
+		case 7:	
+			return "Burgos";
+		case 8:	
+			return "Cáceres";
+		case 9:	
+			return "Cádiz";
+		case 10:	
+			return "Castellón";
+		case 11:	
+			return "Ciudad Real";
+		case 12:	
+			return "Córdoba";
+		case 13:	
+			return "A Coruña";
+		case 14:	
+			return "Cuenca";
+		case 15:	
+			return "Gerona";
+		case 16:	
+			return "Granada";
+		case 17:	
+			return "Guadalajara";
+		case 18:	
+			return "Huelva";
+		case 19:	
+			return "Huesca";
+		case 20:	
+			return "Jaén";
+		case 21:	
+			return "León";
+		case 22:	
+			return "Lérida";
+		case 23:	
+			return "Logroño";
+		case 24:	
+			return "Lugo";
+		case 25:	
+			return "Madrid";
+		case 26:	
+			return "Málaga";
+		default:	
+			return "Unknown city (" + n + ")";
+			
+		}
+	}
 }
+
