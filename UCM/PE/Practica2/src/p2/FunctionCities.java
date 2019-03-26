@@ -77,11 +77,11 @@ public class FunctionCities extends Function{
 		}
 	}
 
-	public int evaluate(int... args) {
-		int sum = 0;
+	public double evaluate(double... args) {
+		double sum = 0;
 		for (int i = 1; i <= 27; i++) {
-			int city1 = args[i];
-			int city2 = args[i - 1];
+			int city1 = (int)args[i];
+			int city2 = (int)args[i - 1];
 			
 			if(city1 < city2) {
 				sum += _DIST[city2][city1];

@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.swing.event.ListSelectionEvent;
+
 import org.math.plot.utils.Array;
 
 import model.Chromosome;
@@ -44,7 +46,6 @@ public class CitiesChromosome extends Chromosome<Integer> {
 		for (int i = 0; i < 25; i++) { genes.add(i); }
 		//Añadimos madrid al final del cromosoma
 		genes.add(26);
-		genes.add(27);
 		genes.add(25);
 		
 		//Añadimos madrid al final
@@ -60,8 +61,8 @@ public class CitiesChromosome extends Chromosome<Integer> {
 	// Bijective Function that given the id of the interval and (binary chain =
 	// number)
 	// returns a point in the value.
-	private Integer getFenotype(Integer n) {
-		return genes.get(n);
+	private double getFenotype(Integer n) {
+		return (double)genes.get(n);
 	};
 
 	public double[] getFenotypes() {
@@ -71,130 +72,137 @@ public class CitiesChromosome extends Chromosome<Integer> {
 		}
 		return result;
 	};
+	
+	public void setFenotypes(double[] rs) {
+		for (int i = 0; i < genes.size(); ++i) {
+			this.genes.set(i, Integer.valueOf((int)rs[i]));
+		}
+	};
 
 	// -----------------------------------------------
 	// - Mutations
 	public void mutate(MutationType mutation, double prob) {
-		System.out.println("Mutation");
-		switch(mutation) {
-			case INSERTION:
+		if(Math.random() < prob) {
+			switch(mutation) {
+				case INSERTION:
+					
+					// Algoritmos
+					// 1. Elegimos posición aleatoria para elegirlo como desplazante  (1 - 27)
+					int moving_pointer = 1 + (int) (Math.random() * 27);
+					// 2. Elegimos segunda posición aleatoria para desplazar.
+					int move_pointer = 1 + (int) (Math.random() * moving_pointer);
+					// 3. Desplazamos todo el subarray hacia la derecha (1 posición)
+					List<Integer> left = genes.subList(0, move_pointer);
+					List<Integer> shift = genes.subList(move_pointer, moving_pointer);
+					Integer fx = genes.get(moving_pointer);
+					List<Integer> right = genes.subList(moving_pointer + 1, genes.size());
+					
+					
+					List<Integer> result = new ArrayList<>();
+					result.addAll(left);
+					// 4. Insertamos en ese lugar, el elemento que teniamos.
+					result.add(fx);
+					result.addAll(shift);
+					result.addAll(right);
+					
+					this.genes = new ArrayList<Integer>(result);
+				break;
 				
-				// Algoritmos
-				// 1. Elegimos posición aleatoria para elegirlo como desplazante
-				int moving_pointer = (int) (1 + Math.random() * 28);
-				// 2. Elegimos segunda posición aleatoria para desplazar.
-				int move_pointer = (int) (1 + Math.random() * moving_pointer);
-				// 3. Desplazamos todo el subarray hacia la derecha (1 posición)
-				List<Integer> left = genes.subList(0, move_pointer);
-				List<Integer> shift = genes.subList(move_pointer, moving_pointer);
-				Integer fx = genes.get(moving_pointer);
-				List<Integer> right = genes.subList(moving_pointer + 1, genes.size());
+				case SWAP:
+	
+					// Intercambiamos dos posiciones aleatorias  (1 - 27)
+					int swap_1 = (int) (1 + Math.random() * 27);
+					int swap_2 = (int) (1 + Math.random() * 27);
+					Collections.swap(this.genes, swap_1, swap_2);
+					
+				break;
 				
+				case INVERSION:
+					
+					 // (1 - 27)
+					int invert_1 = (int) (1 + Math.random() * 27);
+					int invert_2 = (int) (1 + Math.random() * 27);
+					
+					int min = Math.min(invert_1, invert_2);
+					int max = Math.max(invert_1, invert_2);
+					
+					List<Integer> part0 = new ArrayList<>();
+					part0.addAll(genes.subList(0, min));
+					List<Integer> reverse = genes.subList(min, max);
+					Collections.reverse(reverse);
+					part0.addAll(reverse);
+					part0.addAll(genes.subList(max, genes.size()));
+					
+					this.genes = new ArrayList<>(part0);
+					
+				break;
 				
-				List<Integer> result = new ArrayList<>();
-				result.addAll(left);
-				// 4. Insertamos en ese lugar, el elemento que teniamos.
-				result.add(fx);
-				result.addAll(shift);
-				result.addAll(right);
+				case HEURISTIC:
+					
+					int[] markers = new int [] { // (1 - 27)
+						(int) (1 + Math.random() * 27),
+					    (int) (1 + Math.random() * 27),
+					    (int) (1 + Math.random() * 27)
+					};
+					
+					int perm = 3; //(int)(1 + Math.random() * 2);
+					int[][] all = PERMUTATION[perm];
+					
+					double[] cp = this.getFenotypes();
+					double min_ev = ((FunctionCities)func).evaluate(cp);
+					// Look at all permutations and find the best
+					for(int i = 1; i < all.length; ++i) {
+						double[] perm_gene = this.getFenotypes();
+						for(int j = 0; j < perm; ++j) {
+							perm_gene[markers[j]] = this.getFenotype(markers[all[i][j]]);
+						}
+						
+						// See who has minimum distance
+						double ev_ax = ((FunctionCities)func).evaluate(perm_gene);
+						if(ev_ax < min_ev) {
+							min_ev = ev_ax;
+							cp = perm_gene;
+						}
+					}
+					// Swap values
+					this.setFenotypes(cp);
+					
+				break;
 				
-				this.genes = new ArrayList<Integer>(result);
-			break;
-			
-			case SWAP:
-
-				// Intercambiamos dos posiciones aleatorias
-				int swap_1 = (int) (1 + Math.random() * 28);
-				int swap_2 = (int) (1 + Math.random() * 28);
-				Collections.swap(this.genes, swap_1, swap_2);
-				
-			break;
-			
-			case INVERSION:
-
-				int invert_1 = (int) (1 + Math.random() * 28);
-				int invert_2 = (int) (1 + Math.random() * 28);
-				
-				int min = Math.min(invert_1, invert_2);
-				int max = Math.max(invert_1, invert_2);
-				
-				List<Integer> part0 = new ArrayList<>();
-				part0.addAll(genes.subList(0, min));
-				List<Integer> reverse = genes.subList(min, max);
-				Collections.reverse(reverse);
-				part0.addAll(reverse);
-				part0.addAll(genes.subList(max, genes.size()));
-				
-				System.out.println(part0.toString());
-				
-				this.genes = new ArrayList<>(part0);
-				
-			break;
-			
-			case HEURISTIC:
-				
-				int[] markers = new int [] {
-					(int) (1 + Math.random() * 28),
-				    (int) (1 + Math.random() * 28),
-				    (int) (1 + Math.random() * 28)
-				};
-				
-				int perm = 3; //(int)(1 + Math.random() * 2);
-				int[][] all = PERMUTATION[perm];
-				
-				ArrayList<Integer> cp = this.genes;
-				int min_ev = ((FunctionCities)func).evaluate(cp.stream().mapToInt(Integer::intValue).toArray());
-				// Look at all permutations and find the best
-				for(int i = 1; i < all.length; ++i) {
-					Integer[] perm_gene = this.genes.toArray(new Integer[0]);
-					for(int j = 0; j < perm; ++j) {
-						perm_gene[markers[j]] = this.genes.get(markers[all[i][j]]);
+				case SELF_METHOD_1:
+					
+					// Miramos si haciendo swap a la derecha o a la izquierda, se mejora la evaluación, si es así, cambiamos.
+	
+					// 1. Cogemos 1 elemento aleatorio ( 2 - 26 ) para evitar coger madrid
+					int p = (int) (2 + Math.random() * 26);
+					double ev_p = ((FunctionCities)func).evaluate(this.getFenotypes());
+					
+					double[] cp0_gene = this.getFenotypes();
+					double rs = cp0_gene[p]; // Helper
+					cp0_gene[p] = cp0_gene[p - 1];
+					cp0_gene[p - 1] = rs;
+					double ev_cp0 = ((FunctionCities)func).evaluate(cp0_gene);
+					
+					double[] cp1_gene = this.getFenotypes();
+					cp0_gene[p] = cp0_gene[p + 1];
+					cp0_gene[p + 1] = rs;
+					double ev_cp1 = ((FunctionCities)func).evaluate(cp1_gene);
+	
+					// SI el de la izquierda es menor distancia, cogemos
+					if(ev_cp0 < ev_p) {
+						ev_p = ev_cp0;
+						this.setFenotypes(cp0_gene);
 					}
 					
-					// See who has minimum distance
-					List<Integer> ax = Arrays.asList(perm_gene);
-					int ev_ax = ((FunctionCities)func).evaluate(ax.stream().mapToInt(Integer::intValue).toArray());
-					if(ev_ax < min_ev) {
-						min_ev = ev_ax;
-						cp = new ArrayList<Integer>(ax);
+					// SI el de la derecha es menor distancia, cogemos
+					if(ev_cp1 < ev_p) {
+						ev_p = ev_cp1;
+						this.setFenotypes(cp1_gene);
 					}
-				}
-				// Swap values
-				this.genes = cp;
-				
-			break;
-			
-			case SELF_METHOD_1:
-				
-				// Miramos si haciendo swap a la derecha o a la izquierda, se mejora la evaluación, si es así, cambiamos.
-
-				// 1. Cogemos 1 elemento aleatorio ( 2 - 26 ) para evitar coger madrid
-				int p = (int) (2 + Math.random() * 25);
-				int ev_p = ((FunctionCities)func).evaluate(this.genes.stream().mapToInt(Integer::intValue).toArray());
-				
-				List<Integer> cp0_gene = Arrays.asList(this.genes.toArray(new Integer[0]));
-				Collections.swap(cp0_gene, p, p - 1);
-				int ev_cp0 = ((FunctionCities)func).evaluate(cp0_gene.stream().mapToInt(Integer::intValue).toArray());
-				
-				List<Integer> cp1_gene = Arrays.asList(this.genes.toArray(new Integer[0]));
-				Collections.swap(cp1_gene, p, p + 1);
-				int ev_cp1 = ((FunctionCities)func).evaluate(cp1_gene.stream().mapToInt(Integer::intValue).toArray());
-
-				// SI el de la izquierda es menor distancia, cogemos
-				if(ev_cp0 < ev_p) {
-					ev_p = ev_cp0;
-					this.genes = new ArrayList<>(cp0_gene);
-				}
-				
-				// SI el de la derecha es menor distancia, cogemos
-				if(ev_cp1 < ev_p) {
-					ev_p = ev_cp1;
-					this.genes = new ArrayList<>(cp1_gene);
-				}
-				
-			break;
+					
+				break;
+			}
 		}
-		
 	};
 	
 	protected void cross(@SuppressWarnings("rawtypes") Chromosome chr1, CrossType type) {
@@ -213,9 +221,7 @@ public class CitiesChromosome extends Chromosome<Integer> {
 	
 	public String toString() {
 		String result = "\t\n Chromosome: \n";
-		
-		result = genes.stream().map(g -> parseCity(g)).collect(Collectors.joining("->"));
-		
+		result += genes.stream().map(g -> parseCity(g) + "("+ g +")").collect(Collectors.joining("->"));
 		result += "\nEvaluation: " + func.evaluate(this.getFenotypes()) + "\n";
 		return result;
 	}

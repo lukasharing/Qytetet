@@ -125,14 +125,14 @@ public class Panel2 extends JFrame {
 
 
 		/* Size Population */
-		this.size_population = new JTextField("100", 12);
+		this.size_population = new JTextField("10", 12);
 		JPanel p1 = new JPanel(new GridLayout(2, 1));
 		p1.add(new JLabel("Tamaño población:"));
 		p1.add(size_population);
 		barraizq.add(p1);
 
 		/* Number Generations */
-		this.num_generations = new JTextField("100", 12);
+		this.num_generations = new JTextField("5", 12);
 		JPanel p2 = new JPanel(new GridLayout(2, 1));
 		p2.add(new JLabel("Número generaciones:"));
 		p2.add(num_generations);
@@ -288,10 +288,6 @@ public class Panel2 extends JFrame {
 
 				addPlotLines(generations, best_chromosomes);
 				*/
-				
-				for(double[] db : best_distances) {
-					System.out.println(Arrays.toString(db));
-				}
 				
 				plot.repaint();
 				plot.revalidate();

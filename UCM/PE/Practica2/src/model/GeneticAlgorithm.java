@@ -101,9 +101,9 @@ public class GeneticAlgorithm<T> {
 		while (currentGeneration < total_generations) {
 			best = getBest(this.elitism);
 
-			this.selection(eval_result);
+			//this.selection(eval_result);
 			//this.crossover();
-			//this.mutation();
+			this.mutation();
 			eval_result = this.evaluation();
 
 			@SuppressWarnings("rawtypes")
@@ -160,12 +160,14 @@ public class GeneticAlgorithm<T> {
 
 	@SuppressWarnings({ "rawtypes" })
 	private ArrayList<Chromosome> getBest(int subsize) {
-
+		
 		ArrayList<Pair<Chromosome, Double>> pares = new ArrayList<>();
+		System.out.println("-----------------------------------");
 		for (Chromosome chr : chromosomes) {
 			pares.add(new Pair<Chromosome, Double>(chr, function.evaluate(chr.getFenotypes())));
+			System.out.println(chr.toString());
 		}
-
+		
 		pares.sort((a, b) -> function.compare(a.second, b.first.getFenotypes()));
 
 		// System.out.println(pares);
@@ -195,10 +197,8 @@ public class GeneticAlgorithm<T> {
 			eval_results[i] = function.evaluate(fenotypes);
 			if (function.compare(minmax_value, fenotypes) > 0) {
 				minmax_value = eval_results[i];
-			} else {
-				if (function.compare(maxmin_value, fenotypes) > 0) {
-					maxmin_value = eval_results[i];
-				}
+			} else if (function.compare(maxmin_value, fenotypes) > 0) {
+				maxmin_value = eval_results[i];
 			}
 		}
 
@@ -276,9 +276,6 @@ public class GeneticAlgorithm<T> {
 
 			break;
 		}*/
-		for (@SuppressWarnings("rawtypes") Chromosome chromosome : chromosomes) {
-			chromosome.mutate(mute, mutation_prob);
-		}
 		//this.chromosomes = generation;
 	}
 
