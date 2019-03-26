@@ -148,6 +148,8 @@ public class GeneticAlgorithm<T> {
 			for (int i = 0; i < initial_population; ++i) {
 				chromosomes.add(RealChromosome.newInstance(function));
 			}
+			
+			// Creation of Cities Chromosomes
 		} else if (class_type.getName().contains("CitiesChromosome")) {
 			for (int i = 0; i < initial_population; ++i) {
 				chromosomes.add(CitiesChromosome.newInstance(function));
@@ -209,7 +211,7 @@ public class GeneticAlgorithm<T> {
 	};
 
 	private void selection(double[] evaluations) {
-		@SuppressWarnings("rawtypes")
+		/*@SuppressWarnings("rawtypes")
 		ArrayList<Chromosome> generation = new ArrayList<>();
 		switch (selection) {
 			case ROULETTE:
@@ -273,8 +275,11 @@ public class GeneticAlgorithm<T> {
 			}
 
 			break;
+		}*/
+		for (@SuppressWarnings("rawtypes") Chromosome chromosome : chromosomes) {
+			chromosome.mutate(mute, mutation_prob);
 		}
-		this.chromosomes = generation;
+		//this.chromosomes = generation;
 	}
 
 	private void mutation() {

@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Arrays;
 import java.util.List;
 
 import org.math.plot.*;
@@ -42,9 +43,27 @@ public class Panel extends JFrame {
 	private JTextField mutation_perc;
 	private JTextField prec;
 	private String[] function_sel_ops = { "Función 1", "Función 2", "Función 3", "Función 4" };
-	private String[] selection_type = { "Ruleta", "Torneo Determinista", "Torneo Probabilístico" };
-	private String[] mutation_type = { "Aleatoria (Binario)", "Uniforme (Reales)", "No uniforme (Reales)" };
-	private String[] cross_type = { "Monopunto", "Multipunto", "Uniforme (Binario)" };
+
+	// Selection Dropdown
+	private List<SelectionType> selection_type = Arrays.asList(
+		SelectionType.ROULETTE,
+		SelectionType.DETE_TOURNAMENT,
+		SelectionType.PRB_TOURNAMENT
+	);
+	// Mutation Dropdown
+	private List<MutationType> mutation_type = Arrays.asList(
+		MutationType.RANDOM,
+		MutationType.UNIFORM,
+		MutationType.NONUNIFORM
+	);
+	
+	// Crosing Dropdown
+	private List<CrossType> cross_type = Arrays.asList(
+		CrossType.MONOPOINT,
+		CrossType.MULTIPOINT,
+		CrossType.UNIFORM
+	);
+	
 	private JComboBox<String> function_sel;
 	private JComboBox<String> selection_sel;
 	private JComboBox<String> mutation_sel;
@@ -143,21 +162,21 @@ public class Panel extends JFrame {
 		barraizq.add(p7);
 		
 		/* Selection Selection */
-		this.selection_sel = new JComboBox<>(selection_type);
+		this.selection_sel = new JComboBox<>(selection_type.stream().map(n -> n.toString()).toArray(String[]::new));
 		JPanel p11 = new JPanel(new GridLayout(2, 1));
 		p11.add(new JLabel("Selección:"));
 		p11.add(selection_sel);
 		barraizq.add(p11);
 		
 		/* Mutation Selection */
-		this.mutation_sel = new JComboBox<>(mutation_type);
+		this.mutation_sel = new JComboBox<>(mutation_type.stream().map(n -> n.toString()).toArray(String[]::new));
 		JPanel p12 = new JPanel(new GridLayout(2, 1));
 		p12.add(new JLabel("Mutación:"));
 		p12.add(mutation_sel);
 		barraizq.add(p12);
 		
 		/* Cross Selection */
-		this.cross_sel = new JComboBox<>(cross_type);
+		this.cross_sel = new JComboBox<>(cross_type.stream().map(n -> n.toString()).toArray(String[]::new));
 		JPanel p13 = new JPanel(new GridLayout(2, 1));
 		p13.add(new JLabel("Cruce:"));
 		p13.add(cross_sel);
@@ -250,47 +269,9 @@ public class Panel extends JFrame {
 
 				int num_gen = Integer.parseInt(num_generations.getText());
 
-				model.SelectionType type_sel = SelectionType.ROULETTE;
-				String selection_name = (String) selection_sel.getSelectedItem();
-				switch (selection_name) {
-					case "Ruleta":
-						type_sel = SelectionType.ROULETTE;
-					break;
-					case "Torneo Determinista":
-						type_sel = SelectionType.DETE_TOURNAMENT;
-					break;
-					case "Torneo Probabilístico":
-						type_sel = SelectionType.PRB_TOURNAMENT;
-					break;
-				}
-				
-				model.MutationType type_mut = MutationType.RANDOM;
-				String mute_name = (String) mutation_sel.getSelectedItem();
-				switch (mute_name) {
-					case "Aleatoria (Binario)":
-						type_mut = MutationType.RANDOM;
-					break;
-					case "Uniforme (Reales)":
-						type_mut = MutationType.UNIFORM;
-					break;
-					case "No uniforme (Reales)":
-						type_mut = MutationType.NONUNIFORM;
-					break;
-				}
-
-				model.CrossType type_cross = CrossType.MONOPOINT;
-				String cross_name = (String) cross_sel.getSelectedItem();
-				switch(cross_name) {
-					case "Monopunto":
-						type_cross = CrossType.MONOPOINT;
-					break;
-					case "Multipunto":
-						type_cross = CrossType.MULTIPOINT;
-					break;
-					case "Uniforme (Binario)":
-						type_cross = CrossType.UNIFORM;
-					break;
-				}
+				model.SelectionType type_sel = selection_type.get(selection_sel.getSelectedIndex());
+				model.CrossType type_cross = cross_type.get(cross_sel.getSelectedIndex());
+				model.MutationType type_mut = mutation_type.get(mutation_sel.getSelectedIndex());
 				
 				
 				if (chrtype_sel.getSelectedItem().equals(chrtype_sel_ops[0])) {

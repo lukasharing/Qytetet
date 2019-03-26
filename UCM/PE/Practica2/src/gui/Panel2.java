@@ -7,6 +7,8 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -45,9 +47,38 @@ public class Panel2 extends JFrame {
 	private JTextField num_generations;
 	private JTextField crossover_perc;
 	private JTextField mutation_perc;
-	private String[] selection_type = { "Ruleta", "Torneo Determinista", "Torneo Probabilístico" };
-	private String[] mutation_type = { "Aleatoria (Binario)", "Uniforme (Reales)", "No uniforme (Reales)" };
-	private String[] cross_type = { "Monopunto", "Multipunto", "Uniforme (Binario)" };
+	
+	// Algoritmos de selección
+	private List<SelectionType> selection_type = Arrays.asList(
+		SelectionType.ROULETTE, 
+		SelectionType.DETE_TOURNAMENT,
+		SelectionType.PRB_TOURNAMENT,
+		SelectionType.RANKING, 
+		SelectionType.TRUNCATION
+	);
+	
+	// Algoritmos de cruce
+	private List<CrossType> cross_type = Arrays.asList(
+		CrossType.PARTIALLY_MAPPED,
+		CrossType.ORDERED,
+		CrossType.ORDERED_VARIANT,
+		CrossType.CICLES,
+		CrossType.RECOMBINATION,
+		CrossType.ORDINAL_CODIFICATION,
+		CrossType.SELF_METHOD_1,
+		CrossType.SELF_METHOD_2
+	);
+	
+	// Algoritmos de mutación
+	private List<MutationType> mutation_type = Arrays.asList(
+		MutationType.INSERTION,
+		MutationType.SWAP,
+		MutationType.INVERSION,
+		MutationType.HEURISTIC,
+		MutationType.SELF_METHOD_1,
+		MutationType.SELF_METHOD_2
+	);
+	
 	private JComboBox<String> selection_sel;
 	private JComboBox<String> mutation_sel;
 	private JComboBox<String> cross_sel;
@@ -146,21 +177,21 @@ public class Panel2 extends JFrame {
 //		barraizq.add(p7);
 //		 
 		/* Selection Selection */
-		this.selection_sel = new JComboBox<>(selection_type);
+		this.selection_sel = new JComboBox<>(selection_type.stream().map(n -> n.toString()).toArray(String[]::new));
 		JPanel p11 = new JPanel(new GridLayout(2, 1));
 		p11.add(new JLabel("Selección:"));
 		p11.add(selection_sel);
 		barraizq.add(p11);
 		
 		/* Mutation Selection */
-		this.mutation_sel = new JComboBox<>(mutation_type);
+		this.mutation_sel = new JComboBox<>(mutation_type.stream().map(n -> n.toString()).toArray(String[]::new));
 		JPanel p12 = new JPanel(new GridLayout(2, 1));
 		p12.add(new JLabel("Mutación:"));
 		p12.add(mutation_sel);
 		barraizq.add(p12);
 		
 		/* Cross Selection */
-		this.cross_sel = new JComboBox<>(cross_type);
+		this.cross_sel = new JComboBox<>(cross_type.stream().map(n -> n.toString()).toArray(String[]::new));
 		JPanel p13 = new JPanel(new GridLayout(2, 1));
 		p13.add(new JLabel("Cruce:"));
 		p13.add(cross_sel);
@@ -229,78 +260,39 @@ public class Panel2 extends JFrame {
 				restartPlot();
 				restartResults(barradchactr, titulodcha);
 
-				int elitism_am = 0;
-				//if (elitism.isSelected()) {
-					elitism_am = ((Integer) elitism_amount.getValue());
-				//}
+				int elitism_am = elitism_am = ((Integer) elitism_amount.getValue());
 
 				int num_gen = Integer.parseInt(num_generations.getText());
 
-				model.SelectionType type_sel = SelectionType.ROULETTE;
-				String selection_name = (String) selection_sel.getSelectedItem();
-				switch (selection_name) {
-					case "Ruleta":
-						type_sel = SelectionType.ROULETTE;
-					break;
-					case "Torneo Determinista":
-						type_sel = SelectionType.DETE_TOURNAMENT;
-					break;
-					case "Torneo Probabilístico":
-						type_sel = SelectionType.PRB_TOURNAMENT;
-					break;
-				}
+				model.SelectionType type_sel = selection_type.get(selection_sel.getSelectedIndex());
+				model.CrossType type_cross = cross_type.get(cross_sel.getSelectedIndex());
+				model.MutationType type_mut = mutation_type.get(mutation_sel.getSelectedIndex());
 				
-				model.MutationType type_mut = MutationType.RANDOM;
-				String mute_name = (String) mutation_sel.getSelectedItem();
-				switch (mute_name) {
-					case "Aleatoria (Binario)":
-						type_mut = MutationType.RANDOM;
-					break;
-					case "Uniforme (Reales)":
-						type_mut = MutationType.UNIFORM;
-					break;
-					case "No uniforme (Reales)":
-						type_mut = MutationType.NONUNIFORM;
-					break;
-				}
+				ga = new GeneticAlgorithm<CitiesChromosome>(
+					CitiesChromosome.class,
+					Integer.parseInt(size_population.getText()),
+					num_gen,
+					Double.parseDouble(crossover_perc.getText()),
+					Double.parseDouble(mutation_perc.getText()),
+					0.0, elitism_am, type_sel, type_cross, type_mut,
+					new FunctionCities(FunctionType.MINIMIZE)
+				);
+				
+				List<double[]> best_distances = ga.run();
 
-				model.CrossType type_cross = CrossType.MONOPOINT;
-				String cross_name = (String) cross_sel.getSelectedItem();
-				switch(cross_name) {
-					case "Monopunto":
-						type_cross = CrossType.MONOPOINT;
-					break;
-					case "Multipunto":
-						type_cross = CrossType.MULTIPOINT;
-					break;
-					case "Uniforme (Binario)":
-						type_cross = CrossType.UNIFORM;
-					break;
-				}
-				
-				
-				
-				ga = new GeneticAlgorithm<CitiesChromosome>(CitiesChromosome.class,
-						Integer.parseInt(size_population.getText()), num_gen,
-						Double.parseDouble(crossover_perc.getText()), Double.parseDouble(mutation_perc.getText()),
-						0.0, elitism_am, type_sel, type_cross, type_mut, new FunctionCities(27, FunctionType.MINIMIZE));
-			
-
-				List<double[]> best_chromosomes = ga.run();
-
+				/*
 				double[] generations = new double[num_gen];
-				for (int i = 0; i < num_gen; ++i)
+				for (int i = 0; i < num_gen; ++i) {
 					generations[i] = i;
+				}
 
 				addPlotLines(generations, best_chromosomes);
-
-				best_ev.setText(Integer.toString((int) best_chromosomes.get(0)[best_chromosomes.get(0).length - 1]) +" kms");
-
-				for (int i = 0; i < ga.getBest_chr().getFenotypes().length; i++) {
-					barradchactr.add(
-							new JLabel(CitiesChromosome.parseCity((int) ga.getBest_chr().getFenotypes()[i]) + "->"));
+				*/
+				
+				for(double[] db : best_distances) {
+					System.out.println(Arrays.toString(db));
 				}
-
+				
 				plot.repaint();
 				plot.revalidate();
 
