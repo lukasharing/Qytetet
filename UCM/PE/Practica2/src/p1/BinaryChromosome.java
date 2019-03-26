@@ -1,8 +1,14 @@
-package model;
+package p1;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import model.Chromosome;
+import model.CrossType;
+import model.Function;
+import model.MutationType;
+import model.Pair;
 
 public class BinaryChromosome extends Chromosome<ArrayList<Integer>> {
 

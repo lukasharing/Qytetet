@@ -12,18 +12,18 @@ import java.util.List;
 
 import org.math.plot.*;
 
-import model.BinaryChromosome;
 import model.CrossType;
 import model.Function;
-import model.Function1;
-import model.Function2;
-import model.Function3;
-import model.Function4;
 import model.FunctionType;
 import model.GeneticAlgorithm;
 import model.MutationType;
-import model.RealChromosome;
 import model.SelectionType;
+import p1.BinaryChromosome;
+import p1.Function1;
+import p1.Function2;
+import p1.Function3;
+import p1.Function4;
+import p1.RealChromosome;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

@@ -319,7 +319,7 @@ public class Panel extends JFrame {
 					barradchactr.add(
 							new JLabel("x" + (i + 1) + ": " + Double.toString(ga.getBest_chr().getFenotypes()[i])));
 				}
-
+				plot.repaint();
 			}
 		});
 
@@ -328,7 +328,7 @@ public class Panel extends JFrame {
 				restartPlot();
 				best_ev.setText(" ");
 				restartResults(barradchactr, titulodcha);
-
+				plot.repaint();
 			}
 		});
 

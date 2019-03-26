@@ -4,7 +4,7 @@ import java.util.*;
 
 public abstract class Chromosome<T> {
 
-	protected ArrayList<T> genes;
+	public ArrayList<T> genes;
 
 	protected Function func;
 	protected double prec = 0.0;

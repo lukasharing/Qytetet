@@ -1,6 +1,10 @@
-package model;
+package p2;
 
 import java.util.ArrayList;
+
+import model.Function;
+import model.FunctionType;
+import model.Pair;
 
 public class FunctionCities extends Function{
 

@@ -10,7 +10,7 @@ public abstract class Function {
 	@SuppressWarnings("rawtypes")
 	protected List<Pair> arguments_intervals;
 
-	int getTotalArguments() {
+	public int getTotalArguments() {
 		return arguments_intervals.size();
 	};
 

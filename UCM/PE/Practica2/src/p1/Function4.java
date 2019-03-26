@@ -1,6 +1,10 @@
-package model;
+package p1;
 
 import java.util.ArrayList;
+
+import model.Function;
+import model.FunctionType;
+import model.Pair;
 
 public class Function4 extends Function {
 

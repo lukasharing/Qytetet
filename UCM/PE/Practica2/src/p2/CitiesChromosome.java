@@ -1,7 +1,13 @@
-package model;
+package p2;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import model.Chromosome;
+import model.CrossType;
+import model.Function;
+import model.MutationType;
+import model.Pair;
 
 public class CitiesChromosome extends Chromosome<Integer> {
 	

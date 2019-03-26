@@ -1,7 +1,13 @@
-package model;
+package p1;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import model.Chromosome;
+import model.CrossType;
+import model.Function;
+import model.MutationType;
+import model.Pair;
 
 public class RealChromosome extends Chromosome<Double> {
 
@@ -82,7 +88,6 @@ public class RealChromosome extends Chromosome<Double> {
 		return new RealChromosome(f);
 	};
 
-	@SuppressWarnings("unchecked")
 	protected void cross(@SuppressWarnings("rawtypes") Chromosome chr1, CrossType type) {
 		switch(type) {
 			case MONOPOINT:

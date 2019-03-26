@@ -3,6 +3,7 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
@@ -25,13 +27,13 @@ import javax.swing.border.EmptyBorder;
 
 import org.math.plot.Plot2DPanel;
 
-import model.CitiesChromosome;
 import model.CrossType;
-import model.FunctionCities;
 import model.FunctionType;
 import model.GeneticAlgorithm;
 import model.MutationType;
 import model.SelectionType;
+import p2.CitiesChromosome;
+import p2.FunctionCities;
 
 public class Panel2 extends JFrame {
 
@@ -66,12 +68,20 @@ public class Panel2 extends JFrame {
 		setTitle("Práctica 2");
 		this.setMinimumSize(new Dimension(1300, 700));
 
+//		// Components
+//		plot = new Plot2DPanel();
+//		plot.addLegend("SOUTH");
+//		plot.setBorder(BorderFactory.createLineBorder(new Color(141, 179, 214)));
+//		add(plot, BorderLayout.CENTER);
+
 		// Components
 		plot = new Plot2DPanel();
 		plot.addLegend("SOUTH");
 		plot.setBorder(BorderFactory.createLineBorder(new Color(141, 179, 214)));
+		plot.setMinimumSize(new Dimension(200, 200));
 		add(plot, BorderLayout.CENTER);
 
+        
 		JPanel barraizq = new JPanel();
 		barraizq.setLayout(new BoxLayout(barraizq, BoxLayout.Y_AXIS));
 
@@ -290,10 +300,11 @@ public class Panel2 extends JFrame {
 					barradchactr.add(
 							new JLabel(CitiesChromosome.parseCity((int) ga.getBest_chr().getFenotypes()[i]) + "->"));
 				}
-				
 
-			}
-		});
+				plot.repaint();
+				plot.revalidate();
+
+		}});
 
 		restart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -301,6 +312,8 @@ public class Panel2 extends JFrame {
 				best_ev.setText(" ");
 				restartResults(barradchactr, titulodcha);
 
+				plot.repaint();
+				plot.revalidate();
 			}
 		});
 
@@ -312,8 +325,17 @@ public class Panel2 extends JFrame {
 		});*/
 
 
+		
 	}
 
+    public void paint (Graphics g)
+    {
+        super.paint(g);
+
+        g.setColor (Color.blue);
+        g.drawLine (0, 70, 100, 70);
+    }
+	
 	void restartResults(JPanel p, JLabel l) {
 		p.removeAll();
 		p.add(l);
