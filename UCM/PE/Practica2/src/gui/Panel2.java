@@ -20,6 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
@@ -125,14 +126,14 @@ public class Panel2 extends JFrame {
 
 
 		/* Size Population */
-		this.size_population = new JTextField("10", 12);
+		this.size_population = new JTextField("100", 12);
 		JPanel p1 = new JPanel(new GridLayout(2, 1));
 		p1.add(new JLabel("Tamaño población:"));
 		p1.add(size_population);
 		barraizq.add(p1);
 
 		/* Number Generations */
-		this.num_generations = new JTextField("5", 12);
+		this.num_generations = new JTextField("100", 12);
 		JPanel p2 = new JPanel(new GridLayout(2, 1));
 		p2.add(new JLabel("Número generaciones:"));
 		p2.add(num_generations);
@@ -206,7 +207,7 @@ public class Panel2 extends JFrame {
 
 		/* Number Elitism */
 		this.elitism_amount = new JSpinner();
-		elitism_amount.setValue(5);
+		elitism_amount.setValue(0);
 		JPanel p9 = new JPanel(new GridLayout(2, 1));
 		p9.add(new JLabel("Número Elitismo:"));
 		p9.add(elitism_amount);
@@ -246,6 +247,7 @@ public class Panel2 extends JFrame {
 		restartResults(barradchactr, titulodcha);
 
 		JPanel barradchaftr = new JPanel();
+		
 		barradcha.add(barradchaftr, BorderLayout.PAGE_END);
 		barradchaftr.setLayout(new BoxLayout(barradchaftr, BoxLayout.Y_AXIS));
 		barradchaftr.add(new JLabel("Mejor evaluación:"), BorderLayout.PAGE_END);
@@ -275,19 +277,29 @@ public class Panel2 extends JFrame {
 					Double.parseDouble(crossover_perc.getText()),
 					Double.parseDouble(mutation_perc.getText()),
 					0.0, elitism_am, type_sel, type_cross, type_mut,
-					new FunctionCities(FunctionType.MINIMIZE)
+					new FunctionCities(27, FunctionType.MINIMIZE)
 				);
 				
+				
+				//System.out.println(Arrays.toString(ga.evaluation()));
+				//ga.getBest(1);
 				List<double[]> best_distances = ga.run();
 
-				
 				double[] generations = new double[num_gen];
 				for (int i = 0; i < num_gen; ++i) {
 					generations[i] = i;
 				}
-
+				
+				
+				
 				addPlotLines(generations, best_distances);
 				
+				best_ev.setText(Integer.toString((int) best_distances.get(0)[best_distances.get(0).length - 1]) +" kms");
+
+				for (int i = 0; i < ga.getBest_chr().getFenotypes().length; i++) {
+					barradchactr.add(
+							new JLabel(CitiesChromosome.parseCity((int) ga.getBest_chr().getFenotypes()[i]) + "->"));
+				}
 			
 				plot.repaint();
 				plot.revalidate();
@@ -314,14 +326,6 @@ public class Panel2 extends JFrame {
 
 		
 	}
-
-    public void paint (Graphics g)
-    {
-        super.paint(g);
-
-        g.setColor (Color.blue);
-        g.drawLine (0, 70, 100, 70);
-    }
 	
 	void restartResults(JPanel p, JLabel l) {
 		p.removeAll();

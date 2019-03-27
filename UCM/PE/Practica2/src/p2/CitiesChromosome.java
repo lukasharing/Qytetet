@@ -17,6 +17,7 @@ import model.MutationType;
 import model.Pair;
 
 public class CitiesChromosome extends Chromosome<Integer> {
+	private int randomRange(int a, int b) { return a + (int)((b - a + 1) * Math.random()); };
 	
 	static int[][][] PERMUTATION = new int[][][]{
 		new int[][] {},// 0 Permutation
@@ -86,16 +87,22 @@ public class CitiesChromosome extends Chromosome<Integer> {
 			switch(mutation) {
 				case INSERTION:
 					
+					
+					// A, B, C, D, E
 					// Algoritmos
-					// 1. Elegimos posición aleatoria para elegirlo como desplazante  (1 - 27)
-					int moving_pointer = 1 + (int) (Math.random() * 27);
+					// 1. Elegimos posición aleatoria para elegirlo como desplazante  (1 - 26)
+					int moving_pointer = randomRange(1, 26);
 					// 2. Elegimos segunda posición aleatoria para desplazar.
-					int move_pointer = 1 + (int) (Math.random() * moving_pointer);
+					int move_pointer = randomRange(1, 26);
+					
+					int min_p = Math.min(moving_pointer, move_pointer);
+					int max_p = Math.max(move_pointer, move_pointer);
+					
 					// 3. Desplazamos todo el subarray hacia la derecha (1 posición)
-					List<Integer> left = genes.subList(0, move_pointer);
-					List<Integer> shift = genes.subList(move_pointer, moving_pointer);
-					Integer fx = genes.get(moving_pointer);
-					List<Integer> right = genes.subList(moving_pointer + 1, genes.size());
+					List<Integer> left = genes.subList(0, min_p);
+					List<Integer> shift = genes.subList(min_p, max_p);
+					Integer fx = genes.get(max_p);
+					List<Integer> right = genes.subList(max_p + 1, genes.size());
 					
 					
 					List<Integer> result = new ArrayList<>();
@@ -111,17 +118,18 @@ public class CitiesChromosome extends Chromosome<Integer> {
 				case SWAP:
 	
 					// Intercambiamos dos posiciones aleatorias  (1 - 27)
-					int swap_1 = (int) (1 + Math.random() * 27);
-					int swap_2 = (int) (1 + Math.random() * 27);
+					int swap_1 = randomRange(1, 26);
+					int swap_2 = randomRange(1, 26);
 					Collections.swap(this.genes, swap_1, swap_2);
 					
 				break;
 				
 				case INVERSION:
 					
-					 // (1 - 27)
-					int invert_1 = (int) (1 + Math.random() * 27);
-					int invert_2 = (int) (1 + Math.random() * 27);
+					// (1 - 26)
+					// Invierte un subarray del vector
+					int invert_1 = randomRange(1, 26);
+					int invert_2 = randomRange(1, 26);
 					
 					int min = Math.min(invert_1, invert_2);
 					int max = Math.max(invert_1, invert_2);
@@ -140,9 +148,9 @@ public class CitiesChromosome extends Chromosome<Integer> {
 				case HEURISTIC:
 					
 					int[] markers = new int [] { // (1 - 27)
-						(int) (1 + Math.random() * 27),
-					    (int) (1 + Math.random() * 27),
-					    (int) (1 + Math.random() * 27)
+						randomRange(1, 26),
+						randomRange(1, 26),
+						randomRange(1, 26)
 					};
 					
 					int perm = 3; //(int)(1 + Math.random() * 2);
@@ -174,7 +182,7 @@ public class CitiesChromosome extends Chromosome<Integer> {
 					// Miramos si haciendo swap a la derecha o a la izquierda, se mejora la evaluación, si es así, cambiamos.
 	
 					// 1. Cogemos 1 elemento aleatorio ( 2 - 26 ) para evitar coger madrid
-					int p = (int) (2 + Math.random() * 26);
+					int p = randomRange(2, 25);
 					double ev_p = ((FunctionCities)func).evaluate(this.getFenotypes());
 					
 					double[] cp0_gene = this.getFenotypes();

@@ -168,36 +168,54 @@ public class GeneticAlgorithm<T> {
 	}
 
 	// Evaluate Population
-	private double[] evaluation() {
+	public double[] evaluation() {
 		int size = chromosomes.size();
 		double[] eval_results = new double[size];
-
-		@SuppressWarnings("rawtypes")
-		Chromosome first_chromosome = chromosomes.get(0);
-		double maxmin_value = function.evaluate((first_chromosome).getFenotypes());
-		double minmax_value = maxmin_value;
-		eval_results[0] = maxmin_value;
-
-		for (int i = 1; i < size; ++i) {
-			@SuppressWarnings("rawtypes")
-			Chromosome current = chromosomes.get(i);
-			double[] fenotypes = (current).getFenotypes();
-			eval_results[i] = function.evaluate(fenotypes);
-			if (function.compare(minmax_value, fenotypes) > 0) {
-				minmax_value = eval_results[i];
-			} else {
-				if (function.compare(maxmin_value, fenotypes) > 0) {
-					maxmin_value = eval_results[i];
+		
+		if(function.maxmin == FunctionType.MAXIMIZE) {
+			
+			Chromosome first_chromosome = chromosomes.get(0);
+			double min1 = function.evaluate((first_chromosome).getFenotypes());
+			eval_results[0] = min1;
+			for (int i = 1; i < size; ++i) {
+				Chromosome current = chromosomes.get(i);
+				double[] fenotypes = (current).getFenotypes();
+				eval_results[i] = function.evaluate(fenotypes);
+				
+				if (eval_results[i] < min1) {
+					min1 = eval_results[i];
 				}
 			}
+
+			final double min = min1;
+			DoubleStream map2 = Arrays.stream(eval_results).map(g -> min + g);
+			double total_sum = map2.sum();
+			DoubleStream map3 = Arrays.stream(eval_results).map(g -> (min + g) / total_sum);
+			return map3.toArray();
+			
+		}else {
+			
+			Chromosome first_chromosome = chromosomes.get(0);
+			double max1 = function.evaluate((first_chromosome).getFenotypes());
+			eval_results[0] = max1;
+			for (int i = 1; i < size; ++i) {
+				Chromosome current = chromosomes.get(i);
+				double[] fenotypes = (current).getFenotypes();
+				eval_results[i] = function.evaluate(fenotypes);
+				
+				if (eval_results[i] > max1) {
+					max1 = eval_results[i];
+				}
+			}
+
+			final double max = max1;
+			DoubleStream map2 = Arrays.stream(eval_results).map(g -> max - g);
+			double total_sum = map2.sum();
+			DoubleStream map3 = Arrays.stream(eval_results).map(g -> (max - g) / total_sum);
+			return map3.toArray();
+			
 		}
-
-		final double value = (function.maxmin == FunctionType.MAXIMIZE ? -1 : 1) * maxmin_value;
-
-		DoubleStream map2 = Arrays.stream(eval_results).map((e) -> value - e);
-		double total_sum = map2.sum();
-		DoubleStream map3 = Arrays.stream(eval_results).map((e) -> (value - e) / total_sum);
-		return map3.toArray();
+		
 	};
 
 	private void selection(double[] evaluations) {

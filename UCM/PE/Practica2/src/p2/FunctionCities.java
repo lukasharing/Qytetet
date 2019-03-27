@@ -69,19 +69,19 @@ public class FunctionCities extends Function{
             };
 	
 	@SuppressWarnings("rawtypes")
-	public FunctionCities(FunctionType type) {
+	public FunctionCities(int n, FunctionType type) {
 		super(type);
 		arguments_intervals = new ArrayList<Pair>();
-		for(int i = 0; i < 29; ++i) {
-			arguments_intervals.add(new Pair<Integer, Integer>(0, 28));
+		for(int i = 0; i <= n; ++i) {
+			arguments_intervals.add(new Pair<Integer, Integer>(0, n - 1));
 		}
 	}
 
 	public double evaluate(double... args) {
 		double sum = 0;
-		for (int i = 1; i <= 27; i++) {
+		for (int i = 0; i < (args.length - 1); i++) {
 			int city1 = (int)args[i];
-			int city2 = (int)args[i - 1];
+			int city2 = (int)args[i + 1];
 			
 			if(city1 < city2) {
 				sum += _DIST[city2][city1];

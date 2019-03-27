@@ -8,9 +8,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Arrays;
 import java.util.List;
 
 import org.math.plot.*;
+
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 import model.BinaryChromosome;
 import model.CrossType;
@@ -305,6 +308,7 @@ public class Panel extends JFrame {
 							Double.parseDouble(prec.getText()), elitism_am, type_sel, type_cross, type_mut, f);
 				}
 
+
 				List<double[]> best_chromosomes = ga.run();
 
 				double[] generations = new double[num_gen];
@@ -319,6 +323,7 @@ public class Panel extends JFrame {
 					barradchactr.add(
 							new JLabel("x" + (i + 1) + ": " + Double.toString(ga.getBest_chr().getFenotypes()[i])));
 				}
+				
 				plot.repaint();
 			}
 		});
