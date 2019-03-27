@@ -280,15 +280,15 @@ public class Panel2 extends JFrame {
 				
 				List<double[]> best_distances = ga.run();
 
-				/*
+				
 				double[] generations = new double[num_gen];
 				for (int i = 0; i < num_gen; ++i) {
 					generations[i] = i;
 				}
 
-				addPlotLines(generations, best_chromosomes);
-				*/
+				addPlotLines(generations, best_distances);
 				
+			
 				plot.repaint();
 				plot.revalidate();
 
@@ -311,7 +311,6 @@ public class Panel2 extends JFrame {
 				elitism_amount.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
 			}
 		});*/
-
 
 		
 	}
