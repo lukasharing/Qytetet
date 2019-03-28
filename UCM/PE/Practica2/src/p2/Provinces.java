@@ -3,38 +3,47 @@ package p2;
 import model.Pair;
 
 public enum Provinces {
+	ALBACETE("Albacete", new Pair<Integer, Integer>(555, 390)),
+	ALICANTE("Alicante", new Pair<Integer, Integer>(645, 420)),
+	ALMERIA("Almería", new Pair<Integer, Integer>(540, 530)),
+	AVILA("Ávila", new Pair<Integer, Integer>(387, 250)),
+	BADAJOZ("Badajoz", new Pair<Integer, Integer>(260, 395)),
+	BARCELONA("Barcelona", new Pair<Integer, Integer>(780, 177)),
+	BILBAO("Bilbao", new Pair<Integer, Integer>(488, 44)),
+	BURGOS("Burgos", new Pair<Integer, Integer>(442, 120)),
+	CACERES("Caceres", new Pair<Integer, Integer>(305, 320)),
+	CADIZ("Cadiz", new Pair<Integer, Integer>(310, 560)),
+	CASTELLON("Castellón", new Pair<Integer, Integer>(665, 290)),
+	CIUDAD_REAL("Ciudad Real", new Pair<Integer, Integer>(450, 390)),
+	CORDOBA("Cordoba", new Pair<Integer, Integer>(390, 460)),
+	A_CORUÑA("A Coruña", new Pair<Integer, Integer>(180, 38)),
+	CUENCA("Cuenca", new Pair<Integer, Integer>(535, 300)),
+	GERONA("Gerona", new Pair<Integer, Integer>(820, 120)),
+	GRANADA("Granada", new Pair<Integer, Integer>(470, 520)),
+	GUADALAJARA("Guadalajara", new Pair<Integer, Integer>(490, 250)),
+	HUELVA("Huelva", new Pair<Integer, Integer>(250, 500)),
+	HUESCA("Huesca", new Pair<Integer, Integer>(635, 130)),
+	JAEN("Jaén", new Pair<Integer, Integer>(465, 470)),
+	LEON("León", new Pair<Integer, Integer>(325, 100)),
+	LERIDA("Lérida", new Pair<Integer, Integer>(695, 165)),
+	LOGROÑO("Logroño", new Pair<Integer, Integer>(505, 110)),
+	LUGO("Lugo", new Pair<Integer, Integer>(225, 65)),
+	MADRID("Madrid", new Pair<Integer, Integer>(445, 260)),
+	MALAGA("Malaga", new Pair<Integer, Integer>(405, 550)),
 	
-	GRANADA("Granada", new Pair(470, 520)),
-	ALMERIA("Almería", new Pair(540, 530)),
-	JAEN("Jaén", new Pair(465, 470)),
-	CORDOBA("Cordoba", new Pair(390, 460)),
-	SEVILLA("Sevilla", new Pair(330, 504)),
-	MALAGA("Malaga", new Pair(405, 550)),
-	HUELVA("Huelva", new Pair(250, 500)),
-	CADIZ("Cadiz", new Pair(310, 560)),
 	
-	MURCIA("Murcia", new Pair(610, 450)),
 	
-	CACERES("Caceres", new Pair(305, 320)),
-	BADAJOZ("Badajoz", new Pair(260, 395)),
-	
-	CIUDAD_REAL("Ciudad Real", new Pair(450, 390)),
-	ALBACETE("Albacete", new Pair(555, 390)),
-	TOLEDO("Toledo", new Pair(430, 310)),
-	CUENCA("Cuenca", new Pair(535, 300)),
-	GUADALAJARA("Guadalajara", new Pair(490, 250)),
-	
-	ALICANTE("Alicante", new Pair(645, 420)),
-	VALENCIA("Valencia", new Pair(650, 330)),
-	CASTELLON("Castellón", new Pair(665, 290)),
-	
-	MADRID("Madrid", new Pair(445, 260)),
+	MURCIA("Murcia", new Pair<Integer, Integer>(610, 450)),
+	SEVILLA("Sevilla", new Pair<Integer, Integer>(330, 504)),
+	TOLEDO("Toledo", new Pair<Integer, Integer>(430, 310)),
+	VALENCIA("Valencia", new Pair<Integer, Integer>(650, 330)),
+
 	;
 	
 	private final String name;
 	private final Pair<Integer, Integer> coord;
 	
-	private Provinces(String n, Pair p) {
+	private Provinces(String n, Pair<Integer, Integer> p) {
 		this.name = n;
 		this.coord = p;
 	};
@@ -51,6 +60,6 @@ public enum Provinces {
 	};
 	
 	public static Provinces[] CITIES = {
-		ALBACETE, ALICANTE, ALMERIA, BADAJOZ, CACERES, CADIZ, CASTELLON, CIUDAD_REAL, CORDOBA, CUENCA, GRANADA, GUADALAJARA, HUELVA, JAEN, MADRID, MALAGA
+		ALBACETE, ALICANTE, ALMERIA, AVILA, BADAJOZ, BARCELONA, BILBAO, BURGOS, CACERES, CADIZ, CASTELLON, CIUDAD_REAL, CORDOBA, A_CORUÑA, CUENCA, GERONA, GRANADA, GUADALAJARA, HUELVA, HUESCA, JAEN, LEON, LERIDA, LOGROÑO, LUGO, MADRID, MALAGA
 	};
 }

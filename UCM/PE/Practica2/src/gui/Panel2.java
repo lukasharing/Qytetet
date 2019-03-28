@@ -51,6 +51,9 @@ public class Panel2 extends JFrame {
 	private static final long serialVersionUID = 2569879142816556337L;
 
 	Plot2DPanel plot;
+	JTabbedPane tabbedPane;
+	JPanel tp0;
+	JPanel tp1;
 
 	private JTextField size_population;
 	private JTextField num_generations;
@@ -115,7 +118,7 @@ public class Panel2 extends JFrame {
 //		add(plot, BorderLayout.CENTER);
 
 		// Components
-		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane = new JTabbedPane();
 		
 		
 		plot = new Plot2DPanel();
@@ -129,20 +132,26 @@ public class Panel2 extends JFrame {
 		System.out.println(Provinces.CITIES.length + " -> " + Provinces.CITIES_TEXT.length);
 
 		
-		JPanel tp0 = new JPanel();
+		tp0 = new JPanel();
 		tp0.add(plot);
 		tp0.setLayout(new GridLayout(1, 1));
 		System.out.println("Working Directory = " +
 	              System.getProperty("user.dir"));
 		final BufferedImage map = ImageIO.read(new File("./src/images/mapa.png"));
         
-		JPanel tp1 = new JPanel() {
+		tp1 = new JPanel() {
 			@Override
 		    public void paintComponent(Graphics g){
 				g.drawImage(map, 0, 0, this);
 				for(int i = 0; i < Provinces.CITIES.length; ++i) {
 					Pair<Integer, Integer> coords = Provinces.CITIES[i].getCoords();
-					g.drawOval(coords.first, coords.second, 5, 5);
+					g.drawOval(coords.first-3, coords.second-3, 6, 6);
+					//g.drawChars(data, offset, length, x, y);
+					try {
+						g.drawLine(Provinces.CITIES[(int) ga.getBest_chr().getFenotypes()[i]].getCoords().first, Provinces.CITIES[(int) ga.getBest_chr().getFenotypes()[i]].getCoords().second, Provinces.CITIES[(int) ga.getBest_chr().getFenotypes()[i+1]].getCoords().first, Provinces.CITIES[(int) ga.getBest_chr().getFenotypes()[i+1]].getCoords().second);
+					} catch (Exception e) {
+						//System.err.println("No se puedo imprimir el recorrido porque no hay resultado todavía.");
+					}
 				}
 		    };
 		};
@@ -302,7 +311,7 @@ public class Panel2 extends JFrame {
 				restartPlot();
 				restartResults(barradchactr, titulodcha);
 
-				int elitism_am = elitism_am = ((Integer) elitism_amount.getValue());
+				int elitism_am = ((Integer) elitism_amount.getValue());
 
 				int num_gen = Integer.parseInt(num_generations.getText());
 
@@ -325,6 +334,8 @@ public class Panel2 extends JFrame {
 				//ga.getBest(1);
 				List<double[]> best_distances = ga.run();
 
+				
+				
 				double[] generations = new double[num_gen];
 				for (int i = 0; i < num_gen; ++i) {
 					generations[i] = i;
@@ -336,16 +347,15 @@ public class Panel2 extends JFrame {
 
 				for (int i = 0; i < ga.getBest_chr().getFenotypes().length; i++) {
 					barradchactr.add(
-						new JLabel(CitiesChromosome.parseCity((int) ga.getBest_chr().getFenotypes()[i]) + "->"));
+						new JLabel(CitiesChromosome.parseCity((int) ga.getBest_chr().getFenotypes()[i]) + ((i == ga.getBest_chr().getFenotypes().length-1) ? " " : "->" )));
 				}
+				
 			
-				plot.repaint();
-				plot.revalidate();
-
 		}});
 
 		restart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				ga = null;
 				restartPlot();
 				best_ev.setText(" ");
 				restartResults(barradchactr, titulodcha);
@@ -355,14 +365,6 @@ public class Panel2 extends JFrame {
 			}
 		});
 
-		/*elitism.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				elitism_amount.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
-			}
-		});*/
-
-		
 	}
 	
 	void restartResults(JPanel p, JLabel l) {
@@ -375,12 +377,10 @@ public class Panel2 extends JFrame {
 	}
 
 	void restartPlot() {
-		remove(plot);
+		tp0.remove(plot);
 		plot = new Plot2DPanel();
 		plot.addLegend("SOUTH");
-		add(plot, BorderLayout.CENTER);
-		repaint();
-		validate();
+		tp0.add(plot, BorderLayout.CENTER);
 	}
 
 	void addPlotLines(double[] generations, List<double[]> best_chromosomes) {
