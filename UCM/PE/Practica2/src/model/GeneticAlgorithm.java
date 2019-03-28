@@ -102,7 +102,7 @@ public class GeneticAlgorithm<T> {
 			best = getBest(this.elitism);
 
 			this.selection(eval_result);
-			//this.crossover();
+			this.crossover();
 			this.mutation();
 			eval_result = this.evaluation();
 
@@ -133,6 +133,8 @@ public class GeneticAlgorithm<T> {
 		fenotypes_result = best_absolute.getFenotypes();
 		return report;
 	};
+
+
 
 	// Init population
 	public void createInitialPopulation() throws Exception {
@@ -236,8 +238,6 @@ public class GeneticAlgorithm<T> {
 		switch (selection) {
 			case ROULETTE:
 
-				System.out.println(Arrays.toString(evaluations));
-
 			for (int i = 1; i < evaluations.length; ++i) {
 				evaluations[i] += evaluations[i - 1];
 			}
@@ -299,6 +299,29 @@ public class GeneticAlgorithm<T> {
 			break;
 		}
 		this.chromosomes = generation;
+	}
+	
+	
+	private void crossover() {
+		
+		ArrayList<Integer> quieren_cruzarse = new ArrayList<>();
+		for (int i = 0; i < initial_population; ++i) {
+			if (Math.random() <= this.crossing_prob) {
+				quieren_cruzarse.add(i);
+			}
+		}
+
+		// Convertir en par
+		int size = quieren_cruzarse.size() & ~0x1;
+		
+		for (int i = 0; i < size; i += 2) {
+			@SuppressWarnings("rawtypes")
+			Chromosome chr1 = chromosomes.get(quieren_cruzarse.get(i + 0));
+			@SuppressWarnings("rawtypes")
+			Chromosome chr2 = chromosomes.get(quieren_cruzarse.get(i + 1));
+
+			chr1.cross(chr2, cross); // Symmetric
+		}
 	}
 
 	private void mutation() {

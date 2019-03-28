@@ -150,6 +150,7 @@ public class CitiesChromosome extends Chromosome<Integer> {
 						int num = randomRange(1, 26);
 						if(!Arrays.asList(markers).contains(num)){
 							markers[i] = num;
+							System.out.println(markers[i]);
 						}
 					}
 					
@@ -209,6 +210,11 @@ public class CitiesChromosome extends Chromosome<Integer> {
 					}
 					
 				break;
+				
+				case SELF_METHOD_2:
+					
+					
+				break;
 			}
 		}
 	};
@@ -217,7 +223,69 @@ public class CitiesChromosome extends Chromosome<Integer> {
 
 		switch(type) {
 			case PARTIALLY_MAPPED: // PMX
+				System.out.println("A cruzar 1: " + this);
+				System.out.println("A cruzar 2: " + chr1);
 				
+				int cut1 = randomRange(2,26);
+				int cut2 = randomRange(2,26);
+				while(cut1 == cut2) {
+					cut2 = randomRange(2,26);
+				}
+				if(cut1 > cut2) {
+					int temp = cut1;
+					cut1 = cut2;
+					cut2 = temp;
+				}
+				
+				ArrayList<Integer> sub1 = (ArrayList<Integer>) this.genes.subList(cut1, cut2);
+				ArrayList<Integer> sub2 = (ArrayList<Integer>) chr1.genes.subList(cut1, cut2);
+				System.out.println("Sub 1: " + sub1);
+				System.out.println("Sub 2: " + sub2);
+				
+				ArrayList<Integer> result1 = new ArrayList<Integer>(func.getTotalArguments());
+				result1.add(25);
+				result1.addAll(cut1, sub2);
+				result1.add(25);
+				
+				ArrayList<Integer> result2 = new ArrayList<Integer>(func.getTotalArguments());
+				result2.add(25);
+				result2.addAll(cut1, sub1);
+				result2.add(25);
+				
+				for(int i = 1; i < cut1; i++) {
+					if(result1.contains(this.genes.get(i))) {
+						result1.set(i, (Integer) chr1.genes.get(i));
+					} else {
+						result1.set(i, (Integer) this.genes.get(i));
+					}
+				}
+				
+				for(int i = (cut2+1); i < 27 ; i++) {
+					if(result1.contains(this.genes.get(i))) {
+						result1.set(i, (Integer) chr1.genes.get(i));
+					} else {
+						result1.set(i, (Integer) this.genes.get(i));
+					}
+				}
+				
+				for(int i = 1; i < cut1; i++) {
+					if(result2.contains(this.genes.get(i))) {
+						result2.set(i, (Integer) this.genes.get(i));
+					} else {
+						result2.set(i, (Integer) chr1.genes.get(i));
+					}
+				}
+				
+				for(int i = (cut2+1); i < 27 ; i++) {
+					if(result2.contains(this.genes.get(i))) {
+						result2.set(i, (Integer) this.genes.get(i));
+					} else {
+						result2.set(i, (Integer) chr1.genes.get(i));
+					}
+				}
+				
+				this.genes = result1;
+				chr1.genes = result2;
 			break;
 		}
 		
