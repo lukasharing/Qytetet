@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,6 +32,7 @@ import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import org.math.plot.Plot2DPanel;
 
+import model.Chromosome;
 import model.CrossType;
 import model.FunctionType;
 import model.GeneticAlgorithm;
@@ -93,7 +95,7 @@ public class Panel2 extends JFrame {
 	private JButton restart;
 	//private JCheckBox elitism;
 	private JSpinner elitism_amount;
-	private GeneticAlgorithm<?> ga;
+	private GeneticAlgorithm<?> ga = null;
 
 	public Panel2() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
 			UnsupportedLookAndFeelException, IOException {
@@ -115,17 +117,9 @@ public class Panel2 extends JFrame {
 		plot.setBorder(BorderFactory.createLineBorder(new Color(141, 179, 214)));
 		plot.setMinimumSize(new Dimension(200, 200));
 		
-		for(int i = 0; i < Provinces.CITIES_TEXT.length; ++i) {
-			System.out.println(i + " -> " + Provinces.CITIES_TEXT[i]);
-		}
-		System.out.println(Provinces.CITIES.length + " -> " + Provinces.CITIES_TEXT.length);
-
-		
 		tp0 = new JPanel();
 		tp0.add(plot);
 		tp0.setLayout(new GridLayout(1, 1));
-		System.out.println("Working Directory = " +
-	              System.getProperty("user.dir"));
 		final BufferedImage map = ImageIO.read(new File("./src/images/mapa.png"));
         
 		tp1 = new JPanel() {
@@ -133,16 +127,20 @@ public class Panel2 extends JFrame {
 
 			@Override
 		    public void paintComponent(Graphics g){
-				g.drawImage(map, 0, 0, this);
+				Graphics2D ctx = (Graphics2D)g;
+				
+				ctx.drawImage(map, 0, 0, this);
+				
+				if(ga == null) return;
+				
 				for(int i = 0; i < Provinces.CITIES.length; ++i) {
-					Pair<Integer, Integer> coords = Provinces.CITIES[i].getCoords();
-					g.drawOval(coords.first-3, coords.second-3, 6, 6);
+					double[] chr = ga.getBest_chr().getFenotypes();
+					Pair<Integer, Integer> p0 = Provinces.CITIES[(int) chr[i]].getCoords();
+					Pair<Integer, Integer> p1 = Provinces.CITIES[(int) chr[i + 1]].getCoords();
+					
+					g.drawOval(p0.first - 3, p0.second - 3, 6, 6);
 					//g.drawChars(data, offset, length, x, y);
-					try {
-						g.drawLine(Provinces.CITIES[(int) ga.getBest_chr().getFenotypes()[i]].getCoords().first, Provinces.CITIES[(int) ga.getBest_chr().getFenotypes()[i]].getCoords().second, Provinces.CITIES[(int) ga.getBest_chr().getFenotypes()[i+1]].getCoords().first, Provinces.CITIES[(int) ga.getBest_chr().getFenotypes()[i+1]].getCoords().second);
-					} catch (Exception e) {
-						//System.err.println("No se puedo imprimir el recorrido porque no hay resultado todavía.");
-					}
+					ctx.drawLine(p0.first, p0.second, p1.first, p1.second);
 				}
 		    };
 		};
@@ -292,7 +290,6 @@ public class Panel2 extends JFrame {
 					new FunctionCities(27, FunctionType.MINIMIZE)
 				);
 				
-
 				List<double[]> best_distances = ga.run();
 
 				
@@ -310,7 +307,6 @@ public class Panel2 extends JFrame {
 					barradchactr.add(
 						new JLabel(CitiesChromosome.parseCity((int) ga.getBest_chr().getFenotypes()[i]) + ((i == ga.getBest_chr().getFenotypes().length-1) ? " " : "->" )));
 				}
-				
 			
 		}});
 

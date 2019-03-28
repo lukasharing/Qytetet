@@ -48,8 +48,6 @@ public enum Provinces {
 		this.coord = p;
 	};
 	
-	public static String[] CITIES_TEXT = {"Albacete", "Alicante", "Almería", "Ávila", "Badajoz", "Barcelona", "Bilbao", "Burgos", "Cáceres", "Cádiz", "Castellón", "Ciudad Real", "Córdoba", "A Coruña", "Cuenca", "Gerona", "Granada", "Guadalajara", "Huelva", "Huesca", "Jaén", "León", "Lérida", "Logroño", "Lugo", "Madrid", "Málaga"};
-
 	@Override
 	public String toString() {
 		return this.name;
