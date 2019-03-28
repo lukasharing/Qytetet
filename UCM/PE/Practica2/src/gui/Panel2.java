@@ -7,10 +7,14 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -27,6 +31,8 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 
 import org.math.plot.Plot2DPanel;
 
@@ -35,8 +41,10 @@ import model.FunctionType;
 import model.GeneticAlgorithm;
 import model.MutationType;
 import model.SelectionType;
+import model.Pair;
 import p2.CitiesChromosome;
 import p2.FunctionCities;
+import p2.Provinces;
 
 public class Panel2 extends JFrame {
 
@@ -90,7 +98,7 @@ public class Panel2 extends JFrame {
 	private GeneticAlgorithm<?> ga;
 
 	public Panel2() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
-			UnsupportedLookAndFeelException {
+			UnsupportedLookAndFeelException, IOException {
 
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -107,11 +115,43 @@ public class Panel2 extends JFrame {
 //		add(plot, BorderLayout.CENTER);
 
 		// Components
+		JTabbedPane tabbedPane = new JTabbedPane();
+		
+		
 		plot = new Plot2DPanel();
 		plot.addLegend("SOUTH");
 		plot.setBorder(BorderFactory.createLineBorder(new Color(141, 179, 214)));
 		plot.setMinimumSize(new Dimension(200, 200));
-		add(plot, BorderLayout.CENTER);
+		
+		for(int i = 0; i < Provinces.CITIES_TEXT.length; ++i) {
+			System.out.println(i + " -> " + Provinces.CITIES_TEXT[i]);
+		}
+		System.out.println(Provinces.CITIES.length + " -> " + Provinces.CITIES_TEXT.length);
+
+		
+		JPanel tp0 = new JPanel();
+		tp0.add(plot);
+		tp0.setLayout(new GridLayout(1, 1));
+		System.out.println("Working Directory = " +
+	              System.getProperty("user.dir"));
+		final BufferedImage map = ImageIO.read(new File("./src/images/mapa.png"));
+        
+		JPanel tp1 = new JPanel() {
+			@Override
+		    public void paintComponent(Graphics g){
+				g.drawImage(map, 0, 0, this);
+				for(int i = 0; i < Provinces.CITIES.length; ++i) {
+					Pair<Integer, Integer> coords = Provinces.CITIES[i].getCoords();
+					g.drawOval(coords.first, coords.second, 5, 5);
+				}
+		    };
+		};
+        tp1.setLayout(new GridLayout(1, 1));
+
+		tabbedPane.addTab("Gráfica", tp0);
+        tabbedPane.addTab("Mapa", tp1);
+        
+		add(tabbedPane, BorderLayout.CENTER);
 
         
 		JPanel barraizq = new JPanel();
@@ -290,15 +330,13 @@ public class Panel2 extends JFrame {
 					generations[i] = i;
 				}
 				
-				
-				
 				addPlotLines(generations, best_distances);
 				
 				best_ev.setText(Integer.toString((int) best_distances.get(0)[best_distances.get(0).length - 1]) +" kms");
 
 				for (int i = 0; i < ga.getBest_chr().getFenotypes().length; i++) {
 					barradchactr.add(
-							new JLabel(CitiesChromosome.parseCity((int) ga.getBest_chr().getFenotypes()[i]) + "->"));
+						new JLabel(CitiesChromosome.parseCity((int) ga.getBest_chr().getFenotypes()[i]) + "->"));
 				}
 			
 				plot.repaint();

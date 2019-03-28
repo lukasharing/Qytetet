@@ -1,5 +1,7 @@
 package model;
 
+import java.io.IOException;
+
 import javax.swing.UnsupportedLookAndFeelException;
 
 import gui.Panel;
@@ -8,7 +10,7 @@ import model.FunctionType;
 public class Main {
 
 	public static void main(String[] args) throws ClassNotFoundException, InstantiationException,
-			IllegalAccessException, UnsupportedLookAndFeelException {
+			IllegalAccessException, UnsupportedLookAndFeelException, IOException {
 		new Panel2();
 		/*
 		Function f;

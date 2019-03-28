@@ -87,8 +87,6 @@ public class CitiesChromosome extends Chromosome<Integer> {
 			switch(mutation) {
 				case INSERTION:
 					
-					
-					// A, B, C, D, E
 					// Algoritmos
 					// 1. Elegimos posición aleatoria para elegirlo como desplazante  (1 - 26)
 					int moving_pointer = randomRange(1, 26);
@@ -215,6 +213,12 @@ public class CitiesChromosome extends Chromosome<Integer> {
 	
 	protected void cross(@SuppressWarnings("rawtypes") Chromosome chr1, CrossType type) {
 
+		switch(type) {
+			case PARTIALLY_MAPPED: // PMX
+				
+			break;
+		}
+		
 	};
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -234,9 +238,8 @@ public class CitiesChromosome extends Chromosome<Integer> {
 		return result;
 	}
 	
-	static String[] CITIES = {"Albacete", "Alicante", "Almería", "Ávila", "Badajoz", "Barcelona", "Bilbao", "Burgos", "Cáceres", "Cádiz", "Castellón", "Ciudad Real", "Córdoba", "A Coruña", "Cuenca", "Gerona", "Granada", "Guadalajara", "Huelva", "Huesca", "Jaén", "León", "Lérida", "Logroño", "Lugo", "Madrid", "Málaga"};
 	public static String parseCity(int n){
-		return (n >= CITIES.length ? "Error" : CITIES[n]);
+		return (n >= Provinces.CITIES.length ? "Error" : Provinces.CITIES[n].toString());
 	}
 }
 
