@@ -145,11 +145,13 @@ public class CitiesChromosome extends Chromosome<Integer> {
 				
 				case HEURISTIC:
 					
-					int[] markers = new int [] { // (1 - 27)
-						randomRange(1, 26),
-						randomRange(1, 26),
-						randomRange(1, 26)
-					};
+					int[] markers = new int [3];
+					for(int i=0; i<3; i++){
+						int num = randomRange(1, 26);
+						if(!Arrays.asList(markers).contains(num)){
+							markers[i] = num;
+						}
+					}
 					
 					int perm = 3; //(int)(1 + Math.random() * 2);
 					int[][] all = PERMUTATION[perm];

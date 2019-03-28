@@ -236,7 +236,6 @@ public class GeneticAlgorithm<T> {
 		switch (selection) {
 			case ROULETTE:
 
-				
 				System.out.println(Arrays.toString(evaluations));
 
 			for (int i = 1; i < evaluations.length; ++i) {
