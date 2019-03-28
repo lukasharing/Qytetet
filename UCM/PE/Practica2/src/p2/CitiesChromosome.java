@@ -77,8 +77,9 @@ public class CitiesChromosome extends Chromosome<Integer> {
 	};
 	
 	public void setFenotypes(double[] rs) {
+		
 		for (int i = 0; i < genes.size(); ++i) {
-			this.genes.set(i, Integer.valueOf((int)rs[i]));
+			this.genes.set(i, (int)rs[i]);
 		}
 	};
 
@@ -147,13 +148,11 @@ public class CitiesChromosome extends Chromosome<Integer> {
 				
 				case HEURISTIC:
 					
-					int[] markers = new int [3];
-					for(int i=0; i<3; i++){
-						int num = randomRange(1, 26);
-						if(!Arrays.asList(markers).contains(num)){
-							markers[i] = num;
-						}
-					}
+					int[] markers = new int [] { // (1 - 27)
+						randomRange(1, 26),
+						randomRange(1, 26),
+						randomRange(1, 26)
+					};
 					
 					int perm = 3; //(int)(1 + Math.random() * 2);
 					int[][] all = PERMUTATION[perm];
@@ -185,17 +184,20 @@ public class CitiesChromosome extends Chromosome<Integer> {
 	
 					// 1. Cogemos 1 elemento aleatorio ( 2 - 26 ) para evitar coger madrid
 					int p = randomRange(2, 25);
-					double ev_p = ((FunctionCities)func).evaluate(this.getFenotypes());
 					
 					double[] cp0_gene = this.getFenotypes();
+					double ev_p = ((FunctionCities)func).evaluate(cp0_gene);
+					
+					// Swap center and left
 					double rs = cp0_gene[p]; // Helper
 					cp0_gene[p] = cp0_gene[p - 1];
 					cp0_gene[p - 1] = rs;
 					double ev_cp0 = ((FunctionCities)func).evaluate(cp0_gene);
-					
+
+					// Swap center and right
 					double[] cp1_gene = this.getFenotypes();
-					cp0_gene[p] = cp0_gene[p + 1];
-					cp0_gene[p + 1] = rs;
+					cp1_gene[p] = cp1_gene[p + 1];
+					cp1_gene[p + 1] = rs;
 					double ev_cp1 = ((FunctionCities)func).evaluate(cp1_gene);
 	
 					// SI el de la izquierda es menor distancia, cogemos
@@ -203,10 +205,9 @@ public class CitiesChromosome extends Chromosome<Integer> {
 						ev_p = ev_cp0;
 						this.setFenotypes(cp0_gene);
 					}
-					
+
 					// SI el de la derecha es menor distancia, cogemos
 					if(ev_cp1 < ev_p) {
-						ev_p = ev_cp1;
 						this.setFenotypes(cp1_gene);
 					}
 					
@@ -249,6 +250,50 @@ public class CitiesChromosome extends Chromosome<Integer> {
 				
 				this.genes = child0;
 				chr1.genes = child1;
+				
+			break;
+			
+			case CICLES:
+				
+				// Buscamos ciclos.
+				int ttl = this.genes.size();
+				
+				Boolean[] visited = new Boolean[ttl];
+				Arrays.fill(visited, Boolean.FALSE);
+				
+				ArrayList<Integer> child2 = new ArrayList<>(ttl);
+				ArrayList<Integer> child3 = new ArrayList<>(ttl);
+				
+				ArrayList<List<Integer>> cycles = new ArrayList<>();
+				
+				// Add all cycles into arraylist
+				for(int i = 1; i < ttl - 1; ++i) {
+					if(!visited[i].booleanValue()) {
+						visited[i] = Boolean.TRUE;
+						
+						// Iterate over cycles
+						int current = i;
+						List<Integer> cycle = new ArrayList<Integer>();
+						cycle.add(current);
+						while(this.genes.indexOf(chr1.genes.get(current)) != i) {
+							current = this.genes.indexOf(chr1.genes.get(current));
+							visited[current] = Boolean.TRUE;
+							cycle.add(current);
+						}
+						cycles.add(cycle);
+					}
+				}
+				
+				// Iterate Over Cycles and swap cycles in even numbers
+				for(int i = 1; i < cycles.size(); i += 2) {
+					List<Integer> cycle = cycles.get(i);
+					// Swap if odd
+					for(Integer c : cycle) {
+						int tmp = this.genes.get(c);
+						this.genes.set(c, ((CitiesChromosome) chr1).genes.get(c));
+						chr1.genes.set(c, tmp);
+					}
+				}
 				
 			break;
 		}

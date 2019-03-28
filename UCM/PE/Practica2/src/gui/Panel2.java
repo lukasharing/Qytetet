@@ -34,6 +34,7 @@ import org.math.plot.Plot2DPanel;
 
 import model.Chromosome;
 import model.CrossType;
+import model.Function;
 import model.FunctionType;
 import model.GeneticAlgorithm;
 import model.MutationType;
@@ -42,6 +43,7 @@ import model.Pair;
 import p2.CitiesChromosome;
 import p2.FunctionCities;
 import p2.Provinces;
+import sun.awt.image.PNGImageDecoder.Chromaticities;
 
 public class Panel2 extends JFrame {
 
@@ -280,6 +282,22 @@ public class Panel2 extends JFrame {
 				model.CrossType type_cross = cross_type.get(cross_sel.getSelectedIndex());
 				model.MutationType type_mut = mutation_type.get(mutation_sel.getSelectedIndex());
 				
+				Function fun = new FunctionCities(/*8*/27, FunctionType.MINIMIZE);
+				/*
+				CitiesChromosome c0 = new CitiesChromosome(fun);
+				CitiesChromosome c1 = new CitiesChromosome(fun);
+				
+				//c0.setFenotypes(new double[] {8, 4, 7, 3, 6, 2, 5, 1, 9, 0});
+				//c1.setFenotypes(new double[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+				
+				System.out.println(c0.toString());
+				System.out.println(c1.toString());
+				
+				c0.cross(c1, CrossType.CICLES);
+				
+				System.out.println(c0.toString());
+				System.out.println(c1.toString());
+				*/
 				ga = new GeneticAlgorithm<CitiesChromosome>(
 					CitiesChromosome.class,
 					Integer.parseInt(size_population.getText()),
@@ -287,7 +305,7 @@ public class Panel2 extends JFrame {
 					Double.parseDouble(crossover_perc.getText()),
 					Double.parseDouble(mutation_perc.getText()),
 					0.0, elitism_am, type_sel, type_cross, type_mut,
-					new FunctionCities(27, FunctionType.MINIMIZE)
+					fun
 				);
 				
 				List<double[]> best_distances = ga.run();
@@ -306,8 +324,7 @@ public class Panel2 extends JFrame {
 				for (int i = 0; i < ga.getBest_chr().getFenotypes().length; i++) {
 					barradchactr.add(
 						new JLabel(CitiesChromosome.parseCity((int) ga.getBest_chr().getFenotypes()[i]) + ((i == ga.getBest_chr().getFenotypes().length-1) ? " " : "->" )));
-				}
-			
+				}//*/
 		}});
 
 		restart.addActionListener(new ActionListener() {
