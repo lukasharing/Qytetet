@@ -44,11 +44,9 @@ public class CitiesChromosome extends Chromosome<Integer> {
 		//Añadimos madrid al comienzo del cromosoma
 		genes.add(25);
 		//Añadimos el resto de ciudades al cromosoma
-		int min = Math.min(number_arguments, 25);
-		
-		for (int i = 0; i < min; i++) { genes.add(i); }
+		for (int i = 0; i < 25; i++) { genes.add(i); }
 		//Añadimos madrid al final del cromosoma
-		for (int i = min + 1; i < number_arguments; i++) { genes.add(i); }
+		genes.add(26);
 		genes.add(25);
 		
 		//Añadimos madrid al final
@@ -215,65 +213,15 @@ public class CitiesChromosome extends Chromosome<Integer> {
 		}
 	};
 	
-	public void cross(@SuppressWarnings("rawtypes") Chromosome chr1, CrossType type) {
+	protected void cross(@SuppressWarnings("rawtypes") Chromosome chr1, CrossType type) {
 
 		switch(type) {
 			case PARTIALLY_MAPPED: // PMX
-				
-				int p0 = randomRange(1, genes.size() - 2);
-				int p1 = randomRange(1, genes.size() - 2);
-				
-				int min = 2;//Math.min(p0, p1);
-				int max = 6;//Math.max(p0, p1);
-				
-				// Swap both subintervals
-				List<Integer> sub0 = this.genes.subList(min, max);
-				List<Integer> sub1 = chr1.genes.subList(min, max);
-				
-				int total = this.genes.size();
-				ArrayList<Integer> child0 = new ArrayList<>(total);
-				ArrayList<Integer> child1 = new ArrayList<>(total);
-				
-				// Vemos 0 - (min - 1)
-				for(int i = 0; i < min; ++i) {
-					// Vemos si está dentro del subconjunto.
-					pmx_temp(child0, sub1, sub0, i, this);
-					pmx_temp(child1, sub0, sub1, i, chr1);
-				}
-				child0.addAll(sub1); // Swap 0 -> 1
-				child1.addAll(sub0); // Swap 1 -> 0
-				for(int i = max; i < total; ++i) {
-					pmx_temp(child0, sub1, sub0, i, this);
-					pmx_temp(child1, sub0, sub1, i, chr1);
-				}
-				
-				this.genes = child0;
-				chr1.genes = child1;
 				
 			break;
 		}
 		
 	};
-	
-	void pmx_temp(ArrayList<Integer> child, List<Integer> sub0, List<Integer> sub1, int i, Chromosome chr) {
-		// Vemos si está dentro del subconjunto.
-		int gn = (int)chr.genes.get(i);
-		int id = sub0.indexOf(gn);
-		if(id >= 0) {
-			
-			// Escalamos "recursivamente" 
-			// Ya que supongamos que i = 6 y las sublistas
-			// 6 1 2 3
-			// 1 2 3 0, el escalado es 6 -> 1 -> 2 -> 3 -> 0
-			while(sub0.indexOf(sub1.get(id)) >= 0){
-				id = sub0.indexOf(sub1.get(id));
-			}
-			
-			child.add(i, sub1.get(id));
-		}else {
-			child.add(gn);
-		}
-	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Chromosome clone() {
@@ -287,7 +235,6 @@ public class CitiesChromosome extends Chromosome<Integer> {
 	
 	public String toString() {
 		String result = "\t\n Chromosome: \n";
-		result += "Total cities: " + this.genes.size() + "\n"; 
 		result += genes.stream().map(g -> parseCity(g) + "("+ g +")").collect(Collectors.joining("->"));
 		result += "\nEvaluation: " + func.evaluate(this.getFenotypes()) + "\n";
 		return result;
