@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,16 +23,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
-
 import org.math.plot.Plot2DPanel;
 
 import model.CrossType;
@@ -111,12 +106,6 @@ public class Panel2 extends JFrame {
 		setTitle("Práctica 2");
 		this.setMinimumSize(new Dimension(1300, 700));
 
-//		// Components
-//		plot = new Plot2DPanel();
-//		plot.addLegend("SOUTH");
-//		plot.setBorder(BorderFactory.createLineBorder(new Color(141, 179, 214)));
-//		add(plot, BorderLayout.CENTER);
-
 		// Components
 		tabbedPane = new JTabbedPane();
 		
@@ -140,6 +129,8 @@ public class Panel2 extends JFrame {
 		final BufferedImage map = ImageIO.read(new File("./src/images/mapa.png"));
         
 		tp1 = new JPanel() {
+			private static final long serialVersionUID = 1L;
+
 			@Override
 		    public void paintComponent(Graphics g){
 				g.drawImage(map, 0, 0, this);
@@ -201,31 +192,7 @@ public class Panel2 extends JFrame {
 		p4.add(new JLabel("Probabilidad de mutación:"));
 		p4.add(mutation_perc);
 		barraizq.add(p4);
-
-		/* Precition */
-//		
-//		this.prec = new JTextField("0.0001", 12);
-//		JPanel p5 = new JPanel(new GridLayout(2, 1));
-//		p5.add(new JLabel("Precisión:"));
-//		p5.add(prec);
-//		barraizq.add(p5);
-//		
-//		/* Function Selection */
-//		this.function_sel = new JComboBox<>(function_sel_ops);
-//		JPanel p6 = new JPanel(new GridLayout(2, 1));
-//		p6.add(new JLabel("Función:"));
-//		p6.add(function_sel);
-//		barraizq.add(p6);
-//		
-//		/* Number Parameters */
-//		this.func4_params = new JSpinner();
-//		func4_params.setValue(3);
-//		func4_params.setEnabled(false);
-//		JPanel p7 = new JPanel(new GridLayout(2, 1));
-//		p7.add(new JLabel("Número Argumentos:"));
-//		p7.add(func4_params);
-//		barraizq.add(p7);
-//		 
+		 
 		/* Selection Selection */
 		this.selection_sel = new JComboBox<>(selection_type.stream().map(n -> n.toString()).toArray(String[]::new));
 		JPanel p11 = new JPanel(new GridLayout(2, 1));
@@ -246,13 +213,6 @@ public class Panel2 extends JFrame {
 		p13.add(new JLabel("Cruce:"));
 		p13.add(cross_sel);
 		barraizq.add(p13);
-
-
-		/* Has Elitism */
-		/*this.elitism = new JCheckBox("Elitismo");
-		JPanel p8 = new JPanel(new GridLayout(1, 1));
-		p8.add(elitism);
-		barraizq.add(p8);*/
 
 		/* Number Elitism */
 		this.elitism_amount = new JSpinner();
@@ -309,6 +269,9 @@ public class Panel2 extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 
 				restartPlot();
+				tp1.repaint();
+				tp1.revalidate();
+				
 				restartResults(barradchactr, titulodcha);
 
 				int elitism_am = ((Integer) elitism_amount.getValue());
@@ -329,9 +292,7 @@ public class Panel2 extends JFrame {
 					new FunctionCities(27, FunctionType.MINIMIZE)
 				);
 				
-				
-				//System.out.println(Arrays.toString(ga.evaluation()));
-				//ga.getBest(1);
+
 				List<double[]> best_distances = ga.run();
 
 				
@@ -357,6 +318,8 @@ public class Panel2 extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				ga = null;
 				restartPlot();
+				tp1.repaint();
+				tp1.revalidate();
 				best_ev.setText(" ");
 				restartResults(barradchactr, titulodcha);
 
