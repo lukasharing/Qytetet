@@ -134,8 +134,6 @@ public class GeneticAlgorithm<T> {
 		return report;
 	};
 
-
-
 	// Init population
 	public void createInitialPopulation() throws Exception {
 		// Creationf Binary Chromosomes
@@ -321,29 +319,6 @@ public class GeneticAlgorithm<T> {
 			break;
 		}
 		this.chromosomes = generation;
-	}
-	
-	
-	private void crossover() {
-		
-		ArrayList<Integer> quieren_cruzarse = new ArrayList<>();
-		for (int i = 0; i < initial_population; ++i) {
-			if (Math.random() <= this.crossing_prob) {
-				quieren_cruzarse.add(i);
-			}
-		}
-
-		// Convertir en par
-		int size = quieren_cruzarse.size() & ~0x1;
-		
-		for (int i = 0; i < size; i += 2) {
-			@SuppressWarnings("rawtypes")
-			Chromosome chr1 = chromosomes.get(quieren_cruzarse.get(i + 0));
-			@SuppressWarnings("rawtypes")
-			Chromosome chr2 = chromosomes.get(quieren_cruzarse.get(i + 1));
-
-			chr1.cross(chr2, cross); // Symmetric
-		}
 	}
 
 	private void mutation() {
