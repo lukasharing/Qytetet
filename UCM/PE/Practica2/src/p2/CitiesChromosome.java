@@ -44,7 +44,7 @@ public class CitiesChromosome extends Chromosome<Integer> {
 		//Añadimos madrid al comienzo del cromosoma
 		genes.add(25);
 		//Añadimos el resto de ciudades al cromosoma
-		int min = Math.min(number_arguments, 25);
+		int min = Math.min(number_arguments, genes.get(0));
 		
 		for (int i = 0; i < min; i++) { genes.add(i); }
 		//Añadimos madrid al final del cromosoma
@@ -217,12 +217,14 @@ public class CitiesChromosome extends Chromosome<Integer> {
 	};
 	
 	public void cross(@SuppressWarnings("rawtypes") Chromosome chr1, CrossType type) {
-
+		// Total elements
+		int ttl = this.genes.size();
+		
 		switch(type) {
 			case PARTIALLY_MAPPED: // PMX
 				
-				int p0 = randomRange(1, genes.size() - 2);
-				int p1 = randomRange(1, genes.size() - 2);
+				int p0 = randomRange(1, ttl - 2);
+				int p1 = randomRange(1, ttl - 2);
 				
 				int min = 2;//Math.min(p0, p1);
 				int max = 6;//Math.max(p0, p1);
@@ -254,9 +256,6 @@ public class CitiesChromosome extends Chromosome<Integer> {
 			break;
 			
 			case CICLES:
-				
-				// Buscamos ciclos.
-				int ttl = this.genes.size();
 				
 				Boolean[] visited = new Boolean[ttl];
 				Arrays.fill(visited, Boolean.FALSE);
@@ -296,6 +295,37 @@ public class CitiesChromosome extends Chromosome<Integer> {
 				}
 				
 			break;
+			
+			case ORDINAL_CODIFICATION:
+				
+				List<Integer> ord_0 = ord_get_temp(this);
+				List<Integer> ord_1 = ord_get_temp(chr1);
+				
+				// Swap subintervals
+				int swap_i = 4;//randomRange(1, );
+				List<Integer> sub_00 = ord_0.subList(0, swap_i);
+				List<Integer> sub_01 = ord_0.subList(swap_i, ttl - 2);
+				
+				List<Integer> sub_10 = ord_1.subList(0, swap_i);
+				List<Integer> sub_11 = ord_1.subList(swap_i, ttl - 2);
+				
+				ArrayList<Integer> result_0 = new ArrayList<Integer>(ttl - 2);
+				ArrayList<Integer> result_1 = new ArrayList<Integer>(ttl - 2);
+				
+				// Swap
+				result_0.addAll(sub_00);
+				result_0.addAll(sub_11);
+
+				// Swap
+				result_1.addAll(sub_10);
+				result_1.addAll(sub_01);
+				
+				// Set to the genes
+				ord_set_temp(result_0, this);
+				ord_set_temp(result_1, chr1);
+				
+				
+			break;
 		}
 		
 	};
@@ -319,6 +349,39 @@ public class CitiesChromosome extends Chromosome<Integer> {
 			child.add(gn);
 		}
 	}
+	
+	List<Integer> ord_get_temp(Chromosome chr) {
+		
+		int ttl = chr.genes.size();
+		//Añadimos el resto de ciudades al cromosoma
+		List<Integer> order = new ArrayList<Integer>(ttl - 2);
+		
+		for (int i = 0; i < (int)chr.genes.get(0); i++) { order.add(i); }
+		for (int i = (int)chr.genes.get(0) + 1; i < ttl - 1; i++) { order.add(i); }
+		
+		List<Integer> codification = new ArrayList<Integer>(ttl);
+		
+		for(int i = 1; i < ttl - 1; ++i) {
+			int idx = order.indexOf(chr.genes.get(i));
+			order.remove(idx);
+			codification.add(idx);
+		}
+		
+		return codification;
+	};
+	
+	void ord_set_temp(ArrayList<Integer> rs, Chromosome chr) {
+		int ttl = chr.genes.size();
+		List<Integer> order = new ArrayList<Integer>(ttl);
+		for (int i = 0; i < (int)chr.genes.get(0); i++) { order.add(i); }
+		for (int i = (int)chr.genes.get(0) + 1; i < ttl - 1; i++) { order.add(i); }
+		
+		for(int i = 0; i < rs.size(); ++i) {
+			Integer id = rs.get(i);
+			chr.genes.set(i + 1, order.get(id));
+			order.remove(id.intValue());
+		}
+	};
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Chromosome clone() {

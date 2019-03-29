@@ -12,7 +12,7 @@ import p2.CitiesChromosome;
 public class GeneticAlgorithm<T> {
 
 	private final int TOURNAMENT_SET = 3;
-	private final double TOURNAMENT_PROB = 0.60;
+	private final double TOURNAMENT_PROB = 0.50;
 
 	@SuppressWarnings("rawtypes")
 	private ArrayList<Chromosome> chromosomes; // Population

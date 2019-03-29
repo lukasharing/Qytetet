@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -31,6 +32,8 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import org.math.plot.Plot2DPanel;
+
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 import model.Chromosome;
 import model.CrossType;
@@ -131,18 +134,74 @@ public class Panel2 extends JFrame {
 		    public void paintComponent(Graphics g){
 				Graphics2D ctx = (Graphics2D)g;
 				
+				// Draw map
 				ctx.drawImage(map, 0, 0, this);
+				
+				
+				// Draw text
+				for(Provinces pr : Provinces.CITIES) {
+
+					ctx.setColor(Color.red);
+					ctx.fillOval(pr.getCoords().first - 3, pr.getCoords().second - 3, 6, 6);
+
+					ctx.setColor(Color.black);
+					ctx.drawOval(pr.getCoords().first - 4, pr.getCoords().second - 4, 8, 8);
+				}
 				
 				if(ga == null) return;
 				
 				for(int i = 0; i < Provinces.CITIES.length; ++i) {
 					double[] chr = ga.getBest_chr().getFenotypes();
-					Pair<Integer, Integer> p0 = Provinces.CITIES[(int) chr[i]].getCoords();
-					Pair<Integer, Integer> p1 = Provinces.CITIES[(int) chr[i + 1]].getCoords();
+					final Pair<Integer, Integer> p0 = Provinces.CITIES[(int) chr[i]].getCoords();
+					final Pair<Integer, Integer> p1 = Provinces.CITIES[(int) chr[i + 1]].getCoords();
 					
-					g.drawOval(p0.first - 3, p0.second - 3, 6, 6);
+					int dx = p0.first - p1.first;
+					int dy = p0.second - p1.second;
+					
+					int rw = 5; // Arrow Size
+					int ds = (int)Math.sqrt(dx * dx + dy * dy) - 2 * rw; // Distance
+					
+					
+					List<Integer> arrow_x = Arrays.asList(
+						0, // .
+						ds, // -
+						ds, // |
+						ds + rw, // >
+						ds,
+						ds,
+						0 // .
+					);
+					
+					List<Integer> arrow_y = Arrays.asList(
+						0, // .
+						0, // -
+						-rw, // |
+						0, // >
+						+rw, // |
+						0, // -
+						0 // .
+					);
+					
+					// Rotate all vertices
+					double angle = Math.atan2(dy, dx);
+					double sin = Math.sin(angle);
+					double cos = Math.cos(angle);
+					int vertices = arrow_y.size();
+					for(int j = 0; j < vertices; ++j) {
+						int x = arrow_x.get(j);
+						int y = arrow_y.get(j);
+						
+						arrow_x.set(j, (int)(x * cos - y * sin));
+						arrow_y.set(j, (int)(x * sin + y * cos));	
+					}
+					
+					// Translate all vertices
+					arrow_x = arrow_x.stream().map(z -> z + p1.first).collect(Collectors.toList());
+					arrow_y = arrow_y.stream().map(z -> z + p1.second).collect(Collectors.toList());
+
+					ctx.setColor(Color.black);
 					//g.drawChars(data, offset, length, x, y);
-					ctx.drawLine(p0.first, p0.second, p1.first, p1.second);
+					ctx.drawPolygon(arrow_x.stream().mapToInt(v->v).toArray(), arrow_y.stream().mapToInt(v->v).toArray(), vertices);
 				}
 		    };
 		};
@@ -282,22 +341,24 @@ public class Panel2 extends JFrame {
 				model.CrossType type_cross = cross_type.get(cross_sel.getSelectedIndex());
 				model.MutationType type_mut = mutation_type.get(mutation_sel.getSelectedIndex());
 				
-				Function fun = new FunctionCities(/*8*/27, FunctionType.MINIMIZE);
-				/*
-				CitiesChromosome c0 = new CitiesChromosome(fun);
+				Function fun = new FunctionCities(27, FunctionType.MINIMIZE);
+				///*
+				/*CitiesChromosome c0 = new CitiesChromosome(fun);
 				CitiesChromosome c1 = new CitiesChromosome(fun);
 				
-				//c0.setFenotypes(new double[] {8, 4, 7, 3, 6, 2, 5, 1, 9, 0});
-				//c1.setFenotypes(new double[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+				c0.setFenotypes(new double[] {3, 4, 1, 0, 7, 6, 5, 8, 2});
+				c1.setFenotypes(new double[] {0, 1, 2, 3, 4, 5, 6, 7, 8});
 				
 				System.out.println(c0.toString());
 				System.out.println(c1.toString());
 				
-				c0.cross(c1, CrossType.CICLES);
+				c0.cross(c1, CrossType.ORDINAL_CODIFICATION);
 				
 				System.out.println(c0.toString());
 				System.out.println(c1.toString());
-				*/
+				//*/
+				///*
+				
 				ga = new GeneticAlgorithm<CitiesChromosome>(
 					CitiesChromosome.class,
 					Integer.parseInt(size_population.getText()),
