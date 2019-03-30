@@ -1,0 +1,7 @@
+bool exp1;
+bool exp2;
+exp
+&&
+exp1 = true or false;
+exp2 = false and true;
+exp = (not exp1) and (not exp2) or ((not exp1) and exp2);
