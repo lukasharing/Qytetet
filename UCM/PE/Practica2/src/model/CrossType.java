@@ -8,7 +8,7 @@ public enum CrossType {
 	MULTIPOINT("Multipunto"),
 	UNIFORM("Uniforme"),
 	PARTIALLY_MAPPED("Emparejamiento Parcial (PMX)"),
-	ORDERED("ORDEN (OX)"),
+	ORDERED("Cruce por Orden (OX)"),
 	ORDERED_VARIANT("Variante de OX"),
 	CICLES("Ciclos (CX)"),
 	RECOMBINATION("Recombinación"),

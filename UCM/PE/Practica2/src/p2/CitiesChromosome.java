@@ -216,7 +216,7 @@ public class CitiesChromosome extends Chromosome<Integer> {
 		}
 	};
 	
-	public void cross(@SuppressWarnings("rawtypes") Chromosome chr1, CrossType type) {
+	public void cross(Chromosome<Integer> chr1, CrossType type) {
 		// Total elements
 		int ttl = this.genes.size();
 		
@@ -295,6 +295,83 @@ public class CitiesChromosome extends Chromosome<Integer> {
 				}
 				
 			break;
+			
+			case ORDERED: 
+				
+				int cut1 = randomRange(2,26);
+				int cut2 = randomRange(2,26);
+				while(cut1 == cut2) {
+					cut2 = randomRange(2,26);
+				}
+				if(cut1 > cut2) {
+					int temp = cut1;
+					cut1 = cut2;
+					cut2 = temp;
+				}
+				ArrayList<Integer> sublist1 = new ArrayList<Integer>(this.genes.subList(cut1, cut2));
+				ArrayList<Integer> sublist2 = new ArrayList<Integer>(chr1.genes.subList(cut1, cut2));
+				
+				List<Integer> result1 = new ArrayList<Integer>(func.getTotalArguments());
+				List<Integer> result2 = new ArrayList<Integer>(func.getTotalArguments());
+				
+				for(int i = 1; i<cut1; i++){
+					result1.add(-1);
+					result2.add(-1);
+				}
+				result1.addAll(sublist2);
+				result2.addAll(sublist1);
+				for(int i = cut2; i<func.getTotalArguments()-1; i++){
+					result1.add(-1);
+					result2.add(-1);
+				}				
+				
+				ArrayList<Integer> subparent1 = new ArrayList<Integer>(this.genes.subList(1, func.getTotalArguments()-1));
+				ArrayList<Integer> subparent2 = new ArrayList<Integer>(chr1.genes.subList(1, func.getTotalArguments()-1));
+				
+				for(int i = 0; i<subparent1.size();i++){
+					if(result1.get(i) == -1){
+						boolean finished=false;
+						int j = i;
+						while (!finished){
+							if(!result1.contains(subparent1.get(j))){
+								result1.set(i, subparent1.get(j));
+								finished = true;
+							}
+							j++;
+							if(subparent1.size()==j){
+								j=0;
+							}
+						}
+					}
+				}
+				
+				for(int i = 0; i<subparent2.size();i++){
+					if(result2.get(i) == -1){
+						boolean finished=false;
+						int j = i;
+						while (!finished){
+							if(!result2.contains(subparent2.get(j))){
+								result2.set(i, subparent2.get(j));
+								finished = true;
+							}
+							j++;
+							if(subparent1.size()==j){
+								j=0;
+							}
+						}
+					}
+				}
+				
+				result1.add(0,25);
+				result2.add(0,25);
+				result1.add(25);
+				result2.add(25);
+				
+				this.genes = (ArrayList<Integer>) result1;
+				chr1.genes = (ArrayList<Integer>) result2;
+				
+			break;
+		
 			
 			case ORDINAL_CODIFICATION:
 				
