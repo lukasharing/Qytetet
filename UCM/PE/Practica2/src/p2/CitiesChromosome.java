@@ -148,22 +148,28 @@ public class CitiesChromosome extends Chromosome<Integer> {
 				
 				case HEURISTIC:
 					
-					int[] markers = new int [] { // (1 - 27)
-						randomRange(1, 26),
-						randomRange(1, 26),
-						randomRange(1, 26)
-					};
-					
-					int perm = 3; //(int)(1 + Math.random() * 2);
+
+					final int perm = 3; //(int)(1 + Math.random() * 2);
 					int[][] all = PERMUTATION[perm];
+					
+					int[] markers = new int [perm];
+					double[] values = new double [perm];
+					
+					// Inicializamos los markadores y los valores de estos
+					for(int i = 0; i < perm; ++i) {
+						markers[i] = randomRange(1, 26);
+						values[i] = this.getFenotype(markers[i]);
+					}
 					
 					double[] cp = this.getFenotypes();
 					double min_ev = ((FunctionCities)func).evaluate(cp);
 					// Look at all permutations and find the best
 					for(int i = 1; i < all.length; ++i) {
 						double[] perm_gene = this.getFenotypes();
+						
+						
 						for(int j = 0; j < perm; ++j) {
-							perm_gene[markers[j]] = this.getFenotype(markers[all[i][j]]);
+							perm_gene[markers[j]] = values[all[i][j]];
 						}
 						
 						// See who has minimum distance
@@ -212,6 +218,10 @@ public class CitiesChromosome extends Chromosome<Integer> {
 					}
 					
 				break;
+				
+				case SELF_METHOD_2:
+					// TODO
+				break;
 			}
 		}
 	};
@@ -226,8 +236,8 @@ public class CitiesChromosome extends Chromosome<Integer> {
 				int p0 = randomRange(1, ttl - 2);
 				int p1 = randomRange(1, ttl - 2);
 				
-				int min = 2;//Math.min(p0, p1);
-				int max = 6;//Math.max(p0, p1);
+				int min = Math.min(p0, p1);
+				int max = Math.max(p0, p1);
 				
 				// Swap both subintervals
 				List<Integer> sub0 = this.genes.subList(min, max);

@@ -155,8 +155,8 @@ public class Panel2 extends JFrame {
 					final Pair<Integer, Integer> p0 = Provinces.CITIES[(int) chr[i]].getCoords();
 					final Pair<Integer, Integer> p1 = Provinces.CITIES[(int) chr[i + 1]].getCoords();
 					
-					int dx = p0.first - p1.first;
-					int dy = p0.second - p1.second;
+					int dx = p1.first - p0.first;
+					int dy = p1.second - p0.second;
 					
 					int rw = 5; // Arrow Size
 					int ds = (int)Math.sqrt(dx * dx + dy * dy) - 2 * rw; // Distance
@@ -196,8 +196,8 @@ public class Panel2 extends JFrame {
 					}
 					
 					// Translate all vertices
-					arrow_x = arrow_x.stream().map(z -> z + p1.first).collect(Collectors.toList());
-					arrow_y = arrow_y.stream().map(z -> z + p1.second).collect(Collectors.toList());
+					arrow_x = arrow_x.stream().map(z -> z + p0.first).collect(Collectors.toList());
+					arrow_y = arrow_y.stream().map(z -> z + p0.second).collect(Collectors.toList());
 
 					ctx.setColor(Color.black);
 					//g.drawChars(data, offset, length, x, y);
