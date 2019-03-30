@@ -16,7 +16,7 @@ public class GeneticAlgorithm<T> {
 
 	@SuppressWarnings("rawtypes")
 	private ArrayList<Chromosome> chromosomes; // Population
-
+	private ArrayList<Chromosome> chromosomes_last_gen;
 	private Class<T> class_type;
 
 	private SelectionType selection;
@@ -31,8 +31,11 @@ public class GeneticAlgorithm<T> {
 	private int total_generations = 0;
 	private double gene_precision = 0.0;
 	private int elitism = 0;
+	private boolean contractivity = false;
 	@SuppressWarnings("rawtypes")
 	public Chromosome best_chr = null;
+	public Chromosome best_absolute;
+	
 
 	// Probabilities
 	private double crossing_prob = 0.0;
@@ -40,7 +43,7 @@ public class GeneticAlgorithm<T> {
 
 	// Constructor
 	public GeneticAlgorithm(Class<T> class_type, int population, int generations, double crossoverProbability,
-			double mutationProbability, double precision, int num_elitism, SelectionType sel_type, CrossType cross_type, MutationType mut_type, Function evaluationFunction) {
+			double mutationProbability, double precision, int num_elitism, SelectionType sel_type, CrossType cross_type, MutationType mut_type, Function evaluationFunction, boolean contractivity) {
 		this.class_type = class_type;
 		this.selection = sel_type;
 		this.cross = cross_type;
@@ -53,6 +56,7 @@ public class GeneticAlgorithm<T> {
 		this.crossing_prob = crossoverProbability;
 		this.mutation_prob = mutationProbability;
 		this.function = evaluationFunction;
+		this.contractivity = contractivity;
 
 		chromosomes = new ArrayList<>();
 
@@ -84,8 +88,7 @@ public class GeneticAlgorithm<T> {
 		@SuppressWarnings("rawtypes")
 		ArrayList<Chromosome> best = getBest(this.elitism);
 
-		@SuppressWarnings("rawtypes")
-		Chromosome best_absolute = getBest(1).get(0);
+		best_absolute = getBest(1).get(0);
 		generation_best[0] = function.evaluate(best_absolute.getFenotypes());
 		generation_best_abs[0] = generation_best[0];
 
@@ -96,9 +99,12 @@ public class GeneticAlgorithm<T> {
 			mean += function.evaluate(chr.getFenotypes());
 		}
 		generation_mean[0] = mean / initial_population;
-
+		int failureCount = 0;
+		
 		currentGeneration = 1;
-		while (currentGeneration < total_generations) {
+		while ((currentGeneration<total_generations) && (failureCount < 1000)) {
+			chromosomes_last_gen = chromosomes;
+			
 			best = getBest(this.elitism);
 
 			this.selection(eval_result);
@@ -127,7 +133,20 @@ public class GeneticAlgorithm<T> {
 			}
 			generation_mean[currentGeneration] = mean / initial_population;
 
-			currentGeneration++;
+			if(contractivity){
+				if(currentGeneration!=0){
+					if(generation_mean[currentGeneration] <= generation_mean[currentGeneration-1]){
+						currentGeneration++;
+						failureCount = 0;
+					}else {
+						chromosomes = chromosomes_last_gen;
+						failureCount++;
+					}
+				}
+			}else{
+				currentGeneration++;
+			}
+			
 		}
 
 		fenotypes_result = best_absolute.getFenotypes();
@@ -330,6 +349,11 @@ public class GeneticAlgorithm<T> {
 	@SuppressWarnings("rawtypes")
 	public Chromosome getBest_chr() {
 		return best_chr;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public Chromosome getBestAbs_chr() {
+		return best_absolute;
 	}
 
 }

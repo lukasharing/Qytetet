@@ -19,6 +19,7 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -100,6 +101,7 @@ public class Panel2 extends JFrame {
 	private JButton restart;
 	//private JCheckBox elitism;
 	private JSpinner elitism_amount;
+	private JCheckBox contractivity;
 	private GeneticAlgorithm<?> ga = null;
 
 	public Panel2() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
@@ -151,7 +153,7 @@ public class Panel2 extends JFrame {
 				if(ga == null) return;
 				
 				for(int i = 0; i < Provinces.CITIES.length; ++i) {
-					double[] chr = ga.getBest_chr().getFenotypes();
+					double[] chr = ga.getBestAbs_chr().getFenotypes();
 					final Pair<Integer, Integer> p0 = Provinces.CITIES[(int) chr[i]].getCoords();
 					final Pair<Integer, Integer> p1 = Provinces.CITIES[(int) chr[i + 1]].getCoords();
 					
@@ -281,6 +283,13 @@ public class Panel2 extends JFrame {
 		p9.add(elitism_amount);
 		barraizq.add(p9);
 
+		/* Contractivity */
+		this.contractivity = new JCheckBox("Contractividad");
+		JPanel p14 = new JPanel(new GridLayout(1, 1));
+		p14.add(contractivity);
+		barraizq.add(p14);
+
+		
 		/* Buttons */
 		JPanel p10 = new JPanel(new GridLayout(2, 1));
 		start = new JButton("Iniciar");
@@ -366,7 +375,7 @@ public class Panel2 extends JFrame {
 					Double.parseDouble(crossover_perc.getText()),
 					Double.parseDouble(mutation_perc.getText()),
 					0.0, elitism_am, type_sel, type_cross, type_mut,
-					fun
+					fun, contractivity.isSelected()
 				);
 				
 				List<double[]> best_distances = ga.run();
@@ -380,11 +389,14 @@ public class Panel2 extends JFrame {
 				
 				addPlotLines(generations, best_distances);
 				
-				best_ev.setText(Integer.toString((int) best_distances.get(0)[best_distances.get(0).length - 1]) +" kms");
-
-				for (int i = 0; i < ga.getBest_chr().getFenotypes().length; i++) {
+				//best_ev.setText(Integer.toString((int) best_distances.get(0)[best_distances.get(0).length - 1]) +" kms");
+				best_ev.setText(Integer.toString((int) fun.evaluate(ga.getBestAbs_chr().getFenotypes())) +" kms");
+				
+				
+				
+				for (int i = 0; i < ga.getBestAbs_chr().getFenotypes().length; i++) {
 					barradchactr.add(
-						new JLabel(CitiesChromosome.parseCity((int) ga.getBest_chr().getFenotypes()[i]) + ((i == ga.getBest_chr().getFenotypes().length-1) ? " " : "->" )));
+						new JLabel(CitiesChromosome.parseCity((int) ga.getBestAbs_chr().getFenotypes()[i]) + ((i == ga.getBestAbs_chr().getFenotypes().length-1) ? " " : "->" )));
 				}//*/
 		}});
 

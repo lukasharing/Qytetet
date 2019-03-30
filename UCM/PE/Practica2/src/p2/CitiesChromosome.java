@@ -382,6 +382,74 @@ public class CitiesChromosome extends Chromosome<Integer> {
 				
 			break;
 		
+			case ORDERED_VARIANT: 
+
+				
+				ArrayList<Integer> ov_subparent1 = new ArrayList<Integer>(this.genes.subList(1, func.getTotalArguments()-1));
+				ArrayList<Integer> ov_subparent2 = new ArrayList<Integer>(chr1.genes.subList(1, func.getTotalArguments()-1));
+				
+				List<Integer> ov_result1 = new ArrayList<Integer>(func.getTotalArguments());
+				List<Integer> ov_result2 = new ArrayList<Integer>(func.getTotalArguments());
+				
+				for(int i=0; i<ov_subparent1.size(); i++){
+					ov_result1.add(-1);
+					ov_result2.add(-1);
+				}
+				
+				int ncross = randomRange(0 , ov_subparent1.size()-1);
+				
+				for(int i = 0; i<ncross; i++){
+					int toswap = randomRange(0 , ov_subparent1.size()-1);
+					if(ov_result1.get(toswap)==-1){
+						ov_result1.set(toswap, ov_subparent2.get(toswap));
+						ov_result2.set(toswap, ov_subparent1.get(toswap));
+					}
+				}
+				
+				for(int i = 0; i<ov_subparent1.size();i++){
+					if(ov_result1.get(i) == -1){
+						boolean finished=false;
+						int j = i;
+						while (!finished){
+							if(!ov_result1.contains(ov_subparent1.get(j))){
+								ov_result1.set(i, ov_subparent1.get(j));
+								finished = true;
+							}
+							j++;
+							if(ov_subparent1.size()==j){
+								j=0;
+							}
+						}
+					}
+				}
+				
+				for(int i = 0; i<ov_subparent2.size();i++){
+					if(ov_result2.get(i) == -1){
+						boolean finished=false;
+						int j = i;
+						while (!finished){
+							if(!ov_result2.contains(ov_subparent2.get(j))){
+								ov_result2.set(i, ov_subparent2.get(j));
+								finished = true;
+							}
+							j++;
+							if(ov_subparent1.size()==j){
+								j=0;
+							}
+						}
+					}
+				}
+				
+				ov_result1.add(0,25);
+				ov_result2.add(0,25);
+				ov_result1.add(25);
+				ov_result2.add(25);
+				
+				this.genes = (ArrayList<Integer>) ov_result1;
+				chr1.genes = (ArrayList<Integer>) ov_result2;
+				
+			break;
+		
 			
 			case ORDINAL_CODIFICATION:
 				
@@ -413,6 +481,7 @@ public class CitiesChromosome extends Chromosome<Integer> {
 				
 				
 			break;
+			
 		}
 		
 	};
