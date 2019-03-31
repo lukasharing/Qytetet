@@ -104,6 +104,9 @@ public class GeneticAlgorithm<T> {
 		currentGeneration = 1;
 		while ((currentGeneration<total_generations) && (failureCount < 1000)) {
 			chromosomes_last_gen = chromosomes;
+			Chromosome<?> best_chr_cpy = best_chr;
+			Chromosome<?> best_absolute_cpy = best_absolute;
+			
 			
 			best = getBest(this.elitism);
 
@@ -118,10 +121,11 @@ public class GeneticAlgorithm<T> {
 			this.chromosomes = best_no_elitism;
 
 			best_chr = getBest(1).get(0);
+			
 			if (function.compare(function.evaluate(best_absolute.getFenotypes()), best_chr.getFenotypes()) > 0) {
 				best_absolute = best_chr;
 			}
-
+			
 			generation_best[currentGeneration] = function.evaluate(best_chr.getFenotypes());
 			generation_best_abs[currentGeneration] = function.evaluate(best_absolute.getFenotypes());
 
@@ -140,6 +144,8 @@ public class GeneticAlgorithm<T> {
 						failureCount = 0;
 					}else {
 						chromosomes = chromosomes_last_gen;
+						best_chr = best_chr_cpy;
+						best_absolute = best_absolute_cpy;
 						failureCount++;
 					}
 				}

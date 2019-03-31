@@ -222,9 +222,6 @@ public class CitiesChromosome extends Chromosome<Integer> {
 					
 				break;
 				
-				case SELF_METHOD_2:
-					// TODO
-				break;
 			}
 		}
 	};
@@ -267,47 +264,7 @@ public class CitiesChromosome extends Chromosome<Integer> {
 				chr1.genes = child1;
 				
 			break;
-			
-			case CICLES:
-				
-				Boolean[] visited = new Boolean[ttl];
-				Arrays.fill(visited, Boolean.FALSE);
-				
-				ArrayList<Integer> child2 = new ArrayList<>(ttl);
-				ArrayList<Integer> child3 = new ArrayList<>(ttl);
-				
-				ArrayList<List<Integer>> cycles = new ArrayList<>();
-				
-				// Add all cycles into arraylist
-				for(int i = 1; i < ttl - 1; ++i) {
-					if(!visited[i].booleanValue()) {
-						visited[i] = Boolean.TRUE;
-						
-						// Iterate over cycles
-						int current = i;
-						List<Integer> cycle = new ArrayList<Integer>();
-						cycle.add(current);
-						while(this.genes.indexOf(chr1.genes.get(current)) != i) {
-							current = this.genes.indexOf(chr1.genes.get(current));
-							visited[current] = Boolean.TRUE;
-							cycle.add(current);
-						}
-						cycles.add(cycle);
-					}
-				}
-				
-				// Iterate Over Cycles and swap cycles in even numbers
-				for(int i = 1; i < cycles.size(); i += 2) {
-					List<Integer> cycle = cycles.get(i);
-					// Swap if odd
-					for(Integer c : cycle) {
-						int tmp = this.genes.get(c);
-						this.genes.set(c, ((CitiesChromosome) chr1).genes.get(c));
-						chr1.genes.set(c, tmp);
-					}
-				}
-				
-			break;
+
 			
 			case ORDERED: 
 				
@@ -385,7 +342,7 @@ public class CitiesChromosome extends Chromosome<Integer> {
 				
 			break;
 		
-			case ORDERED_VARIANT: 
+			case ORDERED_VARIANT_OXPP:
 
 				
 				ArrayList<Integer> ov_subparent1 = new ArrayList<Integer>(this.genes.subList(1, func.getTotalArguments()-1));
@@ -453,6 +410,140 @@ public class CitiesChromosome extends Chromosome<Integer> {
 				
 			break;
 		
+			case ORDERED_VARIANT_OXOP:
+				
+				ArrayList<Integer> ovo_subparent1 = new ArrayList<Integer>(this.genes.subList(1, func.getTotalArguments()-1));
+				ArrayList<Integer> ovo_subparent2 = new ArrayList<Integer>(chr1.genes.subList(1, func.getTotalArguments()-1));
+				
+				List<Integer> ovo_result1 = new ArrayList<Integer>(func.getTotalArguments());
+				List<Integer> ovo_result2 = new ArrayList<Integer>(func.getTotalArguments());
+				
+				for(int i=0; i<ovo_subparent1.size(); i++){
+					ovo_result1.add(-1);
+					ovo_result2.add(-1);
+				}
+				
+				int nSelectedPositions = randomRange(1 , 10/*ovo_subparent1.size()-1*/);
+				List<Integer> selectedPositions = new ArrayList<Integer>(nSelectedPositions);
+				
+				int z=0;
+				while(z<nSelectedPositions){
+					int pos = randomRange(0 , ovo_subparent1.size()-1);
+					if(!selectedPositions.contains(pos)){
+						selectedPositions.add(pos);
+						z++;
+					}
+				}
+				
+				for(int i=0; i<selectedPositions.size(); i++){
+					ovo_result1.set(ovo_subparent2.indexOf(ovo_subparent1.get(selectedPositions.get(i))), -2);
+					ovo_result2.set(ovo_subparent1.indexOf(ovo_subparent2.get(selectedPositions.get(i))), -2);
+				}
+				
+				int j=0;
+				for(int i=0; i<ovo_subparent1.size(); i++){
+					if(ovo_result1.get(i)==-1){
+						ovo_result1.set(i, ovo_subparent2.get(i));
+					}else if(ovo_result1.get(i)==-2){
+						ovo_result1.set(i, ovo_subparent1.get(selectedPositions.get(j)));
+						j++;
+					}
+				}
+				
+				j=0;
+				for(int i=0; i<ovo_subparent2.size(); i++){
+					if(ovo_result2.get(i)==-1){
+						ovo_result2.set(i, ovo_subparent1.get(i));
+					}else if(ovo_result2.get(i)==-2){
+						ovo_result2.set(i, ovo_subparent2.get(selectedPositions.get(j)));
+						j++;
+					}
+				}
+				
+				
+				ovo_result1.add(0,25);
+				ovo_result2.add(0,25);
+				ovo_result1.add(25);
+				ovo_result2.add(25);
+				
+				this.genes = (ArrayList<Integer>) ovo_result1;
+				chr1.genes = (ArrayList<Integer>) ovo_result2;
+				
+				
+			break;
+		
+			
+			case CICLES:
+				
+				Boolean[] visited = new Boolean[ttl];
+				Arrays.fill(visited, Boolean.FALSE);
+				
+				ArrayList<Integer> child2 = new ArrayList<>(ttl);
+				ArrayList<Integer> child3 = new ArrayList<>(ttl);
+				
+				ArrayList<List<Integer>> cycles = new ArrayList<>();
+				
+				// Add all cycles into arraylist
+				for(int i = 1; i < ttl - 1; ++i) {
+					if(!visited[i].booleanValue()) {
+						visited[i] = Boolean.TRUE;
+						
+						// Iterate over cycles
+						int current = i;
+						List<Integer> cycle = new ArrayList<Integer>();
+						cycle.add(current);
+						while(this.genes.indexOf(chr1.genes.get(current)) != i) {
+							current = this.genes.indexOf(chr1.genes.get(current));
+							visited[current] = Boolean.TRUE;
+							cycle.add(current);
+						}
+						cycles.add(cycle);
+					}
+				}
+				
+				// Iterate Over Cycles and swap cycles in even numbers
+				for(int i = 1; i < cycles.size(); i += 2) {
+					List<Integer> cycle = cycles.get(i);
+					// Swap if odd
+					for(Integer c : cycle) {
+						int tmp = this.genes.get(c);
+						this.genes.set(c, ((CitiesChromosome) chr1).genes.get(c));
+						chr1.genes.set(c, tmp);
+					}
+				}
+				
+			break;
+			
+			case PATH_RECOMBINATION:
+				
+				List<Integer> ord_0 = ord_get_temp(this);
+				List<Integer> ord_1 = ord_get_temp(chr1);
+				
+				// Swap subintervals
+				int swap_i = 4;//randomRange(1, );
+				List<Integer> sub_00 = ord_0.subList(0, swap_i);
+				List<Integer> sub_01 = ord_0.subList(swap_i, ttl - 2);
+				
+				List<Integer> sub_10 = ord_1.subList(0, swap_i);
+				List<Integer> sub_11 = ord_1.subList(swap_i, ttl - 2);
+				
+				ArrayList<Integer> result_0 = new ArrayList<Integer>(ttl - 2);
+				ArrayList<Integer> result_1 = new ArrayList<Integer>(ttl - 2);
+				
+				// Swap
+				result_0.addAll(sub_00);
+				result_0.addAll(sub_11);
+
+				// Swap
+				result_1.addAll(sub_10);
+				result_1.addAll(sub_01);
+				
+				// Set to the genes
+				ord_set_temp(result_0, this);
+				ord_set_temp(result_1, chr1);
+				
+				
+			break;
 			
 			case ORDINAL_CODIFICATION:
 				

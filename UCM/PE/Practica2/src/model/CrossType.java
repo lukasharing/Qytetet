@@ -9,12 +9,12 @@ public enum CrossType {
 	UNIFORM("Uniforme"),
 	PARTIALLY_MAPPED("Emparejamiento Parcial (PMX)"),
 	ORDERED("Cruce por Orden (OX)"),
-	ORDERED_VARIANT("Variante de OX"),
+	ORDERED_VARIANT_OXPP("OX con Posiciones Prioritarias"),
+	ORDERED_VARIANT_OXOP("OX con Orden Prioritario"),
 	CICLES("Ciclos (CX)"),
-	RECOMBINATION("Recombinación"),
+	PATH_RECOMBINATION("Recombinación"),
 	ORDINAL_CODIFICATION("Codificación Ordinal"),
-	SELF_METHOD_1("Método propio 1"),
-	SELF_METHOD_2("Método propio 2");
+	SELF_METHOD_1("Método propio 1");
 	
 	private final String name;
 	

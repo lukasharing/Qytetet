@@ -76,12 +76,12 @@ public class Panel2 extends JFrame {
 	private List<CrossType> cross_type = Arrays.asList(
 		CrossType.PARTIALLY_MAPPED,
 		CrossType.ORDERED,
-		CrossType.ORDERED_VARIANT,
+		CrossType.ORDERED_VARIANT_OXPP,
+		CrossType.ORDERED_VARIANT_OXOP,
 		CrossType.CICLES,
-		CrossType.RECOMBINATION,
+		CrossType.PATH_RECOMBINATION,
 		CrossType.ORDINAL_CODIFICATION,
-		CrossType.SELF_METHOD_1,
-		CrossType.SELF_METHOD_2
+		CrossType.SELF_METHOD_1
 	);
 	
 	// Algoritmos de mutación
@@ -90,8 +90,7 @@ public class Panel2 extends JFrame {
 		MutationType.SWAP,
 		MutationType.INVERSION,
 		MutationType.HEURISTIC,
-		MutationType.SELF_METHOD_1,
-		MutationType.SELF_METHOD_2
+		MutationType.SELF_METHOD_1
 	);
 	
 	private JComboBox<String> selection_sel;
