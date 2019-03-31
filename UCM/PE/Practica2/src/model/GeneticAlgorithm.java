@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.DoubleStream;
 
@@ -277,6 +278,7 @@ public class GeneticAlgorithm<T> {
 	};
 	
 
+	@SuppressWarnings("rawtypes")
 	private void selection(double[] evaluations) {
 		@SuppressWarnings("rawtypes")
 		ArrayList<Chromosome> generation = new ArrayList<>();
@@ -363,6 +365,20 @@ public class GeneticAlgorithm<T> {
 			
 			case TRUNCATION:
 				
+				double trunc = 0.5;
+				while (generation.size()<initial_population){
+					generation.addAll(new ArrayList<Chromosome>(getBest((int) (initial_population*trunc))));
+					
+					@SuppressWarnings("unchecked")
+					ArrayList<Chromosome> bests = (ArrayList<Chromosome>) getBest((int) (initial_population*trunc)).clone();
+					
+					for(Chromosome chrm : bests){ 
+						generation.add(chrm.clone());
+					}
+				}
+				
+				generation = new ArrayList<Chromosome>(generation.subList(0, initial_population));
+								
 			break;
 		}
 		this.chromosomes = generation;
