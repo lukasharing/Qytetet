@@ -478,10 +478,7 @@ public class CitiesChromosome extends Chromosome<Integer> {
 				Boolean[] visited = new Boolean[ttl];
 				Arrays.fill(visited, Boolean.FALSE);
 				
-				ArrayList<Integer> child2 = new ArrayList<>(ttl);
-				ArrayList<Integer> child3 = new ArrayList<>(ttl);
-				
-				ArrayList<List<Integer>> cycles = new ArrayList<>();
+			ArrayList<List<Integer>> cycles = new ArrayList<>();
 				
 				// Add all cycles into arraylist
 				for(int i = 1; i < ttl - 1; ++i) {
@@ -514,33 +511,177 @@ public class CitiesChromosome extends Chromosome<Integer> {
 				
 			break;
 			
-			case PATH_RECOMBINATION:
+			case EDGE_RECOMBINATION:
+			
+				ArrayList<Integer> erx_subparent1 = new ArrayList<Integer>(this.genes.subList(1, func.getTotalArguments()-1));
+				ArrayList<Integer> erx_subparent2 = new ArrayList<Integer>(chr1.genes.subList(1, func.getTotalArguments()-1));
 				
-				List<Integer> ord_0 = ord_get_temp(this);
-				List<Integer> ord_1 = ord_get_temp(chr1);
+				List<Integer> erx_result1 = new ArrayList<Integer>(func.getTotalArguments());
+				List<Integer> erx_result2 = new ArrayList<Integer>(func.getTotalArguments());
 				
-				// Swap subintervals
-				int swap_i = 4;//randomRange(1, );
-				List<Integer> sub_00 = ord_0.subList(0, swap_i);
-				List<Integer> sub_01 = ord_0.subList(swap_i, ttl - 2);
 				
-				List<Integer> sub_10 = ord_1.subList(0, swap_i);
-				List<Integer> sub_11 = ord_1.subList(swap_i, ttl - 2);
+				List<List<Integer>> scoreTable = new ArrayList<List<Integer>>();
 				
-				ArrayList<Integer> result_0 = new ArrayList<Integer>(ttl - 2);
-				ArrayList<Integer> result_1 = new ArrayList<Integer>(ttl - 2);
+				for(int i=0; i<this.genes.size(); i++){
+					List<Integer> temp = new ArrayList<Integer>();
+					
+					try {
+						int n = erx_subparent1.indexOf(i);
+						if(n!=-1 && !temp.contains(erx_subparent1.get(n-1)))
+							temp.add(erx_subparent1.get(n-1));
+					} catch (Exception e) {	}
+					
+					try {
+						int n = erx_subparent1.indexOf(i);
+						if(n!=-1 && !temp.contains(erx_subparent1.get(n+1)))
+							temp.add(erx_subparent1.get(n+1));
+					} catch (Exception e) {	}
+					
+					try {
+						int n = erx_subparent2.indexOf(i);
+						if(n!=-1 && !temp.contains(erx_subparent2.get(n-1)))
+							temp.add(erx_subparent2.get(n-1));
+					} catch (Exception e) {	}
+					
+					try {
+						int n = erx_subparent2.indexOf(i);
+						if(n!=-1 && !temp.contains(erx_subparent2.get(n+1)))
+							temp.add(erx_subparent2.get(n+1));
+					} catch (Exception e) {	}
+					
+					scoreTable.add(temp);
+				}
 				
-				// Swap
-				result_0.addAll(sub_00);
-				result_0.addAll(sub_11);
-
-				// Swap
-				result_1.addAll(sub_10);
-				result_1.addAll(sub_01);
+				List<List<Integer>> scoreTable2 = new ArrayList<List<Integer>>(scoreTable);
 				
-				// Set to the genes
-				ord_set_temp(result_0, this);
-				ord_set_temp(result_1, chr1);
+				
+				for (int i = 0; i<erx_subparent1.size(); i++){
+					if(i==0){
+						int r = erx_subparent1.get(i);
+						erx_result1.add(r);
+						for(int k=0; k<scoreTable.size(); k++){
+							scoreTable.get(k).remove(new Integer(r));
+							
+						}
+						
+					} else {
+						
+						int minPath = -1;
+						List<Integer> minsAt = new ArrayList<Integer>();
+						
+						for(int m=0; m < scoreTable.get(erx_result1.get(i-1)).size(); m++){
+							if(minPath!=-1){
+								int newMinPath = scoreTable.get(scoreTable.get(erx_result1.get(i-1)).get(m)).size();
+								if(newMinPath<=minPath){
+									//minsAt = new ArrayList<Integer>();
+									minPath = newMinPath;
+									minsAt.add(scoreTable.get(erx_result1.get(i-1)).get(m));
+								}
+							} else {
+								minPath = scoreTable.get(scoreTable.get(erx_result1.get(i-1)).get(m)).size();
+								if(!erx_result1.contains(scoreTable.get(erx_result1.get(i-1)).get(m)))
+									minsAt.add(scoreTable.get(erx_result1.get(i-1)).get(m));
+							}
+						
+						}
+												
+						//Si en la lista de mejores hay mas de uno, cojo uno al azar
+						int shortest = randomRange(0,minsAt.size()-1);
+						
+						if(!minsAt.isEmpty()){
+							for(int k=0; k<scoreTable.size(); k++){								
+								scoreTable.get(k).remove(minsAt.get(shortest));
+							}
+							
+							erx_result1.add(minsAt.get(shortest));
+						} else {
+							List<Integer> temp_list = new ArrayList<Integer>(func.getTotalArguments()-1);
+							for (int it=0; it<func.getTotalArguments()-1; it++){
+								if(it!=25)
+									temp_list.add(it);
+							}
+							
+							temp_list.removeAll(erx_result1);
+							int num = randomRange(0,temp_list.size()-1);
+							for(int k=0; k<scoreTable.size(); k++){
+									scoreTable.get(k).remove(new Integer(num));
+								
+							}
+							
+							erx_result1.add(temp_list.get(num));
+						}
+						
+					}
+				}
+				
+				
+				for (int i = 0; i<erx_subparent2.size(); i++){
+					if(i==0){
+						int r = erx_subparent2.get(i);
+						erx_result2.add(r);
+						for(int k=0; k<scoreTable2.size(); k++){
+							scoreTable2.get(k).remove(new Integer(r));
+							
+						}
+						
+					} else {
+						
+						int minPath = -1;
+						List<Integer> minsAt = new ArrayList<Integer>();
+						
+						for(int m=0; m < scoreTable2.get(erx_result2.get(i-1)).size(); m++){
+							if(minPath!=-1){
+								int newMinPath = scoreTable2.get(scoreTable2.get(erx_result2.get(i-1)).get(m)).size();
+								if(newMinPath<=minPath){
+									//minsAt = new ArrayList<Integer>();
+									minPath = newMinPath;
+									minsAt.add(scoreTable2.get(erx_result2.get(i-1)).get(m));
+								}
+							} else {
+								minPath = scoreTable2.get(scoreTable2.get(erx_result2.get(i-1)).get(m)).size();
+								if(!erx_result2.contains(scoreTable2.get(erx_result2.get(i-1)).get(m)))
+									minsAt.add(scoreTable2.get(erx_result2.get(i-1)).get(m));
+							}
+						
+						}
+												
+						//Si en la lista de mejores hay mas de uno, cojo uno al azar
+						int shortest = randomRange(0,minsAt.size()-1);
+						
+						if(!minsAt.isEmpty()){
+							for(int k=0; k<scoreTable2.size(); k++){								
+								scoreTable2.get(k).remove(minsAt.get(shortest));
+							}
+							
+							erx_result2.add(minsAt.get(shortest));
+						} else {
+							List<Integer> temp_list = new ArrayList<Integer>(func.getTotalArguments()-1);
+							for (int it=0; it<func.getTotalArguments()-1; it++){
+								if(it!=25)
+									temp_list.add(it);
+							}
+							
+							temp_list.removeAll(erx_result2);
+							int num = randomRange(0,temp_list.size()-1);
+							for(int k=0; k<scoreTable2.size(); k++){
+									scoreTable2.get(k).remove(new Integer(num));
+								
+							}
+							
+							erx_result2.add(temp_list.get(num));
+						}
+						
+					}
+				}
+				
+				
+				erx_result1.add(0,25);
+				erx_result2.add(0,25);
+				erx_result1.add(25);
+				erx_result2.add(25);
+				
+				this.genes = (ArrayList<Integer>) erx_result1;
+				chr1.genes = (ArrayList<Integer>) erx_result2;
 				
 				
 			break;

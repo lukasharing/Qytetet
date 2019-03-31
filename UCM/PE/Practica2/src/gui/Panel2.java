@@ -79,7 +79,7 @@ public class Panel2 extends JFrame {
 		CrossType.ORDERED_VARIANT_OXPP,
 		CrossType.ORDERED_VARIANT_OXOP,
 		CrossType.CICLES,
-		CrossType.PATH_RECOMBINATION,
+		CrossType.EDGE_RECOMBINATION,
 		CrossType.ORDINAL_CODIFICATION,
 		CrossType.SELF_METHOD_1
 	);

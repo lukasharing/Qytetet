@@ -12,7 +12,7 @@ public enum CrossType {
 	ORDERED_VARIANT_OXPP("OX con Posiciones Prioritarias"),
 	ORDERED_VARIANT_OXOP("OX con Orden Prioritario"),
 	CICLES("Ciclos (CX)"),
-	PATH_RECOMBINATION("Recombinación"),
+	EDGE_RECOMBINATION("Recombinación de rutas (ERX)"),
 	ORDINAL_CODIFICATION("Codificación Ordinal"),
 	SELF_METHOD_1("Método propio 1");
 	
