@@ -87,14 +87,15 @@ public class CitiesChromosome extends Chromosome<Integer> {
 	// - Mutations
 	public void mutate(MutationType mutation, double prob) {
 		if(Math.random() < prob) {
+			int ttl = this.genes.size();
 			switch(mutation) {
 				case INSERTION:
 					
 					// Algoritmos
 					// 1. Elegimos posición aleatoria para elegirlo como desplazante  (1 - 26)
-					int moving_pointer = randomRange(1, 26);
+					int moving_pointer = randomRange(1, ttl - 2);
 					// 2. Elegimos segunda posición aleatoria para desplazar.
-					int move_pointer = randomRange(1, 26);
+					int move_pointer = randomRange(1, ttl - 2);
 					
 					int min_p = Math.min(moving_pointer, move_pointer);
 					int max_p = Math.max(move_pointer, move_pointer);
@@ -129,8 +130,8 @@ public class CitiesChromosome extends Chromosome<Integer> {
 					
 					// (1 - 26)
 					// Invierte un subarray del vector
-					int invert_1 = randomRange(1, 26);
-					int invert_2 = randomRange(1, 26);
+					int invert_1 = randomRange(1, ttl - 2);
+					int invert_2 = randomRange(1, ttl - 2);
 					
 					int min = Math.min(invert_1, invert_2);
 					int max = Math.max(invert_1, invert_2);
@@ -157,9 +158,11 @@ public class CitiesChromosome extends Chromosome<Integer> {
 					
 					// Inicializamos los markadores y los valores de estos
 					for(int i = 0; i < perm; ++i) {
-						markers[i] = randomRange(1, 26);
+						markers[i] = randomRange(1, ttl - 2);
 						values[i] = this.getFenotype(markers[i]);
 					}
+					
+					
 					
 					double[] cp = this.getFenotypes();
 					double min_ev = ((FunctionCities)func).evaluate(cp);
