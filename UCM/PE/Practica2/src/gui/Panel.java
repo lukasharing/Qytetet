@@ -278,12 +278,12 @@ public class Panel extends JFrame {
 					ga = new GeneticAlgorithm<BinaryChromosome>(BinaryChromosome.class,
 							Integer.parseInt(size_population.getText()), num_gen,
 							Double.parseDouble(crossover_perc.getText()), Double.parseDouble(mutation_perc.getText()),
-							Double.parseDouble(prec.getText()), elitism_am, type_sel, type_cross, type_mut, f);
+							Double.parseDouble(prec.getText()), elitism_am, type_sel, type_cross, type_mut, f, false);
 				} else {
 					ga = new GeneticAlgorithm<RealChromosome>(RealChromosome.class,
 							Integer.parseInt(size_population.getText()), num_gen,
 							Double.parseDouble(crossover_perc.getText()), Double.parseDouble(mutation_perc.getText()),
-							Double.parseDouble(prec.getText()), elitism_am, type_sel, type_cross, type_mut, f);
+							Double.parseDouble(prec.getText()), elitism_am, type_sel, type_cross, type_mut, f, false);
 				}
 
 				List<double[]> best_chromosomes = ga.run();
