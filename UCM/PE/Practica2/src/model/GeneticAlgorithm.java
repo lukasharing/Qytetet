@@ -178,7 +178,7 @@ public class GeneticAlgorithm<T> {
 			// Creation of Cities Chromosomes
 		} else if (class_type.getName().contains("CitiesChromosome")) {
 			for (int i = 0; i < initial_population; ++i) {
-				chromosomes.add(CitiesChromosome.newInstance(function));
+				chromosomes.add(CitiesChromosome.newInstance(function, 25));
 			}
 		}
 

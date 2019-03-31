@@ -36,20 +36,20 @@ public class CitiesChromosome extends Chromosome<Integer> {
 		}
 	};
 	
-	public CitiesChromosome(Function f) {
+	public CitiesChromosome(Function f, int city) {
 		super(f, 0.0);
 		
 		int number_arguments = f.getTotalArguments()-1;
 		
 		//Añadimos madrid al comienzo del cromosoma
-		genes.add(25);
+		genes.add(city);
 		//Añadimos el resto de ciudades al cromosoma
 		int min = Math.min(number_arguments, genes.get(0));
 		
 		for (int i = 0; i < min; i++) { genes.add(i); }
 		//Añadimos madrid al final del cromosoma
 		for (int i = min + 1; i < number_arguments; i++) { genes.add(i); }
-		genes.add(25);
+		genes.add(city);
 		
 		//Añadimos madrid al final
 		Collections.shuffle(genes.subList(1, genes.size() - 1));
@@ -193,7 +193,7 @@ public class CitiesChromosome extends Chromosome<Integer> {
 					// Miramos si haciendo swap a la derecha o a la izquierda, se mejora la evaluación, si es así, cambiamos.
 	
 					// 1. Cogemos 1 elemento aleatorio ( 2 - 26 ) para evitar coger madrid
-					int p = randomRange(2, 25);
+					int p = randomRange(2, (int)getFenotype(0));
 					
 					double[] cp0_gene = this.getFenotypes();
 					double ev_p = ((FunctionCities)func).evaluate(cp0_gene);
@@ -333,10 +333,10 @@ public class CitiesChromosome extends Chromosome<Integer> {
 					}
 				}
 				
-				result1.add(0,25);
-				result2.add(0,25);
-				result1.add(25);
-				result2.add(25);
+				result1.add(0,(int)getFenotype(0));
+				result2.add(0,(int)getFenotype(0));
+				result1.add((int)getFenotype(0));
+				result2.add((int)getFenotype(0));
 				
 				this.genes = (ArrayList<Integer>) result1;
 				chr1.genes = (ArrayList<Integer>) result2;
@@ -401,10 +401,10 @@ public class CitiesChromosome extends Chromosome<Integer> {
 					}
 				}
 				
-				ov_result1.add(0,25);
-				ov_result2.add(0,25);
-				ov_result1.add(25);
-				ov_result2.add(25);
+				ov_result1.add(0,(int)getFenotype(0));
+				ov_result2.add(0,(int)getFenotype(0));
+				ov_result1.add((int)getFenotype(0));
+				ov_result2.add((int)getFenotype(0));
 				
 				this.genes = (ArrayList<Integer>) ov_result1;
 				chr1.genes = (ArrayList<Integer>) ov_result2;
@@ -462,10 +462,10 @@ public class CitiesChromosome extends Chromosome<Integer> {
 				}
 				
 				
-				ovo_result1.add(0,25);
-				ovo_result2.add(0,25);
-				ovo_result1.add(25);
-				ovo_result2.add(25);
+				ovo_result1.add(0,(int)getFenotype(0));
+				ovo_result2.add(0,(int)getFenotype(0));
+				ovo_result1.add((int)getFenotype(0));
+				ovo_result2.add((int)getFenotype(0));
 				
 				this.genes = (ArrayList<Integer>) ovo_result1;
 				chr1.genes = (ArrayList<Integer>) ovo_result2;
@@ -562,7 +562,6 @@ public class CitiesChromosome extends Chromosome<Integer> {
 						erx_result1.add(r);
 						for(int k=0; k<scoreTable.size(); k++){
 							scoreTable.get(k).remove(new Integer(r));
-							
 						}
 						
 					} else {
@@ -590,23 +589,22 @@ public class CitiesChromosome extends Chromosome<Integer> {
 						int shortest = randomRange(0,minsAt.size()-1);
 						
 						if(!minsAt.isEmpty()){
-							for(int k=0; k<scoreTable.size(); k++){								
+							for(int k = 0; k < scoreTable.size(); ++k){								
 								scoreTable.get(k).remove(minsAt.get(shortest));
 							}
 							
 							erx_result1.add(minsAt.get(shortest));
 						} else {
 							List<Integer> temp_list = new ArrayList<Integer>(func.getTotalArguments()-1);
-							for (int it=0; it<func.getTotalArguments()-1; it++){
-								if(it!=25)
+							for (int it = 0; it < func.getTotalArguments() - 1; it++){
+								if(it != getFenotype(0))
 									temp_list.add(it);
 							}
 							
 							temp_list.removeAll(erx_result1);
 							int num = randomRange(0,temp_list.size()-1);
-							for(int k=0; k<scoreTable.size(); k++){
-									scoreTable.get(k).remove(new Integer(num));
-								
+							for(int k = 0; k < scoreTable.size(); ++k){
+								scoreTable.get(k).remove(new Integer(num));
 							}
 							
 							erx_result1.add(temp_list.get(num));
@@ -658,7 +656,7 @@ public class CitiesChromosome extends Chromosome<Integer> {
 						} else {
 							List<Integer> temp_list = new ArrayList<Integer>(func.getTotalArguments()-1);
 							for (int it=0; it<func.getTotalArguments()-1; it++){
-								if(it!=25)
+								if(it!=(int)getFenotype(0))
 									temp_list.add(it);
 							}
 							
@@ -676,10 +674,10 @@ public class CitiesChromosome extends Chromosome<Integer> {
 				}
 				
 				
-				erx_result1.add(0,25);
-				erx_result2.add(0,25);
-				erx_result1.add(25);
-				erx_result2.add(25);
+				erx_result1.add(0,(int)getFenotype(0));
+				erx_result2.add(0,(int)getFenotype(0));
+				erx_result1.add((int)getFenotype(0));
+				erx_result2.add((int)getFenotype(0));
 				
 				this.genes = (ArrayList<Integer>) erx_result1;
 				chr1.genes = (ArrayList<Integer>) erx_result2;
@@ -715,6 +713,58 @@ public class CitiesChromosome extends Chromosome<Integer> {
 				ord_set_temp(result_0, this);
 				ord_set_temp(result_1, chr1);
 				
+				
+			break;
+			
+			case SELF_METHOD_1:
+			
+				List<Integer> lst1 = new ArrayList<Integer>(genes.size() - 1);
+				List<Integer> lst2 = new ArrayList<Integer>(genes.size() - 1);
+				
+				// Initialize the list 0->(n-1)->(n+1)->m 
+				for(int i = 0; i < genes.get(0); ++i) {
+					lst1.add(i);
+					lst2.add(i);
+				}
+				for(int i = genes.get(0) + 1; i < genes.size() - 1; ++i) {
+					lst1.add(i);
+					lst2.add(i);
+				}
+				
+				// min/max
+				int b0 = randomRange(1, ttl - 2);
+				int b1 = randomRange(1, ttl - 2);
+				
+				int bmin = Math.min(b0, b1);
+				int bmax = Math.max(b0, b1);
+				
+				// Quitamos de lstn
+				for(int i = bmin; i < bmax; ++i) {
+					lst1.remove(this.genes.get(i));
+					lst2.remove(chr1.genes.get(i));
+				}
+				
+				ArrayList<Integer> res0 = new ArrayList<Integer>(genes.size());
+				ArrayList<Integer> res1 = new ArrayList<Integer>(genes.size());
+				
+				/* Metemos los primeros */
+				res0.add(genes.get(0));
+				res1.add(genes.get(0));
+				tmp_method(res0, lst1, bmin);
+				tmp_method(res1, lst2, bmin);
+				
+				/* Hacemos swap */
+				res0.addAll(this.genes.subList(bmin, bmax));
+				res1.addAll(chr1.genes.subList(bmin, bmax));
+				
+				/* Metemos los ultimos */
+				tmp_method(res0, lst1, lst1.size());
+				tmp_method(res1, lst2, lst2.size());
+				res0.add(genes.get(0));
+				res1.add(genes.get(0));
+				
+				this.genes = res0;
+				chr1.genes = res1;
 				
 			break;
 			
@@ -775,14 +825,24 @@ public class CitiesChromosome extends Chromosome<Integer> {
 		}
 	};
 	
+	void tmp_method(List<Integer> res0, List<Integer> lst1, int n) {
+		
+		for(int i = 0; i < n; ++i) {
+			int rnd = randomRange(0, lst1.size() - 1);
+			res0.add(lst1.get(rnd));
+			lst1.remove(rnd);
+		}
+		
+	};
+	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Chromosome clone() {
 		return new CitiesChromosome(this.func, this.genes);
 	};
 	
 	
-	public static CitiesChromosome newInstance(Function f) {
-		return new CitiesChromosome(f);
+	public static CitiesChromosome newInstance(Function f, int city) {
+		return new CitiesChromosome(f, city);
 	};
 	
 	public String toString() {
