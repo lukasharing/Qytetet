@@ -153,16 +153,18 @@ public class CitiesChromosome extends Chromosome<Integer> {
 					final int perm = 3; //(int)(1 + Math.random() * 2);
 					int[][] all = PERMUTATION[perm];
 					
-					int[] markers = new int [perm];
-					double[] values = new double [perm];
+					ArrayList<Integer> markers = new ArrayList<Integer>(perm);
+					double[] values = new double[perm];
 					
 					// Inicializamos los markadores y los valores de estos
 					for(int i = 0; i < perm; ++i) {
-						markers[i] = randomRange(1, ttl - 2);
-						values[i] = this.getFenotype(markers[i]);
+						int rand = 0;
+						do {
+							rand = randomRange(1, ttl - 2);
+						}while(markers.contains(rand)); // Generate Safe Number
+						markers.add(rand);
+						values[i] = this.getFenotype(markers.get(i));
 					}
-					
-					
 					
 					double[] cp = this.getFenotypes();
 					double min_ev = ((FunctionCities)func).evaluate(cp);
@@ -170,9 +172,8 @@ public class CitiesChromosome extends Chromosome<Integer> {
 					for(int i = 1; i < all.length; ++i) {
 						double[] perm_gene = this.getFenotypes();
 						
-						
 						for(int j = 0; j < perm; ++j) {
-							perm_gene[markers[j]] = values[all[i][j]];
+							perm_gene[markers.get(j)] = values[all[i][j]];
 						}
 						
 						// See who has minimum distance

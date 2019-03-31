@@ -350,20 +350,21 @@ public class Panel2 extends JFrame {
 				model.MutationType type_mut = mutation_type.get(mutation_sel.getSelectedIndex());
 				
 				Function fun = new FunctionCities(27, FunctionType.MINIMIZE);
-				///*
-				/*CitiesChromosome c0 = new CitiesChromosome(fun);
+				/*
+				CitiesChromosome c0 = new CitiesChromosome(fun);
 				CitiesChromosome c1 = new CitiesChromosome(fun);
 				
 				c0.setFenotypes(new double[] {3, 4, 1, 0, 7, 6, 5, 8, 2});
 				c1.setFenotypes(new double[] {0, 1, 2, 3, 4, 5, 6, 7, 8});
 				
 				System.out.println(c0.toString());
-				System.out.println(c1.toString());
+				//System.out.println(c1.toString());
 				
-				c0.cross(c1, CrossType.ORDINAL_CODIFICATION);
+				c0.mutate(MutationType.HEURISTIC, 1.0);
+				//c0.cross(c1, CrossType.ORDINAL_CODIFICATION);
 				
 				System.out.println(c0.toString());
-				System.out.println(c1.toString());
+				//System.out.println(c1.toString());
 				//*/
 				///*
 				
