@@ -342,6 +342,28 @@ public class GeneticAlgorithm<T> {
 			}
 
 			break;
+			case RANKING:
+
+				/* 
+				 * (b +- sqrt(b^2 - 4ab))/2a
+				 * b = bias (Presión selectiva)
+				 * a = bias - 1
+				 * c = Math.random()
+				 * 
+				 */
+				
+				for (int i = 0; i < initial_population; ++i) {
+				    double bias = 1.5;
+				    int index = (int)(initial_population * (bias - Math.sqrt(bias*bias - 4.0 * (bias-1) * Math.random())) 
+				        / (2.0 * (bias-1)));
+					generation.add(chromosomes.get(index).clone());
+				}
+				
+			break;
+			
+			case TRUNCATION:
+				
+			break;
 		}
 		this.chromosomes = generation;
 	}
