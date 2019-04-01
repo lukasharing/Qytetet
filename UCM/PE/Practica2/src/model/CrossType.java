@@ -1,8 +1,5 @@
 package model;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 public enum CrossType {
 	MONOPOINT("Monopunto"),
 	MULTIPOINT("Multipunto"),

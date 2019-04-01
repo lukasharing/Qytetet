@@ -34,9 +34,6 @@ import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import org.math.plot.Plot2DPanel;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
-
-import model.Chromosome;
 import model.CrossType;
 import model.Function;
 import model.FunctionType;
@@ -47,7 +44,6 @@ import model.Pair;
 import p2.CitiesChromosome;
 import p2.FunctionCities;
 import p2.Provinces;
-import sun.awt.image.PNGImageDecoder.Chromaticities;
 
 public class Panel2 extends JFrame {
 
