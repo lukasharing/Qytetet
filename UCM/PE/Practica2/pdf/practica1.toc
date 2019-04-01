@@ -3,8 +3,9 @@
 \contentsline {subsection}{\numberline {1.2}Aclaraciones}{3}% 
 \contentsline {section}{\numberline {2}Algoritmos Propios}{4}% 
 \contentsline {subsection}{\numberline {2.1}Algoritmo de Cruce}{4}% 
-\contentsline {subsection}{\numberline {2.2}Algoritmo de Mutaci\IeC {\'o}n}{4}% 
-\contentsline {section}{\numberline {3}An\IeC {\'a}lisis de ejecuciones}{5}% 
-\contentsline {subsection}{\numberline {3.1}Ruleta}{5}% 
-\contentsline {subsection}{\numberline {3.2}Contractividad}{6}% 
-\contentsline {subsection}{\numberline {3.3}Elitismo}{6}% 
+\contentsline {subsection}{\numberline {2.2}Algoritmo de Mutaci\IeC {\'o}n}{5}% 
+\contentsline {section}{\numberline {3}An\IeC {\'a}lisis de ejecuciones}{6}% 
+\contentsline {subsection}{\numberline {3.1}Peores resultados}{6}% 
+\contentsline {subsection}{\numberline {3.2}Contractividad}{7}% 
+\contentsline {subsection}{\numberline {3.3}Elitismo}{7}% 
+\contentsline {subsection}{\numberline {3.4}Mejores resultados}{8}% 

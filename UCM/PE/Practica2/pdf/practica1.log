@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6930 64-bit) (preloaded format=pdflatex 2019.3.1)  1 APR 2019 14:39
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6930 64-bit) (preloaded format=pdflatex 2019.3.1)  1 APR 2019 15:08
 entering extended mode
 **./practica1.tex
 (practica1.tex
@@ -883,75 +883,95 @@ Underfull \hbox (badness 10000) in paragraph at lines 125--131
  []
 
 [4]
-Underfull \hbox (badness 10000) in paragraph at lines 146--152
+
+! LaTeX Error: There's no line here to end.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.142 \newline
+              
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 147--153
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 162--164
-
- []
-
-<./images/rule1.png, id=38, 824.32968pt x 505.13719pt>
+[5]
+<./images/rule1.png, id=43, 824.32968pt x 505.13719pt>
 File: ./images/rule1.png Graphic file (type png)
 <use ./images/rule1.png>
-Package pdftex.def Info: ./images/rule1.png  used on input line 165.
+Package pdftex.def Info: ./images/rule1.png  used on input line 167.
 (pdftex.def)             Requested size: 329.72603pt x 202.05128pt.
-[5 <./images/rule1.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 167--169
-
- []
-
 <./images/rule2.png, id=44, 825.0825pt x 505.89pt>
 File: ./images/rule2.png Graphic file (type png)
 <use ./images/rule2.png>
-Package pdftex.def Info: ./images/rule2.png  used on input line 170.
+Package pdftex.def Info: ./images/rule2.png  used on input line 178.
 (pdftex.def)             Requested size: 330.02715pt x 202.3524pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 173--175
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[6 <./images/rule1.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 184--186
 
  []
 
-<./images/cont.png, id=45, 389.20406pt x 12.7978pt>
+<./images/cont.png, id=49, 389.20406pt x 12.7978pt>
 File: ./images/cont.png Graphic file (type png)
 <use ./images/cont.png>
-Package pdftex.def Info: ./images/cont.png  used on input line 176.
+Package pdftex.def Info: ./images/cont.png  used on input line 187.
 (pdftex.def)             Requested size: 323.03929pt x 10.62216pt.
-[6 <./images/rule2.png> <./images/cont.png>] (practica1.aux) ) 
+[7 <./images/rule2.png> <./images/cont.png>]
+<./images/best.png, id=53, 822.82407pt x 505.89pt>
+File: ./images/best.png Graphic file (type png)
+<use ./images/best.png>
+Package pdftex.def Info: ./images/best.png  used on input line 197.
+(pdftex.def)             Requested size: 287.99274pt x 177.06415pt.
+<./images/best2.png, id=54, 824.32968pt x 505.13719pt>
+File: ./images/best2.png Graphic file (type png)
+<use ./images/best2.png>
+Package pdftex.def Info: ./images/best2.png  used on input line 203.
+(pdftex.def)             Requested size: 288.51971pt x 176.80066pt.
+ [8 <./images/best.png> <./images/best2.png>] (practica1.aux) ) 
 Here is how much of TeX's memory you used:
- 13562 strings out of 492946
- 285732 string characters out of 3126267
- 309593 words of memory out of 3000000
- 17179 multiletter control sequences out of 15000+200000
+ 13572 strings out of 492946
+ 285927 string characters out of 3126267
+ 307593 words of memory out of 3000000
+ 17187 multiletter control sequences out of 15000+200000
  18045 words of font info for 44 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 55i,9n,66p,560b,215s stack positions out of 5000i,500n,10000p,200000b,50000s
- <C:\Users\Raúl\
-AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/public/mathabx/dpi600\mathb10.pk> <C:\
-Users\Raúl\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/public/mathabx/dpi600\math
-a10.pk> <C:\Users\Raúl\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/public/mathabx
-/dpi600\matha7.pk> <C:\Users\Raúl\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/jkn
-appen/ec/dpi600\ecti1000.pk> <C:\Users\Raúl\AppData\Local\MiKTeX\2.9\fonts/pk/
-ljfour/jknappen/ec/dpi600\ecbx1200.pk> <C:\Users\Raúl\AppData\Local\MiKTeX\2.9
-\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1000.pk> <C:\Users\Raúl\AppData\Local\
-MiKTeX\2.9\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1000.pk> <C:\Users\Raúl\AppD
-ata\Local\MiKTeX\2.9\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1440.pk> <C:\Users\
-Raúl\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.pk> 
-<C:\Users\Raúl\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/jknappen/ec/dpi600\ect
-i1440.pk> <C:\Users\Raúl\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/jknappen/ec/
-dpi600\ecbx2074.pk> <C:\Users\Raúl\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/jk
-nappen/ec/dpi600\eccc1440.pk> <C:\Users\Raúl\AppData\Local\MiKTeX\2.9\fonts/pk
-/ljfour/jknappen/ec/dpi600\eccc1728.pk><C:/Users/Raúl/AppData/Local/Programs/M
-iKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/Raúl/AppData/Loc
-al/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/Raúl
-/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:
-/Users/Raúl/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/c
-mr7.pfb><C:/Users/Raúl/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/am
-sfonts/cm/cmsy10.pfb><C:/Users/Raúl/AppData/Local/Programs/MiKTeX 2.9/fonts/ty
-pe1/public/amsfonts/symbols/msbm10.pfb>
-Output written on practica1.pdf (7 pages, 500213 bytes).
+ 55i,9n,66p,560b,229s stack positions out of 5000i,500n,10000p,200000b,50000s
+ <C:\Users\Raúl
+\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/public/mathabx/dpi600\mathb10.pk> <C:
+\Users\Raúl\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/public/mathabx/dpi600\mat
+ha10.pk> <C:\Users\Raúl\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/public/mathab
+x/dpi600\matha7.pk> <C:\Users\Raúl\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/jk
+nappen/ec/dpi600\ecti1000.pk> <C:\Users\Raúl\AppData\Local\MiKTeX\2.9\fonts/pk
+/ljfour/jknappen/ec/dpi600\ecbx1200.pk> <C:\Users\Raúl\AppData\Local\MiKTeX\2.
+9\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1000.pk> <C:\Users\Raúl\AppData\Local
+\MiKTeX\2.9\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1000.pk> <C:\Users\Raúl\App
+Data\Local\MiKTeX\2.9\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1440.pk> <C:\Users
+\Raúl\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.pk>
+ <C:\Users\Raúl\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/jknappen/ec/dpi600\ec
+ti1440.pk> <C:\Users\Raúl\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/jknappen/ec
+/dpi600\ecbx2074.pk> <C:\Users\Raúl\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/j
+knappen/ec/dpi600\eccc1440.pk> <C:\Users\Raúl\AppData\Local\MiKTeX\2.9\fonts/p
+k/ljfour/jknappen/ec/dpi600\eccc1728.pk><C:/Users/Raúl/AppData/Local/Programs/
+MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/Raúl/AppData/Lo
+cal/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/Raú
+l/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C
+:/Users/Raúl/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/
+cmr7.pfb><C:/Users/Raúl/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/a
+msfonts/cm/cmsy10.pfb><C:/Users/Raúl/AppData/Local/Programs/MiKTeX 2.9/fonts/t
+ype1/public/amsfonts/symbols/msbm10.pfb>
+Output written on practica1.pdf (9 pages, 894090 bytes).
 PDF statistics:
- 343 PDF objects out of 1000 (max. 8388607)
+ 356 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 33 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 43 words of extra memory for PDF output out of 10000 (max. 10000000)
 
