@@ -1,4 +1,4 @@
-package implementacionCUP.alex;
+package implementacionCUP.asint;
 
 public enum ClaseLexica {
  ID,

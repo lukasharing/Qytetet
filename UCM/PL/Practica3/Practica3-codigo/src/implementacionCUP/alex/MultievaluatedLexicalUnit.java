@@ -1,4 +1,5 @@
 package implementacionCUP.alex;
+import implementacionCUP.asint.*;
 
 public class MultievaluatedLexicalUnit extends LexicalUnit {
   private String lexema;

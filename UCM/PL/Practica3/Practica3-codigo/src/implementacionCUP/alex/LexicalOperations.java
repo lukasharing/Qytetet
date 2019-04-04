@@ -1,5 +1,7 @@
 package implementacionCUP.alex;
 
+import implementacionCUP.asint.*;
+
 import java.io.FileInputStream;
 import java.io.Reader;
 

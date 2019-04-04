@@ -15,5 +15,5 @@ public class Main {
 	 //asint.setScanner(alex);
 	 asint.parse();
  }
-}   
+}
    

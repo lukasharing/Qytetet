@@ -1,6 +1,6 @@
 package implementacionCUP.errors;
 
-import implementacionCUP.alex.*;
+import implementacionCUP.asint.*;
 
 public class TinyErrorController {
    public void errorLexico(int fila, String lexema) {
