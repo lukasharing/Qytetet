@@ -88,6 +88,7 @@ public class RealChromosome extends Chromosome<Double> {
 		return new RealChromosome(f);
 	};
 
+	@SuppressWarnings("incomplete-switch")
 	protected void cross(@SuppressWarnings("rawtypes") Chromosome chr1, CrossType type) {
 		switch(type) {
 			case MONOPOINT:

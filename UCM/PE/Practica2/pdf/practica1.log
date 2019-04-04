@@ -961,7 +961,7 @@ LaTeX Font Info:    Redeclaring math symbol \circlearrowright on input line 642
 .
 LaTeX Font Info:    Redeclaring math symbol \rightsquigarrow on input line 645.
 
-LaTeX Font Info:    Redeclaring math symbol \leftrightsquigarrow on input line 
+LaTeX Font Info:    Redeclaring math symbol \leftrightsquigarrow on input line
 646.
 LaTeX Font Info:    Redeclaring math symbol \oplus on input line 658.
 LaTeX Font Info:    Redeclaring math symbol \ominus on input line 659.
@@ -1182,8 +1182,8 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
- ...                                              
-                                                  
+ ...
+
 l.125 \begin
             {tabular}{|l|*9{c|}}
 Your command was ignored.
@@ -1196,19 +1196,29 @@ Underfull \hbox (badness 10000) in paragraph at lines 125--131
  []
 
 [4]
-Underfull \hbox (badness 10000) in paragraph at lines 146--152
+
+! LaTeX Error: There's no line here to end.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...
+
+l.142 \newline
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 147--153
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 162--164
-
- []
-
-<./images/rule1.png, id=38, 824.32968pt x 505.13719pt>
+[5]
+<./images/rule1.png, id=43, 824.32968pt x 505.13719pt>
 File: ./images/rule1.png Graphic file (type png)
 <use ./images/rule1.png>
-Package pdftex.def Info: ./images/rule1.png  used on input line 165.
+Package pdftex.def Info: ./images/rule1.png  used on input line 167.
 (pdftex.def)             Requested size: 329.72603pt x 202.05128pt.
 [5 <./images/rule1.png>]
 Underfull \hbox (badness 10000) in paragraph at lines 169--171
@@ -1225,12 +1235,23 @@ Underfull \hbox (badness 10000) in paragraph at lines 175--177
 
  []
 
-<./images/cont.png, id=45, 389.20406pt x 12.7978pt>
+<./images/cont.png, id=49, 389.20406pt x 12.7978pt>
 File: ./images/cont.png Graphic file (type png)
 <use ./images/cont.png>
 Package pdftex.def Info: ./images/cont.png  used on input line 178.
 (pdftex.def)             Requested size: 323.03929pt x 10.62216pt.
-[6 <./images/rule2.png> <./images/cont.png>] (practica1.aux) ) 
+[7 <./images/rule2.png> <./images/cont.png>]
+<./images/best.png, id=53, 822.82407pt x 505.89pt>
+File: ./images/best.png Graphic file (type png)
+<use ./images/best.png>
+Package pdftex.def Info: ./images/best.png  used on input line 197.
+(pdftex.def)             Requested size: 287.99274pt x 177.06415pt.
+<./images/best2.png, id=54, 824.32968pt x 505.13719pt>
+File: ./images/best2.png Graphic file (type png)
+<use ./images/best2.png>
+Package pdftex.def Info: ./images/best2.png  used on input line 203.
+(pdftex.def)             Requested size: 288.51971pt x 176.80066pt.
+ [8 <./images/best.png> <./images/best2.png>] (practica1.aux) )
 Here is how much of TeX's memory you used:
  13628 strings out of 493305
  283054 string characters out of 3129803
@@ -1249,7 +1270,7 @@ ljfour\jknappen\ec\dpi600\ecbx1200.pk> <C:\Users\lukas\AppData\Local\MiKTeX\2.9
 \fonts\pk\ljfour\jknappen\ec\dpi600\ecrm1000.pk> <C:\Users\lukas\AppData\Local\
 MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecbx1000.pk> <C:\Users\lukas\AppD
 ata\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecbx1440.pk> <C:\Users\
-lukas\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecrm1200.pk> 
+lukas\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecrm1200.pk>
 <C:\Users\lukas\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ect
 i1440.pk> <C:\Users\lukas\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\
 dpi600\ecbx2074.pk> <C:\Users\lukas\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jk
@@ -1264,7 +1285,6 @@ sfonts/cm/cmsy10.pfb><D:/Users/lukas/AppData/Local/Programs/MiKTeX 2.9/fonts/ty
 pe1/public/amsfonts/symbols/msbm10.pfb>
 Output written on practica1.pdf (7 pages, 500349 bytes).
 PDF statistics:
- 343 PDF objects out of 1000 (max. 8388607)
+ 356 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 33 words of extra memory for PDF output out of 10000 (max. 10000000)
-
+ 43 words of extra memory for PDF output out of 10000 (max. 10000000)

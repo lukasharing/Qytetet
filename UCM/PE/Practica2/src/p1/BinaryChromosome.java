@@ -95,6 +95,7 @@ public class BinaryChromosome extends Chromosome<ArrayList<Integer>> {
 
 	// -------------------------------------------------
 	// Crossing
+	@SuppressWarnings("incomplete-switch")
 	protected void cross(BinaryChromosome chr1, CrossType type) {
 
 		switch(type) {

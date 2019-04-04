@@ -6,15 +6,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.swing.event.ListSelectionEvent;
-
-import org.math.plot.utils.Array;
-
 import model.Chromosome;
 import model.CrossType;
 import model.Function;
 import model.MutationType;
-import model.Pair;
 
 public class CitiesChromosome extends Chromosome<Integer> {
 	private int randomRange(int a, int b) { return a + (int)((b - a + 1) * Math.random()); };
@@ -85,6 +80,7 @@ public class CitiesChromosome extends Chromosome<Integer> {
 
 	// -----------------------------------------------
 	// - Mutations
+	@SuppressWarnings("incomplete-switch")
 	public void mutate(MutationType mutation, double prob) {
 		if(Math.random() < prob) {
 			int ttl = this.genes.size();
@@ -227,6 +223,7 @@ public class CitiesChromosome extends Chromosome<Integer> {
 		}
 	};
 	
+	@SuppressWarnings("incomplete-switch")
 	public void cross(Chromosome<Integer> chr1, CrossType type) {
 		// Total elements
 		int ttl = this.genes.size();
@@ -772,7 +769,7 @@ public class CitiesChromosome extends Chromosome<Integer> {
 		
 	};
 	
-	void pmx_temp(ArrayList<Integer> child, List<Integer> sub0, List<Integer> sub1, int i, Chromosome chr) {
+	void pmx_temp(ArrayList<Integer> child, List<Integer> sub0, List<Integer> sub1, int i, @SuppressWarnings("rawtypes") Chromosome chr) {
 		// Vemos si está dentro del subconjunto.
 		int gn = (int)chr.genes.get(i);
 		int id = sub0.indexOf(gn);
@@ -792,7 +789,7 @@ public class CitiesChromosome extends Chromosome<Integer> {
 		}
 	}
 	
-	List<Integer> ord_get_temp(Chromosome chr) {
+	List<Integer> ord_get_temp(@SuppressWarnings("rawtypes") Chromosome chr) {
 		
 		int ttl = chr.genes.size();
 		//Añadimos el resto de ciudades al cromosoma
@@ -812,7 +809,8 @@ public class CitiesChromosome extends Chromosome<Integer> {
 		return codification;
 	};
 	
-	void ord_set_temp(ArrayList<Integer> rs, Chromosome chr) {
+	@SuppressWarnings("unchecked")
+	void ord_set_temp(ArrayList<Integer> rs, @SuppressWarnings("rawtypes") Chromosome chr) {
 		int ttl = chr.genes.size();
 		List<Integer> order = new ArrayList<Integer>(ttl);
 		for (int i = 0; i < (int)chr.genes.get(0); i++) { order.add(i); }
