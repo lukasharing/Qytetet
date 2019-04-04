@@ -1,5 +1,6 @@
 package implementacionCUP.errors;
 
+import implementacionCUP.alex.*;
 import implementacionCUP.asint.*;
 
 public class TinyErrorController {
@@ -7,12 +8,9 @@ public class TinyErrorController {
      System.out.println("ERROR fila "+fila+": Caracter inexperado: "+lexema);
      System.exit(1);
    }
-   public void errorSintactico(int fila, ClaseLexica encontrada, ClaseLexica ... esperadas) {
-     System.out.print("ERROR fila "+ fila +": Encontrado "+ encontrada +" Se esperada: ");
-     for(ClaseLexica esperada: esperadas)
-         System.out.print(esperada+" ");
-     System.out.println();
-     System.exit(1);
+   public void errorSintactico(LexicalUnit unidadLexica) {
+	   System.out.print("ERROR fila "+unidadLexica.fila()+": Elemento inexperado "+unidadLexica.value);
+	   System.exit(1);
    }
    public void errorFatal(Exception e) {
      System.out.println(e);

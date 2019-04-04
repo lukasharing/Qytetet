@@ -1,14 +1,14 @@
 package implementacionCUP.alex;
 import implementacionCUP.asint.*;
+import java_cup.runtime.Symbol;
 
-public abstract class LexicalUnit {
-   private ClaseLexica clase;
+public abstract class LexicalUnit extends Symbol {
    private int fila;
-   public LexicalUnit(int fila, ClaseLexica clase) {
+   public LexicalUnit(int fila, int clase, String lexema) {
+     super(clase,lexema);
      this.fila = fila;
-     this.clase = clase;
    }
-   public ClaseLexica clase () {return clase;}
-   public abstract String lexema();
+   public int clase () {return sym;}
+   public String lexema() {return (String)value;}
    public int fila() {return fila;}
 }

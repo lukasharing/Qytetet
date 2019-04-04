@@ -1,15 +1,15 @@
-package asint;
+package implementacionCUP.asint;
 
 import java_cup.runtime.*;
-import alex.TinyLexicalAnalyzer;
-import alex.UnidadLexica;
-import errors.TinyErrorController;
+import implementacionCUP.alex.TinyLexicalAnalyzer;
+import implementacionCUP.alex.LexicalUnit;
+import implementacionCUP.errors.TinyErrorController;
 
 scan with {: return getScanner().next_token(); :};
 parser code {:
    private TinyErrorController errores;
    public void syntax_error(Symbol unidadLexica) {
-     errores.errorSintactico((UnidadLexica)unidadLexica);
+     errores.errorSintactico((LexicalUnit)unidadLexica);
    }
 :};
 init with {:
