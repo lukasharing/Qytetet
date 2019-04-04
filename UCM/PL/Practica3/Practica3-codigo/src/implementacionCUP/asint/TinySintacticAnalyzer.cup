@@ -34,11 +34,11 @@ non terminal A, OA, Ap;
 non terminal B, OB, Bp;
 
 non terminal E0, E0p, O0;
-non terminal E1, E1p, O11, O12;
+non terminal E1, E1p;
 non terminal E2, E2p, O2;
 non terminal E3, E3p, O3;
-non terminal E4, 041, 042;
-non terminal E5, 051, 052;
+non terminal E4;
+non terminal E5;
 
 B       ::= OB ID Bp;
 OB      ::= BOOL | NUM;
@@ -47,7 +47,7 @@ A       ::= ID EQ E0 Ap;
 Ap      ::= PYC A | ;
 PROGRAM ::= B SEP A;
 
-EO      ::= E1 E0p;
+E0      ::= E1 E0p;
 E0p     ::= O0 E1 E0p | ;
 O0      ::= PLS | MNS;
 
