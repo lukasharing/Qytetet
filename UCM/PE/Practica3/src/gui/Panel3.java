@@ -44,8 +44,10 @@ import model.Pair;
 import p2.CitiesChromosome;
 import p2.FunctionCities;
 import p2.Provinces;
+import p3.Ant;
+import p3.AntMovement;
 
-public class Panel2 extends JFrame {
+public class Panel3 extends JFrame {
 
 	private static final long serialVersionUID = 2569879142816556337L;
 
@@ -99,7 +101,7 @@ public class Panel2 extends JFrame {
 	private JCheckBox contractivity;
 	private GeneticAlgorithm<?> ga = null;
 
-	public Panel2() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
+	public Panel3() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
 			UnsupportedLookAndFeelException, IOException {
 
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -123,83 +125,52 @@ public class Panel2 extends JFrame {
 		tp0.add(plot);
 		tp0.setLayout(new GridLayout(1, 1));
 		final BufferedImage map = ImageIO.read(new File("./src/images/mapa.png"));
-        
+		
+		List<AntMovement> movement = Arrays.asList(
+			AntMovement.TURN_LEFT, AntMovement.MOVE, AntMovement.MOVE,
+			AntMovement.TURN_RIGHT, AntMovement.MOVE, AntMovement.TURN_LEFT,
+			AntMovement.MOVE
+		);
+		Ant ant = new Ant();
+		
+		for(int i = 0; i < movement.size(); ++i) {
+			ant.step(movement.get(i));
+		}
+		
 		tp1 = new JPanel() {
 			private static final long serialVersionUID = 1L;
-
+			private int time = 0;
+			
 			@Override
 		    public void paintComponent(Graphics g){
 				Graphics2D ctx = (Graphics2D)g;
 				
-				// Draw map
-				ctx.drawImage(map, 0, 0, this);
+				Pair<Integer, Integer> coords = ant.coords();
 				
+				final int SIZE = 16;
+				final int DSX = +200;
+				final int DSY = +50;
 				
-				// Draw text
-				for(Provinces pr : Provinces.CITIES) {
 
-					ctx.setColor(Color.red);
-					ctx.fillOval(pr.getCoords().first - 3, pr.getCoords().second - 3, 6, 6);
-
-					ctx.setColor(Color.black);
-					ctx.drawOval(pr.getCoords().first - 4, pr.getCoords().second - 4, 8, 8);
-				}
+				g.clearRect(DSX, DSY, SIZE * 32, SIZE * 32);
 				
-				if(ga == null) return;
-				
-				for(int i = 0; i < Provinces.CITIES.length; ++i) {
-					double[] chr = ga.getBestAbs_chr().getFenotypes();
-					final Pair<Integer, Integer> p0 = Provinces.CITIES[(int) chr[i]].getCoords();
-					final Pair<Integer, Integer> p1 = Provinces.CITIES[(int) chr[i + 1]].getCoords();
-					
-					int dx = p1.first - p0.first;
-					int dy = p1.second - p0.second;
-					
-					int rw = 5; // Arrow Size
-					int ds = (int)Math.sqrt(dx * dx + dy * dy) - 2 * rw; // Distance
-					
-					
-					List<Integer> arrow_x = Arrays.asList(
-						0, // .
-						ds, // -
-						ds, // |
-						ds + rw, // >
-						ds,
-						ds,
-						0 // .
-					);
-					
-					List<Integer> arrow_y = Arrays.asList(
-						0, // .
-						0, // -
-						-rw, // |
-						0, // >
-						+rw, // |
-						0, // -
-						0 // .
-					);
-					
-					// Rotate all vertices
-					double angle = Math.atan2(dy, dx);
-					double sin = Math.sin(angle);
-					double cos = Math.cos(angle);
-					int vertices = arrow_y.size();
-					for(int j = 0; j < vertices; ++j) {
-						int x = arrow_x.get(j);
-						int y = arrow_y.get(j);
+				for(int j = 0; j < 32; ++j) {
+					for(int i = 0; i < 32; ++i) {
+						int dx = i * SIZE + DSX;
+						int dy = j * SIZE + DSY;
+						if(Ant.MAP_ANT[j][i] == 1) {
+							ctx.setColor(Color.GREEN);
+							ctx.fillRect(dx, dy, SIZE, SIZE);
+						}
 						
-						arrow_x.set(j, (int)(x * cos - y * sin));
-						arrow_y.set(j, (int)(x * sin + y * cos));	
+						ctx.setColor(Color.BLACK);
+						ctx.drawRect(dx, dy, SIZE, SIZE);
+						
 					}
-					
-					// Translate all vertices
-					arrow_x = arrow_x.stream().map(z -> z + p0.first).collect(Collectors.toList());
-					arrow_y = arrow_y.stream().map(z -> z + p0.second).collect(Collectors.toList());
-
-					ctx.setColor(Color.black);
-					//g.drawChars(data, offset, length, x, y);
-					ctx.drawPolygon(arrow_x.stream().mapToInt(v->v).toArray(), arrow_y.stream().mapToInt(v->v).toArray(), vertices);
 				}
+				
+				ctx.setColor(Color.RED);
+				ctx.fillRect(coords.first * SIZE + DSX + 3, coords.second * SIZE + DSY + 3, SIZE - 6, SIZE - 6);
 		    };
 		};
         tp1.setLayout(new GridLayout(1, 1));
