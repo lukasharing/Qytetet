@@ -43,6 +43,8 @@ public class Ant {
 		new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	};
 	
+	HashMap<Integer, Boolean> foodvisited = new HashMap<>(100);
+	
 	private int x;
 	private int y;
 	private double angle;
@@ -57,8 +59,7 @@ public class Ant {
 		}
 	}
 	
-	HashMap<Integer, Boolean> foodvisited = new HashMap<>(100);
-	
+	// Next Step
 	public void step(AntMovement mov) {
 		switch(mov) {
 			case TURN_LEFT: this.angle -= Math.PI * 0.5; break;
@@ -77,9 +78,11 @@ public class Ant {
 		}
 	}
 	
+	// Returns Numnber of food eaten
 	public int eaten() { return foodvisited.size(); };
 	
 	
+	// Return next block (0 = nothing, 1 = food)
 	public int sensor() {
 		int x = this.x + (int)Math.cos(this.angle);
 		int y = this.y + (int)Math.sin(this.angle);
@@ -89,7 +92,7 @@ public class Ant {
 		return MAP_ANT[y][x];
 	};
 	
-
+	// Returns Position of the Ant
 	public Pair<Integer, Integer> coords() {
 		return new Pair<Integer, Integer>(this.x, this.y);
 	};
