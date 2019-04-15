@@ -1,5 +1,9 @@
 package p3;
 
+
+
+import java.util.HashMap;
+
 import model.Pair;
 
 public class Ant {
@@ -47,7 +51,13 @@ public class Ant {
 		this.x = 0;
 		this.y = 0;
 		this.angle = Math.PI / 2;
+		
+		if(MAP_ANT[this.y][this.x] == 1) {
+			foodvisited.put(this.x + this.y * 32, true);
+		}
 	}
+	
+	HashMap<Integer, Boolean> foodvisited = new HashMap<>(100);
 	
 	public void step(AntMovement mov) {
 		switch(mov) {
@@ -59,9 +69,15 @@ public class Ant {
 				
 				this.x = (this.x + 32) % 32;
 				this.y = (this.y + 32) % 32;
+				
+				if(MAP_ANT[this.y][this.x] == 1) {
+					foodvisited.put(this.x + this.y * 32, true);
+				}
 			break;
 		}
 	}
+	
+	public int eaten() { return foodvisited.size(); };
 	
 	
 	public int sensor() {
@@ -70,7 +86,7 @@ public class Ant {
 		
 		x = (x + 32) % 32;
 		y = (y + 32) % 32;
-		return MAP_ANT[x][y];
+		return MAP_ANT[y][x];
 	};
 	
 
