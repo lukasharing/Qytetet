@@ -127,9 +127,9 @@ public class Panel3 extends JFrame {
 		final BufferedImage map = ImageIO.read(new File("./src/images/mapa.png"));
 		
 		List<AntMovement> movement = Arrays.asList(
-			AntMovement.TURN_LEFT, AntMovement.MOVE, AntMovement.MOVE,
+			/*AntMovement.TURN_LEFT, AntMovement.MOVE, AntMovement.MOVE,
 			AntMovement.TURN_RIGHT, AntMovement.MOVE, AntMovement.TURN_LEFT,
-			AntMovement.MOVE
+			AntMovement.MOVE*/
 		);
 		Ant ant = new Ant();
 		
@@ -169,8 +169,7 @@ public class Panel3 extends JFrame {
 					}
 				}
 				
-				ctx.setColor(Color.RED);
-				ctx.fillRect(coords.first * SIZE + DSX + 3, coords.second * SIZE + DSY + 3, SIZE - 6, SIZE - 6);
+				ant.draw(ctx);
 		    };
 		};
         tp1.setLayout(new GridLayout(1, 1));
