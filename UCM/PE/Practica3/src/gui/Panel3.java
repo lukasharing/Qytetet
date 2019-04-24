@@ -41,11 +41,10 @@ import model.GeneticAlgorithm;
 import model.MutationType;
 import model.SelectionType;
 import model.Pair;
-import p2.CitiesChromosome;
-import p2.FunctionCities;
-import p2.Provinces;
 import p3.Ant;
+import p3.AntChromosome;
 import p3.AntMovement;
+import p3.FunctionAnt;
 
 public class Panel3 extends JFrame {
 
@@ -165,12 +164,40 @@ public class Panel3 extends JFrame {
 						
 						ctx.setColor(Color.BLACK);
 						ctx.drawRect(dx, dy, SIZE, SIZE);
-						
 					}
 				}
 				
-				ctx.setColor(Color.RED);
-				ctx.fillRect(coords.first * SIZE + DSX + 3, coords.second * SIZE + DSY + 3, SIZE - 6, SIZE - 6);
+				ant.draw(ctx);
+				
+				
+				// Draw path done
+				int x = 0;
+				int y = 0;
+				double angle = Math.PI / 2;
+				for(AntMovement mov : movement){
+					int dx = x * SIZE + DSX + SIZE / 2;
+					int dy = y * SIZE + DSY + SIZE / 2;
+					switch(mov) {
+						case TURN_LEFT:
+							angle -= Math.PI * 0.5;
+						break;
+						case TURN_RIGHT:
+							angle += Math.PI * 0.5;
+						break;
+						case MOVE:
+							ctx.drawLine(
+								dx,
+								dy,
+								dx + (int)Math.cos(angle) * SIZE,
+								dy + (int)Math.sin(angle) * SIZE
+							);
+							
+							
+							x += Math.cos(angle);
+							y += Math.sin(angle);
+						break;
+					}
+				}
 		    };
 		};
         tp1.setLayout(new GridLayout(1, 1));
@@ -307,7 +334,13 @@ public class Panel3 extends JFrame {
 				tp1.revalidate();
 				
 				restartResults(barradchactr, titulodcha);
+				
 
+				Function fun = new FunctionAnt(1, FunctionType.MAXIMIZE);
+				AntChromosome chr = new AntChromosome(fun, 0);
+				System.out.println(chr.toString());
+				
+				/*
 				int elitism_am = ((Integer) elitism_amount.getValue());
 
 				int num_gen = Integer.parseInt(num_generations.getText());
@@ -316,8 +349,8 @@ public class Panel3 extends JFrame {
 				model.CrossType type_cross = cross_type.get(cross_sel.getSelectedIndex());
 				model.MutationType type_mut = mutation_type.get(mutation_sel.getSelectedIndex());
 				
-				Function fun = new FunctionCities(27, FunctionType.MINIMIZE);
-				/*
+				Function fun = new FunctionAnt(27, FunctionType.MAXIMIZE);
+				
 				CitiesChromosome c0 = new CitiesChromosome(fun, 5);
 				CitiesChromosome c1 = new CitiesChromosome(fun, 5);
 				
@@ -333,11 +366,11 @@ public class Panel3 extends JFrame {
 				System.out.println("CRUCE");
 				System.out.println(c0.toString());
 				System.out.println(c1.toString());
-				//*/
+				//
 				///*
 				
 				ga = new GeneticAlgorithm<CitiesChromosome>(
-					CitiesChromosome.class,
+					AntChromosome.class,
 					Integer.parseInt(size_population.getText()),
 					num_gen,
 					Double.parseDouble(crossover_perc.getText()),

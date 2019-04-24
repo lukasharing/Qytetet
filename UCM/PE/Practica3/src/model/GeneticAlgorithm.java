@@ -8,6 +8,7 @@ import java.util.stream.DoubleStream;
 import p1.BinaryChromosome;
 import p1.RealChromosome;
 import p2.CitiesChromosome;
+import p3.AntChromosome;
 
 public class GeneticAlgorithm<T> {
 
@@ -178,6 +179,10 @@ public class GeneticAlgorithm<T> {
 		} else if (class_type.getName().contains("CitiesChromosome")) {
 			for (int i = 0; i < initial_population; ++i) {
 				chromosomes.add(CitiesChromosome.newInstance(function, 25));
+			}
+		} else if (class_type.getName().contains("AntChromosome")) {
+			for (int i = 0; i < initial_population; ++i) {
+				chromosomes.add(AntChromosome.newInstance(function, 25));
 			}
 		}
 

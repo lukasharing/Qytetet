@@ -2,6 +2,8 @@ package p3;
 
 
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.util.HashMap;
 
 import model.Pair;
@@ -96,5 +98,40 @@ public class Ant {
 	public Pair<Integer, Integer> coords() {
 		return new Pair<Integer, Integer>(this.x, this.y);
 	};
+	
+	// Draw
+	final int SIZE = 16;
+	final int DSX = +200;
+	final int DSY = +50;
+	
+	public void draw(Graphics2D ctx) {
+
+		ctx.setColor(Color.RED);
+		int ax = x * SIZE + DSX;
+		int ay = y * SIZE + DSY;
+		ctx.fillRect(ax + 3, ay + 3, SIZE - 6, SIZE - 6);
+
+		// Right Eye
+		int rx = (int)(Math.cos(angle - Math.PI / 4) * (SIZE / 2 - 2));
+		int ry = (int)(Math.sin(angle - Math.PI / 4) * (SIZE / 2 - 2));
+		ctx.setColor(Color.BLACK);
+		
+		int eye_size = SIZE / 4;
+		ctx.fillRect(
+			ax + SIZE / 2 - eye_size / 2 + rx,
+			ay + SIZE / 2 - eye_size / 2 + ry,
+			eye_size, eye_size
+		);
+
+		// Left Eye
+		rx = (int)(Math.cos(angle + Math.PI / 4) * (SIZE / 2 - 2));
+		ry = (int)(Math.sin(angle + Math.PI / 4) * (SIZE / 2 - 2));
+		ctx.setColor(Color.BLACK);
+		ctx.fillRect(
+			ax + SIZE / 2 - eye_size / 2 + rx,
+			ay + SIZE / 2 - eye_size / 2 + ry,
+			eye_size, eye_size
+		);
+	}
 	
 }
