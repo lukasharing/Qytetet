@@ -59,16 +59,16 @@ public class Panel3 extends JFrame {
 	private JTextField num_generations;
 	private JTextField crossover_perc;
 	private JTextField mutation_perc;
-	
-	// Algoritmos de selección
+
+	// Algoritmos de selecciï¿½n
 	private List<SelectionType> selection_type = Arrays.asList(
-		SelectionType.ROULETTE, 
+		SelectionType.ROULETTE,
 		SelectionType.DETE_TOURNAMENT,
 		SelectionType.PRB_TOURNAMENT,
-		SelectionType.RANKING, 
+		SelectionType.RANKING,
 		SelectionType.TRUNCATION
 	);
-	
+
 	// Algoritmos de cruce
 	private List<CrossType> cross_type = Arrays.asList(
 		CrossType.PARTIALLY_MAPPED,
@@ -80,8 +80,8 @@ public class Panel3 extends JFrame {
 		CrossType.ORDINAL_CODIFICATION,
 		CrossType.SELF_METHOD_1
 	);
-	
-	// Algoritmos de mutación
+
+	// Algoritmos de mutaciï¿½n
 	private List<MutationType> mutation_type = Arrays.asList(
 		MutationType.INSERTION,
 		MutationType.SWAP,
@@ -89,7 +89,7 @@ public class Panel3 extends JFrame {
 		MutationType.HEURISTIC,
 		MutationType.SELF_METHOD_1
 	);
-	
+
 	private JComboBox<String> selection_sel;
 	private JComboBox<String> mutation_sel;
 	private JComboBox<String> cross_sel;
@@ -108,51 +108,51 @@ public class Panel3 extends JFrame {
 
 		setResizable(false);
 
-		setTitle("Práctica 2");
+		setTitle("Prï¿½ctica 2");
 		this.setMinimumSize(new Dimension(1300, 700));
 
 		// Components
 		tabbedPane = new JTabbedPane();
-		
-		
+
+
 		plot = new Plot2DPanel();
 		plot.addLegend("SOUTH");
 		plot.setBorder(BorderFactory.createLineBorder(new Color(141, 179, 214)));
 		plot.setMinimumSize(new Dimension(200, 200));
-		
+
 		tp0 = new JPanel();
 		tp0.add(plot);
 		tp0.setLayout(new GridLayout(1, 1));
 		final BufferedImage map = ImageIO.read(new File("./src/images/mapa.png"));
-		
+
 		List<AntMovement> movement = Arrays.asList(
-			AntMovement.TURN_LEFT, AntMovement.MOVE, AntMovement.MOVE,
+			/*AntMovement.TURN_LEFT, AntMovement.MOVE, AntMovement.MOVE,
 			AntMovement.TURN_RIGHT, AntMovement.MOVE, AntMovement.TURN_LEFT,
-			AntMovement.MOVE
+			AntMovement.MOVE*/
 		);
 		Ant ant = new Ant();
-		
+
 		for(int i = 0; i < movement.size(); ++i) {
 			ant.step(movement.get(i));
 		}
-		
+
 		tp1 = new JPanel() {
 			private static final long serialVersionUID = 1L;
 			private int time = 0;
-			
+
 			@Override
 		    public void paintComponent(Graphics g){
 				Graphics2D ctx = (Graphics2D)g;
-				
+
 				Pair<Integer, Integer> coords = ant.coords();
-				
+
 				final int SIZE = 16;
 				final int DSX = +200;
 				final int DSY = +50;
-				
+
 
 				g.clearRect(DSX, DSY, SIZE * 32, SIZE * 32);
-				
+
 				for(int j = 0; j < 32; ++j) {
 					for(int i = 0; i < 32; ++i) {
 						int dx = i * SIZE + DSX;
@@ -161,15 +161,15 @@ public class Panel3 extends JFrame {
 							ctx.setColor(Color.GREEN);
 							ctx.fillRect(dx, dy, SIZE, SIZE);
 						}
-						
+
 						ctx.setColor(Color.BLACK);
 						ctx.drawRect(dx, dy, SIZE, SIZE);
 					}
 				}
-				
+
 				ant.draw(ctx);
-				
-				
+
+
 				// Draw path done
 				int x = 0;
 				int y = 0;
@@ -191,8 +191,8 @@ public class Panel3 extends JFrame {
 								dx + (int)Math.cos(angle) * SIZE,
 								dy + (int)Math.sin(angle) * SIZE
 							);
-							
-							
+
+
 							x += Math.cos(angle);
 							y += Math.sin(angle);
 						break;
@@ -202,17 +202,17 @@ public class Panel3 extends JFrame {
 		};
         tp1.setLayout(new GridLayout(1, 1));
 
-		tabbedPane.addTab("Gráfica", tp0);
+		tabbedPane.addTab("Grï¿½fica", tp0);
         tabbedPane.addTab("Mapa", tp1);
-        
+
 		add(tabbedPane, BorderLayout.CENTER);
 
-        
+
 		JPanel barraizq = new JPanel();
 		barraizq.setLayout(new BoxLayout(barraizq, BoxLayout.Y_AXIS));
 
 		/* Titulo */
-		JLabel titulo = new JLabel("PARÁMETROS:");
+		JLabel titulo = new JLabel("PARï¿½METROS:");
 		JPanel ptitle = new JPanel(new GridLayout(1, 1));
 		titulo.setFont(titulo.getFont().deriveFont(16.0f));
 		ptitle.add(titulo);
@@ -222,14 +222,14 @@ public class Panel3 extends JFrame {
 		/* Size Population */
 		this.size_population = new JTextField("100", 12);
 		JPanel p1 = new JPanel(new GridLayout(2, 1));
-		p1.add(new JLabel("Tamaño población:"));
+		p1.add(new JLabel("Tamaï¿½o poblaciï¿½n:"));
 		p1.add(size_population);
 		barraizq.add(p1);
 
 		/* Number Generations */
 		this.num_generations = new JTextField("100", 12);
 		JPanel p2 = new JPanel(new GridLayout(2, 1));
-		p2.add(new JLabel("Número generaciones:"));
+		p2.add(new JLabel("Nï¿½mero generaciones:"));
 		p2.add(num_generations);
 		barraizq.add(p2);
 
@@ -243,24 +243,24 @@ public class Panel3 extends JFrame {
 		/* Mutation Percentage */
 		this.mutation_perc = new JTextField("0.05", 12);
 		JPanel p4 = new JPanel(new GridLayout(2, 1));
-		p4.add(new JLabel("Probabilidad de mutación:"));
+		p4.add(new JLabel("Probabilidad de mutaciï¿½n:"));
 		p4.add(mutation_perc);
 		barraizq.add(p4);
-		 
+
 		/* Selection Selection */
 		this.selection_sel = new JComboBox<>(selection_type.stream().map(n -> n.toString()).toArray(String[]::new));
 		JPanel p11 = new JPanel(new GridLayout(2, 1));
-		p11.add(new JLabel("Selección:"));
+		p11.add(new JLabel("Selecciï¿½n:"));
 		p11.add(selection_sel);
 		barraizq.add(p11);
-		
+
 		/* Mutation Selection */
 		this.mutation_sel = new JComboBox<>(mutation_type.stream().map(n -> n.toString()).toArray(String[]::new));
 		JPanel p12 = new JPanel(new GridLayout(2, 1));
-		p12.add(new JLabel("Mutación:"));
+		p12.add(new JLabel("Mutaciï¿½n:"));
 		p12.add(mutation_sel);
 		barraizq.add(p12);
-		
+
 		/* Cross Selection */
 		this.cross_sel = new JComboBox<>(cross_type.stream().map(n -> n.toString()).toArray(String[]::new));
 		JPanel p13 = new JPanel(new GridLayout(2, 1));
@@ -272,7 +272,7 @@ public class Panel3 extends JFrame {
 		this.elitism_amount = new JSpinner();
 		elitism_amount.setValue(0);
 		JPanel p9 = new JPanel(new GridLayout(2, 1));
-		p9.add(new JLabel("Número Elitismo:"));
+		p9.add(new JLabel("Nï¿½mero Elitismo:"));
 		p9.add(elitism_amount);
 		barraizq.add(p9);
 
@@ -282,7 +282,7 @@ public class Panel3 extends JFrame {
 		p14.add(contractivity);
 		barraizq.add(p14);
 
-		
+
 		/* Buttons */
 		JPanel p10 = new JPanel(new GridLayout(2, 1));
 		start = new JButton("Iniciar");
@@ -297,7 +297,7 @@ public class Panel3 extends JFrame {
 		barraizq.setBorder(BorderFactory.createEmptyBorder(8, 15, 0, 15));
 		add(barraizq, BorderLayout.LINE_START);
 
-		JLabel footer = new JLabel("Realizado por Lukas Haring y Raúl Torrijos", SwingConstants.CENTER);
+		JLabel footer = new JLabel("Realizado por Lukas Haring y Raï¿½l Torrijos", SwingConstants.CENTER);
 		footer.setBorder(new EmptyBorder(10, 10, 10, 10));
 		add(footer, BorderLayout.PAGE_END);
 		setVisible(true);
@@ -317,10 +317,10 @@ public class Panel3 extends JFrame {
 		restartResults(barradchactr, titulodcha);
 
 		JPanel barradchaftr = new JPanel();
-		
+
 		barradcha.add(barradchaftr, BorderLayout.PAGE_END);
 		barradchaftr.setLayout(new BoxLayout(barradchaftr, BoxLayout.Y_AXIS));
-		barradchaftr.add(new JLabel("Mejor evaluación:"), BorderLayout.PAGE_END);
+		barradchaftr.add(new JLabel("Mejor evaluaciï¿½n:"), BorderLayout.PAGE_END);
 		JLabel best_ev = new JLabel(" ");
 		barradchaftr.add(best_ev);
 
@@ -332,14 +332,14 @@ public class Panel3 extends JFrame {
 				restartPlot();
 				tp1.repaint();
 				tp1.revalidate();
-				
+
 				restartResults(barradchactr, titulodcha);
-				
+
 
 				Function fun = new FunctionAnt(1, FunctionType.MAXIMIZE);
 				AntChromosome chr = new AntChromosome(fun, 0);
 				System.out.println(chr.toString());
-				
+
 				/*
 				int elitism_am = ((Integer) elitism_amount.getValue());
 
@@ -348,18 +348,18 @@ public class Panel3 extends JFrame {
 				model.SelectionType type_sel = selection_type.get(selection_sel.getSelectedIndex());
 				model.CrossType type_cross = cross_type.get(cross_sel.getSelectedIndex());
 				model.MutationType type_mut = mutation_type.get(mutation_sel.getSelectedIndex());
-				
+
 				Function fun = new FunctionAnt(27, FunctionType.MAXIMIZE);
-				
+
 				CitiesChromosome c0 = new CitiesChromosome(fun, 5);
 				CitiesChromosome c1 = new CitiesChromosome(fun, 5);
-				
+
 				c0.setFenotypes(new double[] {3, 4, 1, 0, 7, 6, 5, 8, 2});
 				c1.setFenotypes(new double[] {0, 1, 2, 3, 4, 5, 6, 7, 8});
-				
+
 				System.out.println(c0.toString());
 				System.out.println(c1.toString());
-				
+
 				c0.cross(c1, CrossType.SELF_METHOD_1);
 				//c0.mutate(MutationType.HEURISTIC, 1.0);
 				//c0.cross(c1, CrossType.ORDINAL_CODIFICATION);
@@ -368,7 +368,7 @@ public class Panel3 extends JFrame {
 				System.out.println(c1.toString());
 				//
 				///*
-				
+
 				ga = new GeneticAlgorithm<CitiesChromosome>(
 					AntChromosome.class,
 					Integer.parseInt(size_population.getText()),
@@ -378,23 +378,23 @@ public class Panel3 extends JFrame {
 					0.0, elitism_am, type_sel, type_cross, type_mut,
 					fun, contractivity.isSelected()
 				);
-				
+
 				List<double[]> best_distances = ga.run();
 
-				
-				
+
+
 				double[] generations = new double[num_gen];
 				for (int i = 0; i < num_gen; ++i) {
 					generations[i] = i;
 				}
-				
+
 				addPlotLines(generations, best_distances);
-				
+
 				//best_ev.setText(Integer.toString((int) best_distances.get(0)[best_distances.get(0).length - 1]) +" kms");
 				best_ev.setText(Integer.toString((int) fun.evaluate(ga.getBestAbs_chr().getFenotypes())) +" kms");
-				
-				
-				
+
+
+
 				for (int i = 0; i < ga.getBestAbs_chr().getFenotypes().length; i++) {
 					barradchactr.add(
 						new JLabel(CitiesChromosome.parseCity((int) ga.getBestAbs_chr().getFenotypes()[i]) + ((i == ga.getBestAbs_chr().getFenotypes().length-1) ? " " : "->" )));
@@ -416,7 +416,7 @@ public class Panel3 extends JFrame {
 		});
 
 	}
-	
+
 	void restartResults(JPanel p, JLabel l) {
 		p.removeAll();
 		p.add(l);
@@ -435,7 +435,7 @@ public class Panel3 extends JFrame {
 
 	void addPlotLines(double[] generations, List<double[]> best_chromosomes) {
 		plot.addLinePlot("Mejor absoluto", generations, best_chromosomes.get(0));
-		plot.addLinePlot("Mejor de la generación", generations, best_chromosomes.get(1));
-		plot.addLinePlot("Media de la generación", generations, best_chromosomes.get(2));
+		plot.addLinePlot("Mejor de la generaciï¿½n", generations, best_chromosomes.get(1));
+		plot.addLinePlot("Media de la generaciï¿½n", generations, best_chromosomes.get(2));
 	}
 }
