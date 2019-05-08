@@ -1,0 +1,325 @@
+\documentclass{article}
+
+%packages
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{xcolor,colortbl}
+\usepackage{amsmath}
+
+
+\usepackage{tikz-uml}
+
+% Table definition
+\newcommand{\mc}[2]{\multicolumn{#1}{c|}{#2}}
+\definecolor{LightGray}{rgb}{0.88,0.88,0.88}
+
+\begin{document}
+
+\usetikzlibrary{automata,arrows, positioning}
+\renewcommand{\contentsname}{Tabla de contenidos}
+
+\begin{titlepage}
+	\begin{center}
+		\includegraphics{escudo.jpg}
+	\end{center}
+	\centering
+	{\scshape\LARGE Complutense de Madrid \par}
+	\vspace{1cm}
+	{\scshape\Large Práctica Procesadores de Lenguajes.\par}
+	\vspace{1.5cm}
+	{\huge\bfseries Cuarta Fase. \par}
+	\vspace{2cm}
+	{\Large\itshape Kyle Tan \& Lukas Häring\par}
+	{\large Grupo 9\par}
+	\vfill
+	\vfill
+
+% Bottom of the page
+	{\large \today\par}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+\section{Diagrama sintáctico}
+
+La descripción de la función constructora está basada en el lenguaje matemático:
+$$
+	\textless\text{funcion}\textgreater\text:\textless\text{arg}_1\textgreater\times\cdots\times\textless\text{arg}_n\textgreater\rightarrow\textless\text{Valor a devolver}\textgreater
+$$
+Para la función constructora de inicialización:\newline
+$
+\begin{array}{lcl}
+iInit & \rightarrow & Type\text{ ID ; }iInit \mid Type\text{ ID} \\
+Type & \rightarrow & bool | num \\
+\end{array}
+$
+\newline
+Para la función constructora de asignación:\newline
+$
+\begin{array}{lcl}
+iAssign & \rightarrow & \text{ ID } = \text{ exp }; iAssign \mid \text{ ID } = \text{ exp } \\
+\end{array}
+$\newline
+\begin{table}[ht!]
+	\begin{tabular}{|p{4.8cm}|p{6.4cm}|}
+		\hline
+		\rowcolor{LightGray}
+		\mc{1}{Expresión}  & \mc{1}{Función Constructora Programa} \\ \hline
+		% Program %
+		
+		$\text{iInit }\&\&\text{ iAssign}\rightarrow \text{Program}$ & $\text{PROGRAM: }\text{iInit}\times \text{iAssign}\rightarrow \text{Program}$ \\ \hline
+			
+		\rowcolor{LightGray}
+		\mc{1}{Expresión}  & \mc{1}{Función Constructora Inicialización} \\ \hline
+		% Instruction Declaration %
+		$\text{Type ID}; \text{iInit}\rightarrow \text{iInit}$ & $\text{cInit: }Type\times \textbf{string}\times \text{iInit}\rightarrow \text{iInit}$ \\ \hline
+		
+		$\text{Type ID}\rightarrow \text{iInit}$ & $\text{sInit: }Type\times \textbf{string}\rightarrow \text{iInt}$ \\ \hline
+			
+		% Asignación
+		\rowcolor{LightGray}
+		\mc{1}{Expresión}  & \mc{1}{Función Constructora Asignación} \\ \hline
+		
+		$\text{ID = Exp; iAssign}\rightarrow \text{iAssign}$ & $\text{cAssign: }\textbf{string}\times \text{Exp}\times \text{iAssign}\rightarrow \text{iAssign}$ \\ \hline
+		$\text{ID = Exp}\rightarrow \text{iAssign}$ & $\text{sAssign: } \textbf{string}\times \text{Exp}\rightarrow \text{iAssign}$ \\ \hline
+		
+		
+		\rowcolor{LightGray}
+		\mc{1}{Expresión}  & \mc{1}{Función Constructora Operaciones} \\ \hline
+		  % Functions %
+		  $\text{Exp }+\text{ Exp}\rightarrow \text{Exp}$ & $\text{Add: }\text{Exp}\times \text{Exp}\rightarrow \text{Exp}$ \\ \hline
+		  $\text{Exp }-\text{ Exp}\rightarrow \text{Exp}$ & $\text{Sub: }\text{Exp}\times \text{Exp}\rightarrow \text{Exp}$ \\ \hline
+		  $\text{Exp }*\text{ Exp}\rightarrow \text{Exp}$ & $\text{Mul: }\text{Exp}\times \text{Exp}\rightarrow \text{Exp}$ \\ \hline
+		  $\text{Exp }/\text{ Exp}\rightarrow \text{Exp}$ & $\text{Div: }\text{Exp}\times \text{Exp}\rightarrow \text{Exp}$ \\ \hline
+		  $\text{Exp and Exp}\rightarrow \text{Exp}$ & $\text{And: }\text{Exp}\times \text{Exp}\rightarrow \text{Exp}$ \\ \hline
+		  $\text{Exp or Exp}\rightarrow \text{Exp}$ & $\text{Or: }\text{Exp}\times \text{Exp}\rightarrow \text{Exp}$ \\ \hline
+		  
+		  
+		  \rowcolor{LightGray}
+		  \mc{1}{Expresión}  & \mc{1}{Función Constructora Comparaciones} \\ \hline
+		  % Comparaison Methods %
+		  % Equal %
+		  $\text{Exp == Exp}\rightarrow \text{Exp}$ & $\text{Eq: }\text{Exp}\times \text{Exp}\rightarrow \text{Exp}$ \\ \hline
+		  
+		  
+		  % Not Equal %
+		  $\text{Exp != Exp}\rightarrow \text{Exp}$ & $\text{nEq: }\text{Exp}\times \text{Exp}\rightarrow \text{Exp}$ \\ \hline
+		  
+		  % Number Order %
+		  % Less %
+		  $\text{Exp {\textless} Exp}\rightarrow \text{Exp}$ & $\text{Less: }\text{Exp}\times \text{Exp}\rightarrow \text{Exp}$ \\ \hline
+		  $\text{Exp \textless= Exp}\rightarrow \text{Exp}$ & $\text{LessThan: }\text{Exp}\times \text{Exp}\rightarrow \text{Exp}$ \\ \hline
+		  
+		  % Greater %
+		  $\text{Exp {\textgreater} Exp}\rightarrow \text{Exp}$ & $\text{Greater: }\text{Exp}\times \text{Exp}\rightarrow \text{Exp}$ \\ \hline
+		  $\text{Exp \textgreater= Exp}\rightarrow \text{Exp}$ & $\text{GreaterThan: }\text{Exp}\times \text{Exp}\rightarrow \text{Exp}$ \\ \hline
+		  
+		  \rowcolor{LightGray}
+		  \mc{1}{Expresión}  & \mc{1}{Función Constructora Unarias} \\ \hline
+		  % Not %
+		  $\text{not Exp}\rightarrow \text{Exp}$ & $\text{Not: }\text{Exp}\rightarrow \text{Exp}$ \\ \hline
+		  % Unary Number %
+		  $- \text{Exp}\rightarrow \text{Exp}$ & $\text{UnaryMinus: }\text{Exp}\rightarrow \text{Exp}$ \\ \hline
+		  
+		  \rowcolor{LightGray}
+		  \mc{1}{Expresión}  & \mc{1}{Función Constructora Tokens} \\ \hline
+		  
+		  $\textbf{bool}  \rightarrow Type$ & $\text{typeBoolean: }\textbf{num}\rightarrow \text{Type}$ \\ \hline
+		  $\textbf{num}  \rightarrow Type$ & $\text{typeNumber: }\textbf{bool}\rightarrow \text{Type}$ \\ \hline
+		  $\textbf{ID}  \rightarrow Exp$ & $\text{ID: }\textbf{string}\rightarrow \text{Exp}$ \\ \hline
+		  $\textbf{number}  \rightarrow Exp$ & $\text{Number: }\textbf{string}\rightarrow \text{Exp}$ \\ \hline
+		  $\textbf{boolean}  \rightarrow Exp$ & $\text{Boolean: }\textbf{string}\rightarrow \text{Exp}$ \\ \hline
+	\end{tabular}
+\end{table}
+\newpage
+\section{Sintaxis abstracta mediante diagrama de clases}
+
+\tikzstyle{b} = [rectangle, draw, text width=5em, text centered, minimum height=3em]
+\tikzstyle{more} = [rectangle, draw, text width=8em, text centered, minimum height=3em, dashed]
+\tikzstyle{ini} = [circle, draw, fill=black]
+\tikzstyle{l} = [draw, -latex']
+
+\pgfarrowsdeclaredouble[0pt]{open}{open}{}{.open triangle 60}
+
+\begin{tikzpicture}[>=stealth',shorten >=0.5pt,auto,node distance=5 cm, scale = 0.85, transform shape]
+
+\node [b]    (program) at(7.5, 0.0) {PROGRAM};
+
+\node [b]    (init) at(3.5, -2.0) {Init};
+\node [b]    (sinit) at(1.5, -4.0) {sInit};
+\node [b]    (cinit) at(5.5, -4.0) {cInit};
+
+\draw [>=open triangle 60,->] (sinit)  -- (3.1, -4.0) -- (init);
+\draw [>=open triangle 60,->] (cinit)  -- (3.9, -4.0) -- (init);
+
+\draw [>= triangle 60,->][densely dotted] (cinit)  -- (5.5, -2.0) -- (init);
+
+\node [b]    (assign) at(11.5, -2.0) {Assign};
+
+\node [b]    (sassign) at(9.5, -4.0) {sAssign};
+\node [b]    (cassign) at(13.5, -4.0) {cAssign};
+
+\draw [>=open triangle 60,->] (sassign)  -- (11.1, -4.0) -- (assign);
+\draw [>=open triangle 60,->] (cassign)  -- (11.9, -4.0) -- (assign);
+
+\draw [>= triangle 60,->][densely dotted] (cassign)  -- (13.5, -2.0) -- (assign);
+
+\draw [>= triangle 60,->][densely dotted] (program)  -- (3.5, 0.0) -- (init);
+\draw [>= triangle 60,->][densely dotted] (program)  -- (11.5, 0.0) -- (assign);
+
+
+
+\node [b]    (type) at(3.5, -6.0) {Type};
+
+\draw [>=triangle 60,->][densely dotted] (sinit)  -- (3.5, -5.0) -- (type);
+
+\draw [densely dotted] (cinit)  -- (3.5, -5.0);
+
+
+\node [b]    (type) at(3.5, -6.0) {Type};
+
+\node [b]    (id) at(7.5, -6.0) {ID};
+
+\draw [>= triangle 60,->][densely dotted] (cinit) -- (id);
+\draw [densely dotted] (sinit)  -- (6.5, -5.0);
+
+\draw [>= triangle 60,->][densely dotted] (sassign) -- (id);
+\draw [densely dotted] (cassign)  -- (8.5, -5.0);
+
+
+\node [b] (exp) at(11.5, -6.0) {Exp};
+
+
+\node [b]    (num) at(14.5, -6.0) {Number};
+
+\node [b]    (bool) at(14.5, -8.0) {Boolean};
+
+
+\draw [>= triangle 60,->][densely dotted] (sassign)  -- (11.5, -5.0) -- (exp);
+
+\draw [>= open triangle 60,->](id) -- (exp);
+\draw [>= open triangle 60,->](bool) -- (exp);
+\draw [>= open triangle 60,->](num) -- (exp);
+
+\draw [densely dotted] (cassign)  -- (11.5, -5.0);
+
+\node [b]    (tnumber) at(1.5, -8.0) {typeNumber};
+
+\draw [>=open triangle 60,->] (tnumber)  -- (3.1, -8.0) -- (type);
+
+\node [b]    (tbool) at(5.5, -8.0) {typeBoolean};
+
+\draw [>=open triangle 60,->] (tbool)  -- (3.9, -8.0) -- (type);
+
+% Unary
+\node [b]    (unary) at(11.5, -15.0) {UnaryOp};
+
+\draw [>= open triangle 60,->] (11.25, -14.5) -- (11.25, -6.5);
+\draw [>= triangle 60,->][densely dotted] (11.75, -14.5) -- (11.75, -6.5);
+
+\node [b]    (not) at(13.5, -17.0) {Not};
+\node [b]    (minus) at(9.5, -17.0) {UnaryMinus};
+
+\draw [>= open triangle 60,->](not) -- (13.5, -15.0) -- (unary);
+\draw [>= open triangle 60,->](minus) -- (9.5, -15.0) -- (unary);
+
+
+% Binary
+\node [b]    (binary) at(3.5, -13.0) {BinaryOp};
+\draw [>= open triangle 60,->](4.5, -12.5) -- (10.5, -6.5);
+\draw [>= triangle 60,->][densely dotted](4.5, -12.75) -- (10.75, -6.5);
+\draw [>= triangle 60,->][densely dotted](4.25, -12.50) -- (10.50, -6.25);
+
+
+\end{tikzpicture}
+
+\newpage
+\section{Gramática de atributos}
+Utilizando la implementación de la gramática incontextual de la segunda práctica.
+
+\begin{table}[ht!]
+	\begin{tabular}{|p{4.2cm}|p{7.2cm}|}
+		\hline
+		\rowcolor{LightGray}
+		\mc{1}{Gramática}  & \mc{1}{Gramática Programa} \\ \hline
+		% Program %
+		
+		$\text{Program}\rightarrow \text{iInit\&\&iAssign}$ & $\text{Program.a }=PROGRAM(iInit.a, iAssign.a)$ \\ \hline
+		
+		\rowcolor{LightGray}
+		\mc{1}{Gramática}  & \mc{1}{Gramática Inicialización} \\ \hline
+		% Instruction Declaration %
+		$\text{iInit}\rightarrow \text{Init}; \text{iInit}$ & $\text{iInit.a}= sInit(Init.type, Init.id)$ \\ \hline
+		
+		$\text{iInit}\rightarrow \text{Init}$ & $\text{iInit.a}= cInit(iInit.a, Init.type, Init.id)$ \\ \hline
+		
+		$\text{Init}\rightarrow \text{Type ID}$ & $\text{Init.type}=Type \wedge \text{Init.id} = \text{ID.lex}$ \\ \hline
+		
+		% Asignación
+		\rowcolor{LightGray}
+		\mc{1}{Gramática}  & \mc{1}{Gramática Asignación} \\ \hline
+		
+		$\text{iAssign}\rightarrow \text{Asgn}; \text{iAssign}$ & $\text{iAssign.a}= sAssign(Asgn.id, Asgn.exp)$ \\ \hline
+		
+		$\text{iAssign}\rightarrow \text{Asgn}$ & $\text{iAssign.a}= cAssign(iAssign.a, Asn.id, Asn.exp)$ \\ \hline
+		
+		$\text{Asn}\rightarrow \text{ID = Exp}$ & $\text{Asn.id}=ID.lex \wedge \text{Asn.exp} = \text{Exp.a}$ \\ \hline
+		
+		\rowcolor{LightGray}
+		\mc{1}{Gramática}  & \mc{1}{Gramática Expresiones} \\ \hline
+		
+		$Exp \rightarrow Exp + E1$ & $Exp.a = Add(Exp.a, ELv1.a)$ \\ \hline
+		$Exp \rightarrow Exp - E1$ & $Exp.a = Sub(Exp.a, ELv1.a)$ \\ \hline
+		$Exp \rightarrow ELv1$ & $Exp.a = ELv1.a$ \\ \hline
+		
+		$ELv1 \rightarrow Exp + E1$ & $ELv1.a = And(ELv2.a, ELv1.a)$ \\ \hline
+		$ELv1 \rightarrow Exp - E1$ & $ELv1.a = Or(ELv2.a, ELv2.a)$ \\ \hline
+		$ELv1 \rightarrow ELv2$ & $ELv1.a = ELv2.a$ \\ \hline
+		
+		$ELv2 \rightarrow ELv3\text{ Ob } ELv3$ & $ELv1.a = opRel(Ob.op, ELv3.a, ELv3.a)$ \\ \hline
+		
+		$Ob \rightarrow op$ & $Ob.op = op$ \\ \hline
+		
+		\multicolumn{2}{|c|}{$\forall op\in\{or, not, ==, \text{!=}, <, <=, >, >=\}$} \\ \hline
+		
+		$ELv2 \rightarrow ELv3$ & $ELv2.a = ELv.3$ \\ \hline
+		
+		$ELv3 \rightarrow ELv3 * ELv4$ & $ELv3.a = Mul(ELv3.a, ELv4.a)$ \\ \hline
+		$ELv3 \rightarrow ELv3 / ELv4$ & $ELv3.a = Div(ELv3.a, ELv4.a)$ \\ \hline
+		
+		$ELv3 \rightarrow ELv4$ & $ELv3.a = ELv4.a$ \\ \hline
+		
+		$ELv4 \rightarrow - ELv4$ & $ELv4.a = UnaryMinus(ELv4.a)$ \\ \hline
+		$ELv4 \rightarrow \text{not }ELv5$ & $ELv4.a = Not(ELv5.a)$ \\ \hline
+		
+		$ELv4 \rightarrow ELv5$ & $ELv4.a = ELv5.a$ \\ \hline
+		
+		$ELv5 \rightarrow ( Exp )$ & $ELv5.a = Exp.a$ \\ \hline
+		$ELv5 \rightarrow num$ & $ELv5.a = Number(num.lex)$ \\ \hline
+		$ELv5 \rightarrow bool$ & $ELv5.a = Boolean(bool.lex)$ \\ \hline
+		$ELv5 \rightarrow ID$ & $ELv5.a = ID(ID.lex)$ \\ \hline
+		
+		% https://github.com/delcanovega/PL/blob/master/Memoria/Memoria_Procesadores_de_Lenguajes.pdf
+	\end{tabular}
+	\newline
+	\newline
+	Nota: \textit{Asn} es equivalente a \textit{Assign}.
+
+	\[
+	opRel(op, left, right)=\left\{
+	\begin{array}{ll}
+	op = "=="  &\Rightarrow Eq(left, right)\\
+	op = "\text{!=}" & \Rightarrow nEq(left, right)\\
+	op = "<" &\Rightarrow Less(left, right)\\
+	op = "<=" &\Rightarrow LessThan(left, right)\\
+	op = ">" &\Rightarrow Greater(left, right)\\
+	op = ">=" &\Rightarrow GreaterThan(left, right)\\
+	\end{array}
+	\right.
+	\]
+\end{table}
+
+\end{document}
