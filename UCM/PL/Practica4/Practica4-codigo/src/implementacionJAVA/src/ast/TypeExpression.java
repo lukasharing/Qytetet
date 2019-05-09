@@ -1,0 +1,13 @@
+package ast;
+
+public enum TypeExpression {
+	ID, NUMBER, BOOLEAN,
+	UNARY_OP, NOT, UNARYMINUS,
+	
+	BINARY_OP, 
+	ADD, SUB, MUL, DIV, EQ, NEQ,
+	
+	AND, OR,
+	
+	LESS, LESSTHAN, GREATER, GREATERTHAN
+}

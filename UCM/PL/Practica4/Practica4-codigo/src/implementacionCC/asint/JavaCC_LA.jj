@@ -3,7 +3,25 @@ options {
 }
 PARSER_BEGIN(JavaCCLexicalAnalyzer)
 package implementacionCC.asint;
-public class JavaCCLexicalAnalyzer {}
+import ast.*;
+
+public class JavaCCAST{
+  	private ASTTiny ast = new ASTTiny();
+	
+
+	private Program astProgram;
+	private Exp opRel(String type, Exp opLeft, Exp opRight) {
+		switch(type) {
+			case "<": return as.Less(opLeft, opRight); break;
+			case ">": return as.Greater(opLeft, opRight); break;
+			case "<=": return as.LessThan(opLeft, opRight); break;
+			case ">=": return as.GreaterThan(opLeft, opRight); break;
+			case "==": return as.Eq(opLeft, opRight); break;
+			case "!=": return as.nEq(opLeft, opRight); break;
+			default: return null;
+		}
+	}
+}
 PARSER_END(JavaCCLexicalAnalyzer)
 
 TOKEN:{<#NATURAL:["0"-"9"](["0"-"9"])*>}
@@ -13,12 +31,10 @@ TOKEN:{<BOOL:"bool">}
 TOKEN:{<AND:"and">}
 TOKEN:{<OR:"or">}
 TOKEN:{<NOT:"not">}
-TOKEN:{<TRUE:"true">}
-TOKEN:{<FALSE:"false">}
 TOKEN:{<ID:<LETRA>(<LETRA>|["0"-"9"]|"_")*>}
 TOKEN:{<INT:("+"|"-")?<NATURAL>>}
-TOKEN:{<DEC:<INT>"."<NATURAL>>}
-TOKEN:{<EXE:(<INT>|<DEC>)("e"|"E")<INT>>}
+TOKEN:{<NUMBER:(<INT>("."<NATURAL>)?)(("e"|"E")<INT>)?}
+TOKEN:{<BOOLEAN:("true" | "false")}
 TOKEN: {<PYC:";">}
 TOKEN: {<OA:"=">}
 TOKEN: {<SEPARATOR:"&&">}
@@ -30,20 +46,75 @@ TOKEN: {<RELACIONALES:("=="|"!="|">"|">="|"<"|"<=")>}
 | <"/*"(~["/"])*  "*""/" >
 }
 
-void B() : {} {<BOOL> <ID> BP() | <NUM> <ID> BP() }
-void BP() : {} { <PYC> B() | {} }
-void A(): {} {<ID> <OA> E0() AP()}
-void AP(): {} {<PYC> A() | {} }
-void PROGRAM(): {} {B() <SEPARATOR> A() }
-void E0() : {} {E1() E0P()}
-void E0P() : {} {OP0() E1() E0P() | {} }
-void OP0() : {} {"+" | "-"}
-void E1() : {} {E2() E1P() }
-void E1P() : {} { <AND> E1() | <OR> E2() | {} }
-void E2() : {} {E3() E2P() }
-void E2P() : {} {<RELACIONALES> E3() | {} }
-void E3() : {} {E4() E3P() }
-void E3P() : {} {OP1() E4() E3P() | {} }
-void OP1() : {} {"*" | "/"}
-void E4() : {} {"-" E4() | <NOT> E5() | E5() }
-void E5() : {} {"(" E0() ")" | <ID> | <INT> | <DEC> | <EXE> }
+
+Program PROGRAM() : { Init init; Assign assign;} {init = iInit() "&&" assign = iAssign() <EOF> { return as.PROGRAM(init, assign); }}
+
+type id; type id; type id
+
+Init iInit() : {Token} { type id ; iInit() | type id   }
+
+Type Type() : {Token token;}
+{
+	token=<BOOL> {return as.typeBoolean();} |
+	token=<NUMBER> {return as.typeNumber();}
+}
+
+
+Exp E0() : {Exp left, right;}
+{
+	left = E1() right = E0P(left) {return right;}
+}
+
+Exp E0P(Exp last_right) : {Exp left;}
+{
+	"+" left = E1() last_right = RE0(as.Add(last_right, left)) {return last_right;} |
+	"-" left = E1() last_right = RE0(as.Sub(last_right, left)) {return last_right;} |
+	{return last_right;}
+}
+
+Exp E1() : {Exp left, right;}
+{
+	left = E2() right = E1P(left) {return right;}
+}
+
+Exp E1P(Exp last_right) : {Exp exp;}
+{
+	"and" left = E1() right = RE0(as.Add(last_right, left)) {return right;} |
+	"or" left = E1() right = RE0(as.Sub(last_right, left)) {return right;} |
+	{return last_right;}
+}
+
+Exp E2() : {Exp left, right;}
+{
+	left = E3() right = E2P(left) {return right;}
+}
+
+Exp E2P(Exp last_right) : {Exp exp; Token token;}
+{
+	token = <RELACIONALES> exp = E3() {return opRel(token.image, last_right, exp);} | {return last_right;}
+}
+
+Exp E3() : {Exp left, right;}
+{
+	left = E4() right = E3P(left) {return right;}
+}
+
+Exp E3P(Exp last_right) : {Exp exp;}
+{
+	"*" exp = E4() last_right = RE0(as.Mul(last_right, left)) {return last_right;} |
+	"/" exp = E4() last_right = RE0(as.Div(last_right, left)) {return last_right;} |
+	{return last_right;}
+}
+
+Exp E4() : {Exp left, right;}
+{
+	left = E5() right = E4P(left) {return right;}
+}
+
+Exp E5() : {Token token; Exp exp;}
+{
+	"(" exp = E0() ")" {return exp;} |
+	token=<ID> {return as.ID(token.image)}
+	token=<NUMBER> {return as.Number(token.image);} |
+	token=<BOOLEAN> {return as.Bool(token.image);}
+}

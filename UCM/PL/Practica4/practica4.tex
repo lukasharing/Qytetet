@@ -75,7 +75,7 @@ $\newline
 		\rowcolor{LightGray}
 		\mc{1}{Expresión}  & \mc{1}{Función Constructora Inicialización} \\ \hline
 		% Instruction Declaration %
-		$\text{Type ID}; \text{iInit}\rightarrow \text{iInit}$ & $\text{cInit: }Type\times \textbf{string}\times \text{iInit}\rightarrow \text{iInit}$ \\ \hline
+		$\text{Type ID}; \text{iInit}\rightarrow \text{iInit}$ & $\text{: }Type\times \textbf{string}\times \text{iInit}\rightarrow \text{iInit}$ \\ \hline
 		
 		$\text{Type ID}\rightarrow \text{iInit}$ & $\text{sInit: }Type\times \textbf{string}\rightarrow \text{iInt}$ \\ \hline
 			
@@ -148,24 +148,24 @@ $\newline
 
 \node [b]    (program) at(7.5, 0.0) {PROGRAM};
 
-\node [b]    (init) at(3.5, -2.0) {Init};
-\node [b]    (sinit) at(1.5, -4.0) {sInit};
-\node [b]    (cinit) at(5.5, -4.0) {cInit};
+\node [b]    (init) at(3.5, -4.0) {Init};
+\node [b]    (sinit) at(1.5, -2.0) {sInit};
+\node [b]    (cinit) at(5.5, -2.0) {cInit};
 
-\draw [>=open triangle 60,->] (sinit)  -- (3.1, -4.0) -- (init);
-\draw [>=open triangle 60,->] (cinit)  -- (3.9, -4.0) -- (init);
+\draw [>=open triangle 60,->] (sinit)  -- (1.5, -4.0) -- (init);
+\draw [>=open triangle 60,->] (cinit)  -- (5.5, -4.0) -- (init);
 
-\draw [>= triangle 60,->][densely dotted] (cinit)  -- (5.5, -2.0) -- (init);
+\draw [>= triangle 60,->][densely dotted] (cinit) -- (init);
 
-\node [b]    (assign) at(11.5, -2.0) {Assign};
+\node [b]    (assign) at(11.5, -4.0) {Assign};
 
-\node [b]    (sassign) at(9.5, -4.0) {sAssign};
-\node [b]    (cassign) at(13.5, -4.0) {cAssign};
+\node [b]    (sassign) at(9.5, -2.0) {sAssign};
+\node [b]    (cassign) at(13.5, -2.0) {cAssign};
 
-\draw [>=open triangle 60,->] (sassign)  -- (11.1, -4.0) -- (assign);
-\draw [>=open triangle 60,->] (cassign)  -- (11.9, -4.0) -- (assign);
+\draw [>=open triangle 60,->] (sassign)  -- (9.5, -4.0) -- (assign);
+\draw [>=open triangle 60,->] (cassign)  -- (13.5, -4.0) -- (assign);
 
-\draw [>= triangle 60,->][densely dotted] (cassign)  -- (13.5, -2.0) -- (assign);
+\draw [>= triangle 60,->][densely dotted] (cassign) -- (assign);
 
 \draw [>= triangle 60,->][densely dotted] (program)  -- (3.5, 0.0) -- (init);
 \draw [>= triangle 60,->][densely dotted] (program)  -- (11.5, 0.0) -- (assign);
@@ -174,20 +174,16 @@ $\newline
 
 \node [b]    (type) at(3.5, -6.0) {Type};
 
-\draw [>=triangle 60,->][densely dotted] (sinit)  -- (3.5, -5.0) -- (type);
-
-\draw [densely dotted] (cinit)  -- (3.5, -5.0);
+\draw [>=triangle 60,->][densely dotted] (init) -- (type);
 
 
 \node [b]    (type) at(3.5, -6.0) {Type};
 
 \node [b]    (id) at(7.5, -6.0) {ID};
 
-\draw [>= triangle 60,->][densely dotted] (cinit) -- (id);
-\draw [densely dotted] (sinit)  -- (6.5, -5.0);
+\draw [>= triangle 60,->][densely dotted] (init) -- (id);
 
-\draw [>= triangle 60,->][densely dotted] (sassign) -- (id);
-\draw [densely dotted] (cassign)  -- (8.5, -5.0);
+\draw [>= triangle 60,->][densely dotted] (assign) -- (id);
 
 
 \node [b] (exp) at(11.5, -6.0) {Exp};
@@ -198,13 +194,11 @@ $\newline
 \node [b]    (bool) at(14.5, -8.0) {Boolean};
 
 
-\draw [>= triangle 60,->][densely dotted] (sassign)  -- (11.5, -5.0) -- (exp);
+\draw [>= triangle 60,->][densely dotted] (assign) -- (exp);
 
 \draw [>= open triangle 60,->](id) -- (exp);
 \draw [>= open triangle 60,->](bool) -- (exp);
 \draw [>= open triangle 60,->](num) -- (exp);
-
-\draw [densely dotted] (cassign)  -- (11.5, -5.0);
 
 \node [b]    (tnumber) at(1.5, -8.0) {typeNumber};
 
@@ -228,10 +222,46 @@ $\newline
 
 
 % Binary
-\node [b]    (binary) at(3.5, -13.0) {BinaryOp};
-\draw [>= open triangle 60,->](4.5, -12.5) -- (10.5, -6.5);
-\draw [>= triangle 60,->][densely dotted](4.5, -12.75) -- (10.75, -6.5);
-\draw [>= triangle 60,->][densely dotted](4.25, -12.50) -- (10.50, -6.25);
+\node [b]    (binary) at(4.5, -13.0) {BinaryOp};
+\draw [>= open triangle 60,->](5.5, -12.5) -- (10.5, -6.5);
+\draw [>= triangle 60,->][densely dotted](5.5, -12.75) -- (10.75, -6.5);
+\draw [>= triangle 60,->][densely dotted](5.25, -12.50) -- (10.50, -6.25);
+
+\node [b]    (add) at(7.75, -12.0) {Add};
+\draw [>= open triangle 60,->](add) -- (binary);
+
+\node [b]    (sub) at(8.25, -13.25) {Sub};
+\draw [>= open triangle 60,->](sub) -- (binary);
+
+\node [b]    (mul) at(7.75, -14.5) {Mul};
+\draw [>= open triangle 60,->](mul) -- (binary);
+
+\node [b]    (div) at(7.0, -15.75) {Div};
+\draw [>= open triangle 60,->](div) -- (binary);
+
+\node [b]    (eq) at(4.75, -16.0) {Eq};
+\draw [>= open triangle 60,->](eq) -- (binary);
+
+\node [b]    (neq) at(2.50, -15.75) {nEq};
+\draw [>= open triangle 60,->](neq) -- (binary);
+
+\node [b]    (and) at(1.25, -14.5) {And};
+\draw [>= open triangle 60,->](and) -- (binary);
+
+\node [b]    (or) at(0.75, -13.25) {Or};
+\draw [>= open triangle 60,->](or) -- (binary);
+
+\node [b]    (less) at(1.25, -12.0) {Less};
+\draw [>= open triangle 60,->](less) -- (binary);
+
+\node [b]    (tless) at(2.00, -10.75) {LessThan};
+\draw [>= open triangle 60,->](tless) -- (binary);
+
+\node [b]    (greater) at(4.25, -10.50) {Greater};
+\draw [>= open triangle 60,->](greater) -- (binary);
+
+\node [b]    (tgreater) at(6.25, -9.25) {GreaterThan};
+\draw [>= open triangle 60,->](tgreater) -- (binary);
 
 
 \end{tikzpicture}
@@ -304,22 +334,92 @@ Utilizando la implementación de la gramática incontextual de la segunda práct
 		
 		% https://github.com/delcanovega/PL/blob/master/Memoria/Memoria_Procesadores_de_Lenguajes.pdf
 	\end{tabular}
-	\newline
-	\newline
-	Nota: \textit{Asn} es equivalente a \textit{Assign}.
+\end{table}
+Nota: \textit{Asn} es equivalente a \textit{Assign}.
 
-	\[
-	opRel(op, left, right)=\left\{
-	\begin{array}{ll}
-	op = "=="  &\Rightarrow Eq(left, right)\\
-	op = "\text{!=}" & \Rightarrow nEq(left, right)\\
-	op = "<" &\Rightarrow Less(left, right)\\
-	op = "<=" &\Rightarrow LessThan(left, right)\\
-	op = ">" &\Rightarrow Greater(left, right)\\
-	op = ">=" &\Rightarrow GreaterThan(left, right)\\
-	\end{array}
-	\right.
-	\]
+\[
+opRel(op, left, right)=\left\{
+\begin{array}{ll}
+op = "=="  &\Rightarrow Eq(left, right)\\
+op = "\text{!=}" & \Rightarrow nEq(left, right)\\
+op = "<" &\Rightarrow Less(left, right)\\
+op = "<=" &\Rightarrow LessThan(left, right)\\
+op = ">" &\Rightarrow Greater(left, right)\\
+op = ">=" &\Rightarrow GreaterThan(left, right)\\
+\end{array}
+\right.
+\]
+
+
+\newpage
+\section{Acondicionamiento para AST descendiente}
+Utilizando la implementación LL(1) de la práctica 2.
+\begin{table}[ht!]
+	\begin{tabular}{|p{4.2cm}|p{7.2cm}|}
+		\hline
+		\rowcolor{LightGray}
+		\mc{1}{Gramática}  & \mc{1}{Gramática Programa} \\ \hline
+		% Program %
+		
+		$\text{Program}\rightarrow \text{iInit\&\&iAssign}$ & $\text{Program.a }=PROGRAM(iInit.a, iAssign.a)$ \\ \hline
+		
+		\rowcolor{LightGray}
+		\mc{1}{Gramática}  & \mc{1}{Gramática Inicialización} \\ \hline
+		% Instruction Declaration %
+		$\text{iInit}\rightarrow \text{Init iInit'}$ & $\text{iInit.a}= sInit(Init.type, Init.id)$ \\ \hline
+		
+		$\text{iInit'}\rightarrow ; \text{iInit iInit'}$ & $\text{iInit'.a}= cInit(iInit.a, Init.type, Init.id)$ \\ \hline
+		
+		$\text{iInit'}\rightarrow \epsilon$ & $\text{iInit'.a}= iInit.ah$ \\ \hline
+		
+		$\text{Init}\rightarrow \text{Type ID}$ & $\text{Init.type}=Type \wedge \text{Init.id} = \text{ID.lex}$ \\ \hline
+		
+		% Asignación
+		\rowcolor{LightGray}
+		\mc{1}{Gramática}  & \mc{1}{Gramática Asignación} \\ \hline
+		
+		$\text{iAssign}\rightarrow \text{Asgn}; \text{iAssign}$ & $\text{iAssign.a}= sAssign(Asgn.id, Asgn.exp)$ \\ \hline
+		
+		$\text{iAssign}\rightarrow \text{Asgn}$ & $\text{iAssign.a}= cAssign(iAssign.a, Asn.id, Asn.exp)$ \\ \hline
+		
+		$\text{Asn}\rightarrow \text{ID = Exp}$ & $\text{Asn.id}=ID.lex \wedge \text{Asn.exp} = \text{Exp.a}$ \\ \hline
+		
+		\rowcolor{LightGray}
+		\mc{1}{Gramática}  & \mc{1}{Gramática Expresiones} \\ \hline
+		
+		$Exp \rightarrow Exp + E1$ & $Exp.a = Add(Exp.a, ELv1.a)$ \\ \hline
+		$Exp \rightarrow Exp - E1$ & $Exp.a = Sub(Exp.a, ELv1.a)$ \\ \hline
+		$Exp \rightarrow ELv1$ & $Exp.a = ELv1.a$ \\ \hline
+		
+		$ELv1 \rightarrow Exp + E1$ & $ELv1.a = And(ELv2.a, ELv1.a)$ \\ \hline
+		$ELv1 \rightarrow Exp - E1$ & $ELv1.a = Or(ELv2.a, ELv2.a)$ \\ \hline
+		$ELv1 \rightarrow ELv2$ & $ELv1.a = ELv2.a$ \\ \hline
+		
+		$ELv2 \rightarrow ELv3\text{ Ob } ELv3$ & $ELv1.a = opRel(Ob.op, ELv3.a, ELv3.a)$ \\ \hline
+		
+		$Ob \rightarrow op$ & $Ob.op = op$ \\ \hline
+		
+		\multicolumn{2}{|c|}{$\forall op\in\{or, not, ==, \text{!=}, <, <=, >, >=\}$} \\ \hline
+		
+		$ELv2 \rightarrow ELv3$ & $ELv2.a = ELv.3$ \\ \hline
+		
+		$ELv3 \rightarrow ELv3 * ELv4$ & $ELv3.a = Mul(ELv3.a, ELv4.a)$ \\ \hline
+		$ELv3 \rightarrow ELv3 / ELv4$ & $ELv3.a = Div(ELv3.a, ELv4.a)$ \\ \hline
+		
+		$ELv3 \rightarrow ELv4$ & $ELv3.a = ELv4.a$ \\ \hline
+		
+		$ELv4 \rightarrow - ELv4$ & $ELv4.a = UnaryMinus(ELv4.a)$ \\ \hline
+		$ELv4 \rightarrow \text{not }ELv5$ & $ELv4.a = Not(ELv5.a)$ \\ \hline
+		
+		$ELv4 \rightarrow ELv5$ & $ELv4.a = ELv5.a$ \\ \hline
+		
+		$ELv5 \rightarrow ( Exp )$ & $ELv5.a = Exp.a$ \\ \hline
+		$ELv5 \rightarrow num$ & $ELv5.a = Number(num.lex)$ \\ \hline
+		$ELv5 \rightarrow bool$ & $ELv5.a = Boolean(bool.lex)$ \\ \hline
+		$ELv5 \rightarrow ID$ & $ELv5.a = ID(ID.lex)$ \\ \hline
+		
+		% https://github.com/delcanovega/PL/blob/master/Memoria/Memoria_Procesadores_de_Lenguajes.pdf
+	\end{tabular}
 \end{table}
 
 \end{document}
