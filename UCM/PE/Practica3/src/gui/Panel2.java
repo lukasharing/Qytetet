@@ -387,7 +387,7 @@ public class Panel2 extends JFrame {
 				addPlotLines(generations, best_distances);
 				
 				//best_ev.setText(Integer.toString((int) best_distances.get(0)[best_distances.get(0).length - 1]) +" kms");
-				best_ev.setText(Integer.toString((int) fun.evaluate(ga.getBestAbs_chr().getFenotypes())) +" kms");
+				best_ev.setText(Integer.toString((int) fun.evaluate(ga.getBestAbs_chr())) +" kms");
 				
 				
 				

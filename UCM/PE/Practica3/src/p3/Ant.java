@@ -51,16 +51,16 @@ public class Ant {
 	private int y;
 	private double angle;
 
-	public Ant() {
-		this.x = 0;
-		this.y = 0;
+	public Ant(int x, int y) {
+		this.x = x;
+		this.y = y;
 		this.angle = Math.PI / 2;
 
 		if(MAP_ANT[this.y][this.x] == 1) {
 			foodvisited.put(this.x + this.y * 32, true);
 		}
 	}
-
+	
 	// Next Step
 	public void step(AntMovement mov) {
 		switch(mov) {

@@ -91,14 +91,14 @@ public class GeneticAlgorithm<T> {
 		ArrayList<Chromosome> best = getBest(this.elitism);
 
 		best_absolute = getBest(1).get(0);
-		generation_best[0] = function.evaluate(best_absolute.getFenotypes());
+		generation_best[0] = function.evaluate(best_absolute);
 		generation_best_abs[0] = generation_best[0];
 
 		// Mean
 		double mean = 0.0;
 		for (@SuppressWarnings("rawtypes")
 		Chromosome chr : chromosomes) {
-			mean += function.evaluate(chr.getFenotypes());
+			mean += function.evaluate(chr);
 		}
 		generation_mean[0] = mean / initial_population;
 		int failureCount = 0;
@@ -123,18 +123,18 @@ public class GeneticAlgorithm<T> {
 
 			best_chr = getBest(1).get(0);
 
-			if (function.compare(function.evaluate(best_absolute.getFenotypes()), best_chr.getFenotypes()) > 0) {
+			if (function.compare(function.evaluate(best_absolute), best_chr) > 0) {
 				best_absolute = best_chr;
 			}
 
-			generation_best[currentGeneration] = function.evaluate(best_chr.getFenotypes());
-			generation_best_abs[currentGeneration] = function.evaluate(best_absolute.getFenotypes());
+			generation_best[currentGeneration] = function.evaluate(best_chr);
+			generation_best_abs[currentGeneration] = function.evaluate(best_absolute);
 
 			// Mean
 			mean = 0.0;
 			for (@SuppressWarnings("rawtypes")
 			Chromosome chr : chromosomes) {
-				mean += function.evaluate(chr.getFenotypes());
+				mean += function.evaluate(chr);
 			}
 			generation_mean[currentGeneration] = mean / initial_population;
 
@@ -196,10 +196,10 @@ public class GeneticAlgorithm<T> {
 
 		ArrayList<Pair<Chromosome, Double>> pares = new ArrayList<>();
 		for (Chromosome chr : chromosomes) {
-			pares.add(new Pair<Chromosome, Double>(chr, function.evaluate(chr.getFenotypes())));
+			pares.add(new Pair<Chromosome, Double>(chr, function.evaluate(chr)));
 		}
 
-		pares.sort((a, b) -> function.compare(a.second, b.first.getFenotypes()));
+		pares.sort((a, b) -> function.compare(a.second, b.first));
 
 		// System.out.println(pares);
 		for (int i = 0; i < subsize; ++i) {
@@ -218,13 +218,12 @@ public class GeneticAlgorithm<T> {
 
 			@SuppressWarnings("rawtypes")
 			Chromosome first_chromosome = chromosomes.get(0);
-			double min1 = function.evaluate((first_chromosome).getFenotypes());
+			double min1 = function.evaluate(first_chromosome);
 			eval_results[0] = min1;
 			for (int i = 1; i < size; ++i) {
 				@SuppressWarnings("rawtypes")
 				Chromosome current = chromosomes.get(i);
-				double[] fenotypes = (current).getFenotypes();
-				eval_results[i] = function.evaluate(fenotypes);
+				eval_results[i] = function.evaluate(current);
 
 				if (eval_results[i] < min1) {
 					min1 = eval_results[i];
@@ -241,13 +240,12 @@ public class GeneticAlgorithm<T> {
 
 			@SuppressWarnings("rawtypes")
 			Chromosome first_chromosome = chromosomes.get(0);
-			double max1 = function.evaluate((first_chromosome).getFenotypes());
+			double max1 = function.evaluate(first_chromosome);
 			eval_results[0] = max1;
 			for (int i = 1; i < size; ++i) {
 				@SuppressWarnings("rawtypes")
 				Chromosome current = chromosomes.get(i);
-				double[] fenotypes = (current).getFenotypes();
-				eval_results[i] = function.evaluate(fenotypes);
+				eval_results[i] = function.evaluate(current);
 
 				if (eval_results[i] > max1) {
 					max1 = eval_results[i];
@@ -320,7 +318,7 @@ public class GeneticAlgorithm<T> {
 				int first = (int) (Math.random() * initial_population);
 				Chromosome best_cr = chromosomes.get(first);
 				Chromosome worst_cr = best_cr;
-				double best = function.evaluate(best_cr.getFenotypes());
+				double best = function.evaluate(best_cr);
 				double worst = best;
 
 				// Generate n more and compare.
@@ -328,13 +326,13 @@ public class GeneticAlgorithm<T> {
 					int random = (int) (Math.random() * initial_population);
 					Chromosome chromosme = chromosomes.get(random);
 					// Check if better than the best.
-					if (function.compare(best, chromosme.getFenotypes()) > 0) {
-						best = function.evaluate(chromosme.getFenotypes());
+					if (function.compare(best, chromosme) > 0) {
+						best = function.evaluate(chromosme);
 						best_cr = chromosme;
 					} else {
 						// Check if it is worse than the worst.
-						if (function.compare(worst, chromosme.getFenotypes()) > 0) {
-							worst = function.evaluate(chromosme.getFenotypes());
+						if (function.compare(worst, chromosme) > 0) {
+							worst = function.evaluate(chromosme);
 							worst_cr = chromosme;
 						}
 					}

@@ -15,7 +15,12 @@ public class FunctionAnt extends Function{
 		arguments_intervals.add(new Pair<Integer, Integer>(0, 0));
 	}
 	
-	public double evaluate(double... args) {
+	public double evaluate(AntChromosome chromosome) {
+		
+		Ant ant = new Ant(0, 0);
+		
+		
+		
 		return 0;
 	};
 }

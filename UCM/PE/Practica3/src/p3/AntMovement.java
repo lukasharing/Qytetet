@@ -9,9 +9,9 @@ public enum AntMovement {
 	MOVE(0),
 	
 	// Functions
-	ISFOOD(3),
+	ISFOOD(2),
 	PROGN2(2),
-	PROGN3(2);
+	PROGN3(3);
 	
 
 	public int num_args;

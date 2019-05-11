@@ -334,12 +334,7 @@ public class Panel3 extends JFrame {
 				tp1.revalidate();
 
 				restartResults(barradchactr, titulodcha);
-
-
-				Function fun = new FunctionAnt(1, FunctionType.MAXIMIZE);
-				AntChromosome chr = new AntChromosome(fun, 0);
-				System.out.println(chr.toString());
-
+				
 				/*
 				int elitism_am = ((Integer) elitism_amount.getValue());
 

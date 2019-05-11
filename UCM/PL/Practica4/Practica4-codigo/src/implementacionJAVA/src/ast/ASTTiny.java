@@ -31,7 +31,7 @@ public class ASTTiny {
 	public Type typeNumber() { return new typeNumber(); }
 	public Exp ID(String id) { return new ID(id); }  
 	public Exp Number(String st) { return new Number(st); } 
-	public Exp Boolean(String bool) { return new Boolean(bool); }
+	public Exp Bool(String bool) { return new Boolean(bool); }
 	
 	
 }

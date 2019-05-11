@@ -27,7 +27,7 @@ public abstract class Chromosome<T> {
 		for (T gene : genes) {
 			result += gene + ", \n";
 		}
-		result += "Evaluation: " + func.evaluate(this.getFenotypes()) + "\n";
+		result += "Evaluation: " + func.evaluate(this) + "\n";
 		return result;
 	}
 

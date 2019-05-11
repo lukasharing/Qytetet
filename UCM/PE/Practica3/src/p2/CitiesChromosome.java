@@ -847,7 +847,7 @@ public class CitiesChromosome extends Chromosome<Integer> {
 		String result = "\t\n Chromosome: \n";
 		result += "Total cities: " + this.genes.size() + "\n"; 
 		result += genes.stream().map(g -> parseCity(g) + "("+ g +")").collect(Collectors.joining("->"));
-		result += "\nEvaluation: " + func.evaluate(this.getFenotypes()) + "\n";
+		result += "\nEvaluation: " + func.evaluate(this) + "\n";
 		return result;
 	}
 	

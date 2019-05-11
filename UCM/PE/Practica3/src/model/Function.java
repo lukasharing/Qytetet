@@ -2,7 +2,7 @@ package model;
 
 import java.util.List;
 
-public abstract class Function {
+public abstract class Function{
 
 	public FunctionType maxmin;
 
@@ -25,11 +25,11 @@ public abstract class Function {
 		return arguments_intervals.get(i);
 	};
 
-	public double evaluate(double... args) {
+	public double evaluate(Chromosome args) {
 		return 0.0;
 	};
 
-	public int compare(double v1, double... args) {
+	public int compare(double v1, Chromosome args) {
 		if (evaluate(args) == v1)
 			return 0;
 
