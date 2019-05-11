@@ -44,6 +44,7 @@ import model.Pair;
 import p3.Ant;
 import p3.AntChromosome;
 import p3.AntMovement;
+import p3.AntTree;
 import p3.FunctionAnt;
 
 public class Panel3 extends JFrame {
@@ -130,11 +131,28 @@ public class Panel3 extends JFrame {
 			AntMovement.TURN_RIGHT, AntMovement.MOVE, AntMovement.TURN_LEFT,
 			AntMovement.MOVE*/
 		);
-		Ant ant = new Ant();
+		
 
-		for(int i = 0; i < movement.size(); ++i) {
-			ant.step(movement.get(i));
-		}
+		Function fun = new FunctionAnt(1, FunctionType.MAXIMIZE);
+		AntChromosome chr = new AntChromosome(fun, 0);
+		
+		
+		AntTree root = new AntTree(null, 0, AntMovement.PROGN2);
+		AntTree cr1 = new AntTree(root, 1, AntMovement.MOVE);
+		AntTree cr2 = new AntTree(root, 1, AntMovement.ISFOOD);
+		AntTree c12 = new AntTree(cr2, 2, AntMovement.MOVE);
+		AntTree c22 = new AntTree(cr2, 2, AntMovement.TURN_RIGHT);
+		
+		root.addChild(cr1);
+		root.addChild(cr2);
+		
+		cr2.addChild(c12);
+		cr2.addChild(c22);
+		
+		chr.setTree(root);
+		
+		//Pair<Integer, Integer> coords = ant.coords();
+		
 
 		tp1 = new JPanel() {
 			private static final long serialVersionUID = 1L;
@@ -144,7 +162,6 @@ public class Panel3 extends JFrame {
 		    public void paintComponent(Graphics g){
 				Graphics2D ctx = (Graphics2D)g;
 
-				Pair<Integer, Integer> coords = ant.coords();
 
 				final int SIZE = 16;
 				final int DSX = +200;
@@ -167,37 +184,11 @@ public class Panel3 extends JFrame {
 					}
 				}
 
-				ant.draw(ctx);
-
-
-				// Draw path done
-				int x = 0;
-				int y = 0;
-				double angle = Math.PI / 2;
-				for(AntMovement mov : movement){
-					int dx = x * SIZE + DSX + SIZE / 2;
-					int dy = y * SIZE + DSY + SIZE / 2;
-					switch(mov) {
-						case TURN_LEFT:
-							angle -= Math.PI * 0.5;
-						break;
-						case TURN_RIGHT:
-							angle += Math.PI * 0.5;
-						break;
-						case MOVE:
-							ctx.drawLine(
-								dx,
-								dy,
-								dx + (int)Math.cos(angle) * SIZE,
-								dy + (int)Math.sin(angle) * SIZE
-							);
-
-
-							x += Math.cos(angle);
-							y += Math.sin(angle);
-						break;
-					}
-				}
+				FunctionAnt funt = (FunctionAnt) fun;
+				System.out.println(chr.genes.get(0).toString());
+				System.out.println(fun.evaluate(chr));
+				funt.last.draw(ctx);
+				
 		    };
 		};
         tp1.setLayout(new GridLayout(1, 1));

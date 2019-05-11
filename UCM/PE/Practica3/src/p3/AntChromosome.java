@@ -2,7 +2,6 @@ package p3;
 
 import model.Chromosome;
 import model.Function;
-import p2.CitiesChromosome;
 
 public class AntChromosome extends Chromosome<AntTree> {
 	
@@ -11,7 +10,6 @@ public class AntChromosome extends Chromosome<AntTree> {
 	public AntChromosome(Function f, double p) {
 		super(f, 0.0);
 		// Initialize
-
 		AntTree new_tree = new AntTree(null, 0, AntMovement.random_node());
 		this.genes.add(new_tree);
 		create_tree(new_tree, 0);
@@ -54,5 +52,7 @@ public class AntChromosome extends Chromosome<AntTree> {
 	public String toString() {
 		return this.genes.get(0).toString();
 	}
+
+	public void setTree(AntTree root) { this.genes.set(0, root); }
 	
 }

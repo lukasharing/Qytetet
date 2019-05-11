@@ -13,7 +13,7 @@ public class AntTree {
 	// Node type tree
 	AntMovement type;
 	
-	AntTree(AntTree _parent, int _depth, AntMovement _type){
+	public AntTree(AntTree _parent, int _depth, AntMovement _type){
 		this.parent = _parent;
 		this.depth = _depth;
 		this.type = _type;
@@ -21,6 +21,8 @@ public class AntTree {
 	};
 	
 	public void addChild(AntTree child){ children.add(child); };
+	public AntTree getChild(int i) { return children.get(i); };
+	
 	
 	public AntTree clone(AntTree parent) {
 		AntTree clone = new AntTree(parent, this.depth, this.type);

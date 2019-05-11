@@ -48,13 +48,17 @@ public class Ant {
 	HashMap<Integer, Boolean> foodvisited = new HashMap<>(100);
 
 	private int x;
+	public int getX() { return x; };
 	private int y;
+	public int getY() { return y; };
 	private double angle;
-
+	public void setAngle(double a) { angle = a; };
+	public double getAngle() { return angle; };
+	
 	public Ant(int x, int y) {
 		this.x = x;
 		this.y = y;
-		this.angle = Math.PI / 2;
+		this.angle = 0;
 
 		if(MAP_ANT[this.y][this.x] == 1) {
 			foodvisited.put(this.x + this.y * 32, true);
@@ -62,10 +66,11 @@ public class Ant {
 	}
 	
 	// Next Step
+	static double tau = Math.PI * 2;
 	public void step(AntMovement mov) {
 		switch(mov) {
-			case TURN_LEFT: this.angle -= Math.PI * 0.5; break;
-			case TURN_RIGHT: this.angle += Math.PI * 0.5;  break;
+			case TURN_LEFT: this.angle = (this.angle + Math.PI * 0.5 + tau) % tau; break;
+			case TURN_RIGHT: this.angle = (this.angle + Math.PI * 0.5 + tau) % tau;  break;
 			case MOVE:
 				this.x += Math.cos(this.angle);
 				this.y += Math.sin(this.angle);
@@ -85,13 +90,13 @@ public class Ant {
 
 
 	// Return next block (0 = nothing, 1 = food)
-	public int sensor() {
-		int x = this.x + (int)Math.cos(this.angle);
-		int y = this.y + (int)Math.sin(this.angle);
+	public boolean sensor() {
+		int nx = this.x + (int)Math.cos(this.angle);
+		int ny = this.y + (int)Math.sin(this.angle);
 
-		x = (x + 32) % 32;
-		y = (y + 32) % 32;
-		return MAP_ANT[y][x];
+		nx = (nx + 32) % 32;
+		ny = (ny + 32) % 32;
+		return ((MAP_ANT[ny][nx] == 1) && !foodvisited.containsKey(nx + ny * 32));
 	};
 
 	// Returns Position of the Ant

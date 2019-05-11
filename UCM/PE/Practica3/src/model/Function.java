@@ -2,7 +2,7 @@ package model;
 
 import java.util.List;
 
-public abstract class Function{
+public class Function{
 
 	public FunctionType maxmin;
 
