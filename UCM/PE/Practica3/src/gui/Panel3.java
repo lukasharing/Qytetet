@@ -85,6 +85,7 @@ public class Panel3 extends JFrame {
 	// Algoritmos de mutaci�n
 	private List<MutationType> mutation_type = Arrays.asList(
 		MutationType.SIMPLE_TERMINAL,
+		MutationType.SIMPLE_FUNCION,
 		MutationType.SUBTREE,
 		MutationType.PERMUTATION
 	);
@@ -124,13 +125,11 @@ public class Panel3 extends JFrame {
 		tp0.setLayout(new GridLayout(1, 1));
 		final BufferedImage map = ImageIO.read(new File("./src/images/mapa.png"));
 
-		List<AntMovement> movement = Arrays.asList(
-			/*AntMovement.TURN_LEFT, AntMovement.MOVE, AntMovement.MOVE,
+		/*List<AntMovement> movement = Arrays.asList(
+			AntMovement.TURN_LEFT, AntMovement.MOVE, AntMovement.MOVE,
 			AntMovement.TURN_RIGHT, AntMovement.MOVE, AntMovement.TURN_LEFT,
-			AntMovement.MOVE*/
+			AntMovement.MOVE
 		);
-		
-		/*
 		AntTree root = new AntTree(null, 0, AntMovement.PROGN2);
 		AntTree cr1 = new AntTree(root, 1, AntMovement.MOVE);
 		AntTree cr2 = new AntTree(root, 1, AntMovement.ISFOOD);
@@ -146,6 +145,7 @@ public class Panel3 extends JFrame {
 		chr.setTree(root);
 		*/
 		//Pair<Integer, Integer> coords = ant.coords();
+		
 		
 
 		tp1 = new JPanel() {
@@ -329,7 +329,9 @@ public class Panel3 extends JFrame {
 				AntChromosome c0 = new AntChromosome(fun, 0);
 				AntChromosome c1 = new AntChromosome(fun, 0);
 
-				ga = new GeneticAlgorithm<AntChromosome>(
+				c0.mutate(MutationType.SIMPLE_TERMINAL, 1.0);
+				
+				/*ga = new GeneticAlgorithm<AntChromosome>(
 					AntChromosome.class,
 					Integer.parseInt(size_population.getText()),
 					num_gen,
@@ -340,7 +342,7 @@ public class Panel3 extends JFrame {
 				);
 
 				List<double[]> best_distances = ga.run();
-
+				
 
 
 				double[] generations = new double[num_gen];
@@ -348,9 +350,8 @@ public class Panel3 extends JFrame {
 					generations[i] = i;
 				}
 
-				
-				
 				addPlotLines(generations, best_distances);
+				*/
 		}});
 
 		restart.addActionListener(new ActionListener() {

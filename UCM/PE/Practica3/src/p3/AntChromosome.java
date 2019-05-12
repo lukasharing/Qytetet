@@ -6,7 +6,7 @@ import model.MutationType;
 
 public class AntChromosome extends Chromosome<AntTree> {
 	
-	final int MAX_DEPTH = 3;
+	final int MAX_DEPTH = 4;
 	
 	public AntChromosome(Function f, double p) {
 		super(f, 0.0);
@@ -37,22 +37,45 @@ public class AntChromosome extends Chromosome<AntTree> {
 	// - Mutations
 	public void mutate(MutationType mutation, double prob) {
 		if(Math.random() > prob) return;
-		
+
+		AntTree node = this.genes.get(0);
 		switch(mutation) {
 			case SIMPLE_TERMINAL:
 				
-				AntTree node = this.genes.get(0);
 				while(node.type.num_args > 0) {
 					node = node.getChild((int)Math.floor(node.totalChildren() * Math.random()));
 				}
 				
-				System.out.println(node);
+				node.type = AntMovement.random_final();
 				
 			break;
 			case SUBTREE:
+
+				while(node.depth > 0) {
+					node = node.getChild((int)Math.floor(node.totalChildren() * Math.random()));
+				}
+				
+				node.parent.type = AntMovement.random_node();
+				node.emptyChildren();
+				create_tree(node, node.parent.depth);
 				
 			break;
 			case PERMUTATION:
+				
+				int idx = 0;
+				while(node.depth > 0) {
+					idx = (int)Math.floor(node.totalChildren() * Math.random());
+					node = node.getChild(idx);
+				}
+				
+				// Choose random node
+				int rnd = -1;
+				do { rnd = (int)(node.parent.totalChildren() * Math.random()); }while(idx != rnd);
+				
+				// Swap
+				AntTree temp = node.parent.getChild(rnd);
+				node.parent.setChild(idx, node.parent.getChild(rnd));
+				node.parent.setChild(rnd, temp);
 				
 			break;
 		}

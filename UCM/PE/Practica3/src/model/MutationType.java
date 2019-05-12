@@ -9,9 +9,10 @@ public enum MutationType {
 	INVERSION("Inversión"),
 	HEURISTIC("Heurística"),
 	SELF_METHOD_1("Método Propio 1"),
-	SIMPLE_TERMINAL("Funcional Simple"),
+	SIMPLE_TERMINAL("Terminal Simple"),
 	SUBTREE("SubÁrbol"),
-	PERMUTATION("Permutación");
+	PERMUTATION("Permutación"),
+	SIMPLE_FUNCION("Funcional Simple");
 	
 	private final String name;
 	

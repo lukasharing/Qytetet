@@ -7,9 +7,9 @@ public class AntTree {
 	// Parent
 	private ArrayList<AntTree> children;
 	// Parent
-	private AntTree parent;
+	public AntTree parent;
 	// Profundidad
-	private int depth;
+	public int depth;
 	// Node type tree
 	AntMovement type;
 	
@@ -21,9 +21,10 @@ public class AntTree {
 	};
 	
 	public void addChild(AntTree child){ children.add(child); };
+	public void setChild(int i, AntTree child) { children.set(i, child); }
 	public AntTree getChild(int i) { return children.get(i); };
 	public int totalChildren() { return children.size(); };
-	
+	public void emptyChildren() { children.clear(); };
 	
 	public AntTree clone(AntTree parent) {
 		AntTree clone = new AntTree(parent, this.depth, this.type);
