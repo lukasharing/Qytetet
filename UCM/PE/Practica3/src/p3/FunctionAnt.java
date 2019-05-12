@@ -25,37 +25,54 @@ public class FunctionAnt extends Function{
 	public double evaluate(Chromosome chromosome) {
 		Ant ant = last = new Ant(0, 0);
 		do {
-			execute(ant, (AntTree)chromosome.genes.get(0));
+			execute(ant, (AntTree)chromosome.genes.get(0), null);
 		}while(steps > 0);
 		steps = 400;
 		
 		return ant.eaten();
 	};
+	
+	public ArrayList<Pair<Integer, Integer>> getPath(Chromosome chr){
+		
+		ArrayList<Pair<Integer, Integer>> result = new ArrayList<>();
+		Ant ant = last = new Ant(0, 0);
+		
+		result.add(ant.coords());
+		do {
+			execute(ant, (AntTree)chr.genes.get(0), result);
+		}while(steps > 0);
+		steps = 400;
+		
+		return result;
+	}
 
 	
-	public void execute(Ant ant, AntTree tree) {
+	public void execute(Ant ant, AntTree tree, ArrayList<Pair<Integer, Integer>> res) {
 		if(steps <= 0) return;
 		
 		switch(tree.type) {
 			case ISFOOD:
 				if(ant.sensor()) { // is food
-					execute(ant, tree.getChild(0));
+					execute(ant, tree.getChild(0), res);
 				}else {
-					execute(ant, tree.getChild(1));
+					execute(ant, tree.getChild(1), res);
 				}
 			break;
 			case PROGN2:
-				execute(ant, tree.getChild(0));
-				execute(ant, tree.getChild(1));
+				execute(ant, tree.getChild(0), res);
+				execute(ant, tree.getChild(1), res);
 			break;
 			case PROGN3:
-				execute(ant, tree.getChild(0));
-				execute(ant, tree.getChild(1));
-				execute(ant, tree.getChild(2));
+				execute(ant, tree.getChild(0), res);
+				execute(ant, tree.getChild(1), res);
+				execute(ant, tree.getChild(2), res);
 			break;
 			default:
 				--steps;
 				ant.step(tree.type);
+				if(res != null && tree.type.equals(AntMovement.MOVE)) {
+					res.add(ant.coords());
+				}
 			break;
 		}
 			

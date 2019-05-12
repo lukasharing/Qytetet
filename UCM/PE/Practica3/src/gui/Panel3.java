@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -92,6 +93,7 @@ public class Panel3 extends JFrame {
 	private JSpinner elitism_amount;
 	private JCheckBox contractivity;
 	private GeneticAlgorithm<?> ga = null;
+	Function fun;
 
 	public Panel3() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
 			UnsupportedLookAndFeelException, IOException {
@@ -166,13 +168,33 @@ public class Panel3 extends JFrame {
 							ctx.fillRect(dx, dy, SIZE, SIZE);
 						}
 
-						ctx.setColor(Color.BLACK);
-						ctx.drawRect(dx, dy, SIZE, SIZE);
 					}
 				}
 				
+				if(ga != null) {
+					FunctionAnt fut = (FunctionAnt)fun;
+					ArrayList<Pair<Integer, Integer>> res = fut.getPath(ga.getBestAbs_chr());
+	
+					for(int j = 0; j < res.size(); ++j) {
+						ctx.setColor(Color.ORANGE);
+						int dx = res.get(j).first * SIZE + DSX;
+						int dy = res.get(j).second * SIZE + DSY;
+						ctx.fillRect(dx, dy, SIZE, SIZE);
+					}
+					
+					
+					fut.last.draw(ctx);
+				}
+				// Draw Grid
+				for(int j = 0; j < 32; ++j) {
+					for(int i = 0; i < 32; ++i) {
+						int dx = i * SIZE + DSX;
+						int dy = j * SIZE + DSY;
+						ctx.setColor(Color.BLACK);
+						ctx.drawRect(dx, dy, SIZE, SIZE);
+					}	
+				}
 				
-				System.out.println(ga.getBestAbs_chr().genes.get(0).toString());
 		    };
 		};
         tp1.setLayout(new GridLayout(1, 1));
@@ -319,7 +341,7 @@ public class Panel3 extends JFrame {
 				model.CrossType type_cross = cross_type.get(cross_sel.getSelectedIndex());
 				model.MutationType type_mut = mutation_type.get(mutation_sel.getSelectedIndex());
 				
-				Function fun = new FunctionAnt(1, FunctionType.MAXIMIZE);
+				fun = new FunctionAnt(1, FunctionType.MAXIMIZE);
 				/*
 				AntChromosome c0 = new AntChromosome(fun, 0);
 				AntChromosome c1 = new AntChromosome(fun, 0);
