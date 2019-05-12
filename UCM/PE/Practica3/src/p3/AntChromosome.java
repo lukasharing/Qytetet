@@ -57,8 +57,8 @@ public class AntChromosome extends Chromosome<AntTree> {
 				}
 				
 				node.parent.type = AntMovement.random_node();
-				node.emptyChildren();
-				create_tree(node, node.parent.depth);
+				node.parent.emptyChildren();
+				create_tree(node.parent, node.parent.depth);
 				
 			break;
 			case PERMUTATION:
