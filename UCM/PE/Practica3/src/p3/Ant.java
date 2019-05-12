@@ -69,7 +69,7 @@ public class Ant {
 	static double tau = Math.PI * 2;
 	public void step(AntMovement mov) {
 		switch(mov) {
-			case TURN_LEFT: this.angle = (this.angle + Math.PI * 0.5 + tau) % tau; break;
+			case TURN_LEFT: this.angle = (this.angle - Math.PI * 0.5 + tau) % tau; break;
 			case TURN_RIGHT: this.angle = (this.angle + Math.PI * 0.5 + tau) % tau;  break;
 			case MOVE:
 				int dx = (int)Math.cos(this.angle);
@@ -95,7 +95,7 @@ public class Ant {
 
 		nx = (nx + 32) % 32;
 		ny = (ny + 32) % 32;
-	
+		
 		return ((MAP_ANT[ny][nx] == 1) && !foodvisited.containsKey(nx + ny * 32));
 	};
 
