@@ -38,7 +38,8 @@ public class AntChromosome extends Chromosome<AntTree> {
 	
 	// -----------------------------------------------
 	// - Cromosome
-	public void cross(AntChromosome chr1, CrossType type) {
+	@Override
+	public void cross(Chromosome chr1, CrossType type) {
 		switch(type) {
 			case SUBTREE:
 				
@@ -47,7 +48,7 @@ public class AntChromosome extends Chromosome<AntTree> {
 					node1 = node1.getChild((int)Math.floor(node1.totalChildren() * Math.random()));
 				}
 
-				AntTree node2 = chr1.genes.get(0);
+				AntTree node2 = (AntTree) chr1.genes.get(0);
 				while(node2.type.num_args > 0) {
 					node2 = node2.getChild((int)Math.floor(node2.totalChildren() * Math.random()));
 				}

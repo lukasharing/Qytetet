@@ -249,7 +249,7 @@ public class Panel3 extends JFrame {
 
 
 
-		tabbedPane.addTab("Gr�fica", tp0);
+		tabbedPane.addTab("Grafica", tp0);
         tabbedPane.addTab("Mapa", tp1);
         tabbedPane.addTab("Nodos", tp2);
 
@@ -380,30 +380,30 @@ public class Panel3 extends JFrame {
 				restartPlot();
 				tp1.repaint();
 				tp1.revalidate();
-
+	
 				restartResults(barradchactr, titulodcha);
-
-
+	
+	
 				int elitism_am = ((Integer) elitism_amount.getValue());
-
+	
 				int num_gen = Integer.parseInt(num_generations.getText());
-
+	
 				model.SelectionType type_sel = selection_type.get(selection_sel.getSelectedIndex());
 				model.CrossType type_cross = cross_type.get(cross_sel.getSelectedIndex());
 				model.MutationType type_mut = mutation_type.get(mutation_sel.getSelectedIndex());
-
+	
 				/*
 				AntChromosome c0 = new AntChromosome(fun, 0);
 				AntChromosome c1 = new AntChromosome(fun, 0);
-
-
+	
+	
 				System.out.println(c0.toString());
 				System.out.println(c1.toString());
 				System.out.println("Crossing ---------------");
 				c0.cross(c1, CrossType.SUBTREE);
 				System.out.println(c0.toString());
 				*/
-
+	
 				ga = new GeneticAlgorithm<AntChromosome>(
 					AntChromosome.class,
 					Integer.parseInt(size_population.getText()),
@@ -413,34 +413,34 @@ public class Panel3 extends JFrame {
 					0.0, elitism_am, type_sel, type_cross, type_mut,
 					fun, contractivity.isSelected()
 				);
-
+	
 				List<double[]> best_distances = ga.run();
-
-
-
+	
+	
+	
 				double[] generations = new double[num_gen];
 				for (int i = 0; i < num_gen; ++i) {
 					generations[i] = i;
 				}
-
+	
 				addPlotLines(generations, best_distances);
-
+	
 				best_ev.setText((int) fun.evaluate(ga.getBestAbs_chr()) +" comidos");
 				System.out.println(ga.getBestAbs_chr().toString());
-
-
+	
+	
 				AntTree root = (AntTree) ga.getBestAbs_chr().genes.get(0);
 				Text rootText = new Text(root.type.toString(), 60, 30);
 				DefaultTreeForTreeLayout<Text> tree = new DefaultTreeForTreeLayout<>(rootText);
 				generateVisualizationTree(tree, rootText, root);
-
-
+	
+	
 		        NodeExtentProvider<Text> nodeExtentProvider = new NodeExtentProvider<Text>() {
 		            @Override
 		            public double getWidth(Text tn) {
 		                return 75;
 		            }
-
+	
 		            @Override
 		            public double getHeight(Text tn) {
 		              return 20;
@@ -451,23 +451,21 @@ public class Panel3 extends JFrame {
 		        TextTreePane panel = new TextTreePane(treeLayout);
 		        tp2.removeAll();
 		        tp2.add(panel);
+			}});
 
-
-		}});
-
-		restart.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ga = null;
-				restartPlot();
-				tp1.repaint();
-				tp1.revalidate();
-				best_ev.setText(" ");
-				restartResults(barradchactr, titulodcha);
-
-				plot.repaint();
-				plot.revalidate();
-			}
-		});
+			restart.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					ga = null;
+					restartPlot();
+					tp1.repaint();
+					tp1.revalidate();
+					best_ev.setText(" ");
+					restartResults(barradchactr, titulodcha);
+	
+					plot.repaint();
+					plot.revalidate();
+				}
+			});
 
 	}
 
