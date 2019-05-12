@@ -33,6 +33,12 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
+
+import org.abego.treelayout.Configuration.Location;
+import org.abego.treelayout.NodeExtentProvider;
+import org.abego.treelayout.TreeLayout;
+import org.abego.treelayout.util.DefaultConfiguration;
+import org.abego.treelayout.util.DefaultTreeForTreeLayout;
 import org.math.plot.Plot2DPanel;
 
 import model.CrossType;
@@ -55,7 +61,7 @@ public class Panel3 extends JFrame {
 	Plot2DPanel plot;
 	JTabbedPane tabbedPane;
 	JPanel tp0;
-	JPanel tp1;
+	JPanel tp1, tp2;
 
 	private JTextField size_population;
 	private JTextField num_generations;
@@ -118,63 +124,63 @@ public class Panel3 extends JFrame {
 		tp0 = new JPanel();
 		tp0.add(plot);
 		tp0.setLayout(new GridLayout(1, 1));
-		
+
 		/*
 		AntChromosome chr = new AntChromosome(fun, 0);
-		
+
 		AntTree root = new AntTree(null, 0, AntMovement.ISFOOD);
 		AntTree cr1 = new AntTree(root, 1, AntMovement.MOVE);
 		AntTree cr2 = new AntTree(root, 1, AntMovement.PROGN3);
-		
+
 		//cr2
 		AntTree cr12 = new AntTree(cr2, 2, AntMovement.TURN_LEFT);
 		AntTree cr22 = new AntTree(cr2, 2, AntMovement.ISFOOD);
 		AntTree cr32 = new AntTree(cr2, 2, AntMovement.PROGN3);
-		
+
 		// cr22
 		AntTree cr122 = new AntTree(cr22, 3, AntMovement.PROGN3);
 		AntTree cr222 = new AntTree(cr22, 3, AntMovement.TURN_RIGHT);
-		
+
 		// cr122
 		AntTree cr1122 = new AntTree(cr122, 4, AntMovement.MOVE);
 		AntTree cr2122 = new AntTree(cr122, 4, AntMovement.MOVE);
 		AntTree cr3122 = new AntTree(cr122, 4, AntMovement.MOVE);
-		
-		// cr32 
+
+		// cr32
 		AntTree cr132 = new AntTree(cr32, 3, AntMovement.TURN_RIGHT);
 		AntTree cr232 = new AntTree(cr32, 3, AntMovement.ISFOOD);
 		AntTree cr332 = new AntTree(cr32, 3, AntMovement.MOVE);
-		
+
 		// cr232
 		AntTree cr1232 = new AntTree(cr232, 4, AntMovement.MOVE);
 		AntTree cr2232 = new AntTree(cr232, 4, AntMovement.TURN_LEFT);
-		
+
 		root.addChild(cr1);
 		root.addChild(cr2);
-		
+
 		cr2.addChild(cr12);
 		cr2.addChild(cr22);
 		cr2.addChild(cr32);
-		
+
 		cr22.addChild(cr122);
 		cr22.addChild(cr222);
-		
+
 		cr122.addChild(cr1122);
 		cr122.addChild(cr2122);
 		cr122.addChild(cr3122);
-		
+
 		cr32.addChild(cr132);
 		cr32.addChild(cr232);
 		cr32.addChild(cr332);
 
 		cr232.addChild(cr1232);
 		cr232.addChild(cr2232);
-		
+
 		chr.setTree(root);
-		
-		System.out.println(chr);		
+
+		System.out.println(chr);
 		//Pair<Integer, Integer> coords = ant.coords();
-		
+
 		*/
 
 		tp1 = new JPanel() {
@@ -203,22 +209,23 @@ public class Panel3 extends JFrame {
 
 					}
 				}
-				
+
 				if(ga != null) {
 					FunctionAnt fut = (FunctionAnt)fun;
 					ArrayList<Pair<Integer, Integer>> res = fut.getPath(/*chr*/ga.getBestAbs_chr());
-					
-	
+
+
 					for(int j = 0; j < res.size(); ++j) {
 						int x = res.get(j).first;
-						int y = res.get(j).second;
-						int dx = res.get(j).first * SIZE + DSX;
-						int dy = res.get(j).second * SIZE + DSY;
+                        int y = res.get(j).second;
+
+						int dx = x * SIZE + DSX;
+						int dy = y * SIZE + DSY;
 						ctx.setColor(Ant.MAP_ANT[y][x] == 1 ? Color.ORANGE : Color.CYAN);
 						ctx.fillRect(dx, dy, SIZE, SIZE);
 					}
-					
-					
+
+
 					fut.last.draw(ctx);
 				}
 				// Draw Grid
@@ -228,15 +235,23 @@ public class Panel3 extends JFrame {
 						int dy = j * SIZE + DSY;
 						ctx.setColor(Color.BLACK);
 						ctx.drawRect(dx, dy, SIZE, SIZE);
-					}	
+					}
 				}
-				
+
 		    };
 		};
         tp1.setLayout(new GridLayout(1, 1));
 
-		tabbedPane.addTab("Grafica", tp0);
+
+
+
+        tp2 = new JPanel();
+
+
+
+		tabbedPane.addTab("Gr�fica", tp0);
         tabbedPane.addTab("Mapa", tp1);
+        tabbedPane.addTab("Nodos", tp2);
 
 		add(tabbedPane, BorderLayout.CENTER);
 
@@ -367,8 +382,8 @@ public class Panel3 extends JFrame {
 				tp1.revalidate();
 
 				restartResults(barradchactr, titulodcha);
-				
-				
+
+
 				int elitism_am = ((Integer) elitism_amount.getValue());
 
 				int num_gen = Integer.parseInt(num_generations.getText());
@@ -376,20 +391,19 @@ public class Panel3 extends JFrame {
 				model.SelectionType type_sel = selection_type.get(selection_sel.getSelectedIndex());
 				model.CrossType type_cross = cross_type.get(cross_sel.getSelectedIndex());
 				model.MutationType type_mut = mutation_type.get(mutation_sel.getSelectedIndex());
-				
+
 				/*
 				AntChromosome c0 = new AntChromosome(fun, 0);
 				AntChromosome c1 = new AntChromosome(fun, 0);
 
-				
+
 				System.out.println(c0.toString());
 				System.out.println(c1.toString());
 				System.out.println("Crossing ---------------");
 				c0.cross(c1, CrossType.SUBTREE);
 				System.out.println(c0.toString());
-				System.out.println(c1.toString());
 				*/
-				
+
 				ga = new GeneticAlgorithm<AntChromosome>(
 					AntChromosome.class,
 					Integer.parseInt(size_population.getText()),
@@ -401,7 +415,7 @@ public class Panel3 extends JFrame {
 				);
 
 				List<double[]> best_distances = ga.run();
-				
+
 
 
 				double[] generations = new double[num_gen];
@@ -410,8 +424,35 @@ public class Panel3 extends JFrame {
 				}
 
 				addPlotLines(generations, best_distances);
-				/**/
-				
+
+				best_ev.setText((int) fun.evaluate(ga.getBestAbs_chr()) +" comidos");
+				System.out.println(ga.getBestAbs_chr().toString());
+
+
+				AntTree root = (AntTree) ga.getBestAbs_chr().genes.get(0);
+				Text rootText = new Text(root.type.toString(), 60, 30);
+				DefaultTreeForTreeLayout<Text> tree = new DefaultTreeForTreeLayout<>(rootText);
+				generateVisualizationTree(tree, rootText, root);
+
+
+		        NodeExtentProvider<Text> nodeExtentProvider = new NodeExtentProvider<Text>() {
+		            @Override
+		            public double getWidth(Text tn) {
+		                return 75;
+		            }
+
+		            @Override
+		            public double getHeight(Text tn) {
+		              return 20;
+		            }
+		        };
+		        DefaultConfiguration<Text> configuration = new DefaultConfiguration<>(40, 30,Location.Top);
+		        TreeLayout<Text> treeLayout = new TreeLayout<Text>(tree, nodeExtentProvider, configuration);
+		        TextTreePane panel = new TextTreePane(treeLayout);
+		        tp2.removeAll();
+		        tp2.add(panel);
+
+
 		}});
 
 		restart.addActionListener(new ActionListener() {
@@ -427,6 +468,16 @@ public class Panel3 extends JFrame {
 				plot.revalidate();
 			}
 		});
+
+	}
+
+	void generateVisualizationTree(DefaultTreeForTreeLayout<Text> tree, Text parent, AntTree subtree) {
+
+		for(AntTree subsubtree : subtree.children) {
+			Text childText = new Text(subsubtree.type.toString(), 60, 30);
+			tree.addChild(parent, childText);
+			generateVisualizationTree(tree, childText, subsubtree);
+		}
 
 	}
 

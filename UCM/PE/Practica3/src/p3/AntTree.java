@@ -5,13 +5,13 @@ import java.util.Stack;
 
 public class AntTree {
 	// Parent
-	private ArrayList<AntTree> children;
+	public ArrayList<AntTree> children;
 	// Parent
 	public AntTree parent;
 	// Profundidad
 	public int depth;
 	// Node type tree
-	AntMovement type;
+	public AntMovement type;
 	
 	public AntTree(AntTree _parent, int _depth, AntMovement _type){
 		this.parent = _parent;
