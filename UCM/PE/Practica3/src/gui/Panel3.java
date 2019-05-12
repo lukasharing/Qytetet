@@ -198,7 +198,6 @@ public class Panel3 extends JFrame {
 						int dx = i * SIZE + DSX;
 						int dy = j * SIZE + DSY;
 						if(Ant.MAP_ANT[j][i] == 1) {
-							ctx.setColor(Color.GREEN);
 							ctx.fillRect(dx, dy, SIZE, SIZE);
 						}
 
@@ -211,9 +210,11 @@ public class Panel3 extends JFrame {
 					
 	
 					for(int j = 0; j < res.size(); ++j) {
-						ctx.setColor(Color.ORANGE);
+						int x = res.get(j).first;
+						int y = res.get(j).second;
 						int dx = res.get(j).first * SIZE + DSX;
 						int dy = res.get(j).second * SIZE + DSY;
+						ctx.setColor(Ant.MAP_ANT[y][x] == 1 ? Color.ORANGE : Color.CYAN);
 						ctx.fillRect(dx, dy, SIZE, SIZE);
 					}
 					
@@ -376,17 +377,19 @@ public class Panel3 extends JFrame {
 				model.CrossType type_cross = cross_type.get(cross_sel.getSelectedIndex());
 				model.MutationType type_mut = mutation_type.get(mutation_sel.getSelectedIndex());
 				
-				/**/
+				/*
 				AntChromosome c0 = new AntChromosome(fun, 0);
 				AntChromosome c1 = new AntChromosome(fun, 0);
 
 				
 				System.out.println(c0.toString());
-				System.out.println("Mutate ---------------");
-				c0.mutate(MutationType.SIMPLE_FUNCTION, 1.0);
+				System.out.println(c1.toString());
+				System.out.println("Crossing ---------------");
+				c0.cross(c1, CrossType.SUBTREE);
 				System.out.println(c0.toString());
+				System.out.println(c1.toString());
+				*/
 				
-				/*
 				ga = new GeneticAlgorithm<AntChromosome>(
 					AntChromosome.class,
 					Integer.parseInt(size_population.getText()),
@@ -407,7 +410,7 @@ public class Panel3 extends JFrame {
 				}
 
 				addPlotLines(generations, best_distances);
-				*/
+				/**/
 				
 		}});
 

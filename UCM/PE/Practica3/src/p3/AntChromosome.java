@@ -1,5 +1,7 @@
 package p3;
 
+import java.util.ArrayList;
+
 import model.Chromosome;
 import model.CrossType;
 import model.Function;
@@ -7,30 +9,30 @@ import model.MutationType;
 
 public class AntChromosome extends Chromosome<AntTree> {
 	
-	final int MAX_DEPTH = 4;
+	final int MAX_DEPTH = 2;
 	
 	public AntChromosome(Function f, double p) {
 		super(f, 0.0);
 		// Initialize
 		AntTree new_tree = new AntTree(null, 0, AntMovement.random_node());
 		this.genes.add(new_tree);
-		create_tree(new_tree, 0);
+		create_tree(new_tree);
 	};
 
 	// Create Tree
-	private void create_tree(AntTree parent, int current_depth) {
+	private void create_tree(AntTree parent) {
 		for(int i = 0; i < parent.type.num_args; ++i) {
 			// Create ant movement depending on the depth.
-			AntMovement mov = current_depth < MAX_DEPTH ? AntMovement.random_movement() : AntMovement.random_final();
+			AntMovement mov = parent.depth < (MAX_DEPTH - 1) ? AntMovement.random_movement() : AntMovement.random_final();
 			
 			// Create Subtree
-			AntTree subtree = new AntTree(parent, current_depth + 1, mov);
+			AntTree subtree = new AntTree(parent, parent.depth + 1, mov);
 			
 			// Add Subtree
 			parent.addChild(subtree);
 			
 			// Generate sub-subtree
-			create_tree(subtree, current_depth + 1);
+			create_tree(subtree);
 		}
 	};
 	
@@ -41,21 +43,26 @@ public class AntChromosome extends Chromosome<AntTree> {
 			case SUBTREE:
 				
 				AntTree node1 = this.genes.get(0);
-				int ix1 = 0;
 				while(node1.type.num_args > 0) {
-					ix1 = (int)Math.floor(node1.totalChildren() * Math.random());
-					node1 = node1.getChild(ix1);
+					node1 = node1.getChild((int)Math.floor(node1.totalChildren() * Math.random()));
 				}
 
 				AntTree node2 = chr1.genes.get(0);
-				int ix2 = 0;
 				while(node2.type.num_args > 0) {
-					ix2 = (int)Math.floor(node2.totalChildren() * Math.random());
-					node2 = node2.getChild(ix2);
+					node2 = node2.getChild((int)Math.floor(node2.totalChildren() * Math.random()));
 				}
 				
-				node1.parent.setChild(ix1, node2);
-				node2.parent.setChild(ix2, node1);
+				node1 = node1.parent;
+				node2 = node2.parent;
+				
+				AntMovement temp_type = node1.type;
+				ArrayList<AntTree> temp_children = node1.getChildren();
+				
+				node1.type = node2.type;
+				node1.setChildren(node2.getChildren());
+				
+				node2.type = temp_type;
+				node2.setChildren(temp_children);
 				
 			break;
 		}
@@ -96,7 +103,7 @@ public class AntChromosome extends Chromosome<AntTree> {
 				
 				node.parent.type = AntMovement.random_node();
 				node.parent.emptyChildren();
-				create_tree(node.parent, node.parent.depth);
+				create_tree(node.parent);
 				
 			break;
 			case PERMUTATION:

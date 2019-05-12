@@ -20,6 +20,8 @@ public class AntTree {
 		this.children = new ArrayList<>();
 	};
 	
+	public ArrayList<AntTree> getChildren() { return children; };
+	public void setChildren(ArrayList<AntTree> _children) { children = _children; };
 	public void addChild(AntTree child){ children.add(child); };
 	public void setChild(int i, AntTree child) { children.set(i, child); }
 	public AntTree getChild(int i) { return children.get(i); };
