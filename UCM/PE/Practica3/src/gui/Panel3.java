@@ -329,7 +329,11 @@ public class Panel3 extends JFrame {
 				AntChromosome c0 = new AntChromosome(fun, 0);
 				AntChromosome c1 = new AntChromosome(fun, 0);
 
-				c0.mutate(MutationType.SIMPLE_TERMINAL, 1.0);
+				
+				System.out.println(c0.toString());
+				System.out.println("Mutate ---------------");
+				c0.mutate(MutationType.PERMUTATION, 1.0);
+				System.out.println(c0.toString());
 				
 				/*ga = new GeneticAlgorithm<AntChromosome>(
 					AntChromosome.class,

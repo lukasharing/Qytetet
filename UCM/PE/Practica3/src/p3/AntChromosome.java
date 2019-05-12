@@ -46,12 +46,13 @@ public class AntChromosome extends Chromosome<AntTree> {
 					node = node.getChild((int)Math.floor(node.totalChildren() * Math.random()));
 				}
 				
+				// Random Final Node
 				node.type = AntMovement.random_final();
 				
 			break;
 			case SUBTREE:
 
-				while(node.depth > 0) {
+				while(node.type.num_args > 0) {
 					node = node.getChild((int)Math.floor(node.totalChildren() * Math.random()));
 				}
 				
@@ -63,17 +64,17 @@ public class AntChromosome extends Chromosome<AntTree> {
 			case PERMUTATION:
 				
 				int idx = 0;
-				while(node.depth > 0) {
+				while(node.type.num_args > 0) {
 					idx = (int)Math.floor(node.totalChildren() * Math.random());
 					node = node.getChild(idx);
 				}
 				
 				// Choose random node
 				int rnd = -1;
-				do { rnd = (int)(node.parent.totalChildren() * Math.random()); }while(idx != rnd);
+				do { rnd = (int)(node.parent.totalChildren() * Math.random()); }while(idx == rnd);
 				
 				// Swap
-				AntTree temp = node.parent.getChild(rnd);
+				AntTree temp = node.parent.getChild(idx);
 				node.parent.setChild(idx, node.parent.getChild(rnd));
 				node.parent.setChild(rnd, temp);
 				
