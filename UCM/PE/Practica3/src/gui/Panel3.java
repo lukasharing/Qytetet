@@ -85,7 +85,7 @@ public class Panel3 extends JFrame {
 	// Algoritmos de mutaci�n
 	private List<MutationType> mutation_type = Arrays.asList(
 		MutationType.SIMPLE_TERMINAL,
-		MutationType.SIMPLE_FUNCION,
+		MutationType.SIMPLE_FUNCTION,
 		MutationType.SUBTREE,
 		MutationType.PERMUTATION
 	);
@@ -325,17 +325,17 @@ public class Panel3 extends JFrame {
 				model.MutationType type_mut = mutation_type.get(mutation_sel.getSelectedIndex());
 				
 				Function fun = new FunctionAnt(1, FunctionType.MAXIMIZE);
-
+				/*
 				AntChromosome c0 = new AntChromosome(fun, 0);
 				AntChromosome c1 = new AntChromosome(fun, 0);
 
 				
 				System.out.println(c0.toString());
 				System.out.println("Mutate ---------------");
-				c0.mutate(MutationType.SUBTREE, 1.0);
+				c0.mutate(MutationType.SIMPLE_FUNCTION, 1.0);
 				System.out.println(c0.toString());
-				
-				/*ga = new GeneticAlgorithm<AntChromosome>(
+				*/
+				ga = new GeneticAlgorithm<AntChromosome>(
 					AntChromosome.class,
 					Integer.parseInt(size_population.getText()),
 					num_gen,
@@ -355,7 +355,7 @@ public class Panel3 extends JFrame {
 				}
 
 				addPlotLines(generations, best_distances);
-				*/
+				
 		}});
 
 		restart.addActionListener(new ActionListener() {

@@ -1,6 +1,7 @@
 package p3;
 
 import model.Chromosome;
+import model.CrossType;
 import model.Function;
 import model.MutationType;
 
@@ -32,7 +33,16 @@ public class AntChromosome extends Chromosome<AntTree> {
 			create_tree(subtree, current_depth + 1);
 		}
 	};
-
+	
+	// -----------------------------------------------
+	// - Cromosome
+	public void cross(AntChromosome chr1, CrossType type) {
+		switch(type) {
+			case CICLES:
+				
+			break;
+		}
+	}
 	// -----------------------------------------------
 	// - Mutations
 	public void mutate(MutationType mutation, double prob) {
@@ -48,6 +58,17 @@ public class AntChromosome extends Chromosome<AntTree> {
 				
 				// Random Final Node
 				node.type = AntMovement.random_final();
+				
+			break;
+			case SIMPLE_FUNCTION:
+				
+				while(node.type.num_args > 0) {
+					node = node.getChild((int)Math.floor(node.totalChildren() * Math.random()));
+				}
+				// Find Movement with the same number of arguments
+				AntMovement mov = null;
+				do { mov = AntMovement.random_node(); }while(node.parent.type.num_args != mov.num_args);
+				node.parent.type = mov;
 				
 			break;
 			case SUBTREE:

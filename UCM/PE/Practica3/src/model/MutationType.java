@@ -12,7 +12,7 @@ public enum MutationType {
 	SIMPLE_TERMINAL("Terminal Simple"),
 	SUBTREE("SubÁrbol"),
 	PERMUTATION("Permutación"),
-	SIMPLE_FUNCION("Funcional Simple");
+	SIMPLE_FUNCTION("Funcional Simple");
 	
 	private final String name;
 	
