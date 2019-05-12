@@ -72,14 +72,7 @@ public class Panel3 extends JFrame {
 
 	// Algoritmos de cruce
 	private List<CrossType> cross_type = Arrays.asList(
-		CrossType.PARTIALLY_MAPPED,
-		CrossType.ORDERED,
-		CrossType.ORDERED_VARIANT_OXPP,
-		CrossType.ORDERED_VARIANT_OXOP,
-		CrossType.CICLES,
-		CrossType.EDGE_RECOMBINATION,
-		CrossType.ORDINAL_CODIFICATION,
-		CrossType.SELF_METHOD_1
+		CrossType.SUBTREE
 	);
 
 	// Algoritmos de mutaci�n
@@ -178,6 +171,8 @@ public class Panel3 extends JFrame {
 					}
 				}
 				
+				
+				System.out.println(ga.getBestAbs_chr().genes.get(0).toString());
 		    };
 		};
         tp1.setLayout(new GridLayout(1, 1));

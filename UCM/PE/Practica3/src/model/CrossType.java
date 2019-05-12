@@ -11,7 +11,8 @@ public enum CrossType {
 	CICLES("Ciclos (CX)"),
 	EDGE_RECOMBINATION("Recombinación de rutas (ERX)"),
 	ORDINAL_CODIFICATION("Codificación Ordinal"),
-	SELF_METHOD_1("Método propio 1");
+	SELF_METHOD_1("Método propio 1"),
+	SUBTREE("Método SubÁrboles");
 	
 	private final String name;
 	
