@@ -2,6 +2,7 @@ package p3;
 
 import model.Chromosome;
 import model.Function;
+import model.MutationType;
 
 public class AntChromosome extends Chromosome<AntTree> {
 	
@@ -31,6 +32,32 @@ public class AntChromosome extends Chromosome<AntTree> {
 			create_tree(subtree, current_depth + 1);
 		}
 	};
+
+	// -----------------------------------------------
+	// - Mutations
+	public void mutate(MutationType mutation, double prob) {
+		if(Math.random() > prob) return;
+		
+		switch(mutation) {
+			case SIMPLE_TERMINAL:
+				
+				AntTree node = this.genes.get(0);
+				while(node.type.num_args > 0) {
+					node = node.getChild((int)Math.floor(node.totalChildren() * Math.random()));
+				}
+				
+				System.out.println(node);
+				
+			break;
+			case SUBTREE:
+				
+			break;
+			case PERMUTATION:
+				
+			break;
+		}
+	}
+	
 	
 	// Clone AntTree
 	public AntChromosome(Function f, AntTree tree) {
@@ -44,8 +71,8 @@ public class AntChromosome extends Chromosome<AntTree> {
 		return new AntChromosome(this.func, this.genes.get(0));
 	};
 	
-	public static AntChromosome newInstance(Function f, int branching) {
-		return new AntChromosome(f, branching);
+	public static AntChromosome newInstance(Function f) {
+		return new AntChromosome(f, 0.0);
 	};
 	
 	@Override

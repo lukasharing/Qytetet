@@ -22,6 +22,7 @@ public class AntTree {
 	
 	public void addChild(AntTree child){ children.add(child); };
 	public AntTree getChild(int i) { return children.get(i); };
+	public int totalChildren() { return children.size(); };
 	
 	
 	public AntTree clone(AntTree parent) {

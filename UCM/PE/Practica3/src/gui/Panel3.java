@@ -84,11 +84,9 @@ public class Panel3 extends JFrame {
 
 	// Algoritmos de mutaci�n
 	private List<MutationType> mutation_type = Arrays.asList(
-		MutationType.INSERTION,
-		MutationType.SWAP,
-		MutationType.INVERSION,
-		MutationType.HEURISTIC,
-		MutationType.SELF_METHOD_1
+		MutationType.SIMPLE_TERMINAL,
+		MutationType.SUBTREE,
+		MutationType.PERMUTATION
 	);
 
 	private JComboBox<String> selection_sel;
@@ -132,11 +130,7 @@ public class Panel3 extends JFrame {
 			AntMovement.MOVE*/
 		);
 		
-
-		Function fun = new FunctionAnt(1, FunctionType.MAXIMIZE);
-		AntChromosome chr = new AntChromosome(fun, 0);
-		
-		
+		/*
 		AntTree root = new AntTree(null, 0, AntMovement.PROGN2);
 		AntTree cr1 = new AntTree(root, 1, AntMovement.MOVE);
 		AntTree cr2 = new AntTree(root, 1, AntMovement.ISFOOD);
@@ -150,7 +144,7 @@ public class Panel3 extends JFrame {
 		cr2.addChild(c22);
 		
 		chr.setTree(root);
-		
+		*/
 		//Pair<Integer, Integer> coords = ant.coords();
 		
 
@@ -183,11 +177,6 @@ public class Panel3 extends JFrame {
 						ctx.drawRect(dx, dy, SIZE, SIZE);
 					}
 				}
-
-				FunctionAnt funt = (FunctionAnt) fun;
-				System.out.println(chr.genes.get(0).toString());
-				System.out.println(fun.evaluate(chr));
-				funt.last.draw(ctx);
 				
 		    };
 		};
@@ -326,7 +315,7 @@ public class Panel3 extends JFrame {
 
 				restartResults(barradchactr, titulodcha);
 				
-				/*
+				
 				int elitism_am = ((Integer) elitism_amount.getValue());
 
 				int num_gen = Integer.parseInt(num_generations.getText());
@@ -334,28 +323,13 @@ public class Panel3 extends JFrame {
 				model.SelectionType type_sel = selection_type.get(selection_sel.getSelectedIndex());
 				model.CrossType type_cross = cross_type.get(cross_sel.getSelectedIndex());
 				model.MutationType type_mut = mutation_type.get(mutation_sel.getSelectedIndex());
+				
+				Function fun = new FunctionAnt(1, FunctionType.MAXIMIZE);
 
-				Function fun = new FunctionAnt(27, FunctionType.MAXIMIZE);
+				AntChromosome c0 = new AntChromosome(fun, 0);
+				AntChromosome c1 = new AntChromosome(fun, 0);
 
-				CitiesChromosome c0 = new CitiesChromosome(fun, 5);
-				CitiesChromosome c1 = new CitiesChromosome(fun, 5);
-
-				c0.setFenotypes(new double[] {3, 4, 1, 0, 7, 6, 5, 8, 2});
-				c1.setFenotypes(new double[] {0, 1, 2, 3, 4, 5, 6, 7, 8});
-
-				System.out.println(c0.toString());
-				System.out.println(c1.toString());
-
-				c0.cross(c1, CrossType.SELF_METHOD_1);
-				//c0.mutate(MutationType.HEURISTIC, 1.0);
-				//c0.cross(c1, CrossType.ORDINAL_CODIFICATION);
-				System.out.println("CRUCE");
-				System.out.println(c0.toString());
-				System.out.println(c1.toString());
-				//
-				///*
-
-				ga = new GeneticAlgorithm<CitiesChromosome>(
+				ga = new GeneticAlgorithm<AntChromosome>(
 					AntChromosome.class,
 					Integer.parseInt(size_population.getText()),
 					num_gen,
@@ -374,17 +348,9 @@ public class Panel3 extends JFrame {
 					generations[i] = i;
 				}
 
+				
+				
 				addPlotLines(generations, best_distances);
-
-				//best_ev.setText(Integer.toString((int) best_distances.get(0)[best_distances.get(0).length - 1]) +" kms");
-				best_ev.setText(Integer.toString((int) fun.evaluate(ga.getBestAbs_chr().getFenotypes())) +" kms");
-
-
-
-				for (int i = 0; i < ga.getBestAbs_chr().getFenotypes().length; i++) {
-					barradchactr.add(
-						new JLabel(CitiesChromosome.parseCity((int) ga.getBestAbs_chr().getFenotypes()[i]) + ((i == ga.getBestAbs_chr().getFenotypes().length-1) ? " " : "->" )));
-				}//*/
 		}});
 
 		restart.addActionListener(new ActionListener() {

@@ -87,6 +87,7 @@ public class GeneticAlgorithm<T> {
 
 		// 1s Generation
 		double[] eval_result = this.evaluation();
+		
 		@SuppressWarnings("rawtypes")
 		ArrayList<Chromosome> best = getBest(this.elitism);
 
@@ -111,9 +112,9 @@ public class GeneticAlgorithm<T> {
 
 			best = getBest(this.elitism);
 
-			this.selection(eval_result);
-			this.crossover();
-			this.mutation();
+			//this.selection(eval_result);
+			//this.crossover();
+			//this.mutation();
 			eval_result = this.evaluation();
 
 			@SuppressWarnings("rawtypes")
@@ -182,7 +183,7 @@ public class GeneticAlgorithm<T> {
 			}
 		} else if (class_type.getName().contains("AntChromosome")) {
 			for (int i = 0; i < initial_population; ++i) {
-				chromosomes.add(AntChromosome.newInstance(function, 25));
+				chromosomes.add(AntChromosome.newInstance(function));
 			}
 		}
 
@@ -224,6 +225,9 @@ public class GeneticAlgorithm<T> {
 				@SuppressWarnings("rawtypes")
 				Chromosome current = chromosomes.get(i);
 				eval_results[i] = function.evaluate(current);
+				System.out.println(current.toString());
+				System.out.println(eval_results[i]);
+				System.out.println("");
 
 				if (eval_results[i] < min1) {
 					min1 = eval_results[i];
@@ -392,6 +396,7 @@ public class GeneticAlgorithm<T> {
 	private void mutation() {
 		for (@SuppressWarnings("rawtypes")
 		Chromosome chromosome : chromosomes) {
+			
 			chromosome.mutate(mute, mutation_prob);
 		}
 	};

@@ -72,12 +72,11 @@ public class Ant {
 			case TURN_LEFT: this.angle = (this.angle + Math.PI * 0.5 + tau) % tau; break;
 			case TURN_RIGHT: this.angle = (this.angle + Math.PI * 0.5 + tau) % tau;  break;
 			case MOVE:
-				this.x += Math.cos(this.angle);
-				this.y += Math.sin(this.angle);
-
-				this.x = (this.x + 32) % 32;
-				this.y = (this.y + 32) % 32;
-
+				int dx = (int)Math.cos(this.angle);
+				int dy = (int)Math.sin(this.angle);
+				this.x = (this.x + dx + 32) % 32;
+				this.y = (this.y + dy + 32) % 32;
+				
 				if(MAP_ANT[this.y][this.x] == 1) {
 					foodvisited.put(this.x + this.y * 32, true);
 				}
@@ -96,6 +95,7 @@ public class Ant {
 
 		nx = (nx + 32) % 32;
 		ny = (ny + 32) % 32;
+	
 		return ((MAP_ANT[ny][nx] == 1) && !foodvisited.containsKey(nx + ny * 32));
 	};
 

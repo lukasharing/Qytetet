@@ -23,18 +23,11 @@ public class FunctionAnt extends Function{
 	
 	@Override
 	public double evaluate(Chromosome chromosome) {
-		Ant ant = last = new Ant(0, 0);//new Ant(2, 5);
-		//ant.setAngle(-Math.PI / 2);
-		
-		//do {
-		for(int i = 0; i < 7; ++i) {
+		Ant ant = last = new Ant(0, 0);
+		do {
 			execute(ant, (AntTree)chromosome.genes.get(0));
-			System.out.println(ant.getX());
-			System.out.println(ant.getY());
-			System.out.println(ant.getAngle());
-			System.out.println("------------------");
-		}
-		//}while(steps > 0);
+		}while(steps > 0);
+		steps = 400;
 		
 		return ant.eaten();
 	};
@@ -63,6 +56,7 @@ public class FunctionAnt extends Function{
 			default:
 				--steps;
 				ant.step(tree.type);
+			break;
 		}
 			
 		
