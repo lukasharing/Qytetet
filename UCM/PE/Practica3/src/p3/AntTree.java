@@ -56,6 +56,14 @@ public class AntTree {
 		return clone;
 	}
 	
+	
+	public void updateChildrenDepth() {		
+		for (AntTree child : children) {
+			child.setDepth(depth+1);
+			child.updateChildrenDepth();
+		}
+	}
+	
 	@Override
 	public String toString() {
 		String result = "";

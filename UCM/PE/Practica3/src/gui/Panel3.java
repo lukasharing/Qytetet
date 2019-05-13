@@ -398,7 +398,7 @@ public class Panel3 extends JFrame {
 				AntChromosome c0 = new AntChromosome(fun, 0);
 				AntChromosome c1 = new AntChromosome(fun, 0);
 	
-	/*
+	
 				System.out.println(c0.toString());
 				System.out.println(c1.toString());
 				
@@ -408,7 +408,7 @@ public class Panel3 extends JFrame {
 				System.out.println("Crossing ---------------2");
 				System.out.println(c1.toString());
 				
-	*/
+	/*
 				ga = new GeneticAlgorithm<AntChromosome>(
 					AntChromosome.class,
 					Integer.parseInt(size_population.getText()),
@@ -457,7 +457,7 @@ public class Panel3 extends JFrame {
 		        tp2.removeAll();
 		        tp2.add(panel);
 		        
-		        
+		        */
 			}});
 
 			restart.addActionListener(new ActionListener() {

@@ -55,10 +55,9 @@ public class AntChromosome extends Chromosome<AntTree> {
 				
 				node1 = node1.getParent();
 				node2 = node2.getParent();
-				
+								
 				AntMovement temp_type = node1.getType();
 				ArrayList<AntTree> temp_children = node1.getChildren();
-				
 				
 				
 				node1.setType(node2.getType());
@@ -66,6 +65,9 @@ public class AntChromosome extends Chromosome<AntTree> {
 				
 				node2.setType(temp_type);
 				node2.setChildren(temp_children);
+				
+				node1.updateChildrenDepth();
+				node2.updateChildrenDepth();
 				
 			break;
 		}
