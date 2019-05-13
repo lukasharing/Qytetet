@@ -114,15 +114,21 @@ public class AntChromosome extends Chromosome<AntTree> {
 					idx = (int)Math.floor(node.totalChildren() * Math.random());
 					node = node.getChild(idx);
 				}
+
+				AntTree parent = node.parent;
 				
 				// Choose random node
 				int rnd = -1;
-				do { rnd = (int)(node.parent.totalChildren() * Math.random()); }while(idx == rnd);
+				do { rnd = (int)(parent.totalChildren() * Math.random()); }while(idx == rnd);
 				
 				// Swap
-				AntTree temp = node.parent.getChild(idx);
-				node.parent.setChild(idx, node.parent.getChild(rnd));
-				node.parent.setChild(rnd, temp);
+				AntTree swap = parent.getChild(rnd);
+				AntMovement move = swap.type;
+				ArrayList<AntTree> children = swap.getChildren();
+				swap.setChildren(node.getChildren());
+				node.setChildren(children);
+				swap.type = node.type;
+				node.type = move;
 				
 			break;
 		}

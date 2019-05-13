@@ -12,6 +12,7 @@ public class FunctionAnt extends Function{
 
 	private int steps = 400;
 	public Ant last = null;
+	private static int MAXTIMENOEAT = 20;
 	
 	@SuppressWarnings("rawtypes")
 	public FunctionAnt(int n, FunctionType type) {
@@ -19,18 +20,18 @@ public class FunctionAnt extends Function{
 		arguments_intervals = new ArrayList<Pair>();
 		arguments_intervals.add(new Pair<Integer, Integer>(0, 0));
 	}
-	
-	
+			
 	@Override
 	public double evaluate(Chromosome chromosome) {
 		Ant ant = last = new Ant(0, 0);
 		AntTree tree = (AntTree)chromosome.genes.get(0);
 		do {
 			execute(ant, tree, null);
-		}while(steps > 0);
+		}while(steps > 0 && ant.timeNoEat < MAXTIMENOEAT);
 		steps = 400;
 		
-		return ant.eaten() - tree.getTotalNodes(tree);
+		System.out.println(ant.timeNoEat >= MAXTIMENOEAT);
+		return ant.timeNoEat >= MAXTIMENOEAT ? 0 : (ant.eaten() - tree.getMaxHeight(tree));
 	};
 	
 	public ArrayList<Pair<Integer, Integer>> getPath(Chromosome chr){
@@ -46,11 +47,9 @@ public class FunctionAnt extends Function{
 		
 		return result;
 	}
-
-	private static int MAXTIMENOEAT = 5;
 	
 	public void execute(Ant ant, AntTree tree, ArrayList<Pair<Integer, Integer>> res) {
-		if(steps <= 0 && ant.timeNoEat >= MAXTIMENOEAT) return;
+		if(steps <= 0 || ant.timeNoEat >= MAXTIMENOEAT) return;
 		
 		switch(tree.type) {
 			case ISFOOD:

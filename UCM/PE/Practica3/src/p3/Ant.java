@@ -69,6 +69,7 @@ public class Ant {
 	// Next Step
 	static double tau = Math.PI * 2;
 	public void step(AntMovement mov) {
+		++timeNoEat;
 		switch(mov) {
 			case TURN_LEFT: this.angle = (this.angle - Math.PI * 0.5 + tau) % tau; break;
 			case TURN_RIGHT: this.angle = (this.angle + Math.PI * 0.5 + tau) % tau;  break;
@@ -78,7 +79,6 @@ public class Ant {
 				this.x = (this.x + dx + 32) % 32;
 				this.y = (this.y + dy + 32) % 32;
 				
-				++timeNoEat;
 				if(MAP_ANT[this.y][this.x] == 1) {
 					timeNoEat = 0;
 					foodvisited.put(this.x + this.y * 32, true);
