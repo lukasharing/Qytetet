@@ -28,6 +28,22 @@ public class AntTree {
 	public int totalChildren() { return children.size(); };
 	public void emptyChildren() { children.clear(); };
 	
+	public int getMaxHeight(AntTree node) {
+		int max = node.depth;
+		for(AntTree subnode : node.children) {
+			max = Math.max(max, getMaxHeight(subnode));
+		}
+		return max;
+	};
+	
+	public int getTotalNodes(AntTree node) {
+		int count = 1;
+		for(AntTree subnode : node.children) {
+			count += getTotalNodes(subnode);
+		}
+		return count;
+	};
+	
 	public AntTree clone(AntTree parent) {
 		AntTree clone = new AntTree(parent, this.depth, this.type);
 		for(AntTree subtree : this.children) {

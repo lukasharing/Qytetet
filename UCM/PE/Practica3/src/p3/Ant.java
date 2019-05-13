@@ -46,7 +46,8 @@ public class Ant {
 	};
 
 	HashMap<Integer, Boolean> foodvisited = new HashMap<>(100);
-
+	
+	public int timeNoEat = 0;
 	private int x;
 	public int getX() { return x; };
 	private int y;
@@ -77,7 +78,9 @@ public class Ant {
 				this.x = (this.x + dx + 32) % 32;
 				this.y = (this.y + dy + 32) % 32;
 				
+				++timeNoEat;
 				if(MAP_ANT[this.y][this.x] == 1) {
+					timeNoEat = 0;
 					foodvisited.put(this.x + this.y * 32, true);
 				}
 			break;

@@ -24,12 +24,13 @@ public class FunctionAnt extends Function{
 	@Override
 	public double evaluate(Chromosome chromosome) {
 		Ant ant = last = new Ant(0, 0);
+		AntTree tree = (AntTree)chromosome.genes.get(0);
 		do {
-			execute(ant, (AntTree)chromosome.genes.get(0), null);
+			execute(ant, tree, null);
 		}while(steps > 0);
 		steps = 400;
 		
-		return ant.eaten();
+		return ant.eaten() - tree.getTotalNodes(tree);
 	};
 	
 	public ArrayList<Pair<Integer, Integer>> getPath(Chromosome chr){
@@ -46,9 +47,10 @@ public class FunctionAnt extends Function{
 		return result;
 	}
 
+	private static int MAXTIMENOEAT = 5;
 	
 	public void execute(Ant ant, AntTree tree, ArrayList<Pair<Integer, Integer>> res) {
-		if(steps <= 0) return;
+		if(steps <= 0 && ant.timeNoEat >= MAXTIMENOEAT) return;
 		
 		switch(tree.type) {
 			case ISFOOD:
