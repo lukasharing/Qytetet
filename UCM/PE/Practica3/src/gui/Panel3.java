@@ -53,6 +53,8 @@ import p3.AntChromosome;
 import p3.AntMovement;
 import p3.AntTree;
 import p3.FunctionAnt;
+import panels.Text;
+import panels.TextTreePane;
 
 public class Panel3 extends JFrame {
 
@@ -249,7 +251,7 @@ public class Panel3 extends JFrame {
 
 
 
-		tabbedPane.addTab("Grafica", tp0);
+		tabbedPane.addTab("Gráfica", tp0);
         tabbedPane.addTab("Mapa", tp1);
         tabbedPane.addTab("Nodos", tp2);
 
@@ -392,18 +394,21 @@ public class Panel3 extends JFrame {
 				model.CrossType type_cross = cross_type.get(cross_sel.getSelectedIndex());
 				model.MutationType type_mut = mutation_type.get(mutation_sel.getSelectedIndex());
 	
-				/*
+				
 				AntChromosome c0 = new AntChromosome(fun, 0);
 				AntChromosome c1 = new AntChromosome(fun, 0);
 	
-	
+	/*
 				System.out.println(c0.toString());
 				System.out.println(c1.toString());
-				System.out.println("Crossing ---------------");
+				
 				c0.cross(c1, CrossType.SUBTREE);
+				System.out.println("Crossing ---------------1");
 				System.out.println(c0.toString());
-				*/
-	
+				System.out.println("Crossing ---------------2");
+				System.out.println(c1.toString());
+				
+	*/
 				ga = new GeneticAlgorithm<AntChromosome>(
 					AntChromosome.class,
 					Integer.parseInt(size_population.getText()),
@@ -430,7 +435,7 @@ public class Panel3 extends JFrame {
 	
 	
 				AntTree root = (AntTree) ga.getBestAbs_chr().genes.get(0);
-				Text rootText = new Text(root.type.toString(), 60, 30);
+				Text rootText = new Text(root.getType().toString(), 60, 30);
 				DefaultTreeForTreeLayout<Text> tree = new DefaultTreeForTreeLayout<>(rootText);
 				generateVisualizationTree(tree, rootText, root);
 	
@@ -451,6 +456,8 @@ public class Panel3 extends JFrame {
 		        TextTreePane panel = new TextTreePane(treeLayout);
 		        tp2.removeAll();
 		        tp2.add(panel);
+		        
+		        
 			}});
 
 			restart.addActionListener(new ActionListener() {
@@ -471,8 +478,8 @@ public class Panel3 extends JFrame {
 
 	void generateVisualizationTree(DefaultTreeForTreeLayout<Text> tree, Text parent, AntTree subtree) {
 
-		for(AntTree subsubtree : subtree.children) {
-			Text childText = new Text(subsubtree.type.toString(), 60, 30);
+		for(AntTree subsubtree : subtree.getChildren()) {
+			Text childText = new Text(subsubtree.getType().toString(), 60, 30);
 			tree.addChild(parent, childText);
 			generateVisualizationTree(tree, childText, subsubtree);
 		}

@@ -21,12 +21,12 @@ public class AntChromosome extends Chromosome<AntTree> {
 
 	// Create Tree
 	private void create_tree(AntTree parent) {
-		for(int i = 0; i < parent.type.num_args; ++i) {
+		for(int i = 0; i < parent.getType().num_args; ++i) {
 			// Create ant movement depending on the depth.
-			AntMovement mov = parent.depth < (MAX_DEPTH - 1) ? AntMovement.random_movement() : AntMovement.random_final();
+			AntMovement mov = parent.getDepth() < (MAX_DEPTH - 1) ? AntMovement.random_movement() : AntMovement.random_final();
 			
 			// Create Subtree
-			AntTree subtree = new AntTree(parent, parent.depth + 1, mov);
+			AntTree subtree = new AntTree(parent, parent.getDepth() + 1, mov);
 			
 			// Add Subtree
 			parent.addChild(subtree);
@@ -44,25 +44,27 @@ public class AntChromosome extends Chromosome<AntTree> {
 			case SUBTREE:
 				
 				AntTree node1 = this.genes.get(0);
-				while(node1.type.num_args > 0) {
+				while(node1.getType().num_args > 0) {
 					node1 = node1.getChild((int)Math.floor(node1.totalChildren() * Math.random()));
 				}
 
 				AntTree node2 = (AntTree) chr1.genes.get(0);
-				while(node2.type.num_args > 0) {
+				while(node2.getType().num_args > 0) {
 					node2 = node2.getChild((int)Math.floor(node2.totalChildren() * Math.random()));
 				}
 				
-				node1 = node1.parent;
-				node2 = node2.parent;
+				node1 = node1.getParent();
+				node2 = node2.getParent();
 				
-				AntMovement temp_type = node1.type;
+				AntMovement temp_type = node1.getType();
 				ArrayList<AntTree> temp_children = node1.getChildren();
 				
-				node1.type = node2.type;
+				
+				
+				node1.setType(node2.getType());
 				node1.setChildren(node2.getChildren());
 				
-				node2.type = temp_type;
+				node2.setType(temp_type);
 				node2.setChildren(temp_children);
 				
 			break;
@@ -77,45 +79,45 @@ public class AntChromosome extends Chromosome<AntTree> {
 		switch(mutation) {
 			case SIMPLE_TERMINAL:
 				
-				while(node.type.num_args > 0) {
+				while(node.getType().num_args > 0) {
 					node = node.getChild((int)Math.floor(node.totalChildren() * Math.random()));
 				}
 				
 				// Random Final Node
-				node.type = AntMovement.random_final();
+				node.setType(AntMovement.random_final());
 				
 			break;
 			case SIMPLE_FUNCTION:
 				
-				while(node.type.num_args > 0) {
+				while(node.getType().num_args > 0) {
 					node = node.getChild((int)Math.floor(node.totalChildren() * Math.random()));
 				}
 				// Find Movement with the same number of arguments
 				AntMovement mov = null;
-				do { mov = AntMovement.random_node(); }while(node.parent.type.num_args != mov.num_args);
-				node.parent.type = mov;
+				do { mov = AntMovement.random_node(); }while(node.getParent().getType().num_args != mov.num_args);
+				node.getParent().setType(mov);
 				
 			break;
 			case SUBTREE:
 
-				while(node.type.num_args > 0) {
+				while(node.getType().num_args > 0) {
 					node = node.getChild((int)Math.floor(node.totalChildren() * Math.random()));
 				}
 				
-				node.parent.type = AntMovement.random_node();
-				node.parent.emptyChildren();
-				create_tree(node.parent);
+				node.getParent().setType(AntMovement.random_node());
+				node.getParent().emptyChildren();
+				create_tree(node.getParent());
 				
 			break;
 			case PERMUTATION:
 				
 				int idx = 0;
-				while(node.type.num_args > 0) {
+				while(node.getType().num_args > 0) {
 					idx = (int)Math.floor(node.totalChildren() * Math.random());
 					node = node.getChild(idx);
 				}
 
-				AntTree parent = node.parent;
+				AntTree parent = node.getParent();
 				
 				// Choose random node
 				int rnd = -1;
@@ -123,12 +125,12 @@ public class AntChromosome extends Chromosome<AntTree> {
 				
 				// Swap
 				AntTree swap = parent.getChild(rnd);
-				AntMovement move = swap.type;
+				AntMovement move = swap.getType();
 				ArrayList<AntTree> children = swap.getChildren();
 				swap.setChildren(node.getChildren());
 				node.setChildren(children);
-				swap.type = node.type;
-				node.type = move;
+				swap.setType(node.getType());
+				node.setType(move);
 				
 			break;
 		}

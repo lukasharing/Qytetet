@@ -51,7 +51,7 @@ public class FunctionAnt extends Function{
 	public void execute(Ant ant, AntTree tree, ArrayList<Pair<Integer, Integer>> res) {
 		if(steps <= 0 || ant.timeNoEat >= MAXTIMENOEAT) return;
 		
-		switch(tree.type) {
+		switch(tree.getType()) {
 			case ISFOOD:
 				if(ant.sensor()) { // is food
 					execute(ant, tree.getChild(0), res);
@@ -70,8 +70,8 @@ public class FunctionAnt extends Function{
 			break;
 			default:
 				--steps;
-				ant.step(tree.type);
-				if(res != null && tree.type.equals(AntMovement.MOVE)) {
+				ant.step(tree.getType());
+				if(res != null && tree.getType().equals(AntMovement.MOVE)) {
 					res.add(ant.coords());
 				}
 			break;

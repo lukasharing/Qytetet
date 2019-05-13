@@ -1,4 +1,4 @@
-package gui;
+package panels;
 public class Text {
 
     public final String text;
