@@ -55,6 +55,7 @@ import p3.AntTree;
 import p3.FunctionAnt;
 import panels.Text;
 import panels.TextTreePane;
+import panels.TreePanel;
 
 public class Panel3 extends JFrame {
 
@@ -63,7 +64,7 @@ public class Panel3 extends JFrame {
 	Plot2DPanel plot;
 	JTabbedPane tabbedPane;
 	JPanel tp0;
-	JPanel tp1, tp2;
+	JPanel tp1, tp2/*, tp3, tp4, tp5*/;
 
 	private JTextField size_population;
 	private JTextField num_generations;
@@ -75,8 +76,7 @@ public class Panel3 extends JFrame {
 		SelectionType.ROULETTE,
 		SelectionType.DETE_TOURNAMENT,
 		SelectionType.PRB_TOURNAMENT,
-		SelectionType.RANKING,
-		SelectionType.TRUNCATION
+		SelectionType.RANKING
 	);
 
 	// Algoritmos de cruce
@@ -88,8 +88,8 @@ public class Panel3 extends JFrame {
 	private List<MutationType> mutation_type = Arrays.asList(
 		MutationType.SIMPLE_TERMINAL,
 		MutationType.SIMPLE_FUNCTION,
-		MutationType.SUBTREE,
-		MutationType.PERMUTATION
+		MutationType.SUBTREE/*,
+		MutationType.PERMUTATION*/
 	);
 
 	private JComboBox<String> selection_sel;
@@ -248,12 +248,19 @@ public class Panel3 extends JFrame {
 
 
         tp2 = new JPanel();
+        /*
+        tp3 = new JPanel();
+        tp4 = new JPanel();
+        tp5 = new JPanel();*/
 
 
 
-		tabbedPane.addTab("Gráfica", tp0);
+		tabbedPane.addTab("Grafica", tp0);
         tabbedPane.addTab("Mapa", tp1);
-        tabbedPane.addTab("Nodos", tp2);
+        tabbedPane.addTab("Mejor Arbol", tp2);/*
+        tabbedPane.addTab("Nodos Parent 2", tp3);
+        tabbedPane.addTab("Nodos Child 1", tp4);
+        tabbedPane.addTab("Nodos Child 2", tp5);*/
 
 		add(tabbedPane, BorderLayout.CENTER);
 
@@ -382,6 +389,15 @@ public class Panel3 extends JFrame {
 				restartPlot();
 				tp1.repaint();
 				tp1.revalidate();
+				tp2.repaint();
+				tp2.revalidate();
+				/* Paneles para visualizar mutaciones y cruces
+				 * tp3.repaint();
+				tp3.revalidate();
+				tp4.repaint();
+				tp4.revalidate();
+				tp5.repaint();
+				tp5.revalidate();*/
 	
 				restartResults(barradchactr, titulodcha);
 	
@@ -394,21 +410,32 @@ public class Panel3 extends JFrame {
 				model.CrossType type_cross = cross_type.get(cross_sel.getSelectedIndex());
 				model.MutationType type_mut = mutation_type.get(mutation_sel.getSelectedIndex());
 	
-				
+				/*
 				AntChromosome c0 = new AntChromosome(fun, 0);
 				AntChromosome c1 = new AntChromosome(fun, 0);
 	
-	
-				System.out.println(c0.toString());
-				System.out.println(c1.toString());
-				
+
+		        tp2.removeAll();
+		        tp2.add(TreePanel.createTreePanel(c0.genes.get(0)));
+				tp3.removeAll();
+		        tp3.add(TreePanel.createTreePanel(c1.genes.get(0)));
+		        
+
 				c0.cross(c1, CrossType.SUBTREE);
-				System.out.println("Crossing ---------------1");
-				System.out.println(c0.toString());
-				System.out.println("Crossing ---------------2");
-				System.out.println(c1.toString());
 				
-	/*
+		        tp4.removeAll();
+		        tp4.add(TreePanel.createTreePanel(c0.genes.get(0)));
+				tp5.removeAll();
+		        tp5.add(TreePanel.createTreePanel(c1.genes.get(0)));
+				*/
+				
+				//c0.cross(c1, CrossType.SUBTREE);
+				//System.out.println("Crossing ---------------1");
+				//System.out.println(c0.toString());
+				//System.out.println("Crossing ---------------2");
+				//System.out.println(c1.toString());
+				
+				
 				ga = new GeneticAlgorithm<AntChromosome>(
 					AntChromosome.class,
 					Integer.parseInt(size_population.getText()),
@@ -429,35 +456,15 @@ public class Panel3 extends JFrame {
 				}
 	
 				addPlotLines(generations, best_distances);
-	
-				best_ev.setText((int) fun.evaluate(ga.getBestAbs_chr()) +" comidos");
-				System.out.println(ga.getBestAbs_chr().toString());
-	
-	
-				AntTree root = (AntTree) ga.getBestAbs_chr().genes.get(0);
-				Text rootText = new Text(root.getType().toString(), 60, 30);
-				DefaultTreeForTreeLayout<Text> tree = new DefaultTreeForTreeLayout<>(rootText);
-				generateVisualizationTree(tree, rootText, root);
+				
+				fun.evaluate(ga.getBestAbs_chr());
+				FunctionAnt funt = (FunctionAnt) fun;
+				best_ev.setText(funt.last.eaten() +" comidos");
 	
 	
-		        NodeExtentProvider<Text> nodeExtentProvider = new NodeExtentProvider<Text>() {
-		            @Override
-		            public double getWidth(Text tn) {
-		                return 75;
-		            }
-	
-		            @Override
-		            public double getHeight(Text tn) {
-		              return 20;
-		            }
-		        };
-		        DefaultConfiguration<Text> configuration = new DefaultConfiguration<>(40, 30,Location.Top);
-		        TreeLayout<Text> treeLayout = new TreeLayout<Text>(tree, nodeExtentProvider, configuration);
-		        TextTreePane panel = new TextTreePane(treeLayout);
+				AntTree root = (AntTree) ga.getBestAbs_chr().genes.get(0);			
 		        tp2.removeAll();
-		        tp2.add(panel);
-		        
-		        */
+		        tp2.add(TreePanel.createTreePanel(root));
 			}});
 
 			restart.addActionListener(new ActionListener() {
@@ -473,16 +480,6 @@ public class Panel3 extends JFrame {
 					plot.revalidate();
 				}
 			});
-
-	}
-
-	void generateVisualizationTree(DefaultTreeForTreeLayout<Text> tree, Text parent, AntTree subtree) {
-
-		for(AntTree subsubtree : subtree.getChildren()) {
-			Text childText = new Text(subsubtree.getType().toString(), 60, 30);
-			tree.addChild(parent, childText);
-			generateVisualizationTree(tree, childText, subsubtree);
-		}
 
 	}
 

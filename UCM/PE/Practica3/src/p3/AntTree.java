@@ -32,17 +32,17 @@ public class AntTree {
 	
 	
 	public int getMaxHeight(AntTree node) {
-		int max = node.getDepth();
+		int max = node.depth;
 		for(AntTree subnode : node.children) {
 			max = Math.max(max, getMaxHeight(subnode));
 		}
 		return max;
 	};
 	
-	public int getTotalNodes(AntTree node) {
+	public int getTotalNodes() {
 		int count = 1;
-		for(AntTree subnode : node.children) {
-			count += getTotalNodes(subnode);
+		for(AntTree subnode : children) {
+			count += subnode.getTotalNodes();
 		}
 		return count;
 	};

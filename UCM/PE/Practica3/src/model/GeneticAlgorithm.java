@@ -257,8 +257,7 @@ public class GeneticAlgorithm<T> {
 			DoubleStream map2 = Arrays.stream(eval_results).map(g -> max - g);
 			double total_sum = map2.sum();
 			DoubleStream map3 = Arrays.stream(eval_results).map(g -> (max - g) / total_sum);
-			double[] rs = map3.toArray();
-			return rs;
+			return map3.toArray();
 
 		}
 

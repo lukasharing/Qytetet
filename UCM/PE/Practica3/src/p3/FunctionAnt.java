@@ -10,9 +10,9 @@ import p2.CitiesChromosome;
 
 public class FunctionAnt extends Function{
 
-	private int steps = 400;
+	public static int MAX_STEPS = 500;
+	private int steps = MAX_STEPS;
 	public Ant last = null;
-	private static int MAXTIMENOEAT = 20;
 	
 	@SuppressWarnings("rawtypes")
 	public FunctionAnt(int n, FunctionType type) {
@@ -25,13 +25,12 @@ public class FunctionAnt extends Function{
 	public double evaluate(Chromosome chromosome) {
 		Ant ant = last = new Ant(0, 0);
 		AntTree tree = (AntTree)chromosome.genes.get(0);
+		steps = MAX_STEPS;
 		do {
 			execute(ant, tree, null);
-		}while(steps > 0 && ant.timeNoEat < MAXTIMENOEAT);
-		steps = 400;
+		}while(steps > 0);
 		
-		System.out.println(ant.timeNoEat >= MAXTIMENOEAT);
-		return ant.timeNoEat >= MAXTIMENOEAT ? 0 : (ant.eaten() - tree.getMaxHeight(tree));
+		return ant.eaten() - tree.getTotalNodes() * 0.5;
 	};
 	
 	public ArrayList<Pair<Integer, Integer>> getPath(Chromosome chr){
@@ -40,16 +39,17 @@ public class FunctionAnt extends Function{
 		Ant ant = last = new Ant(0, 0);
 		
 		result.add(ant.coords());
+		
+		steps = MAX_STEPS;
 		do {
 			execute(ant, (AntTree)chr.genes.get(0), result);
 		}while(steps > 0);
-		steps = 400;
 		
 		return result;
 	}
 	
 	public void execute(Ant ant, AntTree tree, ArrayList<Pair<Integer, Integer>> res) {
-		if(steps <= 0 || ant.timeNoEat >= MAXTIMENOEAT) return;
+		if(steps <= 0) return;
 		
 		switch(tree.getType()) {
 			case ISFOOD:
