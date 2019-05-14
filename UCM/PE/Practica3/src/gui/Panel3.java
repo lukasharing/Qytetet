@@ -279,7 +279,7 @@ public class Panel3 extends JFrame {
 		/* Size Population */
 		this.size_population = new JTextField("100", 12);
 		JPanel p1 = new JPanel(new GridLayout(2, 1));
-		p1.add(new JLabel("Tamanio poblacion:"));
+		p1.add(new JLabel("Tamaño poblacion:"));
 		p1.add(size_population);
 		barraizq.add(p1);
 
@@ -368,10 +368,7 @@ public class Panel3 extends JFrame {
 		JPanel barradchactr = new JPanel();
 		barradcha.add(barradchactr);
 		barradchactr.setLayout(new BoxLayout(barradchactr, BoxLayout.Y_AXIS));
-		JLabel titulodcha = new JLabel("RESULTADOS:       ");
-		titulodcha.setFont(titulodcha.getFont().deriveFont(16.0f));
 
-		restartResults(barradchactr, titulodcha);
 
 		JPanel barradchaftr = new JPanel();
 
@@ -389,6 +386,8 @@ public class Panel3 extends JFrame {
 				restartPlot();
 				tp1.repaint();
 				tp1.revalidate();
+				tabbedPane.repaint();
+				tabbedPane.revalidate();
 				tp2.repaint();
 				tp2.revalidate();
 				/* Paneles para visualizar mutaciones y cruces
@@ -399,7 +398,6 @@ public class Panel3 extends JFrame {
 				tp5.repaint();
 				tp5.revalidate();*/
 	
-				restartResults(barradchactr, titulodcha);
 	
 	
 				int elitism_am = ((Integer) elitism_amount.getValue());
@@ -465,6 +463,8 @@ public class Panel3 extends JFrame {
 				AntTree root = (AntTree) ga.getBestAbs_chr().genes.get(0);			
 		        tp2.removeAll();
 		        tp2.add(TreePanel.createTreePanel(root));
+		        tp2.repaint();
+				tp2.revalidate();
 			}});
 
 			restart.addActionListener(new ActionListener() {
@@ -473,8 +473,11 @@ public class Panel3 extends JFrame {
 					restartPlot();
 					tp1.repaint();
 					tp1.revalidate();
+					tabbedPane.repaint();
+					tabbedPane.revalidate();
+					tp2.repaint();
+					tp2.revalidate();
 					best_ev.setText(" ");
-					restartResults(barradchactr, titulodcha);
 	
 					plot.repaint();
 					plot.revalidate();

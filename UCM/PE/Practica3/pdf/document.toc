@@ -1,0 +1,10 @@
+\contentsline {section}{\numberline {1}Introducci\IeC {\'o}n}{2}% 
+\contentsline {subsection}{\numberline {1.1}Algoritmos implementados}{2}% 
+\contentsline {subsection}{\numberline {1.2}Aclaraciones}{3}% 
+\contentsline {section}{\numberline {2}Paneles de resultados}{4}% 
+\contentsline {subsection}{\numberline {2.1}Gr\IeC {\'a}ficas}{4}% 
+\contentsline {subsection}{\numberline {2.2}Pesta\IeC {\~n}a Mapa}{4}% 
+\contentsline {subsection}{\numberline {2.3}Pesta\IeC {\~n}a Mejor \IeC {\'A}rbol}{4}% 
+\contentsline {section}{\numberline {3}An\IeC {\'a}lisis de ejecuciones}{5}% 
+\contentsline {subsection}{\numberline {3.1}Peores resultados}{5}% 
+\contentsline {subsection}{\numberline {3.2}Mejores resultados}{6}% 

@@ -30,6 +30,7 @@ public class FunctionAnt extends Function{
 			execute(ant, tree, null);
 		}while(steps > 0);
 		
+		//control de bloating
 		return ant.eaten() - tree.getTotalNodes() * 0.5;
 	};
 	
