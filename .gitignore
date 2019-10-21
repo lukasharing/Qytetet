@@ -3,3 +3,7 @@
 /Qytetet/Qytetet_RUBY/nbproject/private/
 /.metadata/
 /.recommenders/
+*.aux
+*.log
+*.gz
+*.toc
