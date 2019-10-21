@@ -337,7 +337,15 @@ def low_high_hybrid(img1, img2, asigma, bsigma = 2., border = cv2.BORDER_CONSTAN
 """  BONUS 1
 Descomposición 2D a 2 de 1D
 
-Suppose A can be decomposite into 3 matrix
+By the diagonalization of A
+A = S V S^-1
+And thus S is Orthogonal (S^-1 = S^t)
+Then. A = S V S^t
+Lets rename
+S = U and S^-1 = W
+
+Then
+
 A = U V W^t
 U^-1 = U^t (U is Orthogonal)
 W^-1 = W^t (W is Orthogonal)
@@ -345,12 +353,12 @@ W^-1 = W^t (W is Orthogonal)
 For U
 AA^t = (U V W^t)(U V W^t)^t = (U V W^t) (W^t^t V^t U^t) = U V (W^t W) V^t U^t
 AA^t = U (V V^t) U^t
-U is the eigenvectors matrix of AA^t
+U are the eigenvectors matrix of AA^t
 
 For W
 A^tA = (U V W^t)^(U V W^t) = (W^t^t V^t U^t) (U V W^t) = W V (U^t U) V^t W^t
 A^tA = W (V V^t) W^t
-W is the eigenvectors matrix of AA^t
+W are the eigenvectors matrix of AA^t
 
 
 VV^t = Diagonal of Eigenvalues of AA^t or A^tA (Eigenvalues of A = Eigenvalues of A^t)
@@ -409,16 +417,17 @@ def Conv2D_2_1_D(img, A):
 # Ejercicio 1 Gaussian Blur and Get Deriv Kernels
 img = leeimagen("../images/messi.jpg", cv2.IMREAD_GRAYSCALE)
 
-sigma = 1
+sigma = 3
+
 tam = sigma2tam(sigma)
 
 # Ejercicio 1.A - Gaussiana
-
+"""
 kernel = cv2.getGaussianKernel(tam, sigma)
 kernel = [kernel, kernel]
-"""
-gaussian_2d_cv2 = cv2.GaussianBlur(img, None, sigma, sigma, cv2.BORDER_REPLICATE)
-gaussian_2_1d = normalize(conv_1D_1D(img, kernel, cv2.BORDER_REPLICATE))
+
+gaussian_2d_cv2 = cv2.GaussianBlur(img, None, sigma, sigma, cv2.BORDER_REFLECT)
+gaussian_2_1d = normalize(conv_1D_1D(img, kernel, cv2.BORDER_REFLECT))
 
 #np.hstack((gaussian_2d_cv2, ))
 cv2.imshow("Gaussian Smoothing", np.hstack((gaussian_2d_cv2, gaussian_2_1d)))
@@ -432,49 +441,56 @@ cv2.imshow("Laplacian", np.hstack((laplacian, laplacian_abs)))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
-"""
+
 # Ejercicio 2.A - Gauss Piramid
 cv2.imshow("Gauss Piramid", gauss_pyramid(img, 4, sigma, cv2.BORDER_CONSTANT))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
-"""
+
 # Ejercicio 2.B - Laplacian Piramid
 cv2.imshow("Laplacian Piramid", laplacian_pyramid(img, 4, sigma))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
 # Ejercicio 2.C
-cv2.imshow("Blob detection", blob_detection(img, 3, sigma, 1.2, 20.))
+cv2.imshow("Blob detection", blob_detection(img, 3, 1., 1.2, 20.))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
-# Ejercicio 3.1
+# Ejercicio 3. 2
 img1 = leeimagen("../images/einstein.bmp", cv2.IMREAD_GRAYSCALE)
 img2 = leeimagen("../images/marilyn.bmp", cv2.IMREAD_GRAYSCALE)
-cv2.imshow("Hybrid Image", low_high_hybrid(img1, img2, 2.))
+cv2.imshow("Hybrid Image", low_high_hybrid(img2, img1, 8., 2.))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
 img1 = leeimagen("../images/dog.bmp", cv2.IMREAD_GRAYSCALE)
 img2 = leeimagen("../images/cat.bmp", cv2.IMREAD_GRAYSCALE)
-cv2.imshow("Hybrid Image", low_high_hybrid(img1, img2, 3.))
+cv2.imshow("Hybrid Image", low_high_hybrid(img2, img1, 8., 7.))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
-# Bonus 3. 2.
-img1 = leeimagen("../images/plane.bmp", cv2.IMREAD_COLOR)
-img2 = leeimagen("../images/bird.bmp", cv2.IMREAD_COLOR)
-cv2.imshow("Hybrid Image", low_high_hybrid(img1, img2, 2.5))
+img1 = leeimagen("../images/fish.bmp", cv2.IMREAD_GRAYSCALE)
+img2 = leeimagen("../images/submarine.bmp", cv2.IMREAD_GRAYSCALE)
+cv2.imshow("Hybrid Image", low_high_hybrid(img2, img1, 8., 1.))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-
+"""
 # Ejercicio 3. 3
 img1 = leeimagen("../images/submarine.bmp", cv2.IMREAD_GRAYSCALE)
 img2 = leeimagen("../images/fish.bmp", cv2.IMREAD_GRAYSCALE)
-low, high = low_high(img1, img2, 2.5)
+low, high = low_high(img1, img2, 10., 4.)
 hybrid = normalize(low + high)
 cv2.imshow("Laplacian Piramid", gauss_pyramid(hybrid, 4, sigma))
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+"""
+
+# Bonus 3
+img1 = leeimagen("../images/fish-1.jpg", cv2.IMREAD_COLOR)
+img2 = leeimagen("../images/fish-2.jpg", cv2.IMREAD_COLOR)
+cv2.imshow("Hybrid Image", low_high_hybrid(img1, img2, 1.5, 3.5))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
@@ -488,10 +504,11 @@ cv2.imshow("Bonus 1", np.hstack((mtx_fil, vec_fil)))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
-# Bonus 3
-img1 = leeimagen("../images/fish-1.jpg", cv2.IMREAD_COLOR)
-img2 = leeimagen("../images/fish-2.jpg", cv2.IMREAD_COLOR)
-cv2.imshow("Hybrid Image", low_high_hybrid(img1, img2, 1.5, 3.5))
+# Bonus 3. 2.
+img1 = leeimagen("../images/cat.bmp", cv2.IMREAD_COLOR)
+img2 = leeimagen("../images/dog.bmp", cv2.IMREAD_COLOR)
+cv2.imshow("Hybrid Image", low_high_hybrid(img1, img2, 8., 8.))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
+
 """
