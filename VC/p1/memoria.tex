@@ -148,11 +148,97 @@ La pirámide gaussiana es utilizada para escalar imágenes sin que pierda inform
 Además la pirámide gaussiana es utilizada por la GPU para generar texturas con distinto nivel de detalle, conocido como \textit{LOD Textures}[4] o Mipmaps.
 \newline
 \newline
-Mi método \textbf{gauss\_pyramid} hace uso de cuatros parámetros: el primero, la imagen; el número de escalas (Se cuentan n + 1 escalas) como segundo argumento; El valor de sigma y por último, el tipo de borde (por defecto, borde constante).
+Mi método \textbf{gauss\_pyramid} hace uso de cuatros parámetros: el primero, la imagen; el número de escalas (Se cuentan n + 1 escalas) como segundo argumento; El valor de sigma y por último, el tipo de borde (por defecto, borde constante). Este insertará la primera imagen como guía para las demás.
 \begin{lstlisting}[language=Python]
-	gauss_pyramid(img, 4, sigmam, cv2.BORDER_CONSTANT)
+gauss_pyramid(img, 4, sigmam, cv2.BORDER_CONSTANT)
 \end{lstlisting}
-Este método hace uso de los métodos \textbf{gauss\_pyramid\_helper} y \textbf{GSharp}, que se explicarán a continuación. En primer lugar, el método genera una image con la misma altura que la imagen que pasamos y un ancho de 1.5 veces más.
+Además, hace uso de los métodos \textbf{gauss\_pyramid\_helper} y \textbf{GSharp}, que se explicarán a continuación. En primer lugar, el método genera una image con la misma altura que la imagen que pasamos y un ancho de 1.5 veces más.
+\newline
+\newline
+\textbf{GSharp} un método que devuelve la imagen suavizada y luego re-escalada al tamaño (width, height). El suavizado es realizado a través del método \textbf{GaussianBlur} y el re-escalado a través de la función de cv2, \textbf{resize} que utiliza como tipo de interpolación \textbf{INTER\_LINEAR} de \textbf{cv2}.
+\begin{lstlisting}[language=Python]
+filter = GSharp(sourc, height, width, sigma);
+\end{lstlisting}
+\textbf{gauss\_pyramid\_helper} Es un método recursivo que requiere la imagen resultante creada por \textbf{gauss\_pyramid}, la imagen a re-escalar recursivamente; el desplazamiento horizontal y vertical, utilizado para posicionar correctamente cada imagen; el nivel actual de profundidad, el máximo nivel y el sigma que se va a aplicar.
+
+\newpage
+
+\subsubsection{Resultados}
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=1.\textwidth]{assets/ex1-A/gp-reflects-1.jpg}
+	\caption{\textbf{image} = "motorcycle.bmp", \textbf{border} = "reflect", $\boldsymbol{\sigma} = 1.0$}
+\end{figure}
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=1.\textwidth]{assets/ex1-A/gp-constant-s2.jpg}
+	\caption{\textbf{image} = "messi.jpg", \textbf{border} = "constant", $\boldsymbol{\sigma} = 2.0$}
+\end{figure}
+
+\newpage
+
+\subsubsection{Valoración}
+
+Para la \textit{Fig. 7} se ha utilizado un sigma pequeño $\boldsymbol{\sigma} = 1.0$, ya que este contiene bastantes detalles que no queremos perder a la hora de suavizar mucho, vemos que para cada escala obtenemos una imagen con detalles suficientes, incluso la rueda y los cables se pueden notar suficientemente.
+\newline
+\newline
+La segunda imagen \textit{Fig. 8}, tenemos que el sigma utilizado es demasiado alto, ya que el jugador en cada escala parece acoplarse aún más al fondo, por lo que, en mi opinión el sigma debería ser más bajo, que a diferencia del anterior, hasta la última imagen puede diferenciarse qué objeto es.
+\newline
+\newline
+Podemos ver que el borde no afecta al resultado, por lo que cojamos cual cojamos, no va a implicar un gran cambio entre las escalas.
+
+\subsection{Pirámide Laplaciana}
+La pirámide laplaciana es una técnica utilizada para comprimir imágenes, reconocer patrones, etc. Como hemos visto en las diapositivas, la imagen es escalada la mitad (1 octava), previamente se suavizada. Ahora se aplica la operación inversa, es decir, se suaviza y se escala hacia arriba. Una vez tenemos las dos imágenes, se aplica el operador de sustracción sobre la original, obteniendo así, los contornos de la imagen. Este proceso es realizado para cada imagen que hemos re-dimensionado.
+\newline
+\newline
+De manera similar a la pirámide gaussiana, necesitamos de dos funciones, la especificada anteriormente, \textbf{GSharp} y una de ayuda, \textbf{laplacian\_pyramid\_helper}. 
+Almacenamos en una variable la imagen re-escalada a la mitad, para así poder enviarla para la siguiente iteración.
+\begin{lstlisting}[language=Python]
+width = np.uint(img.shape[1] * 0.5)
+heihgt = np.uint(img.shape[0] * 0.5)
+filtering = GSharp(img, width, height, sigma, border)
+\end{lstlisting}
+Ahora, obtenemos el resultado de la iteración (contornos), aplicando el proceso inverso sobre la imagen original.
+\begin{lstlisting}[language=Python]
+width = img.shape[1]
+heihgt = img.shape[0]
+img -= GSharp(filtering, width, height, sigma, border)
+img = normalize(abs(img) if absolute else img, True)
+\end{lstlisting}
+Como vemos, hemos normalizado la imagen, podemos darle valor absoluto para así tener una vista más clara de los bordes.
+\newline
+\newline
+Cabe destacar que se han omitido muchos pasos ya que son equivalentes a la pirámide gaussiana que ha sido explicada en el apartado anterior.
+
+\newpage
+
+\subsubsection{Resultados}
+A la izquierda, la pirámide laplaciana con valor absoluto. A la derecha, sin el valor absoluto. Ambos interpolan como está especificado en el método \textbf{GSharp}.
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=1.\textwidth]{assets/ex1-A/lp-constant-s2.jpg}
+	\caption{\textbf{image} = "einstein.bmp", \textbf{border} = "constant", $\boldsymbol{\sigma} = 2.0$}
+\end{figure}
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=1.\textwidth]{assets/ex1-A/lp-replicates-s3.jpg}
+	\caption{\textbf{image} = "dog.bmp, \textbf{border} = "replicate", $\boldsymbol{\sigma} = 3.0$}
+\end{figure}
+
+\newpage
+\subsubsection{Valoración}
+Podemos observar un resultado similar a la laplaciana-gaussiana, como para cada escala, vamos suavizando, cada vez perdemos más información (útil o no). Además, para cada escala, se acentúan unos bordes y en otras escalas, otros.
+\newline
+\newline
+Para la primera imagen, observamos que con un $\boldsymbol{\sigma} = 2.0$, la primera iteración da mucho ruido al rededor del pelo, pero a medida que iteramos, ese ruido desaparece.  Vemos que la corbata, los ojos y el bigote están siempre presentes, eso quiere decir que tienen una alta intensidad por lo que son los elementos que más destacan.
+\newline
+\newline
+La imagen del perro tiene un efecto parecido a la anterior, la imagen tiene mucho ruido debido al pelo, pero de la misma forma, cada octava reduce aún más ese ruido. Además el elemento que más podemos ver que es destacado son los ojos y el hocico en más iteraciones.
+\newline
+\newline
+Cabe destacar que el tipo de borde no afecta al resultado, por lo que da igual el borde que apliquemos, podría omitirse o utilizar el borde constante.
+
+\subsection{Detección de regiones}
 
 \newpage
 
@@ -168,7 +254,6 @@ Por lo que calcula el máximo ($max$) y el mínimo ($min$) de la región (matriz
 $$ f(x) = \Bigl\lfloor\dfrac{x - min}{max - min} \cdot 255\Bigr\rfloor$$
 Este mapeo, nos devolverá una matriz cuyos valores están siempre en el intervalo $\left[0, 255\right]$ en valores enteros.
 Cabe destacar que también funciona para imágenes de tres canales, aplicando la misma estrategia para cada canal.
-
 
 \newpage
 
@@ -188,6 +273,10 @@ Cabe destacar que también funciona para imágenes de tres canales, aplicando la
 	\bibitem{CiteSeerX} 
 	Level of detail Textures \\
 	\url{https://realazthat.neocities.org/demos/2016-08-17/glsl-gaussian/glsl-gaussian-suite/glsl-gaussian-suite.html}
+	
+	\bibitem{ScienceDirect} 
+	Laplacian Pyramid Compression \\
+	\url{https://www.sciencedirect.com/topics/engineering/laplacian-pyramid}
 	
 \end{thebibliography}
 

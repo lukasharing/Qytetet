@@ -153,13 +153,13 @@ def gauss_pyramid(img, max_level, sigma, border = cv2.BORDER_CONSTANT):
     
     # Put Image Preview
     img_res[:90,:wdt_scl] = cv2.resize(img, (wdt_scl, 90), interpolation = cv2.INTER_NEAREST)
-    img_res = gauss_pyramid_helper(img_res, img, img.shape[1] - 1, 100, 1, max_level, sigma)
+    img_res = gauss_pyramid_helper(img_res, img, img.shape[1] - 1, 100, 1, max_level, sigma, border)
     
     return img_res    
 
-def gauss_pyramid_helper(dest, sourc, x_displacement, y_displacement, level, max_level, sigma):    
+def gauss_pyramid_helper(dest, sourc, x_displacement, y_displacement, level, max_level, sigma, border = cv2.BORDER_CONSTANT):    
     # Apply Gaussian Blur and Resize it to the half
-    filtering = GSharp(sourc, np.uint(sourc.shape[1] * 0.5), np.uint(sourc.shape[0] * 0.5), sigma);
+    filtering = GSharp(sourc, np.uint(sourc.shape[1] * 0.5), np.uint(sourc.shape[0] * 0.5), sigma, border);
     
     # Put Image Preview
     wdt_scl = np.uint(sourc.shape[1] * 90 / sourc.shape[0])
@@ -174,54 +174,55 @@ def gauss_pyramid_helper(dest, sourc, x_displacement, y_displacement, level, max
     if level == max_level:
         return dest
     else:
-        return gauss_pyramid_helper(dest, filtering, x_displacement, y_displacement - 1, level + 1, max_level, sigma)
+        return gauss_pyramid_helper(dest, filtering, x_displacement, y_displacement - 1, level + 1, max_level, sigma, border)
 
 # LAPLACE PIRAMID
-def laplacian_pyramid(img, max_level, sigma):
+def laplacian_pyramid(img, max_level, sigma, absolute = False, border = cv2.BORDER_CONSTANT):
     # Create Image 1.5 * Size
     img_res = np.zeros((img.shape[0] + 100, np.uint(1.5 * img.shape[1])), dtype=np.uint8)
+    # Change to floats
     img = img.astype(float)
     
     # Apply Reduction
-    filtering = GSharp(img, np.uint(img.shape[1] * 0.5), np.uint(img.shape[0] * 0.5), sigma)
+    filtering = GSharp(img, np.uint(img.shape[1] * 0.5), np.uint(img.shape[0] * 0.5), sigma, border)
     
     # Transformamos en una matrix de floats
-    result = np.zeros((img.shape[0], img.shape[1]), dtype=float)
-    result[:,:] = normalize(img - GSharp(filtering, img.shape[1], img.shape[0], sigma), True)
+    img -= GSharp(filtering, img.shape[1], img.shape[0], sigma, border)
+    img = normalize(abs(img) if absolute else img, True)
     
     #Put First Image (Not scaled in position)
-    img_res[100:100 + result.shape[0],:result.shape[1]] = result
-    wdt_scl = np.uint(result.shape[1] / result.shape[0] * 90)
+    img_res[100:100 + img.shape[0],:img.shape[1]] = img
+    wdt_scl = np.uint(img.shape[1] / img.shape[0] * 90)
     
     # Put Image Preview
-    img_res[:90,:wdt_scl] = cv2.resize(result, (wdt_scl, 90), interpolation = cv2.INTER_NEAREST)
-    img_res = laplacian_pyramid_helper(img_res, filtering, img.shape[1] - 1, 100, 1, max_level, sigma)
+    img_res[:90,:wdt_scl] = cv2.resize(img, (wdt_scl, 90), interpolation = cv2.INTER_NEAREST)
+    img_res = laplacian_pyramid_helper(img_res, filtering, img.shape[1] - 1, 100, 1, max_level, sigma, absolute, border)
     
     return img_res
 
-def laplacian_pyramid_helper(dest, sourc, x_displacement, y_displacement, level, max_level, sigma):
+def laplacian_pyramid_helper(dest, sourc, x_displacement, y_displacement, level, max_level, sigma, absolute = False, border = cv2.BORDER_CONSTANT):
     
     # Apply Reduction
-    filtering = GSharp(sourc, np.uint(sourc.shape[1] * 0.5), np.uint(sourc.shape[0] * 0.5), sigma)
+    filtering = GSharp(sourc, np.uint(sourc.shape[1] * 0.5), np.uint(sourc.shape[0] * 0.5), sigma, border)
     
     # Transformamos en una matrix de floats
-    result = np.zeros((sourc.shape[0], sourc.shape[1]), dtype=float)
-    result[:,:] = normalize(sourc - GSharp(filtering, sourc.shape[1], sourc.shape[0], sigma), True)
+    sourc -= GSharp(filtering, sourc.shape[1], sourc.shape[0], sigma, border)
+    sourc = normalize(abs(sourc) if absolute else sourc, True)
     
     # Put Image Preview
     wdt_scl = np.uint(sourc.shape[1] / sourc.shape[0] * 90)
     dsx = wdt_scl * level
-    dest[:90, dsx:dsx + wdt_scl] = cv2.resize(result, (wdt_scl, 90), interpolation = cv2.INTER_NEAREST)
+    dest[:90, dsx:dsx + wdt_scl] = cv2.resize(sourc, (wdt_scl, 90), interpolation = cv2.INTER_NEAREST)
     
     # Put Image Resized and displace the y coord to the next image
-    dest[y_displacement:y_displacement + result.shape[0], x_displacement:x_displacement + result.shape[1]] = result
-    y_displacement += result.shape[0]
+    dest[y_displacement:y_displacement + sourc.shape[0], x_displacement:x_displacement + sourc.shape[1]] = sourc
+    y_displacement += sourc.shape[0]
     
     # If level == Level => Return Image
     if level == max_level:
         return dest
     else:
-        return laplacian_pyramid_helper(dest, filtering, x_displacement, y_displacement - 1, level + 1, max_level, sigma)
+        return laplacian_pyramid_helper(dest, filtering, x_displacement, y_displacement - 1, level + 1, max_level, sigma, absolute, border)
 
 def blob_detection(img, num_steps, sigma, scale, threshold):
     
@@ -415,7 +416,7 @@ def Conv2D_2_1_D(img, A):
 
 
 # Ejercicio 1 Gaussian Blur and Get Deriv Kernels
-img = leeimagen("../images/messi.jpg", cv2.IMREAD_GRAYSCALE)
+img = leeimagen("../images/dog.bmp", cv2.IMREAD_GRAYSCALE)
 
 sigma = 3
 
@@ -443,16 +444,16 @@ cv2.destroyAllWindows()
 
 
 # Ejercicio 2.A - Gauss Piramid
-cv2.imshow("Gauss Piramid", gauss_pyramid(img, 4, sigma, cv2.BORDER_CONSTANT))
+cv2.imshow("Gauss Piramid", gauss_pyramid(img, 4, sigma, cv2.BORDER_REFLECT))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
-
+"""
 # Ejercicio 2.B - Laplacian Piramid
-cv2.imshow("Laplacian Piramid", laplacian_pyramid(img, 4, sigma))
+cv2.imshow("Laplacian Piramid", np.hstack((laplacian_pyramid(img, 3, sigma, True, cv2.BORDER_REPLICATE), laplacian_pyramid(img, 3, sigma, False, cv2.BORDER_REPLICATE))))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-
+"""
 # Ejercicio 2.C
 cv2.imshow("Blob detection", blob_detection(img, 3, 1., 1.2, 20.))
 cv2.waitKey(0)
@@ -476,16 +477,16 @@ img2 = leeimagen("../images/submarine.bmp", cv2.IMREAD_GRAYSCALE)
 cv2.imshow("Hybrid Image", low_high_hybrid(img2, img1, 8., 1.))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-"""
+
 # Ejercicio 3. 3
 img1 = leeimagen("../images/submarine.bmp", cv2.IMREAD_GRAYSCALE)
 img2 = leeimagen("../images/fish.bmp", cv2.IMREAD_GRAYSCALE)
 low, high = low_high(img1, img2, 10., 4.)
 hybrid = normalize(low + high)
-cv2.imshow("Laplacian Piramid", gauss_pyramid(hybrid, 4, sigma))
+cv2.imshow("Hybrid Gauss Piramid", gauss_pyramid(hybrid, 4, sigma))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-"""
+
 
 # Bonus 3
 img1 = leeimagen("../images/fish-1.jpg", cv2.IMREAD_COLOR)
