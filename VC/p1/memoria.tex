@@ -1,0 +1,173 @@
+\documentclass{article}
+
+%packages
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\renewcommand{\contentsname}{Tabla de contenidos}
+\renewcommand\refname{Referencias}
+\renewcommand{\figurename}{Fig.}
+
+\begin{document}
+
+\begin{titlepage}
+	\centering
+	{\includegraphics[width=0.4\textwidth]{assets/logo.jpg} \par}
+	\vspace{3cm}
+	{\huge\bfseries Práctica 1.\\ Filtrado y Detección de regiones \par}
+	\vspace{2cm}
+	{\Large\itshape Lukas Häring García\par}
+	\vfill
+	\vfill
+
+% Bottom of the page
+	{\large \today\par}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Primer Apartado}
+En este apartado vamos a realizar unos ejercicios relacionados con las máscaras gaussianas y las laplacianas-gaussianas estudiadas en clase, con diferentes ejemplos de imágenes, bordes y sigmas.
+
+\subsection{Máscaras Gaussianas}
+Una máscara gaussiana es un operador de convolución que se utiliza para suavizar superficies, esta es obtenida a través del muestreo de una función gaussiana.
+\newline
+\newline
+Vamos a convolucionar nuestra imagen con una máscara gaussiana 2D. Para ello, basta con utilizar el método \textbf{GaussianBlur} de la librería \textbf{cv2}.
+\newline
+\newline
+Este necesita como parámetros, la imagen a aplicar; el segundo parámetro es un par de valores para el tamaño del kernel (El cual no utilizaremos ya que lo haremos dependiente del sigma); tercer y cuarto parámetro, el valor de los sigmas horizontal y vertical respectivamente y finalmente el tipo de borde que queremos aplicar, véase la referencia [1] para obtener más información sobre el tipo de bordes.
+\begin{lstlisting}[language=Python]
+cv2.GaussianBlur(img,None,sigma,sigma,cv2.BORDER_CONSTANT)
+\end{lstlisting}
+Podemos obtener el mismo resultado a través de dos convoluciones 1D, para ellos, vamos a obtener el kernel 1D utilizando la función de cv2 \textbf{getGaussianKernel}, este nos pedirá como argumentos: El tamaño del kernel y el sigma.
+El tamaño del kernel es calculable a partir del sigma.
+$$ \#\text{Kernel} = 2\cdot\lfloor{3\sigma}\rfloor + 1$$ 
+Esta ecuación es deducible a través del tamaño del intervalo y de la necesidad de muestrear un $\ge 95\%$ de la curva. 
+\newline\newline
+Para convolucionar ambos filtros 1D, utilizo el método diseñado por mí, que también es parte del \textbf{Bonus 1} y será explicado posteriormente. Este calcula eficientemente dicha convolución, recibe el nombre de \textbf{conv\_1D\_1D}. \textbf{conv\_1D\_1D} necesita como argumentos, la imagen y una matriz con las dos máscaras 1D. Además hace uso del principio de localidad, por lo que la primera convolución (horizontal) la realiza como tal y la convolución vertical, a la imagen transpuesta (y su posterior transposición). Esta función no devuelve el resultado normalizado, por lo que habrá que normalizarlo $\left[0, 255\right]$ \textbf{normalize} (Véase el pie de página).
+\begin{lstlisting}[language=Python]
+gaussian_2_1d_cv2 = normalize(conv_1D_1D(img, kernel))
+\end{lstlisting}
+
+\newpage
+
+\subsubsection{Resultados}
+A la izquierda el método \textbf{GaussianBlur} y a la derecha, mi función de convolución \textbf{conv\_1D\_1D}.
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=.9\textwidth]{assets/ex1-A/constant-s2.jpg}
+	\caption{\textbf{image} = "fish.bmp", \textbf{border} = "constant", $\boldsymbol{\sigma} = 2.0$}
+\end{figure}
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=.9\textwidth]{assets/ex1-A/reflect-s4.jpg}
+	\caption{\textbf{image} = "cat.bmp", \textbf{border} = "reflect", $\boldsymbol{\sigma} = 4.0$}
+\end{figure}
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=.9\textwidth]{assets/ex1-A/replicate-s6.jpg}
+	\caption{\textbf{image} = "bicycle.bmp", \textbf{border} = "replicate", $\boldsymbol{\sigma} = 6.0$}
+\end{figure}
+
+\newpage
+
+\subsubsection{Valoración}
+Podemos observar una clara diferencia entre ambas imágenes, algo es extraño ya que \textbf{GaussianBlur} para "bicycle.bmp" y para "cat.bmp" parece no aplicar correctamente el filtro gaussiano y solo horizontalmente. Por otro lado, mi método consigue aplicar correctamente un difuminado homogéneo en la bicicleta. Además se observa que en la primera imagen, mi método "arrastra" el padding hacia el centro de la imagen, creando un difuminado obscuro al rededor de los bordes. Está claro que a medida que vamos subiendo $\boldsymbol{\sigma}$, este va difuminando cada vez más, por lo que los resultados, parecen ser coherentes.
+
+\subsection{Filtro Laplaciano-Gaussiano}
+Un filtro laplaciano-gaussiano es utilizada para marcar regiones con alto cambio de intensidad, por ello, es utilizado habitualmente para detectar bordes. Además es isotrópica, quiere decir que afecta por igual en todas direcciones.
+\newline
+\newline
+La laplaciana-gaussiana, como su propio nombre indica, requiere de dos pasos. El primer paso, aplicar un \textbf{filtro Gaussiano} de suavizado (utilizado para eliminar ruido que pueda afectar). En segundo lugar, un \textbf{filtro Laplaciano}, que viene dado por la siguiente ecuación.
+$$ L(x, y) = \dfrac{\partial^2I}{\partial x^2} + \dfrac{\partial^2I}{\partial y^2}$$
+Como podemos apreciar, la derivada lo que va a ver es el cambio en cada dirección (horizontal y vertical), de ahí su detección de bordes.
+\newline
+\newline
+Una vez aplicado el suavizado, aplicaremos el Laplaciano en ambas direcciones a la imagen suavizada por separado y luego, sumaremos los resultados, obteniendo así el resultado final.
+\newline
+\newline
+Para obtener las segundas derivadas espaciales, vamos a utilizar el método de cv2 \textbf{getDerivKernels}.
+\begin{lstlisting}[language=Python]
+d2x = cv2.getDerivKernels(2, 0, tam)
+d2y = cv2.getDerivKernels(0, 2, tam)
+\end{lstlisting}
+Este nos devolverá un filtro de Sobel[3] para cada derivada espacial, estos los aplicaremos con mi método \textbf{conv\_1D\_1D} y luego, sumaremos los resultados.
+\newline
+\newline
+Cabe destacar que los filtros no están normalizados, por lo que deberemos multiplicar al resultado final por $\boldsymbol{\sigma}$. Además, el resultado no estará normalizado en 255, por lo que a la hora de mostrarlo, habrá que normalizar.
+
+\newpage
+
+\subsubsection{Resultados}
+A la izquierda el laplaciano-gaussiano sin valor absoluto. A la derecha, aplicando el valor absoluto.
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=.9\textwidth]{assets/ex1-A/laplacian-constant-s1.jpg}
+	\caption{\textbf{image} = "submarine.bmp", \textbf{border} = "constant", $\boldsymbol{\sigma} = 1.0$}
+\end{figure}
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=.9\textwidth]{assets/ex1-A/laplacian-wrap-s2.jpg}
+	\caption{\textbf{image} = "messi.jpg", \textbf{border} = "wrap", $\boldsymbol{\sigma} = 2.0$}
+\end{figure}
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=.9\textwidth]{assets/ex1-A/laplacian-replicate-s3.jpg}
+	\caption{\textbf{image} = "plane.bmp", \textbf{border} = "replicate", $\boldsymbol{\sigma} = 3.0$}
+\end{figure}
+
+\newpage
+
+\subsubsection{Valoración}
+El filtro Laplaciano-Gaussiano, como ya hemos comentado, suaviza por lo que vamos a eliminar información útil o no (ruido).
+\newline
+\newline
+Es curioso observar que al aplicar el borde "contant", este tome una intensidad baja, esto ocurre ya que al aplicar las derivadas, estos puntos se detecten como bordes ya que su exterior es cero. Podríamos decir que se obtienen "mejores" resultados con cualquier otro borde.
+\newline
+\newline
+Además, el sigma vemos que afecta a la intensidad de los bordes así como al difuminado de estos, por lo que, podríamos afirmar que debemos utilizar un valor intermedio, para no generar bordes muy borrosos pero tampoco demasiado claros.
+\newline
+\newline
+Algo a comentar es que el filtro gaussiano utiliza el mismo sigma que el filtro Laplaciano, algo que se podría evitar añadiendo un argumento más, pero es solo un detalle de implementación.
+
+\newpage
+
+\section{Pié de página}
+
+\subsection{Normalización a 255}
+El método \textbf{normalize} recibe una matriz como argumento, esta devuelve una matriz con valores entre 0 y 255, además tiene un parámetro extra (\textbf{False} si no está definido) que identifica dos casos:
+\begin{enumerate}
+	\item \textbf{Normalización completa} (Segundo argumento vale \textbf{True}).\\ Esto quiere decir que, normaliza tanto valores fuera como dentro del intervalo.
+	\item \textbf{Normalización de fronteras} (Segundo argumento vale \textbf{False}). \\ Normalizará únicamente valores exteriores al intervalo, tanto por encima como por debajo de este.
+\end{enumerate}
+Por lo que calcula el máximo ($max$) y el mínimo ($min$) de la región (matriz) y aplica la siguiente función $f:\mathbb{R} \to \mathbb{N}$ que viene a continuación.
+$$ f(x) = \Bigl\lfloor\dfrac{x - min}{max - min} \cdot 255\Bigr\rfloor$$
+Este mapeo, nos devolverá una matriz cuyos valores están siempre en el intervalo $\left[0, 255\right]$ en valores enteros.
+Cabe destacar que también funciona para imágenes de tres canales, aplicando la misma estrategia para cada canal.
+
+
+\newpage
+
+\begin{thebibliography}{9}
+	\bibitem{TurotialKart} 
+	cv2 Gaussian Blur Function in Python \\
+	\url{https://www.tutorialkart.com/opencv/python/opencv-python-gaussian-image-smoothing/}
+	
+	\bibitem{HIPR2} 
+	Laplaciana Gaussiana\\
+	\url{https://homepages.inf.ed.ac.uk/rbf/HIPR2/log.htm}
+	
+	\bibitem{OpenCV} 
+	Deriv Kernel \\
+	\url{https://docs.opencv.org/2.4/modules/imgproc/doc/filtering.html#getderivkernels}
+	
+\end{thebibliography}
+
+
+\end{document}
