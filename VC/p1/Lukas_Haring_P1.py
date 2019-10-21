@@ -9,12 +9,15 @@ os.path.dirname(os.path.abspath(__file__))
 """
     UTILS
 """
+# Sigma to Size
 def sigma2tam(sigma):
     return 2 * np.uint(sigma * 3) + 1;
 
+# Read image path
 def leeimagen(filename, flagColor):
     return cv2.imread(filename, flagColor)
 
+# Normalize Kernels into the interval [0, 1]
 def normalizeKernels(kernels):
     results = []
     for i in range(len(kernels)):
@@ -24,35 +27,40 @@ def normalizeKernels(kernels):
     
     return (results[0], results[1])
 
+# Normalize a matrix into the interval [0, 255] integer
 def normalize(img, outer = False):
     
     minm = np.amin(img)
     maxm = np.amax(img)
     
-    if outer:
+    if outer: # Normalize all values
         if len(img.shape) == 2:
-            for i in range(0, img.shape[0], 1):
+            for i in range(0, img.shape[0], 1): # Grey scale Image
                 for j in range(0, img.shape[1], 1):
                     img[i, j] = (img[i, j] - minm) / (maxm - minm) * 255
         else:
-            for i in range(0, img.shape[0], 1):
+            for i in range(0, img.shape[0], 1): # Multiple channel Image
                 for j in range(0, img.shape[1], 1):
                     img[i, j, :] = (img[i, j, :] - minm) / (maxm - minm) * 255
-            
-    else:
-        if len(img.shape) == 2:
+    else: # Normalize exterior Values
+        if len(img.shape) == 2: # Grey scale Image
             for i in range(0, img.shape[0], 1):
                 for j in range(0, img.shape[1], 1):
                     if img[i, j] < 0 or img[i, j] >= 255: # Map only negative values
                         img[i, j] = (img[i, j] - minm) / (maxm - minm) * 255
         else:
-            for n in range(0, img.shape[2]):
+            for n in range(0, img.shape[2]): # Multiple channel Image
                 for i in range(0, img.shape[0], 1):
                     for j in range(0, img.shape[1], 1):
                         if img[i, j, n] < 0 or img[i, j, n] >= 255: # Map only negative values
                             img[i, j, n] = (img[i, j, n] - minm) / (maxm - minm) * 255
     
     return img.astype(np.uint8)
+
+# Returns Gaussian Blurr and Resized Image
+def GSharp(img, hw, hh, sigma, border = cv2.BORDER_CONSTANT):
+    smoothed = cv2.GaussianBlur(img, (0, 0), sigma, sigma, border)
+    return cv2.resize(smoothed, (hw, hh), interpolation = cv2.INTER_LINEAR)
 
 
 """
@@ -133,9 +141,8 @@ def laplacian_gauss(img, sigma, abs_res = True, border = cv2.BORDER_CONSTANT):
     
     return (sigma * sigma) * (abs(laplacian) if abs_res else laplacian)
     
-    
 # GAUSS PIRAMID
-def gauss_pyramid(img, max_level, sigma):
+def gauss_pyramid(img, max_level, sigma, border = cv2.BORDER_CONSTANT):
     
     # Create Image 1.5 * Size
     img_res = np.zeros((img.shape[0] + 100, np.uint(1.5 * img.shape[1] + .5)), dtype=np.uint8)
@@ -148,12 +155,7 @@ def gauss_pyramid(img, max_level, sigma):
     img_res[:90,:wdt_scl] = cv2.resize(img, (wdt_scl, 90), interpolation = cv2.INTER_NEAREST)
     img_res = gauss_pyramid_helper(img_res, img, img.shape[1] - 1, 100, 1, max_level, sigma)
     
-    return img_res
-
-def GSharp(img, hw, hh, sigma):
-    smoothed = cv2.GaussianBlur(img, (0, 0), sigma, sigma, cv2.BORDER_CONSTANT)
-    return cv2.resize(smoothed, (hw, hh), interpolation = cv2.INTER_LINEAR)
-    
+    return img_res    
 
 def gauss_pyramid_helper(dest, sourc, x_displacement, y_displacement, level, max_level, sigma):    
     # Apply Gaussian Blur and Resize it to the half
@@ -422,7 +424,7 @@ gaussian_2_1d = normalize(conv_1D_1D(img, kernel, cv2.BORDER_REPLICATE))
 cv2.imshow("Gaussian Smoothing", np.hstack((gaussian_2d_cv2, gaussian_2_1d)))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-"""
+
 # Ejercicio 1.B - Laplaciana d^2(img)/d^2x + d^2(img)/d^2y
 laplacian = normalize(laplacian_gauss(img, sigma, False, cv2.BORDER_WRAP), True)
 laplacian_abs = normalize(laplacian_gauss(img, sigma, True, cv2.BORDER_WRAP), True)
@@ -432,10 +434,11 @@ cv2.destroyAllWindows()
 
 """
 # Ejercicio 2.A - Gauss Piramid
-cv2.imshow("Gauss Piramid", gauss_pyramid(img, 4, sigma))
+cv2.imshow("Gauss Piramid", gauss_pyramid(img, 4, sigma, cv2.BORDER_CONSTANT))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
+"""
 # Ejercicio 2.B - Laplacian Piramid
 cv2.imshow("Laplacian Piramid", laplacian_pyramid(img, 4, sigma))
 cv2.waitKey(0)

@@ -138,6 +138,24 @@ Algo a comentar es que el filtro gaussiano utiliza el mismo sigma que el filtro 
 
 \newpage
 
+\section{Segundo Apartado}
+En esta sección vamos a ver las pirámides gaussianas y laplacianas. También el llamado \textbf{blob detection}, detección de zonas interesantes.
+
+\subsection{Pirámide Gaussiana}
+La pirámide gaussiana es utilizada para escalar imágenes sin que pierda información vital de la imagen, ya que utilizando solo interpolación, suele perder, puntos clave, dirección de lineas, etc.
+\newline
+\newline
+Además la pirámide gaussiana es utilizada por la GPU para generar texturas con distinto nivel de detalle, conocido como \textit{LOD Textures}[4] o Mipmaps.
+\newline
+\newline
+Mi método \textbf{gauss\_pyramid} hace uso de cuatros parámetros: el primero, la imagen; el número de escalas (Se cuentan n + 1 escalas) como segundo argumento; El valor de sigma y por último, el tipo de borde (por defecto, borde constante).
+\begin{lstlisting}[language=Python]
+	gauss_pyramid(img, 4, sigmam, cv2.BORDER_CONSTANT)
+\end{lstlisting}
+Este método hace uso de los métodos \textbf{gauss\_pyramid\_helper} y \textbf{GSharp}, que se explicarán a continuación. En primer lugar, el método genera una image con la misma altura que la imagen que pasamos y un ancho de 1.5 veces más.
+
+\newpage
+
 \section{Pié de página}
 
 \subsection{Normalización a 255}
@@ -166,6 +184,10 @@ Cabe destacar que también funciona para imágenes de tres canales, aplicando la
 	\bibitem{OpenCV} 
 	Deriv Kernel \\
 	\url{https://docs.opencv.org/2.4/modules/imgproc/doc/filtering.html#getderivkernels}
+	
+	\bibitem{CiteSeerX} 
+	Level of detail Textures \\
+	\url{https://realazthat.neocities.org/demos/2016-08-17/glsl-gaussian/glsl-gaussian-suite/glsl-gaussian-suite.html}
 	
 \end{thebibliography}
 
