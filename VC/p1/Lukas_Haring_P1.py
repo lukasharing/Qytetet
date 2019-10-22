@@ -68,7 +68,7 @@ def GSharp(img, hw, hh, sigma, border = cv2.BORDER_CONSTANT):
     @filename : Existing File Path
     @flagColor: cv2.IMREAD_GRAYSCALE or cv2.IMREAD_COLOR
 """
-def Convolution_1D(img, fil, border = cv2.BORDER_CONSTANT):
+def Convolution_1D(img, fil, border = cv2.BORDER_CONSTANT, padding = True):
     # old
     old_height, old_width = img.shape
     
@@ -77,8 +77,9 @@ def Convolution_1D(img, fil, border = cv2.BORDER_CONSTANT):
     size_mask = len(fil)
     
     # Add Padding
-    padding = np.uint8((size_mask + 1) / 2)
-    img = cv2.copyMakeBorder(img, padding - 1, padding - 1, padding - 1, padding - 1, border)
+    if padding:
+        padding = np.uint8((size_mask + 1) / 2)
+        img = cv2.copyMakeBorder(img, padding - 1, padding - 1, padding - 1, padding - 1, border)
     
     height, width = img.shape
     # mask of 000000...000000m1m2m3...mn0000000...00000000
@@ -99,34 +100,32 @@ def Convolution_1D(img, fil, border = cv2.BORDER_CONSTANT):
             result[j, i] = np.dot(mask[0, offset : offset + width], img[j])     
     
     # Remove padding
-    result = result[padding - 1: padding - 1 + old_height, padding - 1: padding  - 1 + old_width]
+    if padding:
+        result = result[padding - 1: padding - 1 + old_height, padding - 1: padding  - 1 + old_width]
     
     return result
 
-def conv_1D_1D(img, fil, border = cv2.BORDER_CONSTANT):
+def conv_1D_1D(img, fil, border = cv2.BORDER_CONSTANT, padding = True):
     # Convolution 1
-    res = Convolution_1D(img, fil[0], border)
+    res = Convolution_1D(img, fil[0], border, padding)
     
     res = np.transpose(res)
-    res = Convolution_1D(res, fil[1], border)
+    res = Convolution_1D(res, fil[1], border, padding)
     res = np.transpose(res)    
     
     return res
 
-def laplacian_gauss(img, sigma, abs_res = True, border = cv2.BORDER_CONSTANT):
+def laplacian_gauss(img, sigma, abs_res = True, border = cv2.BORDER_CONSTANT, padding = True):
     
     tam = sigma2tam(sigma)
     
-    # Apply Gaussian Blur
-    img = cv2.GaussianBlur(img, None, sigma, sigma, border)
-    
-    # Kernels derivation
+    # Kernels derivation and smoothing
     d2x = cv2.getDerivKernels(2, 0, tam)
     d2y = cv2.getDerivKernels(0, 2, tam)
     
-    # d^2x and d^2y
-    conv_x = conv_1D_1D(img, d2x, border)
-    conv_y = conv_1D_1D(img, d2y, border)
+    # d^2x and d^2y with the directional smoothing
+    conv_x = conv_1D_1D(img, d2x, border, padding)
+    conv_y = conv_1D_1D(img, d2y, border, padding)
     
     # d^2x + d^2y
     laplacian = conv_y + conv_x
@@ -244,7 +243,7 @@ def blob_detection(img, num_steps, sigma, scale, threshold):
     for i in range(0, num_steps):
         
         # Laplacian that will be converted to maximal supressed
-        laplacian = normalize(laplacian_gauss(img, sigma * scale ** (i + 1)))
+        laplacian = normalize(laplacian_gauss(img, sigma * scale ** (i + 1), False))
         
         # Make a copy with padding
         supression = np.pad(laplacian, (1, 1), "constant")
@@ -277,9 +276,16 @@ def blob_detection(img, num_steps, sigma, scale, threshold):
         # Bottom Layer Draw Circles
         radius = np.uint(sigma * np.sqrt(2))
         for j in range(len(bottom)):
-            if bottom[j][2] > levels[1][bottom[j][0]][bottom[j][1]]:
-                cv2.circle(result, (bottom[j][1], bottom[j][0]), radius, (0, 0, 255))
+            max_top = bottom[j][2]
+            cx = bottom[j][1]
+            cy = bottom[j][0]
+            for n in range(-1, 2):
+                for m in range(-1, 2): 
+                    max_top = max(max_top, levels[1][cy + n][cx + m]) 
+            if bottom[j][2] >= max_top:
+                cv2.circle(result, (cx, cy), radius, (0, 0, 255))
         
+        """
         # Top Layer Draw Circle
         top = maximals[num_steps - 1]
         radius = np.uint((sigma * scale ** num_steps) * np.sqrt(2))
@@ -295,7 +301,7 @@ def blob_detection(img, num_steps, sigma, scale, threshold):
                 toplayer = levels[i + 1][maximals[i][j][0]][maximals[i][j][1]]
                 if maximals[i][j][2] > bottomlayer and maximals[i][j][2] > toplayer:
                     cv2.circle(result, (maximals[i][j][1], maximals[i][j][0]), radius, (0, 0, 255))
-
+        """
     return result
 
 # Returns Low of Img1 And High Of Image 2
@@ -448,7 +454,7 @@ cv2.imshow("Gauss Piramid", gauss_pyramid(img, 4, sigma, cv2.BORDER_REFLECT))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
-"""
+
 # Ejercicio 2.B - Laplacian Piramid
 cv2.imshow("Laplacian Piramid", np.hstack((laplacian_pyramid(img, 3, sigma, True, cv2.BORDER_REPLICATE), laplacian_pyramid(img, 3, sigma, False, cv2.BORDER_REPLICATE))))
 cv2.waitKey(0)
@@ -458,7 +464,7 @@ cv2.destroyAllWindows()
 cv2.imshow("Blob detection", blob_detection(img, 3, 1., 1.2, 20.))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-
+"""
 # Ejercicio 3. 2
 img1 = leeimagen("../images/einstein.bmp", cv2.IMREAD_GRAYSCALE)
 img2 = leeimagen("../images/marilyn.bmp", cv2.IMREAD_GRAYSCALE)

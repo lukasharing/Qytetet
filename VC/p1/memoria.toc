@@ -1,9 +1,0 @@
-\contentsline {section}{\numberline {1}Primer Apartado}{2}
-\contentsline {subsection}{\numberline {1.1}M\IeC {\'a}scaras Gaussianas}{2}
-\contentsline {subsubsection}{\numberline {1.1.1}Resultados}{3}
-\contentsline {subsubsection}{\numberline {1.1.2}Valoraci\IeC {\'o}n}{4}
-\contentsline {subsection}{\numberline {1.2}Filtro Laplaciano-Gaussiano}{4}
-\contentsline {subsubsection}{\numberline {1.2.1}Resultados}{5}
-\contentsline {subsubsection}{\numberline {1.2.2}Valoraci\IeC {\'o}n}{6}
-\contentsline {section}{\numberline {2}Pi\IeC {\'e} de p\IeC {\'a}gina}{7}
-\contentsline {subsection}{\numberline {2.1}Normalizaci\IeC {\'o}n a 255}{7}
