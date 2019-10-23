@@ -143,11 +143,17 @@ def laplacian_gauss(img, sigma, abs_res = True, border = cv2.BORDER_CONSTANT, pa
 # GAUSS PIRAMID
 def gauss_pyramid(img, max_level, sigma, border = cv2.BORDER_CONSTANT):
     
-    # Create Image 1.5 * Size
-    img_res = np.zeros((img.shape[0] + 100, np.uint(1.5 * img.shape[1] + .5)), dtype=np.uint8)
     
     #Put First Image (Not scaled in position)
-    img_res[100:100 + img.shape[0],:img.shape[1]] = img
+    if len(img.shape) == 2:
+        # Create Image 1 Channel, 1.5 * Size
+        img_res = np.zeros((img.shape[0] + 100, np.uint(1.5 * img.shape[1] + .5)), dtype=np.uint8)
+        img_res[100:100 + img.shape[0],:img.shape[1]] = img
+    else:
+        # Create Image 3 Channel, 1.5 * Size
+        img_res = np.zeros((img.shape[0] + 100, np.uint(1.5 * img.shape[1] + .5), 3), dtype=np.uint8)
+        img_res[100:100 + img.shape[0],:img.shape[1]] = img[:,:]
+        
     wdt_scl = np.uint(img.shape[1] / img.shape[0] * 90)
     
     # Put Image Preview
@@ -163,7 +169,9 @@ def gauss_pyramid_helper(dest, sourc, x_displacement, y_displacement, level, max
     # Put Image Preview
     wdt_scl = np.uint(sourc.shape[1] * 90 / sourc.shape[0])
     dsx = wdt_scl * level
-    dest[:90, dsx:dsx + wdt_scl] = cv2.resize(filtering, (wdt_scl, 90), interpolation = cv2.INTER_NEAREST)
+    preview = cv2.resize(filtering, (wdt_scl, 90), interpolation = cv2.INTER_NEAREST)
+    # Avoid going out by clipping
+    dest[:90, dsx:min(dest.shape[1] - 1, dsx + wdt_scl)] = preview[:,:max(0, dest.shape[1] - 1 - dsx)]
     
     # Put Image Resized and displace the y coord to the next image
     dest[y_displacement:y_displacement + filtering.shape[0], x_displacement:x_displacement + filtering.shape[1]] = filtering
@@ -238,70 +246,79 @@ def blob_detection(img, num_steps, sigma, scale, threshold):
     # Go for each level (LOD)
     height, width = img.shape
     
-    levels = []
+    scales = []
+    # Generate Laplacian Scale
+    for k in range(0, num_steps):        
+        # Scale Laplacian with padding
+        laplacian = np.pad(normalize(laplacian_gauss(img, sigma * scale ** k, False)), (1, 1), "constant")
+        # Add maximal supression image
+        scales.append(laplacian)
+    
     maximals = []
-    for i in range(0, num_steps):
-        
-        # Laplacian that will be converted to maximal supressed
-        laplacian = normalize(laplacian_gauss(img, sigma * scale ** (i + 1), False))
-        
-        # Make a copy with padding
-        supression = np.pad(laplacian, (1, 1), "constant")
-        
-        # Non-maximum Supression
+    # Non-maximum Supression for each scale
+    for k in range(0, num_steps):
+        # Make a copy
+        copy_scale = np.copy(scales[k])
         maximal = []
+        scalen = scales[k]
         for j in range(1, height + 1):
-            for k in range(1, width + 1):
+            for i in range(1, width + 1):
                 # Get Maximum of neighbourhood
-                maximum = np.amax(supression[j - 1 : j + 2, k - 1 : k + 2])
+                maximum = np.amax(scalen[j - 1 : j + 2, i - 1 : i + 2])
                 
                 # Check if the current pixel is maximal, then add it to the list
                 # Create Maximal supressed Image
-                # Shift values because of the padding
                 # High Pass Filter by a threshold
-                if supression[j, k] == maximum and supression[j, k] > threshold:
-                    laplacian[j - 1, k - 1] = maximum
-                    maximal.append([j - 1, k - 1, maximum])
+                if scalen[j, i] >= maximum and scalen[j, i] > threshold:
+                    copy_scale[j, i] = maximum
+                    maximal.append([j, i, maximum])
                 else:
-                    laplacian[j - 1, k - 1] = 0
+                    copy_scale[j, i] = 0
         
-        # Add maximal list
+        scales[k] = copy_scale
         maximals.append(maximal)
-        # Add maximal supression image
-        levels.append(laplacian)
-
+    
     if num_steps > 1:
-
+        # We know that r = sigma sqrt(2) (By solving the solution of g''(x) = 0)
+        root = np.sqrt(2)
+        
         bottom = maximals[0]
         # Bottom Layer Draw Circles
-        radius = np.uint(sigma * np.sqrt(2))
+        radius = np.uint(sigma * root)
         for j in range(len(bottom)):
-            max_top = bottom[j][2]
             cx = bottom[j][1]
             cy = bottom[j][0]
-            for n in range(-1, 2):
-                for m in range(-1, 2): 
-                    max_top = max(max_top, levels[1][cy + n][cx + m]) 
-            if bottom[j][2] >= max_top:
-                cv2.circle(result, (cx, cy), radius, (0, 0, 255))
+            # Get maximum from top layer only
+            max_top = np.amax(scales[1][cy - 1 : cy + 2, cx - 1 : cx + 2])
+            if bottom[j][2] > max_top:
+                cv2.circle(result, (cx - 1, cy - 1), radius, (0, 0, 255))
         
-        """
+        
         # Top Layer Draw Circle
         top = maximals[num_steps - 1]
-        radius = np.uint((sigma * scale ** num_steps) * np.sqrt(2))
+        radius = np.uint((sigma * scale ** (num_steps - 1)) * root)
         for j in range(len(top)):
-            if top[j][2] > levels[num_steps - 2][top[j][0]][top[j][1]]:
-                cv2.circle(result, (top[j][1], top[j][0]), radius, (0, 0, 255))
-            
+            cx = top[j][1]
+            cy = top[j][0]
+            # Get minimum from bottom layer
+            max_bottom = np.amax(scales[num_steps - 2][cy - 1 : cy + 2, cx - 1 : cx + 2])
+            if top[j][2] > max_bottom:
+                cv2.circle(result, (cx - 1, cy - 1), radius, (0, 0, 255))
+        
         # Middle layers Draw Circle
         for i in range(1, num_steps - 1):
-            radius = np.uint((sigma * scale ** i) * np.sqrt(2))  
-            for j in range(0, len(maximals[i])):
-                bottomlayer = levels[i - 1][maximals[i][j][0]][maximals[i][j][1]]
-                toplayer = levels[i + 1][maximals[i][j][0]][maximals[i][j][1]]
-                if maximals[i][j][2] > bottomlayer and maximals[i][j][2] > toplayer:
-                    cv2.circle(result, (maximals[i][j][1], maximals[i][j][0]), radius, (0, 0, 255))
-        """
+            radius = np.uint((sigma * scale ** i) * root)
+            maximuns = maximals[i]
+            for j in range(0, len(maximuns)):
+                cx = maximuns[j][1]
+                cy = maximuns[j][0]
+                # Get max from top and bottom layer
+                max_bottom = np.amax(scales[i - 1][cy - 1 : cy + 2, cx - 1 : cx + 2])
+                max_top = np.amax(scales[i + 1][cy - 1 : cy + 2, cx - 1 : cx + 2])
+                # Check if maximal
+                if (maximuns[j][2] > max_bottom and maximuns[j][2] > max_top):
+                    cv2.circle(result, (cx - 1, cy - 1), radius, (0, 0, 255))
+    
     return result
 
 # Returns Low of Img1 And High Of Image 2
@@ -422,14 +439,13 @@ def Conv2D_2_1_D(img, A):
 
 
 # Ejercicio 1 Gaussian Blur and Get Deriv Kernels
-img = leeimagen("../images/dog.bmp", cv2.IMREAD_GRAYSCALE)
+img = leeimagen("../images/plane.bmp", cv2.IMREAD_GRAYSCALE)
 
 sigma = 3
 
 tam = sigma2tam(sigma)
 
 # Ejercicio 1.A - Gaussiana
-"""
 kernel = cv2.getGaussianKernel(tam, sigma)
 kernel = [kernel, kernel]
 
@@ -459,18 +475,23 @@ cv2.destroyAllWindows()
 cv2.imshow("Laplacian Piramid", np.hstack((laplacian_pyramid(img, 3, sigma, True, cv2.BORDER_REPLICATE), laplacian_pyramid(img, 3, sigma, False, cv2.BORDER_REPLICATE))))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-"""
+
+
 # Ejercicio 2.C
-cv2.imshow("Blob detection", blob_detection(img, 3, 1., 1.2, 20.))
+sigma_o = 2.5
+num_steps = 3
+f = 1.4 # (5 / sigma_o) ** (1/num_steps)
+cv2.imshow("Blob detection", np.hstack((blob_detection(img, num_steps, sigma_o, f, 50.), blob_detection(img, num_steps, sigma_o, f, 150.))))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-"""
+
 # Ejercicio 3. 2
 img1 = leeimagen("../images/einstein.bmp", cv2.IMREAD_GRAYSCALE)
 img2 = leeimagen("../images/marilyn.bmp", cv2.IMREAD_GRAYSCALE)
-cv2.imshow("Hybrid Image", low_high_hybrid(img2, img1, 8., 2.))
+cv2.imshow("Hybrid Image", low_high_hybrid(img2, img1, 10., 4.))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
+
 
 img1 = leeimagen("../images/dog.bmp", cv2.IMREAD_GRAYSCALE)
 img2 = leeimagen("../images/cat.bmp", cv2.IMREAD_GRAYSCALE)
@@ -478,26 +499,21 @@ cv2.imshow("Hybrid Image", low_high_hybrid(img2, img1, 8., 7.))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
+
 img1 = leeimagen("../images/fish.bmp", cv2.IMREAD_GRAYSCALE)
 img2 = leeimagen("../images/submarine.bmp", cv2.IMREAD_GRAYSCALE)
 cv2.imshow("Hybrid Image", low_high_hybrid(img2, img1, 8., 1.))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
+
 # Ejercicio 3. 3
-img1 = leeimagen("../images/submarine.bmp", cv2.IMREAD_GRAYSCALE)
-img2 = leeimagen("../images/fish.bmp", cv2.IMREAD_GRAYSCALE)
-low, high = low_high(img1, img2, 10., 4.)
-hybrid = normalize(low + high)
+img1 = leeimagen("../images/bird.bmp", cv2.IMREAD_GRAYSCALE)
+img2 = leeimagen("../images/plane.bmp", cv2.IMREAD_GRAYSCALE)
+hybrid = low_high_hybrid(img1, img2, 12., 8.)
+width = np.int(hybrid.shape[1] / 3)
+hybrid = hybrid[:,2 * width : 3 * width]
 cv2.imshow("Hybrid Gauss Piramid", gauss_pyramid(hybrid, 4, sigma))
-cv2.waitKey(0)
-cv2.destroyAllWindows()
-
-
-# Bonus 3
-img1 = leeimagen("../images/fish-1.jpg", cv2.IMREAD_COLOR)
-img2 = leeimagen("../images/fish-2.jpg", cv2.IMREAD_COLOR)
-cv2.imshow("Hybrid Image", low_high_hybrid(img1, img2, 1.5, 3.5))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
@@ -511,6 +527,7 @@ cv2.imshow("Bonus 1", np.hstack((mtx_fil, vec_fil)))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
+
 # Bonus 3. 2.
 img1 = leeimagen("../images/cat.bmp", cv2.IMREAD_COLOR)
 img2 = leeimagen("../images/dog.bmp", cv2.IMREAD_COLOR)
@@ -518,4 +535,17 @@ cv2.imshow("Hybrid Image", low_high_hybrid(img1, img2, 8., 8.))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
+
+""" Como no está la imagen, este es el ejemplo
+# Bonus 3
+img1 = leeimagen("../images/fish-1.jpg", cv2.IMREAD_GRAYSCALE)
+img2 = leeimagen("../images/fish-2.jpg", cv2.IMREAD_GRAYSCALE)
+hybrid = low_high_hybrid(img1, img2, 12., 4.)
+width = np.int(hybrid.shape[1] / 3)
+hybrid = hybrid[:,2 * width : 3 * width]
+cv2.imshow("Hybrid Gauss Piramid", gauss_pyramid(hybrid, 4, sigma))
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+cv2.waitKey(0)
+cv2.destroyAllWindows()
 """

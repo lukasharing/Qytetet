@@ -125,7 +125,7 @@ A la izquierda el laplaciano-gaussiano sin valor absoluto. A la derecha, aplican
 El filtro Laplaciano-Gaussiano, como ya hemos comentado, suaviza por lo que vamos a eliminar información útil o no (ruido).
 \newline
 \newline
-Es curioso observar que al aplicar el borde "contant", este tome una intensidad baja, esto ocurre ya que al aplicar las derivadas, estos puntos se detecten como bordes ya que su exterior es cero. Podríamos decir que se obtienen "mejores" resultados con cualquier otro borde.
+Es curioso observar que al aplicar el borde "constant", este tome una intensidad baja, esto ocurre ya que al aplicar las derivadas, estos puntos se detecten como bordes ya que su exterior es cero. Podríamos decir que se obtienen "mejores" resultados con cualquier otro borde.
 \newline
 \newline
 Además, el sigma vemos que afecta a la intensidad de los bordes así como al difuminado de estos, por lo que, podríamos afirmar que debemos utilizar un valor intermedio, para no generar bordes muy borrosos pero tampoco demasiado claros.
@@ -233,13 +233,237 @@ Para la primera imagen, observamos que con un $\boldsymbol{\sigma} = 2.0$, la pr
 La imagen del perro tiene un efecto parecido a la anterior, la imagen tiene mucho ruido debido al pelo, pero de la misma forma, cada octava reduce aún más ese ruido. Además el elemento que más podemos ver que es destacado son los ojos y el hocico en más iteraciones.
 \newline
 \newline
-Cabe destacar que el tipo de borde no afecta al resultado, por lo que da igual el borde que apliquemos, podría omitirse o utilizar el borde constante.
-
+Cabe destacar que el tipo de borde no parece afectar al resultado, por lo que da igual el borde que apliquemos, podría omitirse o utilizar el borde constante.
+\newline
+\newline
+Para finalizar, el último nivel de la pirámide laplaciana (no absoluta) concuerda con el nivel último nivel de su pirámide gaussiana, esto ocurre ya que ambos tienen las frecuencias bajas, que son utilizadas en la pirámide laplaciana para formar la imagen original.
 \subsection{Blob detection}
 Como su propio nombre indica, es utilizado para obtener patrones en una imagen. En nuestro caso, vamos a detectar regiones circulares utilizando el sombrero mejicano (Función Laplaciana). 
 \newline\newline
-Una cualidad de la función laplaciana que nos permite detectar zonas circulares, es la importancia que le da a los valores interiores a la circunferencia y 
+Una cualidad de la función laplaciana que nos permite detectar zonas circulares, es la importancia que le da a los valores interiores a la circunferencia y al centro de la región, junto con los extremos (positivos de la función) que "buscan" los bordes. 
+\newline\newline
+El algoritmo consta de tres partes, la primera parte, aplica el filtro laplaciano-gaussiano incrementando sigma por un factor para cada escala y normaliza por fronteras. En el segundo nivel, se van a aplicar la supresión de no-máximos para cada escala, se va a utilizar de la librería \textit{numpy}, la función \textbf{np.amax} que devuelve el valor máximo de una matriz. Además, para evitar aplicar una segunda pasada, se aplica un filtro de paso alto para eliminar así frecuencias bajas, un toque artístico que puede eliminar regiones. Por último, la supresión de no-máximos por las capas vecinas, es decir, por cada máximo, mira los vecinos de la capa superior e inferior y si este no es máximo, lo elimina. 
+\newline
+\newline
+La implementación ha sido optimizada de la siguiente forma, cada vez que se han encontrado frecuencias máximas que han pasado el filtro, se introducen en un vector junto con su posición x e y.
+Basta con recorrer su vector de escala de máximos e ir comprobando si estos son máximos sobre los vecinos de los máximos de las escalas superiores. Además, la capa inferior comprueban de la capa de encima y la superior, la de debajo. Las capas intermedias, comprueban tanto de arriba como de debajo.
+\newline
+\newline
+En el código, esta función recibe el nombre de \textbf{blob\_detection} y requiere de los siguiente parámetros: La imagen a buscar regiones; el número de escalas; el sigma inicial; un coeficiente, que debe estar entre el intervalo $\left[1.2, 1.4\right]$ y el umbral del filtro de paso alto.
+\newline
+\newline
+Podemos calcular cual será el factor máximo que podemos asignar antes de que \textit{cv2} nos de una excepción debido a que no ha podido generar el kernel para realizar la función \textbf{laplacian\_gauss}. Conocemos que el tamaño máximo que soporta es 31. Denotemos $c$ como el coeficiente de incremento de sigma que desconocemos y queremos calcular para que no de una excepción, $\sigma_0$ como el valor de sigma inicial, $n$ el número escalas y $T$ el tamaño de la máscara.
+\newline
+Existe una relación entre el $sigma$ y el valor del tamaño, $T = 2\cdot\lfloor3\sigma\rfloor+1$.
+$$ T \le 31 \Leftrightarrow  2\cdot\lfloor3\sigma\rfloor+1 \le 31 \Leftrightarrow \sigma \le 5 $$
+Observar que para la última escala "n", el valor de sigma es: $ \sigma_n=\sigma_0\cdot c^n, n\ge 1$.
+$$ \sigma_n \le 5 \Leftrightarrow \sigma_0\cdot c^n \le 5 \Leftrightarrow c^n \le \dfrac{5}{\sigma_0} \Leftrightarrow c \le \left(\dfrac{5}{\sigma_0}\right)^{\dfrac{1}{n}}$$
+Vemos que el valor máximo que puede obtener el coeficiente es $c=\left(\dfrac{5}{\sigma_0}\right)^{\dfrac{1}{n}}$, con esto, podemos saber si el factor calculado entra o no en nuestro intervalo $\left[1.2, 1.4\right]$ en la última escala.
+\newline
+\newline
+El radio de las circunferencias que dibujamos en cada escala es el valor que corta el sombrero $g(x,y)$ con el eje, es decir dónde $g(x,y)=0$, como la parte exponencial no puede valer 0, por lo que $(x^2+y^2-2\sigma^2)=0$, vemos que es la ecuación de una circunferencia de radio $\sigma\sqrt{2}$ (Nota: $x^2+y^2=r^2$).
 
+\newpage
+
+\subsubsection{Resultados}
+A la izquierda, blob-detection con una frecuencia de corte baja $f_1$. A la derecha, una frecuencia de corte ajustada $f_2$.
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=1.\textwidth]{assets/ex1-A/s2_5-t1_4-l3-50-150.png}
+	\caption{\textbf{image} = "plane.bmp", 3 escalas, $c=1.4$, $f_1=50$, $f_2=150$, $\boldsymbol{\sigma} = 2.0$}
+\end{figure}
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=1.\textwidth]{assets/ex1-A/s_3_5-t1_2-l3-50-130.png}
+	\caption{\textbf{image} = "bird.bmp", 4 escalas, $c=1.2$, $f_1=50$, $f_2=130$, $\boldsymbol{\sigma} = 3.5$}
+\end{figure}
+
+\newpage
+
+\subsubsection{Valoración}
+Podemos observar que los resultados aparentemente parecen correctos, se detectan regiones de diferente radio, aunque el radio sea pequeño, es suficiente para observar que obtiene regiones interesantes.
+\newline
+\newline
+Si la frecuencia de corte es demasiado baja $f_1$, observamos que no hemos eliminado información suficiente, en el ejemplo primero "Fig. 11", observamos que el fondo queda detectado ya que todos son máximos. Si la frecuencia de corte es apta, como podemos ver en la imagen de su derecha, conseguimos eliminar todas estas frecuencias. Vemos que en la imagen de la derecha, hemos detectado contorno, la zona de la cabina del viajero, las alas anteriores y posteriores.
+\newline
+\newline
+En la segunda imagen, obtenemos un resultado similar que la primera, como no hemos ajustado un umbral correcto, el fondo es detectado como máximos. Ajustada a una frecuencia de corte más alta, obtenemos mejores resultados, vemos que el pico de la gaviota se detecta, así como zonas de su cuerpo con plumas, bordes de las alas y las zonas en sombra  que también son detectadas.
+\newline
+\newline
+Vemos que es muy importante ajustar correctamente los sigmas y la frecuencia de corte, estos serán decisivos a la hora de obtener regiones correctas (a nuestro parecer).
+
+\newpage
+
+\section{Tercer Apartado}
+En este apartado, vamos a realizar las imágenes híbridas, este tipo de imágenes tienen en sí, otras dos imágenes, perceptibles según la distancia del observador, esto es porque el ojo detecta frecuencias altas cuando está cerca y frecuencias bajas cuando está lejos.
+
+\subsection{Imágenes híbridas}
+Para obtener imágenes híbridas es necesario tener dos imágenes que tienen cierta similitud posicional, de tamaño y rotación. \newline
+Como se ha explicado antes, debemos seleccionar frecuencias altas de una y frecuencias bajas de otra, esto se hará según la cantidad de detalles, es por eso que si tenemos gran cantidad de detalles, es mejor obtener sus frecuencias altas, así desde cerca se podrá apreciar mejor y se ignorará la imagen que está detrás. Aquella que menos detalles tenga, se obtendrán las frecuencias bajas. 
+\newline
+\newline
+Con frecuencias bajas, nos referimos a suavizar una imagen, ya que cuando se suaviza la imagen, estamos "aplanando" las altas. Una vez obtenidas las frecuencias bajas, podemos obtener las altas de manera trivial, bastaría con coger la original y quitarle las bajas (restar).
+\newline
+Hay que destacar un detalle importante, los sigmas de ambas imágenes no tienen que coincidir, quizás una la alisaremos mucho y la otra poco para obtener sus frecuencias altas.
+\newline
+\newline
+Este trabajo consiste en que el usuario sea capaz de \textbf{solo} ver desde una distancia normal, la imagen con frecuencias altas y a medida que se va alejando, observar la imagen con frecuencias bajas. Por lo que nuestro trabajo es intentar acoplar ambas imágenes lo mejor posible.
+\newline
+\newline
+El método \textbf{low\_high\_hybrid} recoge cuatro parámetros, el primero, la imagen a la que se quiere obtener las frecuencias bajas, ambas del mismo tamaño; el segundo argumento, la imagen para las frecuencias altas; el tercer argumento el sigma para suavizar la primera imagen y el cuarto, el sigma que se va a utilizar para suavizar la segunda imagen y posteriormente, obtener las altas.\newline
+Este método hace uso del método \textbf{low\_high}, devuelve un par, las frecuencias bajas (Aplicando \textbf{GaussianBlur} de cv2) de la primera imagen y las frecuencias altas (Imagen original - \textbf{GaussianBlur}).
+\newline
+\newline
+Finalmente mi método construye una imagen 3 veces mas grande, la primera imagen, frecuencias bajas, la segunda, altas y la tercera, la híbrida, donde es la suma de las bajas y las altas. También hay que decir que las tres están normalizadas completamente.
+
+
+\newpage
+
+\subsubsection{Resultados}
+La primera imagen que se refiere la leyenda es aquella imagen de frecuencias altas y su sigma y la segunda imagen de la leyenda, la imagen y su sigma.
+
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=.9\textwidth]{assets/ex1-A/dog_cat_s8_s7.png}
+	\caption{\textbf{image} = "dog.bmp", $\boldsymbol{\sigma} = 7.0$ ; \textbf{image} = "cat.bmp", $\boldsymbol{\sigma} = 8.0$}
+\end{figure}
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=.9\textwidth]{assets/ex1-A/fish_sub_s4_s10.png}
+	\caption{\textbf{image} = "fish.bmp", $\boldsymbol{\sigma} = 4.0$ ; \textbf{image} = "cat.bmp", $\boldsymbol{\sigma} = 10.0$}
+\end{figure}
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=.9\textwidth]{assets/ex1-A/bird_plane_s12_s8.png}
+	\caption{\textbf{image} = "plane.bmp", $\boldsymbol{\sigma} = 8.0$ ; \textbf{image} = "bird.bmp", $\boldsymbol{\sigma} = 12.0$}
+\end{figure}
+
+\newpage
+
+\subsubsection{Valoración}
+Como vemos, se ha utilizado la pirámide gaussiana para mostrar los ejemplos, ya por cada escala, esta va eliminando frecuencias altas, por lo que el resultado es nuestra imagen de frecuencias bajas, que viene ser la imagen a la que pedimos sus frecuencias bajas (Véase las imágenes de los resultados).
+\newline
+\newline
+Cuando dos imágenes no son del mismo tamaño, la pequeña hay que emborronarla mucho (frecuencias bajas), es decir debemos conseguir que la imagen caiga sobre la de frecuencias altas. Esto hará que de la ilusión de que la imagen con frecuencias altas tiene profundidad, algo que se había perdido al quitarle las frecuencias bajas.
+\newline
+\newline
+La primera imagen, se ha escogido el perro por la cantidad de detalles en comparación con el gato, bordes más marcados, más pelo y se han obtenido sus frecuencias altas y el gato como frecuencias altas. Vemos que en la 3 escala ya podemos apreciar al gato. Los sigmas utilizados son, en este caso ya que ocupan más o menos la misma superficie, puestos perceptualmente.
+\newline
+\newline
+La segunda imagen tiene un fondo con muchos detalles, los peces de alrededor y los detalles hacen que debamos situar esta imagen como la candidata a frecuencias altas y el submarino, como frecuencias altas. Como el submarino sobresale un poco del pez, hay que suavizarla mucho para que parezca parte del pez, por lo que su sigma sí es grande.
+\newline
+\newline
+De la misma forma que el anterior, se ha escogido el avión para frecuencias altas ya que es mucho más grande que el pájaro y es imposible esconderlo detrás del pájaro. Por ello, el pájaro va a tener frecuencias bajas y además va a necesitar un gran sigma para suavizar tanto que parezca que es el color del avión.
+\newline
+\newline
+Finalmente podemos concluir que si está bien ajustados los sigmas y las imágenes, a partir de la tercera escala, podemos observar la imagen asignada para frecuencias bajas.
+
+\newpage
+
+\section{Bonus}
+\subsection{Bonus 1}
+Dada una matriz $A\in\mathbb{M}_{n\times n}(\mathbb{R})$ semejante y ortogonal a una matriz diagonal con rango 1, entonces
+$$ A = PDP^{-1} = PDP^t$$
+Es decir, $P$ es ortogonal ($P^t=P^{-1}=K^t$). Ahora bien, si multiplicamos para en cada lado de la matriz $A$ por $A^t$:
+$$ AA^t = (PDK^t)(PDK^t)^t = (PDK)(KD^tP^t) = (PD(K^tK)D^tP^t) = P(DD^t)P^t $$
+$$ A^tA = (PDK^t)^t(PDK^t) = (KD^tP^t)(PDK) = (KD(P^tP)D^tK) = K(DD^t)K^t $$
+Observamos que $P$ son los autovectores de $AA^t$ y que $K$, la matriz de autovectores de $A^tA$.\newline
+Además, $DD^t$ son los valores propios de $AA^t$ y $A^tA$, además como el rango es 1, solo tiene un autovalor. que coincide con la raíz cuadrada del autovalor de $AA^t$ y $A^tA$.
+\newline
+Como $rank(A)=1$, entonces $\lambda_1$ será el único autovalor de $A$, cuyo signo empíricamente es negativo (No se demostrarlo).
+\[
+A=
+\begin{bmatrix}
+u_1 & u_4 & u_7 \\
+u_2 & u_5 & u_8 \\
+u_3 & u_6 & u_9 \\
+\end{bmatrix}\times
+\begin{bmatrix}
+\lambda_1 & 0 & 0 \\
+0 & 0 & 0 \\
+0 & 0 & 0 \\
+\end{bmatrix}\times
+\begin{bmatrix}
+w_1 & w_4 & w_7 \\
+w_2 & w_5 & w_8 \\
+w_3 & w_6 & w_9 \\
+\end{bmatrix}
+\]\\
+
+Observamos que $P$ 
+
+
+\[
+A=
+\begin{bmatrix}
+u_1\lambda_1 & 0 & 0 \\
+u_2\lambda_1 & 0 & 0 \\
+u_3\lambda_1 & 0 & 0 \\
+\end{bmatrix}\times
+\begin{bmatrix}
+w_1 & w_4 & w_7 \\
+w_2 & w_5 & w_8 \\
+w_3 & w_6 & w_9 \\
+\end{bmatrix}=
+\begin{bmatrix}
+u1\lambda_1w1 & u1\lambda_1w2 & u1\lambda_1w3 \\
+u2\lambda_1w1 & u2\lambda_1w2 & u2\lambda_1w3 \\
+u3\lambda_1w1 & u3\lambda_1w2 & u3\lambda_1w3  \\
+\end{bmatrix}
+\]\\
+
+\[
+A=
+\lambda_1\begin{bmatrix}
+u1w1 & u1w2 & u1w3 \\
+u2w1 & u2w2 & u2w3 \\
+u3w1 & u3w2 & u3w3  \\
+\end{bmatrix}
+\]\\
+Podemos observar que el resultado es equivalente a coger la primera columna de $P$, multiplicarla por columna de $K$ transpuesta y multiplicar por el valor propio.
+
+\subsection{Bonus 2}
+Este bonus es una pequeña ampliación del apartado de imágenes híbridas. Como sabemos, las frecuencias altas han hecho que el color vaya desapareciendo, ya que solo se queda tonalidades de gris. Por lo que al realizar la imagen híbrida, vemos que el color que identifica a la imagen resultante es el color de las frecuencias bajas de la imagen que hemos puesto detrás.
+
+\subsubsection{Resultados}
+La primera imagen que se refiere la leyenda es aquella imagen de frecuencias altas y su sigma y la segunda imagen de la leyenda, la imagen y su sigma.
+
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=.9\textwidth]{assets/ex1-A/dog_cat_s8_s7_c.png}
+	\caption{\textbf{image} = "dog.bmp", $\boldsymbol{\sigma} = 7.0$ ; \textbf{image} = "cat.bmp", $\boldsymbol{\sigma} = 8.0$}
+\end{figure}
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=.9\textwidth]{assets/ex1-A/fish_sub_s4_s10_c.png}
+	\caption{\textbf{image} = "fish.bmp", $\boldsymbol{\sigma} = 4.0$ ; \textbf{image} = "cat.bmp", $\boldsymbol{\sigma} = 10.0$}
+\end{figure}
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=.9\textwidth]{assets/ex1-A/bird_plane_s12_s8_c.png}
+	\caption{\textbf{image} = "plane.bmp", $\boldsymbol{\sigma} = 8.0$ ; \textbf{image} = "bird.bmp", $\boldsymbol{\sigma} = 12.0$}
+\end{figure}
+
+\newpage
+
+\subsection{Bonus 3}
+He cogido dos imágenes que cuadran bien, con un tamaño parecido y una forma parecida.
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=.9\textwidth]{assets/ex1-A/fish-1.jpg}
+	\caption{\textbf{image} = "fish-1.jpg", $\boldsymbol{\sigma} = 12.0$}
+\end{figure}
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=.9\textwidth]{assets/ex1-A/fish-2.jpg}
+	\caption{\textbf{image} = \textbf{image} = "fish-2.jpg", $\boldsymbol{\sigma} = 4.0$}
+\end{figure}
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=.9\textwidth]{assets/ex1-A/fish-hibrid.png}
+	\caption{Resultado}
+\end{figure}
+La imagen "fish-1.jpg" es la de frecuencias bajas ya que es más pequeño que el otro pez y además lo hemos suavizado con 10 para que ocupe ese espacio. Además, el pez rojo parece tener más detalles por lo que es el que he decidido que tenga frecuencias altas.
 \newpage
 
 \section{Pié de página}
