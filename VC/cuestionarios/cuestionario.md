@@ -98,7 +98,10 @@
 
     Según la <a href="http://sepwww.stanford.edu/data/media/public/sep/morgan/texturematch/paper_html/node3.html">universidad de stanford</a>, en la figura 2 se comenta que se puede reconstruit perfectamente.
 
-12. **¿Cuálesson las contribuciones más relevantes del algoritmo de Canny al cálculo de los contornos sobre una imagen?¿Existe alguna conexión entre las máscaras de Sobel y el algoritmo de Canny? Justificar la respuesta.**
+12. **¿Cuáles son las contribuciones más relevantes del algoritmo de Canny al cálculo de los contornos sobre una imagen?¿Existe alguna conexión entre las máscaras de Sobel y el algoritmo de Canny? Justificar la respuesta.**
+
+    La principal contribución del algoritmo de Canny es la reducción del suavizado de bordes, creando así lineas "continuas". Así pudiéndose reconocer patrones 
+
 
 13. **Identificar pros y contrasde k-medias como mecanismo paracrear un vocabulario visual a partir del cual poder caracterizar patrones.¿Quéganamos y que perdemos?Justificar los argumentos.**
 
