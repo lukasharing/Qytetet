@@ -46,6 +46,8 @@
     Si I es la imagen, entonces:  I &lowast; A = I &lowast; &sum;<sup>m</sup><sub>n=0</sub> a<sub>n</sub> C<sub>n</sub> F<sub>n</sub><sup>t</sup> = I &lowast; (a<sub>0</sub>C<sub>0</sub>F<sub>0</sub><sup>t</sup>) + ... + I &lowast;(a<sub>m</sub>C<sub>m</sub>F<sub>m</sub><sup>t</sup>)
 
     Por lo que podemos concluir que todas las máscaras son separables, en máscaras 1D.
+
+    Si queremos separar un filtro en **dos** filtros 1D, solo necesitamos un valor propio no nulo, o lo que es lo mismo, el rango sea **1**.
     
 
 6. **Identificar las diferencias y consecuencias desde el punto de vista teórico y de la implementación entre:**
@@ -64,24 +66,35 @@
 
 7. **Identifique las funciones de las que podemos extraer pesos correctos para implementar de forma eficiente la primera derivada de una imagen. Suponer alisamiento Gaussiano.**
 
-    La derivada está definida matemáticamente por:
-    
-    f'(x) = lim<sub>h&#x2192;0</sub> (f(x + h) - f(x)) &#x2044; h
-
-    Como estamos en un espacio discreto, la expresión anterior queda reducida en:
-
-    f'(x) &approx; (f(x + 1) - f(x - 1)) &#x2044; 1 = f(x + 1) - f(x - 1)
-
-    Como vemos, esta expresión se puede aplicar para cada dirección de forma independiente, por lo que podemos obtener el filtro 1D sobre la dirección d: M = [-1, 0, 1] y aplicando la distributiva de la convolución sobre la suma, I = (A &lowast; M<sub>x</sub>) + (A &lowast; M<sub>y</sub>).
-    Cuando se aplica la derivada direccional en y, hay que convolucionar verticalmente (o con la transpuesta de la imagen).  
+    Según el enunciado, tenemos una máscara gaussiana G y una imagen I, a la que queremos calcular su derivada. Además, suponemos que estamos aplicando la convolución. Sabemos que estos filtros se pueden aplicar direccionalmente independientemente, por lo que la derivada en x, definido formalmente por: &part;<sub>x</sub>(I &lowast; G). Por el teorema de la derivada y de la propiedad de conmutatividad, (&part;<sub>x</sub>I) &lowast; G = I &lowast; (&part;<sub>x</sub>G), la parte de la derecha nos quiere decir que podemos convolucionar con la derivada direccional de la gaussiana, además como es separable, podemos realizar: I &lowast; (&part;<sub>x</sub>G + &part;<sub>y</sub>G), pudiéndose así pre-culacular estos filtros muestreando las derivadas direccionales de la gaussiana.
 
 8. **Identifique las funciones de las que podemos extraer pesos correctos para implementar de forma eficiente la Laplacianade una imagen. Suponer alisamiento Gaussiano.**
 
+    Vamos a calcular eficientemente la operación laplaciana &nabla;<sup>2</sup>, esta está definida sobre una Image de la siguiente forma: &nabla;<sup>2</sup>I =  &part;<sub>x</sub><sup>2</sup>I + &part;<sub>y</sub><sup>2</sup>I, como previamente queremos el filtro alisado de forma gaussiana G. Entonces &nabla;<sup>2</sup>(I &lowast; G) =  &part;<sub>x</sub><sup>2</sup>(I &lowast; G) + &part;<sub>y</sub><sup>2</sup>(I &lowast; G) =  I &lowast; &part;<sub>x</sub><sup>2</sup>G + I &lowast; &part;<sub>y</sub><sup>2</sup>G, esta última igualdad es consecuencia del teorema de la derivada sobre convolución.
+
+    Como vemos, el resultado se obtiene de sumar las convoluciones de la imagen I con las respectivas segundas derivadas direccionales de la gaussiana. Esto quiere decir que, podemos pre-calcular la muestra de la segunda derivada de la gaussiana direccional y aplicar la convolución sobre la imagen.
+
 9. **Suponga que le piden implementar de forma eficiente un algoritmo para el cálculo de la derivada de primer orden sobre una imagen usando alisamiento Gaussiano. Enumere y explique los pasos necesarios para llevarlo a cabo.**
 
-10. **Identifique semejanzas y diferencias entre la pirámidegaussiana y el espacio de escalas de una imagen,¿cuándousar una u otra?Justificar los argumentos.**
+    Este apartado es consecuencia directa del apartado 7., por lo que vamos a enunciar cada uno de los pasos para calcular eficientemente la derivada de una imagen con filtro gaussiano, supondremos que tenemos que la imagen no tiene aplicado el filtro gaussiano:
+    1. Obtener la derivada del filtro gaussiano direccional de G<sub>u</sub>=1/(&#8730;(2&pi;)&sigma;)e<sup>-u^2/(2&sigma;^2)</sup>, G'<sub>u</sub> = -u/&sigma;G<sub>u</sub>
+    2. Tomar un valor de 3&sigma; que corresponde a un 95% de la curva y muestrear el intervalo [-3&sigma;, +3&sigma;] de la derivada direccional sobre G'<sub>x</sub> y G'<sub>y</sub>.
+    3. Aplicar la convolución sobre I primero sobre la dirección x.
+    4. Para optimizar la propiedad de espacialización de la Caché, podemos transponer la imagen y aplicar la convolución sobre y.
+
+
+
+10. **Identifique semejanzas y diferencias entre la pirámide gaussiana y el espacio de escalas de una imagen, ¿cuándo usar una u otra? Justificar los argumentos.**
+
+    La principal semejanza entre la pirámide gaussiana y la pirámide laplaciana es que el último nivel de cada una coinciden, esto es debido a que ambos niveles tiene las frecuencias bajas de la imagen. Cabe destacar que las imágenes son suavizadas con el filtro gaussiano.
+    
+    La mayor diferencia es que las demás escalas, la gaussiana contiene las frecuencias bajas, mietras que la laplaciana, las frecuencias altas.
+
+    La pirámide gaussiana es utilizada para escalar una imagen sin perder información direccional espacial (lineas y su dirección), mientras que la pirámide laplaciana, para comprimir una imagen ya que necesitamos pocos bits para almacenar información de las frecuencias altas.
 
 11. **¿Bajo quécondicionespodemos garantizar una perfecta reconstrucción de una imagen a partir de su pirámide Laplaciana? Dar argumentos y discutir las opciones que considere necesario.**
+
+    En primer lugar, si la recontruccion "perfecta" se considera sin pérdida de bits alguna, esto es imposible. Mientras que si perfecta, es considerada, que no se nota, esto es bastante plausible. Para demostrar que la recontrucción es total, bastaría con demostrar que cada uno de los filtros es reversible, lo cual el subsampling es imposible, ya que cuando reducimos a la mitad, si la imagen no es potencia de dos, vamos a peder una fila para las iteraciones de tamaño impar, mientras que si la imagen es potencia de dos, tendremos menos pérdida, pero cuando se interpola, estamos perdiendo pixeles de alrededor. Cabe destacar  
 
 12. **¿Cuálesson las contribuciones más relevantes del algoritmo de Canny al cálculo de los contornos sobre una imagen?¿Existe alguna conexión entre las máscaras de Sobel y el algoritmo de Canny? Justificar la respuesta.**
 
