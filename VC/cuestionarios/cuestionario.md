@@ -9,8 +9,8 @@
 
 2. **Expresar las diferencias y semejanzas entre las operaciones de correlación y convolución. Dar una interpretación de cada una de el las que en el contexto de uso en visión por computador.**
 
-    La correlación (&sstarf;) es una técnica de procesamiento de imagen **local**, mientras que la convolución (&lowast;) es una es una técnica **local en un vecindario** (La región del alrededor de un pixel) **ARREGLAR**.
-    
+    Ambas son técnicas locales de vecindarios.
+
     La convolución es una correlación en la que el filtro está rotado 180 grados.
 
     El resultado de la correlación es equivalente a la convolución si el filtro utilizado es simétrico.
@@ -20,7 +20,7 @@
     |----------------------------------|-----------------|-------------|
     | Asociativa                       | No generalmente | Siempre     |
     | Conmutativa                      | No generalmente | Siempre     |
-    | Distributiva respecto de la suma |                 | Siempre     |
+    | Distributiva respecto de la suma | No generalmente | Siempre     |
     | Escalar                          | Siempre         | Siempre     |
     | Elemento Neutro                  | Tiene           | Tiene       |
     
@@ -80,7 +80,8 @@
     1. Obtener la derivada del filtro gaussiano direccional de G<sub>u</sub>=1/(&#8730;(2&pi;)&sigma;)e<sup>-u^2/(2&sigma;^2)</sup>, G'<sub>u</sub> = -u/&sigma;G<sub>u</sub>
     2. Tomar un valor de 3&sigma; que corresponde a un 95% de la curva y muestrear el intervalo [-3&sigma;, +3&sigma;] de la derivada direccional sobre G'<sub>x</sub> y G'<sub>y</sub>.
     3. Aplicar la convolución sobre I primero sobre la dirección x.
-    4. Para optimizar la propiedad de espacialización de la Caché, podemos transponer la imagen y aplicar la convolución sobre y.
+    4. Para optimizar la propiedad de espacialización de la Caché, podemos transponer la imagen y aplicar la convolución G<sub>y</sub>.
+    5. Finalmente volvemos a transponer la imagen.
 
 
 
@@ -96,15 +97,38 @@
     En primer lugar, si la recontruccion "perfecta" se considera sin pérdida de bits alguna, esto es imposible. Mientras que si perfecta, es considerada, que no se nota, esto es bastante plausible. Para demostrar que la recontrucción es total, bastaría con demostrar que cada uno de los filtros es reversible, lo cual el subsampling es imposible, ya que cuando reducimos a la mitad, si la imagen no es potencia de dos, vamos a peder una fila para las iteraciones de tamaño impar, mientras que si la imagen es potencia de dos, tendremos menos pérdida, pero cuando se interpola, estamos perdiendo pixeles de alrededor.
     Cuando reconstruimos la imagen, necesitamos upsamplear la imagen, por lo que estamos suponiendo pixeles que ya no existen.
 
-    Según la <a href="http://sepwww.stanford.edu/data/media/public/sep/morgan/texturematch/paper_html/node3.html">universidad de stanford</a>, en la figura 2 se comenta que se puede reconstruit perfectamente.
+    Según la <a href="http://sepwww.stanford.edu/data/media/public/sep/morgan/texturematch/paper_html/node3.html">universidad de stanford</a>, en la figura 2 se comenta que se puede reconstruir perfectamente.
 
 12. **¿Cuáles son las contribuciones más relevantes del algoritmo de Canny al cálculo de los contornos sobre una imagen?¿Existe alguna conexión entre las máscaras de Sobel y el algoritmo de Canny? Justificar la respuesta.**
 
-    La principal contribución del algoritmo de Canny es la reducción del suavizado de bordes, creando así lineas "continuas". Así pudiéndose reconocer patrones 
+    La principal contribución del algoritmo de Canny es la reducción del suavizado de bordes en una sola línea, además de la eliminación de ruido. Así pudiéndose reconocer patrones utilizando los humbrales superiores e inferiores.
+
+    La conexión entre los filtros de Sobel con el algoritmo de Canny es que este algoritmo hace uso de los filtros de Sobel para suavizar y calcular la derivada direccional de forma eficiente, ya que aplica ambos filtros de una sola pasada. Finalmente le algoritmo realiza la supressión de no-máximos.
+    
+    El algoritmo de Canny utiliza <a href="https://es.wikipedia.org/wiki/Algoritmo_de_Canny">cuatro filtros de Sobel para las direcciones horizontales, verticales y diagonales</a>.
+
+13. **Identificar pros y contras de k-medias como mecanismo para crear un vocabulario visual a partir del cual poder caracterizar patrones. ¿Qué ganamos y que perdemos? Justificar los argumentos.**
+
+    Podemos encontrar <a href="https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&ved=2ahUKEwjAifH9ur3lAhUEKBoKHRESBGIQFjAAegQIARAC&url=https%3A%2F%2Fkth.instructure.com%2Ffiles%2F663173%2Fdownload%3Fdownload_frd%3D1&usg=AOvVaw1getgL8uGM-MDX7mYkdMn0">las siguientes ventajas y desventajas</a>:
+    ### Ventajas:
+    1. No se ve affectado en gran medida por la posición y orientación del objeto en la image.
+    2. Vectores de longitud fija independientemente del número de detecciones.
+    3. Exitoso en la clasificación de imágenes de acuerdo con los objetos que contienen.
+    4. Requiere mayor entrenamiento para imágenes con cambios más grandes de escala y puntos de vista.
+    ### Desventajas:
+    1. Los centroides se pueden ver desplazados creando  ambigüedad entre grupos.
+    2. Pobre a la hora de localizar objetos dentro de una imagen.
+    3. Inicialización distinta da resultados distintos.
 
 
-13. **Identificar pros y contrasde k-medias como mecanismo paracrear un vocabulario visual a partir del cual poder caracterizar patrones.¿Quéganamos y que perdemos?Justificar los argumentos.**
+14. **Identifique pros y contras del modelo de “Bolsa de Palabras” como mecanismo para caracterizar el contenido de una imagen. ¿Qué ganamos y que perdemos?Justificar los argumentos.**
 
-14. **Identifique pros y contras del modelo de “Bolsa de Palabras”como mecanismo para caracterizar el contenido de unaimagen.¿Qué ganamos y que perdemos?Justificar los argumentos.**
+    Se trata de un modelo de apredizaje supervisado, necesita un conjunto de entrenamiento y otro de prueba.
 
-15. **Suponga que dispone de unconjunto de imágenesde dos tiposde clases bien diferenciadas. Suponga que conoce como implementarde forma eficienteel cálculo de las derivadas hasta el orden N de la imagen. Describa como crear un algoritmo que permitadiferenciar,con garantías,imágenes de ambas clases. Justificar cada uno de los pasos que proponga.**
+    Un problema grande es que si el conjunto de entrenamiento no es bueno, habrán discrepancias en el resultado. Además, cuanto mayor sea el conjunto de entrenamiento, mayor será el diccionario, por lo que más lento se hará el algoritmo
+
+    Es utilizada la técnica de división espacial en regiones para optimizar su búsqueda. Para la detección es usado un histograma, pero cuanto mayor la bolsa, más dificil distinguir por lo que existirán patrones que estén en presentes en los distintos histogramas. 
+
+15. **Suponga que dispone de unconjunto de imágenesde dos tiposde clases bien diferenciadas. Suponga que conoce como implementarde forma eficienteel cálculo de las derivadas hasta el orden N de la imagen. Describa como crear un algoritmo que permita diferenciar, con garantías, imágenes de ambas clases. Justificar cada uno de los pasos que proponga.**
+
+    Utilizando un <a href="https://books.google.es/books?id=S-cSBQAAQBAJ&pg=PA488&lpg=PA488&dq=nth+derivative+and+image+recognition&source=bl&ots=Vt3-zFG6C8&sig=ACfU3U3qRhHeRblCQ2aMcNUfetvUCIWgtg&hl=es&sa=X&ved=2ahUKEwjR1p2Tw73lAhWNzYUKHTOWCRMQ6AEwAnoECAkQAQ#v=onepage&q=nth%20derivative%20and%20image%20recognition&f=false">histograma de Patrones de Derivadas locales</a>, en este se calcularán las derivadas direccionales para cada 45 grados y se aplicará una bolsa generada por cada una de las nth-derivadas.
