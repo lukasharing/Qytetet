@@ -91,9 +91,12 @@
     La mayor diferencia es la pirámide gaussiana escala la imagen a la mitad para cada escala.
 
     Para cada escala del espacio n, el sigma utilizado es &sigma;<sub>n</sub> = &sigma; k<sup>n</sup>, siendo k el factor multiplicativo utilizado. Mientras que el sigma de la gaussiana sobre la otra gaussiana es &#8730; 2 &sigma; entonces para cada escala está definido por &sigma; (&#8730; 2)<sup>n</sup>. Vemos que debería coincidir si k=&#8730;2
-11. **¿Bajo quécondicionespodemos garantizar una perfecta reconstrucción de una imagen a partir de su pirámide Laplaciana? Dar argumentos y discutir las opciones que considere necesario.**
+11. **¿Bajo qué condiciones podemos garantizar una perfecta reconstrucción de una imagen a partir de su pirámide Laplaciana? Dar argumentos y discutir las opciones que considere necesario.**
 
-    En primer lugar, si la recontruccion "perfecta" se considera sin pérdida de bits alguna, esto es imposible. Mientras que si perfecta, es considerada, que no se nota, esto es bastante plausible. Para demostrar que la recontrucción es total, bastaría con demostrar que cada uno de los filtros es reversible, lo cual el subsampling es imposible, ya que cuando reducimos a la mitad, si la imagen no es potencia de dos, vamos a peder una fila para las iteraciones de tamaño impar, mientras que si la imagen es potencia de dos, tendremos menos pérdida, pero cuando se interpola, estamos perdiendo pixeles de alrededor. Cabe destacar  
+    En primer lugar, si la recontruccion "perfecta" se considera sin pérdida de bits alguna, esto es imposible. Mientras que si perfecta, es considerada, que no se nota, esto es bastante plausible. Para demostrar que la recontrucción es total, bastaría con demostrar que cada uno de los filtros es reversible, lo cual el subsampling es imposible, ya que cuando reducimos a la mitad, si la imagen no es potencia de dos, vamos a peder una fila para las iteraciones de tamaño impar, mientras que si la imagen es potencia de dos, tendremos menos pérdida, pero cuando se interpola, estamos perdiendo pixeles de alrededor.
+    Cuando reconstruimos la imagen, necesitamos upsamplear la imagen, por lo que estamos suponiendo pixeles que ya no existen.
+
+    Según la <a href="http://sepwww.stanford.edu/data/media/public/sep/morgan/texturematch/paper_html/node3.html">universidad de stanford</a>, en la figura 2 se comenta que se puede reconstruit perfectamente.
 
 12. **¿Cuálesson las contribuciones más relevantes del algoritmo de Canny al cálculo de los contornos sobre una imagen?¿Existe alguna conexión entre las máscaras de Sobel y el algoritmo de Canny? Justificar la respuesta.**
 
