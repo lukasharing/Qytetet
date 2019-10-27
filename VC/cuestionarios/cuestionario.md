@@ -86,12 +86,11 @@
 
 10. **Identifique semejanzas y diferencias entre la pirámide gaussiana y el espacio de escalas de una imagen, ¿cuándo usar una u otra? Justificar los argumentos.**
 
-    La principal semejanza entre la pirámide gaussiana y la pirámide laplaciana es que el último nivel de cada una coinciden, esto es debido a que ambos niveles tiene las frecuencias bajas de la imagen. Cabe destacar que las imágenes son suavizadas con el filtro gaussiano.
+    La principal semejanza entre la pirámide gaussiana y el espacio de escala es que ambas suavizan las imágenes con el filtro gaussiano.
     
-    La mayor diferencia es que las demás escalas, la gaussiana contiene las frecuencias bajas, mietras que la laplaciana, las frecuencias altas.
+    La mayor diferencia es la pirámide gaussiana escala la imagen a la mitad para cada escala.
 
-    La pirámide gaussiana es utilizada para escalar una imagen sin perder información direccional espacial (lineas y su dirección), mientras que la pirámide laplaciana, para comprimir una imagen ya que necesitamos pocos bits para almacenar información de las frecuencias altas.
-
+    Para cada escala del espacio n, el sigma utilizado es &sigma;<sub>n</sub> = &sigma k<sup>n</sup>, siendo k el factor multiplicativo utilizado. Mientras que el sigma de la gaussiana sobre la otra gaussiana es &sqrt; 2 &sigma; entonces para cada escala está definido por &sigma; &#8730; 2 <sup>n</sup>. Vemos que debería coincidir si k=&#8730;(2)
 11. **¿Bajo quécondicionespodemos garantizar una perfecta reconstrucción de una imagen a partir de su pirámide Laplaciana? Dar argumentos y discutir las opciones que considere necesario.**
 
     En primer lugar, si la recontruccion "perfecta" se considera sin pérdida de bits alguna, esto es imposible. Mientras que si perfecta, es considerada, que no se nota, esto es bastante plausible. Para demostrar que la recontrucción es total, bastaría con demostrar que cada uno de los filtros es reversible, lo cual el subsampling es imposible, ya que cuando reducimos a la mitad, si la imagen no es potencia de dos, vamos a peder una fila para las iteraciones de tamaño impar, mientras que si la imagen es potencia de dos, tendremos menos pérdida, pero cuando se interpola, estamos perdiendo pixeles de alrededor. Cabe destacar  
