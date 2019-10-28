@@ -80,8 +80,8 @@
     1. Obtener la derivada del filtro gaussiano direccional de G<sub>u</sub>=1/(&#8730;(2&pi;)&sigma;)e<sup>-u^2/(2&sigma;^2)</sup>, G'<sub>u</sub> = -u/&sigma;G<sub>u</sub>
     2. Tomar un valor de 3&sigma; que corresponde a un 95% de la curva y muestrear el intervalo [-3&sigma;, +3&sigma;] de la derivada direccional sobre G'<sub>x</sub> y G'<sub>y</sub>.
     3. Aplicar la convolución sobre I primero sobre la dirección x.
-    4. Para optimizar la propiedad de espacialización de la Caché, podemos transponer la imagen y aplicar la convolución G<sub>y</sub>.
-    5. Finalmente volvemos a transponer la imagen.
+    4. Para optimizar la propiedad de espacialización de la Caché, podemos trasponer la imagen y aplicar la convolución G<sub>y</sub>.
+    5. Finalmente volvemos a trasponer la imagen.
 
 
 
