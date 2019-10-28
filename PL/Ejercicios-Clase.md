@@ -42,6 +42,7 @@ Vamos a realizar el ejercicio A.
     }
     ```
     // Movemos el puntero I_o 0
+
     ```
     I_1 = goto(I_o, S) = {
         [S' -> S.]   // No hay nada que expandimos, S' ha terminado
@@ -49,6 +50,7 @@ Vamos a realizar el ejercicio A.
     ```
 
     // Movemos el puntero I_o 1
+    
     ```
     I_2 = goto(I_o, A) = {
         [S -> A.a]  // No expandimos ya que es terminal       0
@@ -56,6 +58,7 @@ Vamos a realizar el ejercicio A.
     ```
 
     // Movemos el puntero I_o 2, 4
+    
     ```
     I_3 = goto(I_o, b) = {
         [S -> b.Ac]  // Expandimos ya que A no es terminal    0
@@ -66,53 +69,69 @@ Vamos a realizar el ejercicio A.
     ```
 
     // Movemos el puntero I_o 3
+    
     ```
     I_4 = goto(I_o, B) = {
         [S -> B.c]   // No expandimos ya que c es terminal
     }
     ```
+    
     // Movemos el puntero I_o 5, 6
+    
     ```
     I_5 = goto(I_o, d) = {
         [A -> d.]    // No expandimos ya A ha terminado
         [B -> d.]    // No expandimos ya A ha terminado
     }
     ```
+    
     // Movemos el puntero I_2 0
+    
     ```
     I_6 = goto(I_1, a) = {
         [S -> Aa.]   // No expandimos ya que a es terminal    0
     } # Podemos reducir
     ```
+    
     // Movemos el puntero I_3 0
+    
     ```
     I_7 = goto(I_3, A) = {
         [S -> bA.c]   // No expandimos ya que c es terminal   0
     }
     ```
+    
     // Movemos el puntero I_3 1
+    
     ```
     I_8 = goto(I_3, B) = {
         [S -> bB.a]   // No expandimos ya que a es terminal   0
     }
     ```
+    
     // Movemos el puntero I_3 2, 3
     
     Vemos que I<sub>9</sub> = I<sub>5</sub>, por lo que no se crea I<sub>9</sub>. **Hay que señalarlo en la tabla**
 
     // Movemos el puntero I_7 0 #MAL
+    
     ```
     I_9 = goto(I_7, c) = {
         [S -> bAc.]   // No expandimos ya S ha terminado
     } # Podemos reducir
+    
     ```
+    
     // Movemos el puntero I_8 0
+    
     ```
     I_10 = goto(I_8, c) = {
         [S -> bAc.]   // No expandimos ya S ha terminado
     } # Podemos reducir
     ```
+
     // Movemos el puntero I_4 0
+    
     ```
     I_11 = goto(I_8, a) = {
         [S -> bBa.]   // No expandimos ya S ha terminado
@@ -143,11 +162,13 @@ Vamos a realizar el ejercicio A.
         B -> d.
     }) = Seguidores(A) + Seguidores(B) = {a, c}
     ```
+    
     ```
     Seguidores(I_6) = Seguidores({
         S -> Aa.
     }) = Seguidores(S) = {$}
     ```
+    
     ```
     Seguidores(I_9) = 
     ```
@@ -173,7 +194,8 @@ Vamos a realizar el ejercicio A.
 
     > [Producción, Padre]
     > Iniciales(\beta a), siendo \beta, lo que hay detrás justo detrás del punto, a es el valor del padre
-
+    
+    ```
     I_0 = clausura([S' -> .S, $]) = {
         [S' -> .S  , $]
         [S  -> .Aa , $] // \beta es iniciales($) = {$}, Expandimos A
@@ -183,17 +205,20 @@ Vamos a realizar el ejercicio A.
         [A  -> .d, a] // \beta es iniciales(a$) = {a}
         [B  -> .d, c] // \beta es iniciales(c$) = {c}
     }
+    ```
 
     ```
     I_1 = goto(I_0, S) = {
         [S' -> S., $] 
     }
     ```
+
     ```
     I_2 = goto(I_0, A) = {
         [S -> A.a, $]
     } 
     ```
+    
     ```
     I_3 = goto(I_0, b) = {
         [S -> b.Ac, $],
@@ -202,48 +227,57 @@ Vamos a realizar el ejercicio A.
         [B -> .d, a],
     } 
     ```
+    
     ```
     I_4 = goto(I_0, B) = {
         [S -> B.c, $]
     }
     ```
+    
     ```
     I_5 = goto(I_0, d) = {
         [A -> d., a]
         [B -> d., c]
     }
     ```
+    
     ```
     I_6 = goto(I_2, a) = {
         [A -> Aa., $]
     }
     ```
+    
     ```
     I_7 = goto(I_3, A) = {
         [S -> bA.c, $]
     }
     ```
+    
     ```
     I_8 = goto(I_3, B) = {
         [S -> bB.a, $]
     }
     ```
+    
     ```
     I_9 = goto(I_3, d) = {
         [A -> d., c]
         [B -> d., a]
     }
     ```
+    
     ```
     I_10 = goto(I_4, c) = {
         [S -> B.c, $]
     }
     ```
+    
     ```
     I_11 = goto(I_7, c) = {
         [S -> bAc., $]
     }
     ```
+    
     ```
     I_12 = goto(I_8, a) = {
         [S -> bBa., $]
@@ -273,6 +307,7 @@ Vamos a realizar el ejercicio A.
     > Para saber si es LALR tenemos que crear la tabla, unir las producciones creadas en LR sin tener encuenta la anticipación
 
     I<sub>5</sub> e I<sub>9</sub> se pueden unir, creamos el estado:
+
     ```
     I_59 = {
         [A -> d., a|c]
@@ -296,7 +331,8 @@ Vamos a realizar el ejercicio A.
     | 12     |       |   |       |    |R_4| |   |   |   |
 
 # Ejercicio 17
-La siguiente gramática abstrae la gramática IF de acuerdo a las siguientes producciones:
+
+    La siguiente gramática abstrae la gramática IF de acuerdo a las siguientes producciones:
     
     S -> iEtSS' | a
 
@@ -341,6 +377,7 @@ Dando la siguiente especificación obtenida del archivo `y.output` que produce e
         lista_expr : lista_expr **coma** expresion
         coma : COMA
              | error 
+    
     ```
     Seguirdores(coma) = Iniciales(expresion) - {epsilon}
     Iniciales(expresion) = {
@@ -349,6 +386,7 @@ Dando la siguiente especificación obtenida del archivo `y.output` que produce e
         IDENTIFICADOR,
         CONSTANTE
     }
+
     ```
 
     c. Error en el token **PCOMA**.
@@ -366,14 +404,14 @@ Dando la siguiente especificación obtenida del archivo `y.output` que produce e
     Seguirdores(sentencias)
 
 
-    por regla 2: FINBLOQUE
-    por regla 3: Iniciales(sentencia) - {epsilon}
+    por regla 2 (bloque)   : FINBLOQUE
+    por regla 3 (sentencia): Iniciales(sentencia) - {epsilon}
     
     Iniciales(sentencia) = Iniciales(bloque) u Iniciales(sentencia_asig) u Iniciales (Subprograma) u Iniciales(expresion)
 
-    Iniciales(bloque) = { INICIOBLOQUE }
+    Iniciales(bloque)         = { INICIOBLOQUE }
     Iniciales(sentencia_asig) = { IDENTIFICADOR }
-    Iniciales(Subprograma) = { IDENTIFICADOR }
+    Iniciales(Subprograma)    = { IDENTIFICADOR }
     Iniciales(expresion) = {
         ABREPARENT,
         OPUNABIN,
@@ -391,3 +429,7 @@ Dando la siguiente especificación obtenida del archivo `y.output` que produce e
     }
 
     ```
+
+    > No cae crear la tabla de análisis de precedencia simple, pero **sí** que puede caer el análisis de la cadena según la tabla.
+
+    > Preguntas de teoría de respuesta breve + Parte de problema de los ejercicios hechos (También de análisis léxica)
