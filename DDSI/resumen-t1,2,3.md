@@ -1,0 +1,119 @@
+# Diseño y Desarrollo de Sistemas de Información
+## Tema 1 - Introducción a los Sistemas de Información
+
+1. Definición y panorama general
+   1. Definición de sistema
+   2. Datos vs Información
+   3. Definición de sistema de información
+   4. Panorama general de los sistemas de información
+2. Sistemas de Información Empresarial
+   1. Recursos principales de una empresa
+   2. Facotres y ventajas de los Sistemas de Información
+   3. Niveles gerenciales
+   4. Organización jerárquica de los Sistemas de Información empresariales: EIS, DDS, MIS, TPS
+
+### Definición y panorama general
+1. Definición de sistema:
+    
+    Conjunto de elementos o partes coordinadas que responden a una ley, o que, ordenadamente relacionadas entre sí, contribuyen a determinado objeto o función.
+
+2. Datos vs Información
+
+    **Datos**: Representación simbólica (numérica, alfabética, algorítmica, espacial, etc.) de un atributo o variable cuantitativa o cualitativa.
+    
+    Los datos describen hechos empíricos, sucesos y entidades.
+
+    **Información**: Conjunto organizado de datos procesados, que constituyen un mensaje que cambia el estado de conocimiento del sujeto o sistema que recibe dicho mensaje.
+
+3. Definición de sistema de información
+
+    Es un sistema, automatizado o manual, que engloba a personas, máquinas y/o métodos organizados para la recopilación, procesamiento, almacenamiento, transmisión, visualización, diseminación y organización de información. 
+
+    En un entorno informático, el sistema de información tiene los siguientes componentes: Hardware, Software, Datos y Personas.
+
+4. Panorama general de los sistemas de información
+   
+   Sistemas de información empresarial, sistema de administración electrónica, redes sociales, sistemas de información geográficos y bibliotecas digitales.
+
+### Sistemas de Información Empresarial
+
+Se trata de un conjunto de elementos interrelacionados que tienen como fin, apoyar las **actividades de una empresa**:
+
+* Gestión de la información
+* Comunicación
+* Resolución de problemas.
+
+1. Recursos principales de una empresa.
+
+    **Recursos físicos**: Personal, material y maquinaria.
+
+    **Recursos conceptuales**: Dinero e información.
+
+2. Facotres y ventajas de los Sistemas de Información.
+
+    **Factores** que favorecen el desarrollo de sistemas de información: 
+    * Complejidad de los sitemas actuales (Competencia)
+    * Capacidad de los ordenadores
+
+    **Ventajas**:
+    * Económicas (ahorro de costes y aumento de productividad).
+    * No económicas (valor recibido).
+
+3. Niveles gerenciales.
+
+    1. **Planificación estratégica**: Ejecutivos. 
+    2. **Control gerencial**: Directores de producto, jefes de división...
+    3. **Control operativo**: Jefes de departamento, jefes de proyecto, supervisores...
+
+    Esta división aparece en todas las siguientes secciones: Finanzas, Recursos Humanos, Servicios de información, producción y marketing.
+
+    La función de un gerente:
+    * *Funciones de Fayol*: Planificar, organizar, apoyar, dirigir y controlar.
+    * *Papeles de Mintzberg*: Funciones interpersonales (liderazgo, prepresentación), información (monitor, portavoz) y toma de decisiones (emprendedor, negociador, asignador de recursos...).
+
+    El origen de la información es gracias a una plaficación estratégica, un control gerencial y un control operativo sobre el entorno, que nos ofrece una información resumida y el interior, que nos ofrece una información detallada.
+
+4. Organización jerárquica de los sistemas de información:
+
+   1. **Ejecutivos** - Sistemas de Información Gerencial.
+    
+        Permite a los ejecutivos conocer el estado actual de funcionamiento de la empresa
+        Además de una vista general global a modo de resumen, conocido como "cuadro de mando".
+        Simulación de escenarios "What-if analysis".
+
+   2. **Gerentes Senior** - Sistemas de soporte a la decisión.
+
+        Dan apoyo a los gestores en la toma de deciones, ayudando en la resolución de problemas semiestructurados. Permiten analizar el impacto de las decisiones tomadas en el funcionamiento de la empresa.
+
+        Los niveles según *Alter*:
+        1. Recuperación de información.
+        2. Creación de informes a partir de múltiples fuentes.
+        3. Estimación de las consecuencias de una decisión.
+        4. Realización de propuestas (posibles cursos de acción).
+        5. Ejecución de decisiones (más propio de la ciencia-ficción).
+        
+        Los sistemas de ayuda a la decisión apoyan al trabajador del conocimiento (ejecutivo, gerente o analista), pero no lo sustituyen, solo contribuyen la efectividad de sus decisiones. **Knowledge-Based Systems, Sistemas Expertos**.
+        1. Programas que codifican el conocimiento de un experto en forma de heurísticas (p.ej. reglas IF-THEN).
+        2. Tienen el potencial de ampliar la capacidad de resolución de problemas de una persona.
+        3. Son capaces de explicar cómo se obtuvo la solución (p.ej. IF-THEN), si bien carecen de la intuición de una persona y les resulta difícil manejar inconsistencias.
+        
+   3. **Gerentes Medios** - Sistemas de soporte a la administración.
+   4. **Trabajadores** - Sistema de procesamiento de transacciones.
+
+
+
+## Tema 2 - Desarrollo de Sistemas de Información
+1. Proceso de desarrollo de software
+2. Modelos de ciclo de vida
+3. Ciclo de vida de una base de datos
+4. Proceso de desarrollo de bases de datos
+   1. Análisis de requerimientos
+   2. Diseño conceptual
+   3. Elección del SGDB
+   4. Diseño lógico
+   5. Diseño físico
+   6. Instalación y mantenimiento
+
+## Tema 3 - Modelos de datos
+1. Conceptos
+2. 
