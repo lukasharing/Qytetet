@@ -39,9 +39,9 @@
 
 Se trata de un conjunto de elementos interrelacionados que tienen como fin, apoyar las **actividades de una empresa**:
 
-* Gestión de la información
-* Comunicación
-* Resolución de problemas.
+* **Gestión de la información**.
+* **Comunicación**.
+* **Resolución de problemas**.
 
 1. Recursos principales de una empresa.
 
@@ -49,7 +49,7 @@ Se trata de un conjunto de elementos interrelacionados que tienen como fin, apoy
 
     **Recursos conceptuales**: Dinero e información.
 
-2. Facotres y ventajas de los Sistemas de Información.
+2. Factores y ventajas de los Sistemas de Información.
 
     **Factores** que favorecen el desarrollo de sistemas de información: 
     * Complejidad de los sitemas actuales (Competencia)
@@ -98,8 +98,51 @@ Se trata de un conjunto de elementos interrelacionados que tienen como fin, apoy
         3. Son capaces de explicar cómo se obtuvo la solución (p.ej. IF-THEN), si bien carecen de la intuición de una persona y les resulta difícil manejar inconsistencias.
         
    3. **Gerentes Medios** - Sistemas de soporte a la administración.
-   4. **Trabajadores** - Sistema de procesamiento de transacciones.
+   
+   4. **Trabajadores** - Sistema de procesamiento de datos.
 
+   Sistemas de información empleados en el funcionamiento cotidiano de una empresa. Procesan la información operativa que se producen en una empresa:
+    * Recopilación de datos (transacciones).
+    * Manipulación de datos: clasificación, ordenación, cálculos...
+    * Almacenamiento de datos (base de datos)
+    * Preparación de documentos (informes)
+    * Gestión de contenidos (CMS)
+    * Business Intelligence: Data Warehousing \& Data Mining
+
+    Ejemplos de sistemas de información contable: Gestión de pedidos; Control de inventario (stock); Facturación y contabilidad.
+
+### Software de gestión empresarial
+* **Planificador de recursos empresariales** *(ERP)*:
+    
+    Sistema integrado de gestión que permite integrar los distintos flujos de información de la empresa (finanzas, compras, ventas, recursos humanos...) de forma modular y adaptada al cliente.
+    * Es un único Sistema de Información integrado para toda la compañía.
+    * Coordina la información en los diferentes procesos de negocio.
+    * Usa una base de datos centralizada para facilitar compartir la información.
+    * Información actualizada en el tiempo real de todos los departamentos de la compañía.
+
+* **Gestor de relaciones con el cliente** *(CMS)*
+
+    Sistema de información de Marketing para la gestión integral de las relaciones con los clientes.
+    * **Análisis de Sistemas y Programación** (*SAP*).
+
+        Es un sistema de información estándar modular que puede ser parametrizado para cada compañía, los datos están en tiempo real y genera pantallas con información resumida para facilitar la toma de decisiones.
+
+        Las compañías que usan *SAP* determinan los módulos que desean utilizar en base a las necesiadades del negocio, pudiéndose personalizar.
+
+        **Características**:
+        * Grandes volúmenes de datos (grandes compañías).
+        * Coste Elevado.
+        * Desarrollo siguiendo las mejores prácticas de la industria.
+        * Adaptar la empresa a SAP y no viceversa, se pueden escribir nuevas funcionalidades usando Advanced Business Application Programming (ABAP&copy;) 
+    * **Oracle E-Business Suite**
+        
+        Se trata de un conjunto de aplicaciones empresarariales globales e integradas, que proporciona una estrategia centrada en el cliente.
+
+        Todas estas aplicaciones utilizan un Sistema Gestor de Bases de Datos Oracle&copy; como repositorio centra le datos.
+
+
+    * **ABW**
+    * **Microsoft Dynamics**
 
 
 ## Tema 2 - Desarrollo de Sistemas de Información

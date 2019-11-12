@@ -56,7 +56,7 @@ def  cargarImagenes ():
     keras.y_train = np_utils.to_categorical(y_train , 25)
     y_test = np_utils.to_categorical(y_test , 25)
     
-    return  x_train , y_train , x_test , y_test
+    return  x_train, y_train, x_test, y_test
 
 #########################################################################
 ######## FUNCIÓN PARA OBTENER EL ACCURACY DEL CONJUNTO DE TEST ##########
