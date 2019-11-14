@@ -123,6 +123,7 @@ Se trata de un conjunto de elementos interrelacionados que tienen como fin, apoy
 * **Gestor de relaciones con el cliente** *(CMS)*
 
     Sistema de información de Marketing para la gestión integral de las relaciones con los clientes.
+    
     * **Análisis de Sistemas y Programación** (*SAP*).
 
         Es un sistema de información estándar modular que puede ser parametrizado para cada compañía, los datos están en tiempo real y genera pantallas con información resumida para facilitar la toma de decisiones.
@@ -133,16 +134,28 @@ Se trata de un conjunto de elementos interrelacionados que tienen como fin, apoy
         * Grandes volúmenes de datos (grandes compañías).
         * Coste Elevado.
         * Desarrollo siguiendo las mejores prácticas de la industria.
-        * Adaptar la empresa a SAP y no viceversa, se pueden escribir nuevas funcionalidades usando Advanced Business Application Programming (ABAP&copy;) 
+        * Adaptar la empresa a SAP y no viceversa, se pueden escribir nuevas funcionalidades usando Advanced Business Application Programming (ABAP&copy;)
+
     * **Oracle E-Business Suite**
         
         Se trata de un conjunto de aplicaciones empresarariales globales e integradas, que proporciona una estrategia centrada en el cliente.
 
-        Todas estas aplicaciones utilizan un Sistema Gestor de Bases de Datos Oracle&copy; como repositorio centra le datos.
+        Todas estas aplicaciones utilizan un Sistema Gestor de Bases de Datos Oracle&copy; como repositorio central de datos.
 
 
-    * **ABW**
+    * **Agresso Bussiness World** *(ABW)*:
+
+        Se trata de una solución empresarial que permite definir, evalauar y validar soluciones **Process Service Automaton** *(PSA)*, **Service Process Optimization** *(SPO)* y **Project Portfolio Management** *(PPM)*. 
+        
+        El acceso a la información siempre está actualizada. 
+        
+        Una gestión de módulos para: *proyectos*, autoriza y valida horas, controla la documentación del proyecto, etc; *recursos humanos*, sugiera persona idónea para las tareas, planificar efectivamente y eficientemente, etc; nómina y finanzas vía web; Integración Excel; *Intelligent Agent*;, etc.
+
+        ABW&copy;. Intelligent Agent identifica proactivamente el problema en el proyecto, envío de alertas de negocio, control de actividades rutinarias, aviso de emisión de facturas, informa a empleados y clientes del estado de las tareas relevantes... 
+
     * **Microsoft Dynamics**
+        
+        Se trata de un software tanto *ERP* como *CRM*, una arquitectura modular, flexible, diseñado por capas y un manejo de usuarios basado en roles.
 
 
 ## Tema 2 - Desarrollo de Sistemas de Información
