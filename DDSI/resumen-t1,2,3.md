@@ -15,11 +15,11 @@
 ### Definición y panorama general
 1. Definición de sistema:
     
-    Conjunto de elementos o partes coordinadas que responden a una ley, o que, ordenadamente relacionadas entre sí, contribuyen a determinado objeto o función.
+    Conjunto de partes coordinadas que responden a una ley, o que, ordenadamente relacionadas entre sí, contribuyen a determinado objeto o función.
 
 2. Datos vs Información
 
-    **Datos**: Representación simbólica (numérica, alfabética, algorítmica, espacial, etc.) de un atributo o variable cuantitativa o cualitativa.
+    **Datos**: Representación simbólica (numérica, alfabética, etc) de un atributo o variable cuantitativa o cualitativa.
     
     Los datos describen hechos empíricos, sucesos y entidades.
 
@@ -39,9 +39,7 @@
 
 Se trata de un conjunto de elementos interrelacionados que tienen como fin, apoyar las **actividades de una empresa**:
 
-* **Gestión de la información**.
-* **Comunicación**.
-* **Resolución de problemas**.
+Su propósito es, la **Gestión de la información**, **Comunicación** y **Resolución de problemas**.
 
 1. Recursos principales de una empresa.
 
@@ -68,18 +66,18 @@ Se trata de un conjunto de elementos interrelacionados que tienen como fin, apoy
     Esta división aparece en todas las siguientes secciones: Finanzas, Recursos Humanos, Servicios de información, producción y marketing.
 
     La función de un gerente:
-    * *Funciones de Fayol*: Planificar, organizar, apoyar, dirigir y controlar.
-    * *Papeles de Mintzberg*: Funciones interpersonales (liderazgo, prepresentación), información (monitor, portavoz) y toma de decisiones (emprendedor, negociador, asignador de recursos...).
+    * **Funciones de Fayol**: Planificar, organizar, apoyar, dirigir y controlar.
+    * **Papeles de Mintzberg**: Funciones interpersonales, información y toma de decisiones.
 
-    El origen de la información es gracias a una plaficación estratégica, un control gerencial y un control operativo sobre el entorno, que nos ofrece una información resumida y el interior, que nos ofrece una información detallada.
+    La planificación estratégica recibe información del interior con un bajo nivel de detalle ya que son ejecutivos y no le es necesario. Mientras que el **control operativo** recibe la información del entorno con un gran nivel de detalle ya que está formado por los jefes de departamentos, jefes de proyecto, que coordinan y deben conocer la información con todo lujo de detalles. 
 
 4. Organización jerárquica de los sistemas de información:
 
    1. **Ejecutivos** - Sistemas de Información Gerencial.
     
-        Permite a los ejecutivos conocer el estado actual de funcionamiento de la empresa
-        Además de una vista general global a modo de resumen, conocido como "cuadro de mando".
-        Simulación de escenarios "What-if analysis".
+        Permite a los ejecutivos conocer el estado actual de funcionamiento de la empresa,
+        además de una vista general global a modo de **resumen**, conocido como "*cuadro de mando*".
+        Simulación de escenarios "*What-if analysis*".
 
    2. **Gerentes Senior** - Sistemas de soporte a la decisión.
 
@@ -123,7 +121,7 @@ Se trata de un conjunto de elementos interrelacionados que tienen como fin, apoy
 * **Gestor de relaciones con el cliente** *(CMS)*
 
     Sistema de información de Marketing para la gestión integral de las relaciones con los clientes.
-    
+
     * **Análisis de Sistemas y Programación** (*SAP*).
 
         Es un sistema de información estándar modular que puede ser parametrizado para cada compañía, los datos están en tiempo real y genera pantallas con información resumida para facilitar la toma de decisiones.
@@ -149,7 +147,7 @@ Se trata de un conjunto de elementos interrelacionados que tienen como fin, apoy
         
         El acceso a la información siempre está actualizada. 
         
-        Una gestión de módulos para: *proyectos*, autoriza y valida horas, controla la documentación del proyecto, etc; *recursos humanos*, sugiera persona idónea para las tareas, planificar efectivamente y eficientemente, etc; nómina y finanzas vía web; Integración Excel; *Intelligent Agent*;, etc.
+        Una gestión de módulos para: *proyectos*, *recursos humanos*, nómina y finanzas vía web e integración Excel, etc.
 
         ABW&copy;. Intelligent Agent identifica proactivamente el problema en el proyecto, envío de alertas de negocio, control de actividades rutinarias, aviso de emisión de facturas, informa a empleados y clientes del estado de las tareas relevantes... 
 
@@ -169,6 +167,70 @@ Se trata de un conjunto de elementos interrelacionados que tienen como fin, apoy
    4. Diseño lógico
    5. Diseño físico
    6. Instalación y mantenimiento
+
+### Proceso de desarrollo de software
+La planificación es la siguiente:
+    
+* Ámbito del proyecto
+* Estudio de viabilidad
+* Análisis de riesgos
+* Estimación
+* Planificación temporal
+* Asignación de recursos
+
+### Tipos de Modelos
+1. **Modelos en Cascada**.
+
+    Se trata de un diseño modelado en cascada ("Ciclo de vida clásico")
+
+    Cada etapa se conecta directamente y únicamente con la etapa inferior y la superior.
+
+    1. **Análisis**. 
+    
+    * Requerimientos: requisitos funcionales y no funcionales. 
+    * Modelado: Modelado de datos o de procesos.
+    
+    2. **Diseño**.
+
+    * Diseño de base de datos.
+    * Diseño de aplicaciones.
+    
+    3. **Implementación**.
+    
+    * Adquisición de componentes.
+    * Creación e integración de los recursos necesarios para que el sistema funcione.
+    
+    4. **Pruebas**.
+    * Pruebas de unidad.
+    * Pruebas de integración.
+    * Pruebas alfa.
+    * Pruebas beta.
+    * Test de aceptación.
+    
+    5. **Intalación / Mantenimiento**.
+    * Mantenimiento adaptativo.
+    * Mantenimiento correctivo.
+    * Mantenimiento perfectivo.
+    * Mantenimiento evolutivo.
+
+2. **Desarrollo de prototipos**.
+    
+    Es un esquema decreciente, es decir cada etapa se conecta con la próxima, pero la etapa de **evaluación**, puede permitir **volver a la etapa de recolección y refinamiento de requisitos**.
+
+    1. **Recolección y refinamiento de requisitos**
+    2. **Diseño Rápido**
+    3. **Contrucción de prototipos**
+    4. **Evaluación**
+    5. **Desarrollo del producto**
+
+3. **Modelo en esperial**.
+
+    Se trata de un modelo circular, comienza:
+    1. Planificación (determinación de objetivos).
+    2. Evaluación de alternativas e Identificación de riesgos
+    3. Desarrollo
+    4. Revisión
+
 
 ## Tema 3 - Modelos de datos
 1. Conceptos
