@@ -130,11 +130,14 @@
     
     a. Independencia
     
-    b. Aislamiento
+    **b. Aislamiento**
     
     c. Indistinguibilidad
     
     d. Imposibilidad
+
+    > Las iniciales del modelo ACID provienen del inglés:
+    **A**tomicity, **C**onsistency, ***I**solation* and **D**urability. 
 
 14. Un sistema de gestiónde bases de datos orientado a objetos es:
     
@@ -146,7 +149,7 @@
     
     d. Un gestor de bases de datos que permite la creación y modelado de datos...
 
-15. Una desventajade las bases dedatos NoSQLes:
+15. Una desventajade las bases dedatos NoSQL es:
 
     a. Cada clase persistente tiene una tabla de bases de datos correspondiente
 
