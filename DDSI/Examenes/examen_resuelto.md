@@ -52,19 +52,23 @@
     
     b. Las pruebas beta
     
-    c. Los test de aceptación
+    **c. Los test de aceptación**
     
     d. Las pruebas de integración
 
+    > **Test de aceptación**. El cliente comprueba el software y verifica que cumpla con sus expectativas.
+
 6. Durante el diseño de base de datos, el diseño lógico produce:
     
-    a. Una descripción del esquema de la base de datos utilizando un modelo de datos conceptual.
+    **a. Una descripción del esquema de la base de datos utilizando un modelo de datos conceptual.**
     
     b. Una descripción de la base de datos a nivel interno
     
     c. Siempre produce un conjunto de tablas
     
     d. Una descripción de la base de datos con un modelo de datos implementable
+    
+    > La **tarea del diseño lógico** consiste en transformar los esquemas obtenidos en el **diseño conceptual** en un conjunto de estructuras propias del modelo abstracto de datos elegido.
     
 7. La implementación de la arquitectura por niveles de sistemas de información mediante estándares abiertos en la web:
     
@@ -84,7 +88,7 @@
     
     c. Sistemas de soporte de la decisión
     
-    d. Sistemas expertos
+    **d. Sistemas expertos**
 
 9.  El inconveniente de no tener una versión de software funcionando hasta bien avanzado el ciclo de vida del proyecto es propio del:
     
