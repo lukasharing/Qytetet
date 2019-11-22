@@ -46,12 +46,9 @@
 	\newpage
 	
 	\section{Zabbix}
-	% https://es.wikipedia.org/wiki/Zabbix
 	\textbf{Zabbix} es un sistema de monitorización de redes creado por Alexei Vladishev. Está diseñado para monitorizar y registrar el estado de varios servicios de red, Servidores y hardware de red[1].
 	\newline
 	\newline
-	% https://es.wikipedia.org/wiki/Ubuntu
-	% https://es.wikipedia.org/wiki/CentOS
 	Esta práctica se centrará en la monitorización de servidores, en nuestro caso, virtuales. Por lo que vamos a utilizar los dos sistemas operativos que hemos estado utilizando en prácticas anteriores, Ubuntu[2] y CentOs[3].
 	\newline
 	\newline
@@ -61,7 +58,6 @@
 	
 		Suponiendo que hemos completado las prácticas anteriores correctamente y estamos en modo \textbf{super-usuario} o \textbf{kernel}.
 		
-		% https://proyectos.softwarelibre.edu.uy/projects/gestion-de-la-sala-de-telecomunicaciones/wiki/Configuracion_de_Zabbix_Server_y_Zabbix_Client
 		\subsubsection{Intalación Zabbix en Ubuntu}
 		 Supondremos además que tenemos \textbf{wget} y \textbf{apt} instalado
 		\newline
@@ -105,7 +101,6 @@
 		\end{tikzpicture}
 		\newline
 		\newline
-		% https://es.wikipedia.org/wiki/LAMP
 		Vamos a comenzar con la instalación del servidor y el \textit{frontend}. {\small (\textbf{Nota}: Cabe destacar que Zabbix hace uso de la pila \textit{LAMP}[4] para almacenar las estadísticas recogidas)} \textbf{zabbix-server-mysql} se trata de un paquete que incluye el servidor de \textbf{Zabbix} y soporte \textbf{MySQL}; \textbf{zabbix-frontend-php} es un paquete que ofrece una interfaz web escrita en \textbf{PHP}.
 		\newline
 		\newline
@@ -529,7 +524,7 @@
 		
 	\subsection{Monitorización de Zabbix}
 		
-		Para añadir \textbf{CentOS} a monitorizar, vamos a acceder al panel de monitorización:
+		Para añadir \textbf{CentOS} a monitorizar[6], vamos a acceder al panel de monitorización:
 		
 		\begin{figure}[h]
 			\centering
@@ -554,5 +549,46 @@
 			\includegraphics[width=1.0\textwidth]{images/acthost.png}
 			\caption{Datos para la configuración de un nuevo host}
 		\end{figure}
+	\newpage
+	\subsection{Gráficas de Zabbix}
+		Podemos ver el rendimiento de nuestro grupo de servidores o por separado a través de la pantalla \textbf{Graphs}.
 		\newline
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=1.0\textwidth]{images/graphs.png}
+			\caption{Gráfico de nuestro grupo / único host}
+		\end{figure}
+	
+	
+	\newpage
+	\section{Referencias Bibliográficas}
+	\begin{thebibliography}{9}
+		\bibitem{Zabbix}
+		¿Qué es Zabbix?
+		\url{https://es.wikipedia.org/wiki/Zabbix}
+		
+		\bibitem{Ubuntu}
+		El sistema operativo Ubuntu
+		\url{https://es.wikipedia.org/wiki/Ubuntu}
+		
+		\bibitem{Ubuntu}
+		El sistema operativo CentOS
+		\url{https://es.wikipedia.org/wiki/CentOS}
+		
+		\bibitem{Instalacion}
+		Instalación de Zabbix Server y Cliente
+		\url{https://proyectos.softwarelibre.edu.uy/projects/gestion-de-la-sala-de-telecomunicaciones/wiki/Configuracion_de_Zabbix_Server_y_Zabbix_Client}
+		
+		\bibitem{Linux Apache MySQL PHP}
+		Instalación de Zabbix Server y Cliente
+		\url{https://es.wikipedia.org/wiki/LAMP}
+		
+		
+		\bibitem{Frontend Zabbix}
+		Monitorizar y Gráficos en Zabbix
+		\url{https://tecadmin.net/add-host-zabbix-server-monitor/}
+		
+		
+	\end{thebibliography}
+		
 \end{document}
