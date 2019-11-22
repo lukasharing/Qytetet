@@ -118,7 +118,7 @@ Su propósito es, la **Gestión de la información**, **Comunicación** y **Reso
     * Usa una base de datos centralizada para facilitar compartir la información.
     * Información actualizada en el tiempo real de todos los departamentos de la compañía.
 
-* **Gestor de relaciones con el cliente** *(CMS)*
+* **Gestor de relaciones con el cliente** *(CRM)*
 
     Sistema de información de Marketing para la gestión integral de las relaciones con los clientes.
 
@@ -244,6 +244,12 @@ La planificación es la siguiente:
     
     **Arquitectura por niveles**: Diferenciado en tres capas con dos servidores, la **capa de presentación**, que engloba a los clientes y se conectan a un servidor con una interfaz, conocida como **capa de aplicación** que este servidor se conecta a otro servidor que contiene la información de la base de datos, conocido como **capa de datos**.
 
+    1. **Capa de presentación**: Es la encargada de que el sistema interactúe con el usuario y viceversa
+   
+    2. **Capa de aplicación**: Residen las funciones que se ejecutan, se reciben las peticiones del usuario, ser procesa la información y se envían las respuestas tras el proceso de la **capa de presentación** a la **capa de datos**.
+   
+    3. **Capa de datos**: Encargado de almacenar los datos del sistema y de los usuarios. Su función es almacenar y devolver datos a la **capa de aplicación**.
+
     Utiliza un conjunto de protocolos y estándares que sirven para intercambiar datos entre aplicaciones mediante adopción de estándares abiertos basados en la web.
 
     1. **Pruebas**.
@@ -254,10 +260,10 @@ La planificación es la siguiente:
     * **Test de aceptación**. El cliente comprueba el software y verifica que cumpla con sus expectativas.
     
     1. **Intalación / Mantenimiento**.
-    * Mantenimiento adaptativo.
-    * Mantenimiento correctivo.
-    * Mantenimiento perfectivo.
-    * Mantenimiento evolutivo.
+    * **Mantenimiento adaptativo**. Modificaciones que afectan a los entornos en los que el sistema opera, por ejemplo, cambios en la configuración del hardware, software de base, gestores de bases de datos, etc..
+    * **Mantenimiento evolutivo**. Incorporaciones, modificaciones y eliminaciones necesarias en un producto software para cubrir la expansión o cambios en las necesiades del usuario.
+    * **Mantenimiento correctivo**. Localiza averías o defectos para corregirlos o repararlos.
+    * **Mantenimiento perfectivo**. Pretende mejorar lo que ya está hecho, refactorizar alguna parte de la aplicación para hacerla más mantenible y/o eficiente
 
 2. **Desarrollo de prototipos**.
     

@@ -78,7 +78,9 @@
     
     c. Requiere que todos los nodos usen un mismo lenguaje de programación
     
-    d. Se basa en diversos protocolos para la búsqueda y petición de servicios.
+    **d. Se basa en diversos protocolos para la búsqueda y petición de servicios.**
+    
+    > **La arquitectura por niveles de sistemas de información mediante estándares abiertos en la web** utilizan un **conjunto de protocolos y estándares** que sirven para **intercambiar datos** entre aplicaciones mediante adopción de estándares abiertos basados en la web.
     
 8. Los sistemas OLAP están dentro de la categoría de los:
     
@@ -88,7 +90,7 @@
     
     c. Sistemas de soporte de la decisión
     
-    **d. Sistemas expertos**
+    d. Sistemas expertos
 
 9.  El inconveniente de no tener una versión de software funcionando hasta bien avanzado el ciclo de vida del proyecto es propio del:
     
