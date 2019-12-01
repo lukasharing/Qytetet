@@ -118,7 +118,7 @@ Su propósito es, la **Gestión de la información**, **Comunicación** y **Reso
     * Usa una base de datos centralizada para facilitar compartir la información.
     * Información actualizada en el tiempo real de todos los departamentos de la compañía.
 
-* **Gestor de relaciones con el cliente** *(CMS)*
+* **Gestor de relaciones con el cliente** *(CRM)*
 
     Sistema de información de Marketing para la gestión integral de las relaciones con los clientes.
 
@@ -190,28 +190,80 @@ La planificación es la siguiente:
     * Requerimientos: requisitos funcionales y no funcionales. 
     * Modelado: Modelado de datos o de procesos.
     
-    2. **Diseño**.
+    Recabar información sobre el uso que se piensa dar al sistema de información.
+    1. Identificación de las principales áreas de la aplicación y de los distintos grupos de usuarios.
+    2. Estudio y análisis de la documentación existente relativa a las aplicaciones.
+    3. Estudio del entorno de operación actual.
+    4. Estudio del uso de la información (transacciones, frecuencias y flujo de datos).
 
+    Se obtiene como resultado un documento de especificación de requerimientos:
+    1. Descripción del sistema en lenguaje natural.
+    2. Lista de requerimientos.
+
+    5. **Diseño**.
     * Diseño de base de datos.
     * Diseño de aplicaciones.
     
-    3. **Implementación**.
+    Producir un esquema **conceptual** de la base de datos, independientemente del SGBD.
+
+    1. Comprensión de la estructura, semántica, relaciones y restricciones de la BD.
+    2. Descripción estable del contenido de la base de datos.
+    3. Comunicación entre usuarios, analistas y diseñadores.
+
+    Características deseables del modelo conceptual.
+    1. **Expresividad**: diferentes tipos de datos, relaciones y restricciones.
+    2. **Sencillez**: Simple para que los usuarios lo comprendan.
+    3. **Minimalidad**: Numero pequeño de conceptos básicos.
+    4. **Representación gráfica**: notación gráfica fácil de interpretar.
+    5. **Formalidad**: Especificación formal y sin ambigüedad de los datos.
+
+    Enfoques para el diseño del **esquema conceptual**:
+    1. **Enfoque centralizado**. Los requisitos de distintas aplicaciones y grupos de usuarios se combinan en un único conjunto de requisitos antes de comenzar el diseño del esquema.
+    3. **Enfoque de integración de vistas**. Se diseña un esquema o vista para cada tipo de usuarios o aplicaciones  basado únicamente en sus requisitos. Durante la etapa de **integración de vistas**, dichos esquemas se combinan o integran para formar un esquema conceptual global (cada vista individual puede considerarse un esquema externo).
+
+    La **tarea** es un modelado de los datos del sistema, cuyo resultado es un diagrama E/R, diagrama de clases UML o un diagrama de CASE\*Method.
+
+    Para el **modelado lógico** hay que elegir el modelo de datos (tipo de DBMS), por ejemplo relacional, orientado a objetos, etc. Consiste en crear un esquema conceptual y los esquemas externos en el modelo de datos del SGBD elegido.
+    
+    La **tarea** consiste en transformar los esquemas obtenidos en el *diseño conceptual* en un conjunto de estructuras propias del modelo abstracto de datos elegido.
+    
+    Finalmente el **modelado físico**, nivel interno, consiste en estimar los diferentes parámetros físicos de nuestra base de datos, mediante técnicas analíticas (rendimiento) y/o técnicas experimentales (simulación, prototipos, etc).
+    
+    La **tarea** es preparar las sentencias **D**ata **D**efinition **L**anguage descritas en el lenguaje del SGBD elegido, selección de parámetros físicos, etc.
+
+    1. **Implementación**.
     
     * Adquisición de componentes.
     * Creación e integración de los recursos necesarios para que el sistema funcione.
     
-    4. **Pruebas**.
-    * Pruebas de unidad.
-    * Pruebas de integración.
-    * Pruebas alfa.
-    * Pruebas beta.
-    * Test de aceptación.
+    Funcionalidad a nivel de DB (Lenguajes de programación para DB) y la funcionalidad (Lenguaje de desarrollo de aplicaciones)
+
+    **Arquitectura centralizada**: Terminales conectadas a un servdor que ofrece una interfaz gráfica y una conexión con la DB.
+
+    **Arquitectura cliente-servidor**: Los clientes se conectan a una red, finalmente la red se conecta con el servidor.
     
-    5. **Intalación / Mantenimiento**.
-    * Mantenimiento adaptativo.
-    * Mantenimiento correctivo.
-    * Mantenimiento perfectivo.
-    * Mantenimiento evolutivo.
+    **Arquitectura por niveles**: Diferenciado en tres capas con dos servidores, la **capa de presentación**, que engloba a los clientes y se conectan a un servidor con una interfaz, conocida como **capa de aplicación** que este servidor se conecta a otro servidor que contiene la información de la base de datos, conocido como **capa de datos**.
+
+    1. **Capa de presentación**: Es la encargada de que el sistema interactúe con el usuario y viceversa
+   
+    2. **Capa de aplicación**: Residen las funciones que se ejecutan, se reciben las peticiones del usuario, ser procesa la información y se envían las respuestas tras el proceso de la **capa de presentación** a la **capa de datos**.
+   
+    3. **Capa de datos**: Encargado de almacenar los datos del sistema y de los usuarios. Su función es almacenar y devolver datos a la **capa de aplicación**.
+
+    Utiliza un conjunto de protocolos y estándares que sirven para intercambiar datos entre aplicaciones mediante adopción de estándares abiertos basados en la web.
+
+    1. **Pruebas**.
+    * **Pruebas de unidad**. Comprobar el correcto funcionamiento de una unidad de código. Es decir que cada unidad funcione correctamente.
+    * **Pruebas de integración**. Después de comprobar las pruebas unitarias. Comprueba que funcionan juntos, comportándose como un grupo.
+    * **Pruebas alfa**. Realizadas por el usuario con el desarrollador como observador en un entorno controlado.
+    * **Pruebas beta**. Realizadas por el usuario en su entorno de trabajo, sin observadores.
+    * **Test de aceptación**. El cliente comprueba el software y verifica que cumpla con sus expectativas.
+    
+    1. **Intalación / Mantenimiento**.
+    * **Mantenimiento adaptativo**. Modificaciones que afectan a los entornos en los que el sistema opera, por ejemplo, cambios en la configuración del hardware, software de base, gestores de bases de datos, etc..
+    * **Mantenimiento evolutivo**. Incorporaciones, modificaciones y eliminaciones necesarias en un producto software para cubrir la expansión o cambios en las necesiades del usuario.
+    * **Mantenimiento correctivo**. Localiza averías o defectos para corregirlos o repararlos.
+    * **Mantenimiento perfectivo**. Pretende mejorar lo que ya está hecho, refactorizar alguna parte de la aplicación para hacerla más mantenible y/o eficiente
 
 2. **Desarrollo de prototipos**.
     

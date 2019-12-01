@@ -52,19 +52,23 @@
     
     b. Las pruebas beta
     
-    c. Los test de aceptación
+    **c. Los test de aceptación**
     
     d. Las pruebas de integración
 
+    > **Test de aceptación**. El cliente comprueba el software y verifica que cumpla con sus expectativas.
+
 6. Durante el diseño de base de datos, el diseño lógico produce:
     
-    a. Una descripción del esquema de la base de datos utilizando un modelo de datos conceptual.
+    **a. Una descripción del esquema de la base de datos utilizando un modelo de datos conceptual.**
     
     b. Una descripción de la base de datos a nivel interno
     
     c. Siempre produce un conjunto de tablas
     
     d. Una descripción de la base de datos con un modelo de datos implementable
+    
+    > La **tarea del diseño lógico** consiste en transformar los esquemas obtenidos en el **diseño conceptual** en un conjunto de estructuras propias del modelo abstracto de datos elegido.
     
 7. La implementación de la arquitectura por niveles de sistemas de información mediante estándares abiertos en la web:
     
@@ -74,7 +78,9 @@
     
     c. Requiere que todos los nodos usen un mismo lenguaje de programación
     
-    d. Se basa en diversos protocolos para la búsqueda y petición de servicios.
+    **d. Se basa en diversos protocolos para la búsqueda y petición de servicios.**
+    
+    > **La arquitectura por niveles de sistemas de información mediante estándares abiertos en la web** utilizan un **conjunto de protocolos y estándares** que sirven para **intercambiar datos** entre aplicaciones mediante adopción de estándares abiertos basados en la web.
     
 8. Los sistemas OLAP están dentro de la categoría de los:
     
