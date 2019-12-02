@@ -1,33 +1,40 @@
 # Cuestionario 1
 ## Realizado por Lukas Häring García
 
-1. **Diga en una sola frase cuál cree que es el objetivo principal de la Visión por Computador. Diga también cuáles la principal propiedad de las imágenesde cara a la creación de algoritmos que la procesen.**
+1. **Identifique las semejanzas y diferencias entre los problemas de:.**
 
+    a) **Clasificación  de  imágenes**
 
-2. **Expresar las diferencias y semejanzas entre las operaciones de correlación y convolución. Dar una interpretación de cada una de el las que en el contexto de uso en visión por computador.**
+    b) **Detección  de  objetos**
 
-3. **¿Cuál es la diferencia “esencial” entre el filtro de convolución y el de mediana? Justificar la  respuesta.**
+    c) **Segmentación de imágenes**
 
-4. **Identifique el “mecanismo concreto” que usa un filtro de máscara para transformar una imagen.**
+    d) **Segmentación de instancias**
 
-5. **¿De qué depende que una máscara de convolución pueda ser implementadapor convoluciones 1D? Justificar la respuesta.**
+2. **¿Cuál es la técnica de búsqueda estándar para la detección de objetos  en  una  imagen?  Identifique  pros  y  contras  de  la  misma  e indique posiblessoluciones para estos últimos.**
 
-6. **Identificar las diferencias y consecuencias desde el punto de vista teórico y de la implementación entre:**
+3. **Considere la aproximación que   extrae una   serie   de características en  cada píxel de  la  imagen  para  decidir  si  hay contorno o no. Diga si existe algún paralelismo entre la forma de actuar  de  esta  técnica  y  el  algoritmo  de  Canny.  En  caso  positivo identifique cuales son los elementos comunes y en que se diferencian los distintos.**
 
-7. **Identifique las funciones de las que podemos extraer pesos correctos para implementar de forma eficiente la primera derivada de una imagen. Suponer alisamiento Gaussiano.**
+4. **Tanto  el  descriptor  de  SIFT  como  HOG  usan  el  mismo  tipo  de información de la imagen pero en contextos distintos. Diga en que se parecen y en que son distintos estos descriptores. Explique para que es útil cada uno de ellos.**
 
-8. **Identifique las funciones de las que podemos extraer pesos correctos para implementar de forma eficiente la Laplacianade una imagen. Suponer alisamiento Gaussiano.**
+5. **Observando el funcionamiento global de una CNN, identifique que dos procesos fundamentales definen lo que se realiza en un pase hacia delante de una imagen por la red. Asocie las capasque conozcaa cada uno de ellos.**
 
-9. **Suponga que le piden implementar de forma eficiente un algoritmo para el cálculo de la derivada de primer orden sobre una imagen usando alisamiento Gaussiano. Enumere y explique los pasos necesarios para llevarlo a cabo.**
+6. **Se ha vistoque el aumento de la profundidad de una CNN es un factor  muy  relevante  para  la  extracción  de característicasen problemas complejos, sin embargo este enfoque añadenuevos problemas. Identifique cuales son y qué soluciones conoce para superarlos.**
 
-10. **Identifique semejanzas y diferencias entre la pirámide gaussiana y el espacio de escalas de una imagen, ¿cuándo usar una u otra? Justificar los argumentos.**
+7. **Existe actualmente alternativas de  interés al aumento  de  la profundidad para el diseño de CNN. En caso afirmativo diga cuál/es y como son.**
 
-11. **¿Bajo qué condiciones podemos garantizar una perfecta reconstrucción de una imagen a partir de su pirámide Laplaciana? Dar argumentos y discutir las opciones que considere necesario.**
+8. **Considere una aproximación clásica al reconocimiento de escenas en donde extraemos de la imagen un vector de características y lo usamos  para  decidir  la  clase  de  cada  imagen.  Compare  este procedimiento  con  el  uso  de  una CNN  para  el  mismo  problema.  ¿Hay conexión entre ambas aproximaciones? En caso afirmativo indique en que parecen y en que son distintas.**
 
-12. **¿Cuáles son las contribuciones más relevantes del algoritmo de Canny al cálculo de los contornos sobre una imagen?¿Existe alguna conexión entre las máscaras de Sobel y el algoritmo de Canny? Justificar la respuesta.**
+9. **¿Cómo evoluciona el campo receptivo de las neuronas de una CNN con la profundidad de la capas? ¿Se solapan los campos receptivos de las distintas neuronas de una misma profundidad? ¿Es este hecho algo positivo o negativo de cara a un mejor funcionamiento?**
 
-13. **Identificar pros y contras de k-medias como mecanismo para crear un vocabulario visual a partir del cual poder caracterizar patrones. ¿Qué ganamos y que perdemos? Justificar los argumentos.**
+10. **¿Qué  operación  es  central  en  el  proceso  de  aprendizaje  y optmización de una CNN?**
 
-14. **Identifique pros y contras del modelo de “Bolsa de Palabras” como mecanismo para caracterizar el contenido de una imagen. ¿Qué ganamos y que perdemos?Justificar los argumentos.**
+11. **Compare los  modelos  de  detección  de  objetos  basados  en aproximaciones clásicas y los basados en CNN y diga que dos procesos comunes a ambos aproximaciones han sido muy mejorados en los modelosCNN. Indique cómo.**
 
-15. **Suponga que dispone de unconjunto de imágenesde dos tiposde clases bien diferenciadas. Suponga que conoce como implementarde forma eficienteel cálculo de las derivadas hasta el orden N de la imagen. Describa como crear un algoritmo que permita diferenciar, con garantías, imágenes de ambas clases. Justificar cada uno de los pasos que proponga.**
+12. **Es posible construir arquitecturas CNN que sean independientes de las dimensiones de la imagende entrada. En caso afirmativo digacómo hacerloy cómo interpretar la salida.**
+
+13. **Suponga que entrenamos una arquitectura Lenet-5 para clasificar imágenes 128x128 de 5 clases distintas. Diga que cambios deberían de hacerse en la arquitectura del modelo para que se capaz dedetectar las zonas de la imagen donde aparecen alguno de los objetos con los que fue entrenada.**
+
+14. **Argumente porqué la transformaciónde un tensorde dimensiones 128x32x32 en otro de dimensiones 256x16x16, usando una convolución 3x3  con  stride = 2,  tiene  sentido  que  pueda  ser  aproximada  por  una secuencia de tres convoluciones: convolución 1x1 + convolución 3x3 + convoluión 1x1. Diga también qué papel juegan cada una de las tres convoluciones.**
+
+15. **Identifique una propiedad técnicade los modelos CNN que permite pensar que podrían llegar   a aproximarcon precisión las características del modelo de visión humano, y que sin ella eso no sería posible. Explique bien su argumento.**
