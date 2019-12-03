@@ -13,6 +13,8 @@
 
 2. **¿Cuál es la técnica de búsqueda estándar para la detección de objetos  en  una  imagen?  Identifique  pros  y  contras  de  la  misma  e indique posibles soluciones para estos últimos.**
 
+    *** MAL *** Ver técnica más general y anterior a 2012
+
     La técnica de búsqueda estándar es la llamada, **Sliding Window**, pasamos una ventana deslizante por toda la imagén y para cada región, utilizamos un clasificador, repitiendo así por escalas.
 
     ### Pros
@@ -51,6 +53,7 @@ Selective search
 
 
 
+
 6. **Se ha visto que el aumento de la profundidad de una CNN es un factor  muy  relevante  para  la  extracción  de característicasen problemas complejos, sin embargo este enfoque añade nuevos problemas. Identifique cuales son y qué soluciones conoce para superarlos.**
 
     El aumento de profundidad hace que cada capa sea capaz de aprender cosas cada vez más generales, por ejemplo, la primera será capaz de detectar bordes, la siguiente, figuras geométricas, la tercera, conjunto de figuras, luego ojos y finalmente caras (es un ejemplo algo general, pero funciona para explicar el problema).
@@ -59,9 +62,21 @@ Selective search
 
     Otro problema y más claro es que al añadir mayor profundidad, tenemos más parámetros a entrenar, lo que añade más dificultad computacional al problema.
 
+    Solución: Data augmentation + Capas dropout
+
 7. **Existe actualmente alternativas de  interés al aumento  de  la profundidad para el diseño de CNN. En caso afirmativo diga cuál/es y como son.**
 
+    Data augmentation
+
+    Utilizar capas de "Pooling" son útiles para reducir complejidad computacional y además, que en etapas tardías, se tenga que fijar en . 
+
+    Skip connection
+
+    Ampliar anchura en vez de profundidad
+
 8. **Considere una aproximación clásica al reconocimiento de escenas en donde extraemos de la imagen un vector de características y lo usamos  para  decidir  la  clase  de  cada  imagen.  Compare  este procedimiento  con  el  uso  de  una CNN  para  el  mismo  problema.  ¿Hay conexión entre ambas aproximaciones? En caso afirmativo indique en que parecen y en que son distintas.**
+
+Wavelet
 
 9.  **¿Cómo evoluciona el campo receptivo de las neuronas de una CNN con la profundidad de la capas? ¿Se solapan los campos receptivos de las distintas neuronas de una misma profundidad? ¿Es este hecho algo positivo o negativo de cara a un mejor funcionamiento?**
 
@@ -75,7 +90,7 @@ Selective search
 
 10. **¿Qué  operación  es  central  en  el  proceso  de  aprendizaje  y optmización de una CNN?**
 
-    La operación central en el proceso de aprendizaje y de optimización de una CNN es la existencia de capas de "filtro" (Capas de activación) que hacen que nuestro modelo se convierta en un modelo no lineal. 
+    La operación central en el proceso de aprendizaje y de optimización de una CNN es la existencia de capas de "filtro" (Capas de activación) que hacen que nuestro modelo se convierta en un modelo no lineal.
 
     Un modelo sin capas de activación se convierte en un modelo de regresión lineal, quiere decir que solo podemos separar dos conjuntos de datos utilizando una recta, lo que en problemas complejos, sería bastante inútil.
 
@@ -111,6 +126,9 @@ Selective search
     Si optáramos por utilizar HoG, veríamos que se convertiría en un problema muy lento el utilizar una ventana deslizante.
 
 14. **Argumente porqué la transformación de un tensor de dimensiones 128x32x32 en otro de dimensiones 256x16x16, usando una convolución 3x3  con  stride = 2,  tiene  sentido  que  pueda  ser  aproximada  por  una secuencia de tres convoluciones: convolución 1x1 + convolución 3x3 + convoluión 1x1. Diga también qué papel juegan cada una de las tres convoluciones.**
+
+
+For future readers, I should mention that I think the 1x1 convs have stride=1 and pad=0, to preserve (WxH) of 56x56. Similarly, the 3x3 convs have stride=1 and pad=1 to preserve size as well.
 
      <!-- https://medium.com/@zurister/depth-wise-convolution-and-depth-wise-separable-convolution-37346565d4ec 
      

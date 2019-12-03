@@ -264,6 +264,7 @@ class Renderer{
     const tempP = new THREE.Vector3();
 
     /* For each item in the foreground scene, re-draw it */
+    console.log(this._foreground_scene.children);
     for(let i = 1; i < this._foreground_scene.children.length; ++i){
       
       /* Elements should always face to the camera */

@@ -5,8 +5,7 @@ window.onload = function(){
   const AlambraApp = new App("AlambraApp");
   AlambraApp.load().then(_ => {
     AlambraApp.init();
+    this.callbacks.map(e => e(AlambraApp));
   });
-  
-  this.callbacks.map(e => e(AlambraApp));
 
 };

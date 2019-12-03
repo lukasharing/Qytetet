@@ -2,7 +2,8 @@ window.callbacks.push(function(app){
     
     app._renderer._leap.loop().use("boneHand", {
         
-        targetEl: document.getElementById("hands"),
+        scene: app._renderer._foreground_scene,
+        targetEl: app._renderer._element,
         opacity: 0.3,
         jointColor: new THREE.Color(0xffffff)
 
