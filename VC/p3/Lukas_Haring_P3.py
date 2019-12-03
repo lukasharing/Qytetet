@@ -30,7 +30,7 @@ def gaussianScaleSpace(img, n):
 img = leeimagen("../images/plane.bmp", cv2.IMREAD_GRAYSCALE)
 
 # Ejercicio 1. Detectar puntos de Harris
-num_scales = 2
+num_scales = 3
 scales = gaussianScaleSpace(img, num_scales)
 scales = list(map(lambda scale: np.pad(scale, (1, 1), "constant"), scales))
 height, width = img.shape
