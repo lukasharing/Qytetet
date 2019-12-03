@@ -29,6 +29,18 @@ def gaussianScaleSpace(img, n):
 # Ejercicio 1 Gaussian Blur and Get Deriv Kernels
 img = leeimagen("../images/plane.bmp", cv2.IMREAD_GRAYSCALE)
 
+# Calcular ángulo, alisar fuerte 4.5,
+# Calcular el gradiente 
+# Calcular el ángulo arctan(y / x)
+
+def gradiente(img, sigma):
+    ksize = sigma2tam(sigma)
+    grad_x = cv2.Sobel(img, cv2.CV_8U, 1, 0, ksize = ksize)
+    grad_y = cv2.Sobel(img, cv2.CV_8U, 0, 1, ksize = ksize)
+
+    return list(zip(grad_x, grad_y))
+
+
 # Ejercicio 1. Detectar puntos de Harris
 num_scales = 3
 scales = gaussianScaleSpace(img, num_scales)

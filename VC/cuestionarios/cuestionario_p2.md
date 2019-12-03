@@ -28,7 +28,7 @@
 
 3. **Considere la aproximación que   extrae una   serie   de características en  cada píxel de  la  imagen  para  decidir  si  hay contorno o no. Diga si existe algún paralelismo entre la forma de actuar  de  esta  técnica  y  el  algoritmo  de  Canny.  En  caso  positivo identifique cuales son los elementos comunes y en que se diferencian los distintos.**
 
-
+Selective search
 
 4. **Tanto  el  descriptor  de  SIFT  como  HOG  usan  el  mismo  tipo  de información de la imagen pero en contextos distintos. Diga en que se parecen y en que son distintos estos descriptores. Explique para que es útil cada uno de ellos.**
 
@@ -116,4 +116,29 @@
      
      https://towardsdatascience.com/covolutional-neural-network-cb0883dd6529-->
 
-15. **Identifique una propiedad técnicade los modelos CNN que permite pensar que podrían llegar   a aproximarcon precisión las características del modelo de visión humano, y que sin ella eso no sería posible. Explique bien su argumento.**
+15. **Identifique una propiedad técnica de los modelos CNN que permite pensar que podrían llegar a aproximar con precisión las características del modelo de visión humano, y que sin ella eso no sería posible. Explique bien su argumento.**
+
+    La propiedad ténica es el método de activación de una neurona, ya que como hemos comentado en el apartado 10., es fundamental para los CNN para convertirse en un modelo no lineal.
+    
+    Al igual que el modelo de visión humano, se sabe que las neuronas también dependen de una función de activación, por lo que ambos modelos se pueden asegurar ser no lineales y que son importantísimos para aprender.
+
+    Otra característica importante es la similitud entre las primeras capas de ambos modelos, en ambos modelos la primera capa se ha demostrado que detectan bordes.
+
+    Un problema por el cuál ambos modelos no son similares es debido a que hay una fuerte teoría de que las neuronas tienen un sistema bi-direccional de propagación, que a diferencia de las CNN, solo "back-propagation".
+
+    <!--La propiedad técnica de los modelos CNN que permiten pensar que podrían llegar a aproximar con precisión las características del modelo de visión humano es la capacidad de extracción de características y de generalizar.
+
+    Por ejemplo, la gran parte de CNN no son capaces de reconocer objetos en una imagen borrosa, mientras que el ser humano sí lo es.
+
+    Se conoce con bastante seguridad de que tanto los modelos CNN y los modelos BNN detectan bordes en la primera capa, además, esta información adquirida es transferida a las siguientes capas, cada capa es más ambigüa.
+
+    Los CNN utilizan Gradiente descendiente utilizando back-propagation en una dirección, mientras que los BNN se sabe que la propagación es bi-direccional .
+
+    Eric Kandel, descubrió que el cerebro aprende utilizando métodos locales "Aprendizaje de Hebbian"
+
+    La función de activación está en ambos modelos
+
+    El ser humano es capaz de reconocer objetos desde casi cualquier punto de vista
+
+    Ambos tenemos que tener un conjunto de entrenamiento -->
+    
