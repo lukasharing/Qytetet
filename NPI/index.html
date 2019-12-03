@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Alhambrap - DDSI</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, minimum-scale=1, maximum-scale=1, width=device-width, target-densitydpi=device-dpi">
+        <script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js" ></script>
+        <link rel="stylesheet" href="./p0/css/styles.css" />
+        <link rel="stylesheet" href="./p1/css/styles.css" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+        integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+        crossorigin=""></script>
+    </head>
+    <body>
+        <div id="modal-area" class="hide">
+            <div id="modal">
+                <h3>Title</h3>
+                <p></p>
+                <div class="modal-buttons">
+                    <button id="modal-cancel">Cancel</button>
+                    <button id="modal-accept">Accept</button>
+                </div>
+            </div>
+        </div>
+        <div class="popup" id="loading-popup">
+            <div class="popup-area">
+                <img src="assets/logo.svg" title="Alhambra 360 logo" />
+                <div id="loading"><div id="loading-bar"></div></div>
+            </div>
+        </div>
+        <div class="popup hide" data-step="0" id="tutorial0">
+            <button class="close"></button>
+            <div class="popup-area">
+                <img id="manual-interaction" src="https://img.icons8.com/nolan/128/000000/hand.png">
+                <h2>Interacción Manual</h2>
+                <p>¡Utiliza más de un dedo para moverte a través del mundo virtual!</p>
+            </div>
+        </div>
+        <div class="popup hide" data-step="1" id="tutorial1">
+            <button class="close"></button>
+            <div class="popup-area">
+                <img id="spatial-interaction" src="https://img.icons8.com/nolan/128/000000/map.png">
+                <h2>Interacción Espacial</h2>
+                <p>¡Muévete a través del mundo virtual estés donde estés!</p>
+            </div>
+        </div>
+        <div class="popup hide" data-step="2" id="tutorial2">
+            <button class="close"></button>
+            <div class="popup-area">
+                <img  id="move-interaction" src="https://img.icons8.com/nolan/128/000000/shake-phone.png">
+                <h2>Interacción Visual</h2>
+                <p>¡Descubre, curiosea y aprende con todo lo que te rodea!</p>
+            </div>
+        </div>
+        <div class="popup hide" id="qr-preview">
+            <button class="close"></button>
+            <video id="preview"></video>
+        </div>
+        <div class="popup hide" id="map-preview">
+            <button class="close"></button>
+            <button id="localize">¡Localízame!</button>
+        </div>
+        <div class="popup hide" id="information-preview">
+            <button class="close"></button>
+            <article></article>
+        </div>
+        <div id="buttons-preview">
+            <div class="preview-button" data-orientation="0"></div>
+            <div class="preview-button" data-orientation="1"></div>
+            <div class="preview-button" data-orientation="2"></div>
+            <div class="preview-button" data-orientation="3"></div>
+            <div id="compass" class="circle-section">
+                <img id="compass-point" src="https://img.icons8.com/nolan/64/000000/gps-device.png">
+                <span id="north">N</span>
+                <span id="east">E</span>
+                <span id="south">S</span>
+                <span id="west">W</span>
+            </div>
+            <button id="qr-button" class="circle-section">
+                <img src="https://img.icons8.com/nolan/64/000000/qr-code.png">
+            </button>
+            <button id="map-button" class="circle-section">
+                <img src="https://img.icons8.com/nolan/64/000000/polyline.png">
+            </button>
+            <canvas id="enviroment"></canvas>
+            <canvas id="hands"></canvas>
+        </div>
+        <script src="https://threejs.org/build/three.js"></script>
+        <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+        <script src="https://www.blend4web.com/apps/code_snippets/scripts/libs/leap-0.6.4.min.js"></script>
+        <!--<script src="./p1/js/leap-widgets-0.1.0.min.js"></script>-->
+        <script src="./p1/js/leap.proximity.js"></script>
+        <script src="https://rawgit.com/leapmotion/leapjs-plugins/master/main/hand-hold/leap.hand-hold.js"></script>
+        <script src="https://rawgit.com/leapmotion/leapjs-plugins/master/main/hand-entry/leap.hand-entry.js"></script>
+        <script src="https://rawgit.com/leapmotion/leapjs-plugins/master/main/bone-hand/leap.bone-hand.js"></script>
+        <script src="./p0/js/utils.js"></script>
+        <script src="./p0/js/cache.js"></script>
+        <script src="./p0/js/item.js"></script>
+        <script src="./p0/js/item-init.js"></script>
+        <script src="./p0/js/graph.js"></script>
+        <script src="./p0/js/graph-init.js"></script>
+        <script src="./p0/js/compass.js"></script>
+        <script src="./p0/js/mini-map.js"></script>
+        <script src="./p0/js/renderer.js"></script>
+        <script src="./p0/js/events.js"></script>
+        <script src="./p0/js/qr.js"></script>
+        <script src="./p1/js/leap.js"></script>
+        <script src="./p0/js/app.js"></script>
+        <script src="./p0/js/main.js"></script>
+    </body>
+</html>
