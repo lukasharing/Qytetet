@@ -30,6 +30,8 @@
 
 3. **Considere la aproximación que   extrae una   serie   de características en  cada píxel de  la  imagen  para  decidir  si  hay contorno o no. Diga si existe algún paralelismo entre la forma de actuar  de  esta  técnica  y  el  algoritmo  de  Canny.  En  caso  positivo identifique cuales son los elementos comunes y en que se diferencian los distintos.**
 
+
+
 Selective search
 
 4. **Tanto  el  descriptor  de  SIFT  como  HOG  usan  el  mismo  tipo  de información de la imagen pero en contextos distintos. Diga en que se parecen y en que son distintos estos descriptores. Explique para que es útil cada uno de ellos.**
@@ -37,6 +39,8 @@ Selective search
     Ambos son "extractores de características", además, ambos utilizan los gradientes de una imagen. 
     
     La principal diferencia es que Sift busca puntos de interés (keypoints) y descriptores según el espacio de escalas laplaciano-gaussiano, mientras que HoG, utiliza el espacio de escalas gaussiano y busca características a través de toda la imagen.
+
+    Los descriptores de SIFT son invariantes, quiere decir que no se ven afectadas por pequñeas variaciones en la pose, brillo, escalado, rotación, mientras que los descriptores HoG
 
     HoG hace uso de "templates de gradientes" para reconocer imágenes, mientras que Sift es capaz de reconocer imágenes según la coincidencia con los puntos de interés.
 
@@ -58,11 +62,15 @@ Selective search
 
     El aumento de profundidad hace que cada capa sea capaz de aprender cosas cada vez más generales, por ejemplo, la primera será capaz de detectar bordes, la siguiente, figuras geométricas, la tercera, conjunto de figuras, luego ojos y finalmente caras (es un ejemplo algo general, pero funciona para explicar el problema).
     
+    Pérdida de intensidad de los gradientes, solución skip connection
+
     Lo que pasa es que a la hora de aumentar la profundidad, estamos fijándonos cada vez en cosas más concretas, por ejemplo en caras específicas y cuando viene una nueva cara, somos tán específico que nuestro modelo no es capaz de detectarla. Por lo que introducir mayor profundidad, hace que nuestro modelo no sea capaz de generalizar y pueda dar lo que llamamos "*overfitting*".
 
     Otro problema y más claro es que al añadir mayor profundidad, tenemos más parámetros a entrenar, lo que añade más dificultad computacional al problema.
 
-    Solución: Data augmentation + Capas dropout
+
+
+    La solución a este problema sería tener un **mayor conjunto de entrenamiento**, así las neuronas no se especializarían, otra pero menos efectivo es utilizar capas dropout ya que se ha visto que 
 
 7. **Existe actualmente alternativas de  interés al aumento  de  la profundidad para el diseño de CNN. En caso afirmativo diga cuál/es y como son.**
 
@@ -117,27 +125,24 @@ Wavelet
 
     Para interpretar estos resultados, bastaría aplicar el método inverso al procesado sobre los resultados obtenidos, si se entrara en la región del padding, se ignorararía el resultado obtenido.
 
-13. **Suponga que entrenamos una arquitectura Lenet-5 para clasificar imágenes 128x128 de 5 clases distintas. Diga que cambios deberían de hacerse en la arquitectura del modelo para que se capaz de detectar las zonas de la imagen donde aparecen alguno de los objetos con los que fue entrenada.**
-
-    Lenet-5 está entrenado sobre un dataset de dígitos escritos a mano, fue utilizado para clasificar dígitos en cheques bancarios en los Estados Unidos.
+13. **Suponga que entrenamos una arquitectura Lenet-5 para clasificar imágenes 128x128 de 5 clases distintas. Diga que cambios deberían de hacerse en la arquitectura del modelo para que se capaz de detectar las zonas de la imagen donde aparecen alguno de los objetos con los que fue entrenada.** 
     
-    Esto son dos problemas distintos, uno es detectar y el otro reconocer. La estrategía sería combinar dos modelos, el de detección, por ejemplo utilizando RCNN o YOLO (O su versiones optimizadas) y finalmente utilizar Lenet-5 para clasificar dichas regiones.
+    Esto son dos problemas distintos, uno es detectar regiones y el otro clasificar imágenes. La estrategía sería combinar dos modelos neuronales, el de detección. 
+    
+    El modelo neuronal que vamos a utilizar es RCNN para detectar regiones, las regiones propuestas son  obtenidas a través del algoritmo "Selective Search", así evitamos tener un conjunto de entrenamiento. Una vez obtenida las regiones, podemos utilizar Lenet-5 como clasificador, sin olvidar de pre-procesar la imagen, probable que tengamos que re-escalar la imagen para la entrada hasta (128 x 128).
 
-    Si optáramos por utilizar HoG, veríamos que se convertiría en un problema muy lento el utilizar una ventana deslizante.
+    Tenemos algunas desventajas, por ejemplo, si utilizamos RCNN necesitamos un algoritmo que proponga regiones, lo cual suele ser bastante ineficiente y además que pueda proponer falsos-positivos. Podría resolverse este problema utilizando su arquitectura más eficiente, Faster RCNN, pero previamente deberemos re-entrenar la red.
 
-14. **Argumente porqué la transformación de un tensor de dimensiones 128x32x32 en otro de dimensiones 256x16x16, usando una convolución 3x3  con  stride = 2,  tiene  sentido  que  pueda  ser  aproximada  por  una secuencia de tres convoluciones: convolución 1x1 + convolución 3x3 + convoluión 1x1. Diga también qué papel juegan cada una de las tres convoluciones.**
+14. **Argumente porqué la transformación de un tensor de dimensiones 128x32x32 en otro de dimensiones 256x16x16, usando una convolución 3x3  con  stride = 2,  tiene  sentido  que  pueda  ser  aproximada  por  una secuencia de tres convoluciones: convolución 1x1 + convolución 3x3 + convolución 1x1. Diga también qué papel juegan cada una de las tres convoluciones.**
 
+    La primera convolución 1x1, se encargará de reducir dimensionalidad (profundidad), pero no alterará ni el alto ni el ancho, por lo que su stride debe ser 1. Esta capa se encarga de encodificar.
 
-For future readers, I should mention that I think the 1x1 convs have stride=1 and pad=0, to preserve (WxH) of 56x56. Similarly, the 3x3 convs have stride=1 and pad=1 to preserve size as well.
+    La segunda convolución 3x3 se encarga de redimensionar de 32 x 32 a 16 x 16, con el stride de 2, manteniendo la misma profundidad. se encargará de realizar los cálculos oportunos como la convolución 3x3.
 
-     <!-- https://medium.com/@zurister/depth-wise-convolution-and-depth-wise-separable-convolution-37346565d4ec 
-     
-     https://towardsdatascience.com/covolutional-neural-network-cb0883dd6529-->
+    Finalmente la ultima convolución 1x1 se encarga de incrementar la profundidad a la que entró, 256. Esta capa se encarga de decodificar.
 
 15. **Identifique una propiedad técnica de los modelos CNN que permite pensar que podrían llegar a aproximar con precisión las características del modelo de visión humano, y que sin ella eso no sería posible. Explique bien su argumento.**
 
-    La propiedad ténica es el método de activación de una neurona, ya que como hemos comentado en el apartado 10., es fundamental para los CNN para convertirse en un modelo no lineal.
-    
     Al igual que el modelo de visión humano, se sabe que las neuronas también dependen de una función de activación, por lo que ambos modelos se pueden asegurar ser no lineales y que son importantísimos para aprender.
 
     Otra característica importante es la similitud entre las primeras capas de ambos modelos, en ambos modelos la primera capa se ha demostrado que detectan bordes.
