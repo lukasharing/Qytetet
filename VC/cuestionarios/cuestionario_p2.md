@@ -3,19 +3,26 @@
 
 1. **Identifique las semejanzas y diferencias entre los problemas de:.**
 
-    a) **Clasificación  de  imágenes**
+    a) **Clasificación de imágenes**
 
-    b) **Detección  de  objetos**
+    b) **Detección de objetos**
 
     c) **Segmentación de imágenes**
 
     d) **Segmentación de instancias**
 
+    Todos estos problemas tienen en común que clasifican, por lo que deben conocer previamente los elementos.
+
+    La **clasificación de imágenes** nos ofrece etiquetas de lo que hay en la imagen sin importar dónde, que a diferencia de la **detección de objectos**, que indentifica las regiones ("*bounding box*") de las diferentes categorías en la imagen. La **segmentación de imágenes** y la **segmentacion de instancias** detectan también objetos, pero de forma precisa, es decir, detectan píxeles del objeto,  que a diferencia de la **detección de objetos**, que introducen pixeles que no pertenecen al objeto.
+
+    La **segmentación de imágenes** da la categoría de cada pixel, por lo que dos objetos de la misma categoría juntos no serían diferenciables, mientras que la **segmentacion de instancias**, si que es capaz de diferenciarlos.   
+
+
 2. **¿Cuál es la técnica de búsqueda estándar para la detección de objetos  en  una  imagen?  Identifique  pros  y  contras  de  la  misma  e indique posibles soluciones para estos últimos.**
 
     *** MAL *** Ver técnica más general y anterior a 2012
 
-    La técnica de búsqueda estándar es la llamada, **Sliding Window**, pasamos una ventana deslizante por toda la imagén y para cada región, utilizamos un clasificador, repitiendo así por escalas.
+    La técnica de búsqueda estándar es la llamada, **Sliding Window**, pasamos una ventana deslizante por toda la imagén y utilziar un extractor de característias para cada región. Finalmente, utilizamos un clasificador sobre las características de este modelo, repitiendo así por escalas.
 
     ### Pros
     * Es capaz de detecar todas las imágenes que el clasificador sea capaz de diferenciar.
@@ -28,11 +35,13 @@
     * Necesitamos un espacio de escalas, lo que hace que sea un proceso algo más lento.
     * El clasificador puede darnos falsos positivos que pueden ver incrementados según el salto de la ventana.
 
-3. **Considere la aproximación que   extrae una   serie   de características en  cada píxel de  la  imagen  para  decidir  si  hay contorno o no. Diga si existe algún paralelismo entre la forma de actuar  de  esta  técnica  y  el  algoritmo  de  Canny.  En  caso  positivo identifique cuales son los elementos comunes y en que se diferencian los distintos.**
+3. **Considere la aproximación que   extrae una   serie   de características en  cada píxel de  la  imagen  para  decidir  si  hay contorno o no. Diga si existe algún paralelismo entre la forma de actuar  de  esta  técnica  y  el  algoritmo  de  Canny. En  caso positivo identifique cuales son los elementos comunes y en que se diferencian los distintos.**
 
+    Lo fundamental en ambos es el gradiente. Para la aproximación que extrae características en cada pixel, utiliza el gradiente para extraer características, mientras que el algoritmo de Canny utiliza el gradiente para la supresión de no máximos y para el proceso de histéresis.
+    
+    Otro elemento común es que en ambos métodos utilizan una imagen suavizada con un kernel gaussiano.
 
-
-Selective search
+    Una de las diferencias es 
 
 4. **Tanto  el  descriptor  de  SIFT  como  HOG  usan  el  mismo  tipo  de información de la imagen pero en contextos distintos. Diga en que se parecen y en que son distintos estos descriptores. Explique para que es útil cada uno de ellos.**
 
@@ -40,70 +49,59 @@ Selective search
     
     La principal diferencia es que Sift busca puntos de interés (keypoints) y descriptores según el espacio de escalas laplaciano-gaussiano, mientras que HoG, utiliza el espacio de escalas gaussiano y busca características a través de toda la imagen.
 
-    Los descriptores de SIFT son invariantes, quiere decir que no se ven afectadas por pequñeas variaciones en la pose, brillo, escalado, rotación, mientras que los descriptores HoG
+    Los descriptores de SIFT son invariantes, quiere decir que no se ven afectadas por variaciones en la pose, brillo, escalado, rotación, etc. Mientras que en HoG si que se ven afectadas.
 
-    HoG hace uso de "templates de gradientes" para reconocer imágenes, mientras que Sift es capaz de reconocer imágenes según la coincidencia con los puntos de interés.
-
-    Sift es muy útil cuando la imagen a reconocer está transformada (rotación, escalado, semi-oculta), mientras que HoG no es capaz de reconocer este tipo de imágenes ya que utiliza un patrón.
-
-    Sift es utilizado para comparar imágenes, creación de imágenes panorámicas, transformación de imágenes, seguir a objetos .
-
-    Sift  Busca puntos de interés en una imagen, en ángulos distintos, condiciones de iluminación, scalado, etc (Utilizado para detectar videos) mientras que si en HoG, si el objeto rota, la ventana tambíen debería rotar, es decir deberíamos tener todas las posibles rotaciones
-
-    Mientras que HoG es útil para buscar 
-    Sift no le importa las sombras, ni el brillo, ni el tiempo, ni la oclusión
+    Las características extraidas por el descriptor de Sift son utilizados utilizadas para comparar imágenes, creación de imágenes panorámicas, seguimiento de objetos, etc.
+    Mientras que las características extraidas por el descriptor de HoG son utilizadas para ...
 
 5. **Observando el funcionamiento global de una CNN, identifique que dos procesos fundamentales definen lo que se realiza en un pase hacia delante de una imagen por la red. Asocie las capas que conozca a cada uno de ellos.**
 
-
-
+    Los dos procesos fundamentales de una CNN son la **extraccion de caracteristicas** que es realizada por las capas convolucionales, las de activación (normalmente "*RELU*")  y las de "*Pooling*". El otro proceso fundamental es la **clasificación**, que es realizada por las capas la de aplanamiento, totalmente conectadas y la capa de activación "*Softmax*".
 
 6. **Se ha visto que el aumento de la profundidad de una CNN es un factor  muy  relevante  para  la  extracción  de característicasen problemas complejos, sin embargo este enfoque añade nuevos problemas. Identifique cuales son y qué soluciones conoce para superarlos.**
 
-    El aumento de profundidad hace que cada capa sea capaz de aprender cosas cada vez más generales, por ejemplo, la primera será capaz de detectar bordes, la siguiente, figuras geométricas, la tercera, conjunto de figuras, luego ojos y finalmente caras (es un ejemplo algo general, pero funciona para explicar el problema).
+    Uno de los problemas tras el aumento de la profundidad es el **desvanecimiento del gradiente**, para resolverlo se pueden utilizar varias técnicas, por ejemplo, redes convolucionales residuales (saltos entre capas, *skip connection*).   
+
+    El aumento de profundidad hace que cada capa combine características de las capas anteriores, haciendo que estas se especialicen cada vez más, hasta llegar a un punto que su especialización es tan alta sobre los datos de entrenamiento que hay "*overfitting*", es decir. Este problema se puede atacar de distintas maneras, por ejemplo con el **data augmentation**, así las neuronas no se especializarían, otra pero menos efectivo es utilizar capas dropout ya que se ha visto que 
+
+    Otro problema y más claro es que al añadir mayor profundidad añade más dificultad computacional al entrenamiento del modelo, pero su solución es utilizar hardware más potente o optar por ampliar la anchura.
+
     
-    Pérdida de intensidad de los gradientes, solución skip connection
-
-    Lo que pasa es que a la hora de aumentar la profundidad, estamos fijándonos cada vez en cosas más concretas, por ejemplo en caras específicas y cuando viene una nueva cara, somos tán específico que nuestro modelo no es capaz de detectarla. Por lo que introducir mayor profundidad, hace que nuestro modelo no sea capaz de generalizar y pueda dar lo que llamamos "*overfitting*".
-
-    Otro problema y más claro es que al añadir mayor profundidad, tenemos más parámetros a entrenar, lo que añade más dificultad computacional al problema.
-
-
-
-    La solución a este problema sería tener un **mayor conjunto de entrenamiento**, así las neuronas no se especializarían, otra pero menos efectivo es utilizar capas dropout ya que se ha visto que 
-
 7. **Existe actualmente alternativas de  interés al aumento  de  la profundidad para el diseño de CNN. En caso afirmativo diga cuál/es y como son.**
 
-    Data augmentation
+    Existen diferentes alternativas al interés al aumento de la profundida, por ejemplo:
 
-    Utilizar capas de "Pooling" son útiles para reducir complejidad computacional y además, que en etapas tardías, se tenga que fijar en . 
-
-    Skip connection
-
-    Ampliar anchura en vez de profundidad
+    * **Ampliar la anchura**, esto ayudaría al cálculo computacional, ya que permite un paralelismo.
+    * **Skip connection**, ayuda a que neuronas utilicen información de capas anteriores y no acaben aprendiendo cosas tan específicas.
+    * **Data augmentation o utilizar capas dropout**, esto ayuda a que las neuronas no se especialicen tanto con los datos de entrenamiento.   
 
 8. **Considere una aproximación clásica al reconocimiento de escenas en donde extraemos de la imagen un vector de características y lo usamos  para  decidir  la  clase  de  cada  imagen.  Compare  este procedimiento  con  el  uso  de  una CNN  para  el  mismo  problema.  ¿Hay conexión entre ambas aproximaciones? En caso afirmativo indique en que parecen y en que son distintas.**
 
-Wavelet
+    Si hay conexión, la conexión principal entre ambas es utilizan filtros para extraer características.
 
-9.  **¿Cómo evoluciona el campo receptivo de las neuronas de una CNN con la profundidad de la capas? ¿Se solapan los campos receptivos de las distintas neuronas de una misma profundidad? ¿Es este hecho algo positivo o negativo de cara a un mejor funcionamiento?**
+    En la aproximación clásica, se especifican los filtros, mientras que utilizando una CNN, estos filtros son "aprendidos".
 
-    El campo receptivo de las neuronas de una CNN aumenta cuanto mayor profundidad ya que al añadir más capas convoucionales, el tamaño del kernel incrementa, haciendo que estas tengan más información.
+    La diferencia principal entre ambas es que la aproximaxión clásica hace uso de un clasificador que a diferencia de la CNN, no. 
 
-    Los campos receptivos de las distintas neuronas de una misma profundidad se solapan por ejemplo cuando hacemos un "*Max Pooling*", con una ventana de 3x3 y un stride de 1 (Salto de 1 en 1), esto quiere decir que, buscará el máximo dentro de la ventana de 3x3 y saltará hacia la siguiente región con un salto de una unidad, claramente la siguiente región se solapará con las 6 neuronas de antes, cuanto mayor sea el stride, menos solapamiento habrá. 
+9.  **¿Cómo evoluciona el campo receptivo de las neuronas de una CNN con la profundidad de las capas? ¿Se solapan los campos receptivos de las distintas neuronas de una misma profundidad? ¿Es este hecho algo positivo o negativo de cara a un mejor funcionamiento?**
 
-    Esto ayuda ya que a mayor profundidad se ha visto que a mayor profundidad, por ejemplo con *Max Pooling*, los detalles más significativos (los máximos), son los que mejor representan a una imagen, además de reducir la complejidad computacional.
+    El campo receptivo de las neuronas aumenta a medida que incrementamos la profundidad ya que debe mantener información de la capa anterior.
 
-    Aunque el tema del uso de *Max Pooling* sigue siendo un tema abierto de debate, pero empíricamente se ha probado que funcione bien. 
+    Sí, los campos receptivos pueden solaparse debido al tamaño del kernel de la capa de convolución.
+    
+    El hecho de que el campo receptivo de dos neuronas se solape es un hecho negativo ya que las neuronas comparten información y ambas extraigan características similares, lo cual no nos interesa ya que queremos variedad.
 
 10. **¿Qué  operación  es  central  en  el  proceso  de  aprendizaje  y optmización de una CNN?**
 
-    La operación central en el proceso de aprendizaje y de optimización de una CNN es la existencia de capas de "filtro" (Capas de activación) que hacen que nuestro modelo se convierta en un modelo no lineal.
 
+    **La capa de activación se puede ver como una operación de filtro.**<br/>
+    
     Un modelo sin capas de activación se convierte en un modelo de regresión lineal, quiere decir que solo podemos separar dos conjuntos de datos utilizando una recta, lo que en problemas complejos, sería bastante inútil.
+    
+    Las capas de activación quitan esa linealidad y lo que llamamos "aprendizaje", consiste en calcular pesos que son capaces de separar de forma más compleja conjunto de datos para así poder diferenciarlos.
 
-    Las capas de activación quitan esa linealidad y lo que llamamos "aprendizaje" consiste en calcular pesos (utilizando backpropagation) que son capaces de separar de forma más compleja conjunto de datos para así poder diferenciarlos.
-
+    El **ajuste de los pesos**, también es una operacion y utilizado para reducir el error que es también fundamental para aprender y optimizar el modelo utilizando *Descenso Gradiente*.
+    
 11. **Compare los  modelos  de  detección  de  objetos  basados  en aproximaciones clásicas y los basados en CNN y diga que dos procesos comunes a ambos aproximaciones han sido muy mejorados en los modelos CNN. Indique cómo.**
 
     Ambos utilizan regiones de la imagen para detectar objetos.
@@ -116,52 +114,32 @@ Wavelet
 
     El problema de este tipo de redes es que necesitamos un gran dataset, además con las regiones identificadas, pero ha sido demostrado funcionar muy bien además de tener todo embedido en una propia estructura que se puede entrenar al completo de una pasada.
 
-12. **Es posible construir arquitecturas CNN que sean independientes de las dimensiones de la imagende entrada. En caso afirmativo diga cómo hacerlo y cómo interpretar la salida.**
+    Además estas capas permiten optimizar el modelo utilizando 
 
-    Supongamos que nuestra arquitectura tiene definida una entrada de un tamaño n x n, una de las posibles estrategias sería preprocesar todas las imágenes de entrada para que tengan dicho tamaño de entrada n x n, por lo que tenemos 3 casos:
-    1. **La imagen tiene tamaño exacto n x n**. No tenemos que procesar la imagen.
-    2. **La imagen es proporcional a n x n**. Bastaría con escalar la imagen (upsampling o downsampling).
-    3. **La imagen tiene tamaño distinto a n x n y no es proporcional**. Podemos rellenar la imagen hasta hacerla proporcional a n x n, por ejemplo rellenándolo de 0's, finalmente, re-escalarla a tamaño n x n.
+12. **Es posible construir arquitecturas CNN que sean independientes de las dimensiones de la imagen de entrada. En caso afirmativo diga cómo hacerlo y cómo interpretar la salida.**
 
-    Para interpretar estos resultados, bastaría aplicar el método inverso al procesado sobre los resultados obtenidos, si se entrara en la región del padding, se ignorararía el resultado obtenido.
+    Las capas convolucionales no tienen en cuenta el tamaño de entrada, pero sí lo tienen las capas totalmente conectadas. Para resolver este problema, se utiliza una capa entre las convolucionales y las totalmente conectadas conocida como "*Spatial pyramid pooling*", esta capa se encarga de transformar la entrada en una salida de tamaño fijo, capaz de ser utilizada por las capas totalmente connectadas.
+
+    La salida de esta capa es interpretada por las capas totalmente conectadas para clasificar.
+
+    Esta capa funciona dividiendo las características de la última capa convolucional y devuelve un número fijo de contenedores, de ahí que se pueda utilizar en la capa totalmente conectada. 
 
 13. **Suponga que entrenamos una arquitectura Lenet-5 para clasificar imágenes 128x128 de 5 clases distintas. Diga que cambios deberían de hacerse en la arquitectura del modelo para que se capaz de detectar las zonas de la imagen donde aparecen alguno de los objetos con los que fue entrenada.** 
     
-    Esto son dos problemas distintos, uno es detectar regiones y el otro clasificar imágenes. La estrategía sería combinar dos modelos neuronales, el de detección. 
-    
-    El modelo neuronal que vamos a utilizar es RCNN para detectar regiones, las regiones propuestas son  obtenidas a través del algoritmo "Selective Search", así evitamos tener un conjunto de entrenamiento. Una vez obtenida las regiones, podemos utilizar Lenet-5 como clasificador, sin olvidar de pre-procesar la imagen, probable que tengamos que re-escalar la imagen para la entrada hasta (128 x 128).
 
-    Tenemos algunas desventajas, por ejemplo, si utilizamos RCNN necesitamos un algoritmo que proponga regiones, lo cual suele ser bastante ineficiente y además que pueda proponer falsos-positivos. Podría resolverse este problema utilizando su arquitectura más eficiente, Faster RCNN, pero previamente deberemos re-entrenar la red.
 
 14. **Argumente porqué la transformación de un tensor de dimensiones 128x32x32 en otro de dimensiones 256x16x16, usando una convolución 3x3  con  stride = 2,  tiene  sentido  que  pueda  ser  aproximada  por  una secuencia de tres convoluciones: convolución 1x1 + convolución 3x3 + convolución 1x1. Diga también qué papel juegan cada una de las tres convoluciones.**
 
-    La primera convolución 1x1, se encargará de reducir dimensionalidad (profundidad), pero no alterará ni el alto ni el ancho, por lo que su stride debe ser 1. Esta capa se encarga de encodificar.
+    La primera convolución 1x1, se encargará de reducir dimensionalidad (encodificar la profundidad), pero no alterará ni el alto ni el ancho, por lo que su stride debe ser 1.
 
-    La segunda convolución 3x3 se encarga de redimensionar de 32 x 32 a 16 x 16, con el stride de 2, manteniendo la misma profundidad. se encargará de realizar los cálculos oportunos como la convolución 3x3.
+    La segunda convolución 3x3 se encarga de redimensionar de 32 x 32 a 16 x 16, con el stride de 2, manteniendo la misma profundidad. se encargará de realizar los cálculos oportunos como la convolución 3x3, el stride es usado aquí para no perder características importantes, que si lo pusiéramos en el 1x1, perderíamos.
 
-    Finalmente la ultima convolución 1x1 se encarga de incrementar la profundidad a la que entró, 256. Esta capa se encarga de decodificar.
+    Finalmente la ultima convolución 1x1 se encarga de incrementar la profundidad (decodificar) a la que entró, 256.
+
+    Este modelo tiene sentido dimensionalemente (el output concuerdan con el modelo 3x3), pero la pregunta es algo ambigüa ya que no se especifica si cada convolución tiene asociada una capa de activación, por lo que encontramos dos casos:
+    * **Si existen capas de activación**, las características de salida son distintas (por).
+    * **Si no existen las capas de activación**, ambos modelos son equivalente ya que son modelos lineales.  
 
 15. **Identifique una propiedad técnica de los modelos CNN que permite pensar que podrían llegar a aproximar con precisión las características del modelo de visión humano, y que sin ella eso no sería posible. Explique bien su argumento.**
-
-    Al igual que el modelo de visión humano, se sabe que las neuronas también dependen de una función de activación, por lo que ambos modelos se pueden asegurar ser no lineales y que son importantísimos para aprender.
-
-    Otra característica importante es la similitud entre las primeras capas de ambos modelos, en ambos modelos la primera capa se ha demostrado que detectan bordes.
-
-    Un problema por el cuál ambos modelos no son similares es debido a que hay una fuerte teoría de que las neuronas tienen un sistema bi-direccional de propagación, que a diferencia de las CNN, solo "back-propagation".
-
-    <!--La propiedad técnica de los modelos CNN que permiten pensar que podrían llegar a aproximar con precisión las características del modelo de visión humano es la capacidad de extracción de características y de generalizar.
-
-    Por ejemplo, la gran parte de CNN no son capaces de reconocer objetos en una imagen borrosa, mientras que el ser humano sí lo es.
-
-    Se conoce con bastante seguridad de que tanto los modelos CNN y los modelos BNN detectan bordes en la primera capa, además, esta información adquirida es transferida a las siguientes capas, cada capa es más ambigüa.
-
-    Los CNN utilizan Gradiente descendiente utilizando back-propagation en una dirección, mientras que los BNN se sabe que la propagación es bi-direccional .
-
-    Eric Kandel, descubrió que el cerebro aprende utilizando métodos locales "Aprendizaje de Hebbian"
-
-    La función de activación está en ambos modelos
-
-    El ser humano es capaz de reconocer objetos desde casi cualquier punto de vista
-
-    Ambos tenemos que tener un conjunto de entrenamiento -->
     
+    La propiedad técnica de los modelos CNN es la estructura jerárquica de las características según los niveles, quiere decir que las primeras capas se fijan es detalles más pequeños (bordes, esquinas, etc), mientras que vamos avanzando, se van combinando (otra propiedad importante) para formar en cada capa información más compleja, por ejemplo, caras particulares u objetos. Donde se ha visto que en el cortex visual, actua de la misma manera.
