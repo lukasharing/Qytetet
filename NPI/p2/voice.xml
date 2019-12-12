@@ -1,0 +1,10 @@
+<vxml version="2.1" xml:lang="es-ES">
+    <menu>
+        <prompt>Bienvenido a casa. Elige una opcion: </prompt>
+        <enumerate/>
+        <choice next="http://www.deportes.ejemplo/vxml/start.vxml">Deportes</choice>
+        <choice next="http://www.previsiones.ejemplo/intro.vxml">Parte meteorologico</choice>
+        <choice next="http://www.real-madrid.ejemplo/voice/start.vxml">Noticias real madrid</choice>
+        <enumerate/>
+    </menu>
+</vxml>
