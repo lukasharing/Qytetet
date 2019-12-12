@@ -1,10 +1,51 @@
-<vxml version="2.1" xml:lang="es-ES">
-    <menu>
-        <prompt>Bienvenido a casa. Elige una opcion: </prompt>
-        <enumerate/>
-        <choice next="http://www.deportes.ejemplo/vxml/start.vxml">Deportes</choice>
-        <choice next="http://www.previsiones.ejemplo/intro.vxml">Parte meteorologico</choice>
-        <choice next="http://www.real-madrid.ejemplo/voice/start.vxml">Noticias real madrid</choice>
-        <enumerate/>
+<?vxml version="2.1"?>
+<vxml version="2.1">
+    
+    <!-- Salir en cualquier momento -->
+    <link next="#exit">
+        <grammar xml:lang="en-US">exit</grammar>
+        <grammar xml:lang="es-ES">salir</grammar>
+        <grammar xml:lang="de-DE">schließen</grammar>
+    </link>
+
+    <!-- Cambiar Idioma en cualquier momento -->
+    <link next="#chlang">
+        <grammar xml:lang="en-US">change language</grammar>
+        <grammar xml:lang="es-ES">cambiar idioma</grammar>
+        <grammar xml:lang="de-DE">sprache wechseln</grammar>
+    </link>
+    
+    <!-- Formulario de bienvenida -->
+    <form id="welcome" scope="document">
+        <block>
+            <prompt xml:lang="en-US">welcome to AlambraApp</prompt>
+            <prompt xml:lang="es-ES">bienvenido a AlambraApp</prompt>
+            <prompt xml:lang="de-DE">wilkomen bie AlambraApp</prompt>
+            <goto next="#chlang"/>
+        </block>
+    </form>
+
+    <!-- Elección de Idioma -->
+    <menu id="chlang" scope="document">
+
+        <prompt xml:lang="en-US">please select language</prompt>
+        <prompt xml:lang="es-ES">porfavor seleccione el idioma</prompt>
+        <prompt xml:lang="de-DE">bitte wählen sie die sprache</prompt>
+
+        <!-- English -->
+        <choice next="#lanUS"><prompt xml:lang="en-US">english</prompt></choice>
+        <choice next="#lanUS"><prompt xml:lang="es-ES">ingles</prompt></choice>
+        <choice next="#lanUS"><prompt xml:lang="de-DE">englisch</prompt></choice>
+        
+        <!-- Spanish -->
+        <choice next="#lanES"><prompt xml:lang="en-US">english</prompt></choice>
+        <choice next="#lanES"><prompt xml:lang="es-ES">español</prompt></choice>
+        <choice next="#lanES"><prompt xml:lang="de-DE">spanisch</prompt></choice>
+        
+        <!-- German -->
+        <choice next="#lanDE"><prompt xml:lang="en-US">german</prompt></choice>
+        <choice next="#lanDE"><prompt xml:lang="es-ES">aleman</prompt></choice>
+        <choice next="#lanDE"><prompt xml:lang="de-DE">deutsch</prompt></choice>
     </menu>
+
 </vxml>
