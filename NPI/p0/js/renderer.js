@@ -231,6 +231,7 @@ class Renderer{
   put_items(){
     
     /* Clear previous Items and tags */
+    //this._foreground_scene.children.forEach(e => console.log(e));
     while(this._foreground_scene.children.length > 1){
       this._foreground_scene.children.pop();
       this._labels_html.firstChild.remove();
@@ -264,11 +265,11 @@ class Renderer{
     const tempP = new THREE.Vector3();
 
     /* For each item in the foreground scene, re-draw it */
-    console.log(this._foreground_scene.children);
-    for(let i = 1; i < this._foreground_scene.children.length; ++i){
+    const children = this._foreground_scene.children.filter(e => e.name.indexOf("hand") < 0 && e.name != "");
+    for(let i = 0; i < children.length; ++i){
       
       /* Elements should always face to the camera */
-      const element = this._foreground_scene.children[i];
+      const element = children[i];
       element.lookAt(this._camera.position);
       
       /* Clone vector */
@@ -290,7 +291,6 @@ class Renderer{
       /* Hide if the vector is facing towards the camera */
       span.style.display = dot >= 0 ? `block` : `none`;
       span.style.transform = `translate(-50%, -50%) translate(${x}px,${y}px)`;
-    
     }
 
   };

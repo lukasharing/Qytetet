@@ -31,6 +31,8 @@ class Item{
             Math.sin(angle) * 100.
         );
         
+        cube.name = "obj_scene";
+
         this._shape = cube;
         this._visible = true;
     };
