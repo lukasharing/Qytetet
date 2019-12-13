@@ -3,6 +3,8 @@
 import cv2
 import numpy as np
 
+import random
+
 import os
 os.path.dirname(os.path.abspath(__file__))
 
@@ -28,7 +30,7 @@ def drawKeypoints(img, keypoints, color = (0, 0, 255)):
 # Returns the image with a size of a power of two (the reminder is a padding of 0)
 def padding_image(img):
     
-    width, height = img.shape
+    height, width = img.shape
     # Find nearest power of two to fit the image
     pow2_x = np.ceil(np.log2(width))
     pow2_y = np.ceil(np.log2(height))
@@ -42,7 +44,7 @@ def padding_image(img):
     new_image = np.zeros((image_size, image_size), dtype = img.dtype)
     
     # Put Image inside of the new
-    new_image[:width,:height] = img
+    new_image[:height,:width] = img
     
     return new_image
 
@@ -71,7 +73,7 @@ def gaussian_scales(img, num_scales):
     # Paper constant
     integration_scale = 1.5 # Gaussian coefficient
     
-    for i in range(num_scales):
+    for i in range(num_scales - 1):
         last_scale = gaussian_scale(last_scale, integration_scale)
         scales.append(last_scale)
     
@@ -83,8 +85,9 @@ def harris_scales(gaussian_scales):
     # Paper constant
     derivate_scale    = 1.0 # Derivate coefficient
     
-    for i in range(len(gaussian_scales)):
-        scale_block = int(8 / np.power(2, i))
+    num_scales = len(gaussian_scales)
+    for i in range(num_scales):
+        scale_block = int(np.power(2, i))
         
         # Eigen Values / Vectors of each pixel
         eigen_image = cv2.cornerEigenValsAndVecs(
@@ -98,14 +101,10 @@ def harris_scales(gaussian_scales):
         harris_scales.append(
             eigen_image[:,:,0] * eigen_image[:,:,1] / (eigen_image[:,:,0] + eigen_image[:,:,1])
         )
-        
-        
     return harris_scales
 
 # Non-Maximum Supression and High Pass Supression
 def maximums_harris_scale(grad, scales, high_pass = 10.):
-    if len(scales) <= 1: return scales
-    
     # Non Maximum Supression For Each Scale
     maximums = []
     for k in range(len(scales)):
@@ -125,21 +124,20 @@ def maximums_harris_scale(grad, scales, high_pass = 10.):
                         angle = np.arctan2(grad[sy][sx][1], grad[sy][sx][0])
                         scale_maximums.append(cv2.KeyPoint(sx, sy, scalef * 16., angle))
         maximums.append(scale_maximums)
-        
+    
     return maximums
 
 
-# Ejercicio 1 Gaussian Blur and Get Deriv Kernels
-def ejercicio1(img, high_pass = 10.):
+# Ejercicio 1
+def ejercicio1(img, num_scales = 3, high_pass = 10.):
     # Sizes image
-    width, height = img.shape
-    
+    height, width = img.shape
     # Resize Image to a power of two
     rimg = padding_image(img)
 
     # Gradient and Gaussian Scales    
     igrad = gradient(img, 4.5)
-    gaussians = gaussian_scales(rimg, 3)
+    gaussians = gaussian_scales(rimg, num_scales)
     
     # Harris Gaussian Scales
     scales = harris_scales(gaussians)
@@ -148,138 +146,93 @@ def ejercicio1(img, high_pass = 10.):
     maximums = maximums_harris_scale(igrad, scales, high_pass)
     
     # Draw one next to another
-    result = np.zeros((height, width * len(gaussians), 3), dtype = rimg.dtype)
+    result = np.zeros((height, width * num_scales, 3), dtype = rimg.dtype)
     
-    keypoints = drawKeypoints(
-        gaussians[0],
-        maximums[0]
-    )
-    result[:width, :height] = keypoints[:width,:height]
-    
-    for i in range(1, len(gaussians)):
-        
-        scale_resize = np.resize(gaussians[i], (rimg.shape[1], rimg.shape[0]), interpolation = cv2.INTER_NEAREST)
-        
-        #scale_resize[:, :]
-        
-        
-        #keypoints = drawKeypoints(
-        #    ,
-        #    maximums
-        #)
-    
+    for i in range(len(gaussians)):
+        scalef = np.power(2, i)
+        scale_resize = cv2.resize(gaussians[i], None, fx = scalef, fy = scalef, interpolation = cv2.INTER_NEAREST)
+        keypoints = drawKeypoints(
+            scale_resize,
+            maximums[i]
+        )
+        result[:height, width * i: width * (i + 1)] = keypoints[:height, :width]
     
     return result
 
-#./imagenes/yosemite7.jpg
-img = cv2.imread("../images/plane.bmp", cv2.IMREAD_GRAYSCALE)
+# Ejercicio 2  AKAZE
+# Lowe's https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf
 
-cv2.imshow("Hybrid Image", ejercicio1(img, 0.9))
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+def create_akaze(img1, img2):
+    akaze = cv2.AKAZE_create()
+    kpts1, desc1 = akaze.detectAndCompute(img1, None)
+    kpts2, desc2 = akaze.detectAndCompute(img2, None)
+    return ((kpts1, desc1), (kpts2, desc2))
 
-
-"""
-# Calcular ángulo, alisar fuerte 4.5,
-# Calcular el gradiente 
-# Calcular el ángulo arctan(y / x)
-
-
-# Ejercicio 1. Detectar puntos de Harris
-num_scales = 2
-scales = gaussianScaleSpace(img, num_scales)
-scales = list(map(lambda scale: np.pad(scale, (1, 1), "constant"), scales))
-height, width = img.shape
-
-####  For each scale detect HARRIS POINTS
-fHMs = []
-for i in range(num_scales):
-    
-    # [λ1, λ2, (x1, y1 eigen vector λ1), (x2, y2 eigen vector λ2)]
-    blockSize = 3 * (i + 1) # 3 x 3 Neighbourhood
-    points = cv2.cornerEigenValsAndVecs(
-        scales[i],
-        blockSize = blockSize,
-        ksize = sigma2tam(1.5), # Paper σ_i=1.5
-        borderType = cv2.BORDER_CONSTANT
+def match_akaze(desc1, desc2, k = 1, cross_check = False):
+    bfmatcher = cv2.BFMatcher(
+        crossCheck = cross_check
     )
+    return bfmatcher.knnMatch(desc1, desc2, k = k)
     
-    # f = (λ1 * λ2) / (λ1 + λ2)
-    fHMs.append((points[:,:,0] * points[:,:,1]) / (points[:,:,0] + points[:,:,1]))
 
-#### MAXIMUM SUPPRESSION
-threshold = 10.
-allmaximums = []
-for k in range(len(fHMs)):
-    maximums = []
-    for j in range(1, height + 1):
-        for i in range(1, width + 1):
-            maximum = np.amax(fHMs[k][j - 1 : j + 2, i - 1 : i + 2])
-            if fHMs[k][j, i] >= maximum and fHMs[k][j, i] > threshold:
-                maximums.append([i, j, maximum, 1. / (k + 1.)])
+def draw_matches(img1, kpts1, img2, kpts2, matches, number_sample):
     
-    allmaximums.append(maximums)
+    # Random Sample
+    matches = random.sample(matches, number_sample)
+    
+    # Draw
+    return cv2.drawMatchesKnn(img1, kpts1, img2, kpts2, matches, None, flags = cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
+    
 
-if len(scales) > 1:
-    interestpoints = []
+def ejercicio2_brute_cross(img1, img2):
     
-    # Bottom Layer
-    #interestbottom = []
-    for maximum in allmaximums[0]:
-        cx = maximum[0]
-        cy = maximum[1]
-        # Get maximum from top layer only
-        max_top = np.amax(fHMs[1][cy - 1 : cy + 2, cx - 1 : cx + 2])
-        if maximum[2] > max_top:
-            interestpoints.append()
+    (kpts1, desc1), (kpts2, desc2) = create_akaze(img1, img2)
     
-    #interestpoints.append(interestbottom)
+    # Get Matches from descriptors
+    matches = match_akaze(desc1, desc2, 1, True)
     
-    # Middle Layers
-    for k in range(1, num_scales - 1):
-        #interestmiddle = []
-        for maximum in allmaximums[k]:
-            cx = maximum[0]
-            cy = maximum[1]
-        
-            max_b = np.amax(fHMs[i - 1][cy - 1 : cy + 2, cx - 1 : cx + 2])
-            max_t = np.amax(fHMs[i + 1][cy - 1 : cy + 2, cx - 1 : cx + 2])
-            
-            if (maximum[2] > max_b and maximum[2] > max_t):
-                interestpoints.append(cv2.KeyPoint(cx, cy, maximum[3], 0))
-        
-        #interestpoints.append(interestmiddle)
-    
-    
-    # Top Layer
-    #interesttop = []
-    for maximum in allmaximums[num_scales - 1]:
-        cx = maximum[0]
-        cy = maximum[1]
-        # Get maximum from top layer only
-        max_bottom = np.amax(fHMs[num_scales - 2][cy - 1 : cy + 2, cx - 1 : cx + 2])
-        if maximum[2] > max_bottom:
-            interestpoints.append(cv2.KeyPoint(cx, cy, maximum[3], 0))
-    
-    #interestpoints.append(interesttop)
-    
-    
-    print(interestpoints)
-    
-    # np.arctan(gy, gx)
-    
-output = cv2.drawKeypoints(
-    img,
-    interestpoints,
-    outImage = np.array([]),
-    color = (0, 0, 255)
-)
+    return (img1, kpts1, img2, kpts2, matches)
 
+def ejercicio2_lowe(img1, img2, ratio = 10.):
+    
+    (kpts1, desc1), (kpts2, desc2) = create_akaze(img1, img2)
+    
+    # Get Matches from descriptors
+    matches = match_akaze(desc1, desc2, 2)
+    
+    # Ratio between each 
+    ratio_matches = []
+    for best, second in matches:
+        if best.distance / second.distance < ratio:
+          ratio_matches.append(best)
+    
+    return (img1, kpts1, img2, kpts2, ratio_matches)
 
-cv2.imshow("Hybrid Image", output)
+# Ejercicio 3
+def ejercicio3(img1, img2):
+    # Matches
+    (img1, kpts1, img2, kpts2, matches) = ejercicio2_lowe(img1, img2)
+    
+    points1 = list([ kpts1[match.queryIdx].pt for match in matches])
+    points2 = list([ kpts2[match.trainIdx].pt for match in matches])
+    
+    homography = cv2.findHomography(points1, points2, cv2.RANSAC, 1)
+    
+    print(homography)
+    return img1
+
+#./imagenes/yosemite7.jpg
+img = cv2.imread("./imagenes/yosemite7.jpg", cv2.IMREAD_GRAYSCALE)
+img1 = cv2.imread("./imagenes/yosemite6.jpg", cv2.IMREAD_GRAYSCALE)
+
+#cv2.imshow("Ejercicio 1", ejercicio1(img, 1, 0.1))
+#cv2.waitKey(0)
+#cv2.destroyAllWindows()
+
+#cv2.imshow("Ejercicio 2", draw_matches(*ejercicio2_lowe(img, img1), 100))
+#cv2.waitKey(0)
+#cv2.destroyAllWindows()
+
+cv2.imshow("Ejercicio 3", ejercicio3(img, img1))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-
-
-# print(values)
-"""
