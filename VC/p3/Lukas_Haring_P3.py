@@ -200,6 +200,9 @@ def ejercicio2_lowe(img1, img2, ratio = 10.):
     # Get Matches from descriptors
     matches = match_akaze(desc1, desc2, 2)
     
+    # Matches
+    matches = random.sample(matches, 100)
+    
     # Ratio between each 
     ratio_matches = []
     for best, second in matches:
@@ -209,17 +212,39 @@ def ejercicio2_lowe(img1, img2, ratio = 10.):
     return (img1, kpts1, img2, kpts2, ratio_matches)
 
 # Ejercicio 3
+# https://en.wikipedia.org/wiki/Transformation_matrix#Other_kinds_of_transformations
+def translation_matrix(tx, ty):
+    return np.array([
+        [1, 0, tx],
+        [0, 1, ty],
+        [0, 0, 1 ]        
+    ])
+
 def ejercicio3(img1, img2):
     # Matches
     (img1, kpts1, img2, kpts2, matches) = ejercicio2_lowe(img1, img2)
     
-    points1 = list([ kpts1[match.queryIdx].pt for match in matches])
-    points2 = list([ kpts2[match.trainIdx].pt for match in matches])
+    points1 = np.array([ kpts1[match.queryIdx].pt for match in matches])
+    points2 = np.array([ kpts2[match.trainIdx].pt for match in matches])
     
-    homography = cv2.findHomography(points1, points2, cv2.RANSAC, 1)
+    homography, mask = cv2.findHomography(points1, points2)
     
-    print(homography)
-    return img1
+    width = 1000
+    height = 1000
+    result = np.zeros((1000, 1000, 3), np.uint8)
+  
+    t_matrix = translation_matrix(width // 2, height // 2)    
+    
+    transform = homography.dot(t_matrix)
+    
+    result = cv2.warpPerspective(
+        img1,
+        transform,
+        result.shape[:-1],
+        borderMode = cv2.BORDER_TRANSPARENT
+    )
+    
+    return result
 
 #./imagenes/yosemite7.jpg
 img = cv2.imread("./imagenes/yosemite7.jpg", cv2.IMREAD_GRAYSCALE)
