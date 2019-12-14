@@ -160,8 +160,6 @@ def ejercicio1(img, num_scales = 3, high_pass = 10.):
     return result
 
 # Ejercicio 2  AKAZE
-# Lowe's https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf
-
 def create_akaze(img1, img2):
     akaze = cv2.AKAZE_create()
     kpts1, desc1 = akaze.detectAndCompute(img1, None)
@@ -169,9 +167,13 @@ def create_akaze(img1, img2):
     return ((kpts1, desc1), (kpts2, desc2))
 
 def match_akaze(desc1, desc2, k = 1, cross_check = False):
+    
+    # Create Matcher
     bfmatcher = cv2.BFMatcher(
         crossCheck = cross_check
     )
+    
+    # Return Match (Best nth correspondencies for each point)
     return bfmatcher.knnMatch(desc1, desc2, k = k)
     
 
@@ -193,21 +195,19 @@ def ejercicio2_brute_cross(img1, img2):
     
     return (img1, kpts1, img2, kpts2, matches)
 
-def ejercicio2_lowe(img1, img2, ratio = 10.):
+# Lowe's https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf (7.1 Keypoint Matching)
+def ejercicio2_lowe(img1, img2, ratio = 0.8):
     
     (kpts1, desc1), (kpts2, desc2) = create_akaze(img1, img2)
     
     # Get Matches from descriptors
     matches = match_akaze(desc1, desc2, 2)
     
-    # Matches
-    matches = random.sample(matches, 100)
-    
     # Ratio between each 
     ratio_matches = []
-    for best, second in matches:
-        if best.distance / second.distance < ratio:
-          ratio_matches.append(best)
+    for first, second in matches:
+        if first.distance / second.distance < ratio:
+          ratio_matches.append(first)
     
     return (img1, kpts1, img2, kpts2, ratio_matches)
 
@@ -218,46 +218,76 @@ def translation_matrix(tx, ty):
         [1, 0, tx],
         [0, 1, ty],
         [0, 0, 1 ]        
-    ])
+    ], dtype = np.float64)
 
-def ejercicio3(img1, img2):
-    # Matches
-    (img1, kpts1, img2, kpts2, matches) = ejercicio2_lowe(img1, img2)
+def get_homography_matrix(img1, img2, ratio = 0.8):
+    (img1, kpts1, img2, kpts2, matches) = ejercicio2_lowe(img1, img2, ratio)
     
     points1 = np.array([ kpts1[match.queryIdx].pt for match in matches])
     points2 = np.array([ kpts2[match.trainIdx].pt for match in matches])
     
-    homography, mask = cv2.findHomography(points1, points2)
+    # Works with , cv2.RANSAC, 5.0
+    return cv2.findHomography(points1, points2, cv2.RANSAC, 1.)[0]
     
-    width = 1000
-    height = 1000
-    result = np.zeros((1000, 1000, 3), np.uint8)
-  
-    t_matrix = translation_matrix(width // 2, height // 2)    
+def ejercicio3(img1, img2):
+    # Matches
+    homography = get_homography_matrix(img2, img1, 0.8)
     
-    transform = homography.dot(t_matrix)
+    # Create Result Image
+    width = 1500
+    height = 700
+    compose_image = np.zeros((height, width, 3), np.uint8)
+
+    # Center Image    
+    dw = (width - img1.shape[1])//2
+    dh = (height - img1.shape[0])//2
+
+    compose_image[dh : dh + img1.shape[0], dw : dw + img1.shape[1]] = img1
     
-    result = cv2.warpPerspective(
-        img1,
+    # Center Translation
+    t_matrix = translation_matrix((width - img2.shape[1]) // 2, (height - img2.shape[0]) // 2)
+    
+    # Concat Transoformations (dot product of the transformations)
+    transform = t_matrix @ homography
+    
+    # Warp the img 
+    compose_image = cv2.warpPerspective(
+        img2,
         transform,
-        result.shape[:-1],
+        (width, height),
+        dst = compose_image,
         borderMode = cv2.BORDER_TRANSPARENT
     )
     
-    return result
+    return compose_image
+
+# Concat multiples images
+def ejercicio4(imgs):
+    if len(imgs) <= 1: return;
+    
+    
+    composing = ejercicio3(imgs[1], imgs[2])
+    
+    return composing
+    
 
 #./imagenes/yosemite7.jpg
-img = cv2.imread("./imagenes/yosemite7.jpg", cv2.IMREAD_GRAYSCALE)
-img1 = cv2.imread("./imagenes/yosemite6.jpg", cv2.IMREAD_GRAYSCALE)
+img = cv2.imread("./imagenes/yosemite5.jpg", cv2.IMREAD_COLOR)
+img1 = cv2.imread("./imagenes/yosemite6.jpg", cv2.IMREAD_COLOR)
+img2 = cv2.imread("./imagenes/yosemite7.jpg", cv2.IMREAD_COLOR)
 
 #cv2.imshow("Ejercicio 1", ejercicio1(img, 1, 0.1))
 #cv2.waitKey(0)
 #cv2.destroyAllWindows()
 
-#cv2.imshow("Ejercicio 2", draw_matches(*ejercicio2_lowe(img, img1), 100))
+cv2.imshow("Ejercicio 2", draw_matches(*ejercicio2_brute_cross(img, ejercicio3(img1, img2)), 100))
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+#cv2.imshow("Ejercicio 3", ejercicio3(img, img1))
 #cv2.waitKey(0)
 #cv2.destroyAllWindows()
 
-cv2.imshow("Ejercicio 3", ejercicio3(img, img1))
+cv2.imshow("Ejercicio 4", ejercicio4([cv2.imread("./imagenes/yosemite"+ str(i) +".jpg", cv2.IMREAD_COLOR) for i in range(1, 8)]))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
