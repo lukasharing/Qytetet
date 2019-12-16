@@ -166,11 +166,11 @@ def create_akaze(img1, img2):
     kpts2, desc2 = akaze.detectAndCompute(img2, None)
     return ((kpts1, desc1), (kpts2, desc2))
 
-def match_akaze(desc1, desc2, k = 1, cross_check = False):
+def match_akaze(desc1, desc2, k = 1):
     
     # Create Matcher
     bfmatcher = cv2.BFMatcher(
-        crossCheck = cross_check
+        crossCheck = True
     )
     
     # Return Match (Best nth correspondencies for each point)
@@ -183,7 +183,12 @@ def draw_matches(img1, kpts1, img2, kpts2, matches, number_sample):
     matches = random.sample(matches, number_sample)
     
     # Draw
-    return cv2.drawMatchesKnn(img1, kpts1, img2, kpts2, matches, None, flags = cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
+    return cv2.drawMatchesKnn(
+        img1, kpts1, 
+        img2, kpts2, 
+        matches, 
+        flags = cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS
+    )
     
 
 def ejercicio2_brute_cross(img1, img2):
@@ -191,7 +196,7 @@ def ejercicio2_brute_cross(img1, img2):
     (kpts1, desc1), (kpts2, desc2) = create_akaze(img1, img2)
     
     # Get Matches from descriptors
-    matches = match_akaze(desc1, desc2, 1, True)
+    matches = match_akaze(desc1, desc2, 1)
     
     return (img1, kpts1, img2, kpts2, matches)
 
@@ -213,10 +218,10 @@ def ejercicio2_lowe(img1, img2, ratio = 0.8):
 
 # Ejercicio 3
 # https://en.wikipedia.org/wiki/Transformation_matrix#Other_kinds_of_transformations
-def translation_matrix(tx, ty):
+def homgraphy_matrix(tx, ty, s = 1.):
     return np.array([
-        [1, 0, tx],
-        [0, 1, ty],
+        [s, 0, tx],
+        [0, s, ty],
         [0, 0, 1 ]        
     ], dtype = np.float64)
 
@@ -229,9 +234,9 @@ def get_homography_matrix(img1, img2, ratio = 0.8):
     # Works with , cv2.RANSAC, 5.0
     return cv2.findHomography(points1, points2, cv2.RANSAC, 1.)[0]
     
-def ejercicio3(img1, img2):
+def ejercicio3(img1, img2, ratio = 0.8):
     # Matches
-    homography = get_homography_matrix(img2, img1, 0.8)
+    homography = get_homography_matrix(img2, img1, ratio)
     
     # Create Result Image
     width = 1500
@@ -241,11 +246,10 @@ def ejercicio3(img1, img2):
     # Center Image    
     dw = (width - img1.shape[1])//2
     dh = (height - img1.shape[0])//2
-
     compose_image[dh : dh + img1.shape[0], dw : dw + img1.shape[1]] = img1
     
     # Center Translation
-    t_matrix = translation_matrix((width - img2.shape[1]) // 2, (height - img2.shape[0]) // 2)
+    t_matrix = homgraphy_matrix(dw, dh)
     
     # Concat Transoformations (dot product of the transformations)
     transform = t_matrix @ homography
@@ -261,33 +265,90 @@ def ejercicio3(img1, img2):
     
     return compose_image
 
-# Concat multiples images
-def ejercicio4(imgs):
+def homographies_queue(imgs, dx = 0., dy = 0., s = 1., ratio = 0.8):
+    # Matches    
+    homographies = [
+        homgraphy_matrix(dx, dy, s)
+    ]
+    
+    for i in range(1, len(imgs)):
+        homographies.append(
+            homographies[i - 1] @ get_homography_matrix(imgs[i], imgs[i - 1], ratio)
+        )
+    
+    return homographies
+
+def ejercicio4(imgs, s = 0.8):
     if len(imgs) <= 1: return;
+    # Sort by image size, Biggest image always in the middle
+    imgs.sort(key = lambda x: x.shape[0] * x.shape[1])
     
+    width = 1000
+    height = 700
+    compose_image = np.zeros((height, width, 3), np.uint8)
     
-    composing = ejercicio3(imgs[1], imgs[2])
+    dw = (width - imgs[0].shape[1])//2
+    dh = (height - imgs[0].shape[0])//2
     
-    return composing
+    homographies = homographies_queue(imgs, dw, dh, s)
+    
+    # Center Translation
+    
+    for i in range(len(imgs)):
+        compose_image = cv2.warpPerspective(
+            imgs[i],
+            homographies[i],
+            (width, height),
+            dst = compose_image,
+            borderMode = cv2.BORDER_TRANSPARENT
+        )
+    
+    return compose_image
     
 
 #./imagenes/yosemite7.jpg
-img = cv2.imread("./imagenes/yosemite5.jpg", cv2.IMREAD_COLOR)
-img1 = cv2.imread("./imagenes/yosemite6.jpg", cv2.IMREAD_COLOR)
-img2 = cv2.imread("./imagenes/yosemite7.jpg", cv2.IMREAD_COLOR)
+img1 = cv2.imread("./imagenes/yosemite5.jpg", cv2.IMREAD_COLOR)
+img2 = cv2.imread("./imagenes/yosemite1.jpg", cv2.IMREAD_COLOR)
 
-#cv2.imshow("Ejercicio 1", ejercicio1(img, 1, 0.1))
+#cv2.imshow("Ejercicio 1", ejercicio1(img1, 3, 0.1))
 #cv2.waitKey(0)
 #cv2.destroyAllWindows()
 
-cv2.imshow("Ejercicio 2", draw_matches(*ejercicio2_brute_cross(img, ejercicio3(img1, img2)), 100))
+cv2.imshow("Ejercicio 2", draw_matches(*ejercicio2_brute_cross(img1, img2), 100))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
-#cv2.imshow("Ejercicio 3", ejercicio3(img, img1))
+#cv2.imshow("Ejercicio 3", ejercicio3(img1, img2))
 #cv2.waitKey(0)
 #cv2.destroyAllWindows()
 
-cv2.imshow("Ejercicio 4", ejercicio4([cv2.imread("./imagenes/yosemite"+ str(i) +".jpg", cv2.IMREAD_COLOR) for i in range(1, 8)]))
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+etsiit_mosaic = [
+ cv2.imread("./imagenes/mosaico003.jpg", cv2.IMREAD_COLOR),
+ cv2.imread("./imagenes/mosaico004.jpg", cv2.IMREAD_COLOR),
+ cv2.imread("./imagenes/mosaico005.jpg", cv2.IMREAD_COLOR),
+ cv2.imread("./imagenes/mosaico006.jpg", cv2.IMREAD_COLOR),
+ cv2.imread("./imagenes/mosaico007.jpg", cv2.IMREAD_COLOR),
+ cv2.imread("./imagenes/mosaico008.jpg", cv2.IMREAD_COLOR),
+ cv2.imread("./imagenes/mosaico009.jpg", cv2.IMREAD_COLOR),
+ cv2.imread("./imagenes/mosaico010.jpg", cv2.IMREAD_COLOR),
+ cv2.imread("./imagenes/mosaico011.jpg", cv2.IMREAD_COLOR),
+]
+
+yosemite_mosaic_1 = [
+ cv2.imread("./imagenes/yosemite1.jpg", cv2.IMREAD_COLOR),
+ cv2.imread("./imagenes/yosemite2.jpg", cv2.IMREAD_COLOR),
+ cv2.imread("./imagenes/yosemite3.jpg", cv2.IMREAD_COLOR),
+ cv2.imread("./imagenes/yosemite4.jpg", cv2.IMREAD_COLOR),
+]
+
+yosemite_mosaic_2 = [
+ cv2.imread("./imagenes/yosemite5.jpg", cv2.IMREAD_COLOR),
+ cv2.imread("./imagenes/yosemite6.jpg", cv2.IMREAD_COLOR),
+ cv2.imread("./imagenes/yosemite7.jpg", cv2.IMREAD_COLOR),
+]
+
+
+
+#cv2.imshow("Ejercicio 4", ejercicio4(etsiit_mosaic))
+#cv2.waitKey(0)
+#cv2.destroyAllWindows()
