@@ -69,7 +69,13 @@ class Node{
     /* Returns all the connections */
     connections(){ return this._connections; };
     /* Returns the node from an angle (direction) */
-    to(id){ return this._connections[id].to(); }
+    to(id){
+        if(this._connections[id]){
+            return this._connections[id].to();
+        }else{
+            return null;
+        }
+    }
 }
 
 class Connection{

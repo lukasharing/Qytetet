@@ -16,8 +16,6 @@ class Renderer{
     
     this._raycast = new THREE.Raycaster();
 
-    this._leap = Leap;
-
     this._stop = true;
 
     this._azimuth_angle = 0;

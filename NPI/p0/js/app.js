@@ -23,6 +23,9 @@ class App{
         /* Cache */
         this._cache   = new Cache();
 
+        /* Leap */
+        this._leap    = new LeapController(this);
+
         /* Touch */
         this._start_touch = 0;
         this._touch = {x: 0, y: 0};
@@ -83,24 +86,23 @@ class App{
             
             /* If it has steps, move to the next element */
             if(elm.parentNode.hasAttribute("data-step")){
-            
-                const id_step = parseInt(elm.parentNode.dataset["step"]);
-                elm.addEventListener("click", _ => {
-                
-                    this.popup_close(`#${ elm.parentElement.id }`);
-                    const next_popup = document.querySelector(`.popup[data-step="${id_step + 1}"]`);
-                    if(next_popup !== null){
-                        this.popup_open(`.popup[data-step="${id_step + 1}"]`);
-                    }
-            
-                });
-
-                /* If not, then close it */
+                elm.addEventListener("click", _ => this.next_tutorial(elm));
+            /* If not, then close it */
             }else{
                 elm.addEventListener("click", _ => this.popup_close(`#${ elm.parentElement.id }`));
             }
             
         });
+    };
+
+    /* Next Tutorial */
+    next_tutorial(elm){
+        const id_step = parseInt(elm.parentNode.dataset["step"]);
+        this.popup_close(`#${ elm.parentElement.id }`);
+        const next_popup = document.querySelector(`.popup[data-step="${id_step + 1}"]`);
+        if(next_popup !== null){
+            this.popup_open(`.popup[data-step="${id_step + 1}"]`);
+        }
     };
 
     /* Touch Events */
@@ -175,10 +177,11 @@ class App{
             
             const direction = document.querySelector(".preview-button.hover");
             if(direction !== null){
-                const id = parseInt(direction.dataset.orientation);
 
+                const id = parseInt(direction.dataset.orientation);
                 this._minimap.move(this._renderer.azimuth_connection(id));
                 document.querySelector(".preview-button.hover").classList.remove("hover");
+                
             }
             body_class.remove("doubletouch");
 

@@ -148,6 +148,7 @@ class MiniMap{
         Node : Object Class to move
     */
     move(v){
+        if(v === null) return;
 
         if(typeof v === 'string'){
             v = this.find_node(v);
