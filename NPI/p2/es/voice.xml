@@ -1,6 +1,6 @@
 <!-- http://www1.se.cuhk.edu.hk/~hccl/publications/pub/0300769.pdf -->
 <?vxml version="1.0" encoding="ISO-8859-1" ?>
-<vxml version="2.0" lang="es">
+<vxml version="2.0">
 
     <!--<link next="#help">
         <grammar>ayuda</grammar>
@@ -32,11 +32,11 @@
 
     <menu id="num-visitor-es" scope="document">
 
-        <prompt>Recuerde que la entrada a menores es gratuita. porfavor, seleccione el numero de visitantes individual, grupal o familia numerosa</prompt>
+        <prompt xml:lang="es-ES">recuerde que la entrada a menores es gratuita. porfavor, seleccione el numero de visitantes individual, grupal o familia numerosa</prompt>
         
-        <choice next="#one"><prompt>individual</prompt></choice>
-        <choice next="#group"><prompt>grupal</prompt></choice>
-        <choice next="#family"><prompt>familia numerosa</prompt></choice>
+        <choice next="#one"><prompt xml:lang="es-ES">individual</prompt></choice>
+        <choice next="#group"><prompt xml:lang="es-ES">grupal</prompt></choice>
+        <choice next="#family"><prompt xml:lang="es-ES">familia numerosa</prompt></choice>
     
     </menu>
 </vxml>
