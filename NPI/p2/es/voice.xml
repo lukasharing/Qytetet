@@ -2,7 +2,7 @@
 <?vxml version="1.0" encoding="ISO-8859-1" ?>
 <vxml version="2.0" lang="es">
 
-    <link next="#help">
+    <!--<link next="#help">
         <grammar>ayuda</grammar>
     </link>
 
@@ -28,11 +28,11 @@
         <block>
             <prompt>familia</prompt>
         </block>
-    </form>
+    </form>-->
 
     <menu id="num-visitor-es" scope="document">
 
-        <prompt>Recuerde que la entrada a menores es gratuita. Porfavor, seleccione el numero de visitantes individual, grupal o familia numerosa</prompt>
+        <prompt>Recuerde que la entrada a menores es gratuita. porfavor, seleccione el numero de visitantes individual, grupal o familia numerosa</prompt>
         
         <choice next="#one"><prompt>individual</prompt></choice>
         <choice next="#group"><prompt>grupal</prompt></choice>
