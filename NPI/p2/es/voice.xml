@@ -1,7 +1,4 @@
 <!-- http://www1.se.cuhk.edu.hk/~hccl/publications/pub/0300769.pdf -->
 <?vxml version="1.0" encoding="ISO-8859-1" ?>
-<vxml version="2.0" lang="es">
-    <form>
-        <prompt>Te voy a hacer una pregunta</prompt>
-    <form>
+<vxml version="2.0" lang="en">
 </vxml>
