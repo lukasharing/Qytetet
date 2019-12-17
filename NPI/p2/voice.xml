@@ -9,11 +9,11 @@
     </link>-->
 
     <!-- Cambiar Idioma en cualquier momento -->
-    <link next="#chlang">
+    <!--<link next="#chlang">
         <grammar xml:lang="en-US">change language</grammar>
         <grammar xml:lang="es-ES">cambiar idioma</grammar>
         <grammar xml:lang="de-DE">sprache wechseln</grammar>
-    </link>
+    </link>-->
     
     <!-- Formulario de bienvenida -->
     <form id="welcome" scope="document">
