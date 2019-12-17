@@ -3,11 +3,11 @@
 <vxml version="2.0">
     
     <!-- Salir en cualquier momento -->
-    <!--<link next="#exit">
+    <link next="#exit">
         <grammar xml:lang="en-US">exit</grammar>
         <grammar xml:lang="es-ES">salir</grammar>
         <grammar xml:lang="de-DE">schließen</grammar>
-    </link>-->
+    </link>
 
     <!-- Cambiar Idioma en cualquier momento -->
     <link next="#chlang">
