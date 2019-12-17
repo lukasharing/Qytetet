@@ -1,6 +1,7 @@
 <!-- http://www1.se.cuhk.edu.hk/~hccl/publications/pub/0300769.pdf -->
 <?vxml version="1.0" encoding="ISO-8859-1" ?>
 <vxml version="2.0" lang="en">
+    
     <!-- Salir en cualquier momento -->
     <!--<link next="#exit">
         <grammar xml:lang="en-US">exit</grammar>
@@ -9,7 +10,7 @@
     </link>-->
 
     <!-- Cambiar Idioma en cualquier momento -->
-    <!--<link next="#chlang">
+<!--    <link next="#chlang">
         <grammar xml:lang="en-US">change language</grammar>
         <grammar xml:lang="es-ES">cambiar idioma</grammar>
         <grammar xml:lang="de-DE">sprache wechseln</grammar>
@@ -18,9 +19,9 @@
     <!-- Formulario de bienvenida -->
     <form id="welcome" scope="document">
         <block>
-            <prompt xml:lang="en-US">welcome to alambraApp</prompt>
-            <prompt xml:lang="es-ES">bienvenido a alambraApp</prompt>
-            <prompt xml:lang="de-DE">wilkomen bie alambraApp</prompt>
+            <prompt xml:lang="en-US">welcome to AlambraApp</prompt>
+            <prompt xml:lang="es-ES">bienvenido a AlambraApp</prompt>
+            <prompt xml:lang="de-DE">wilkomen bie AlambraApp</prompt>
             <goto next="#chlang"/>
         </block>
     </form>
@@ -39,7 +40,7 @@
        
         <!-- Spanish -->
         <choice next="./es/voice.xml"><prompt xml:lang="en-US">english</prompt></choice>
-        <choice next="./es/voice.xml"><prompt xml:lang="es-ES">espaniol</prompt></choice>
+        <choice next="./es/voice.xml"><prompt xml:lang="es-ES">español</prompt></choice>
         <choice next="./es/voice.xml"><prompt xml:lang="de-DE">spanisch</prompt></choice>
         
         <!-- German -->
