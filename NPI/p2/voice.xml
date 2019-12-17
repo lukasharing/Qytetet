@@ -1,6 +1,6 @@
 <!-- http://www1.se.cuhk.edu.hk/~hccl/publications/pub/0300769.pdf -->
 <?vxml version="1.0" encoding="ISO-8859-1" ?>
-<vxml version="2.0" lang="en">
+<vxml version="2.0">
     
     <!-- Salir en cualquier momento -->
     <!--<link next="#exit">
@@ -10,11 +10,11 @@
     </link>-->
 
     <!-- Cambiar Idioma en cualquier momento -->
-<!--    <link next="#chlang">
+    <link next="#chlang">
         <grammar xml:lang="en-US">change language</grammar>
         <grammar xml:lang="es-ES">cambiar idioma</grammar>
         <grammar xml:lang="de-DE">sprache wechseln</grammar>
-    </link>-->
+    </link>
     
     <!-- Formulario de bienvenida -->
     <form id="welcome" scope="document">

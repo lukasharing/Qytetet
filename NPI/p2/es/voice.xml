@@ -1,4 +1,9 @@
 <!-- http://www1.se.cuhk.edu.hk/~hccl/publications/pub/0300769.pdf -->
 <?vxml version="1.0" encoding="ISO-8859-1" ?>
 <vxml version="2.0" lang="en">
+    <form id="welcome" scope="document">
+        <block>
+            <prompt>bienvenido</prompt>
+        </block>
+    </form>
 </vxml>
