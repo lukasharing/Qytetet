@@ -1,10 +1,42 @@
 <!-- http://www1.se.cuhk.edu.hk/~hccl/publications/pub/0300769.pdf -->
 <?vxml version="1.0" encoding="ISO-8859-1" ?>
-<vxml version="2.0" lang="en">
+<vxml version="2.0" lang="es">
 
-    <form id="welcome-es" scope="document">
+    <link next="#help">
+        <grammar>ayuda</grammar>
+    </link>
+
+    <form id="help" scope="document">
         <block>
-            <prompt>bienvenido</prompt>
+            <prompt>puede volver hacia atras en cualquier momento</prompt>
         </block>
     </form>
+
+    <form id="one-visitor" scope="document">
+        <block>
+            <prompt>1</prompt>
+        </block>
+    </form>
+    
+    <form id="group" scope="document">
+        <block>
+            <prompt>grupo</prompt>
+        </block>
+    </form>
+
+    <form id="family" scope="document">
+        <block>
+            <prompt>familia</prompt>
+        </block>
+    </form>
+
+    <menu id="num-visitor-es" scope="document">
+
+        <prompt>Recuerde que la entrada a menores es gratuita. Porfavor, seleccione el numero de visitantes individual, grupal o familia numerosa</prompt>
+        
+        <choice next="#one"><prompt>individual</prompt></choice>
+        <choice next="#group"><prompt>grupal</prompt></choice>
+        <choice next="#family"><prompt>familia numerosa</prompt></choice>
+    
+    </menu>
 </vxml>
