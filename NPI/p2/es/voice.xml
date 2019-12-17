@@ -10,25 +10,25 @@
         <block>
             <prompt>puede volver hacia atras en cualquier momento</prompt>
         </block>
-    </form>
+    </form>-->
 
-    <form id="one-visitor" scope="document">
-        <block>
+    <form id="one" scope="document">
+        <!--<block>
             <prompt>1</prompt>
-        </block>
+        </block>-->
     </form>
     
     <form id="group" scope="document">
-        <block>
+        <!--<block>
             <prompt>grupo</prompt>
-        </block>
+        </block>-->
     </form>
 
     <form id="family" scope="document">
-        <block>
+        <!--<block>
             <prompt>familia</prompt>
-        </block>
-    </form>-->
+        </block>-->
+    </form>
 
     <menu id="num-visitor-es" scope="document">
 
