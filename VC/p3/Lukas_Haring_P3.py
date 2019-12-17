@@ -166,11 +166,11 @@ def create_akaze(img1, img2):
     kpts2, desc2 = akaze.detectAndCompute(img2, None)
     return ((kpts1, desc1), (kpts2, desc2))
 
-def match_akaze(desc1, desc2, k = 1):
+def match_akaze(desc1, desc2, crossCheck = True, k = 1):
     
     # Create Matcher
     bfmatcher = cv2.BFMatcher(
-        crossCheck = True
+        crossCheck = crossCheck
     )
     
     # Return Match (Best nth correspondencies for each point)
@@ -186,7 +186,8 @@ def draw_matches(img1, kpts1, img2, kpts2, matches, number_sample):
     return cv2.drawMatchesKnn(
         img1, kpts1, 
         img2, kpts2, 
-        matches, 
+        matches,
+        outImg = np.array([]),
         flags = cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS
     )
     
@@ -196,7 +197,7 @@ def ejercicio2_brute_cross(img1, img2):
     (kpts1, desc1), (kpts2, desc2) = create_akaze(img1, img2)
     
     # Get Matches from descriptors
-    matches = match_akaze(desc1, desc2, 1)
+    matches = match_akaze(desc1, desc2, k = 1)
     
     return (img1, kpts1, img2, kpts2, matches)
 
@@ -206,7 +207,7 @@ def ejercicio2_lowe(img1, img2, ratio = 0.8):
     (kpts1, desc1), (kpts2, desc2) = create_akaze(img1, img2)
     
     # Get Matches from descriptors
-    matches = match_akaze(desc1, desc2, 2)
+    matches = match_akaze(desc1, desc2, crossCheck = False, k = 2)
     
     # Ratio between each 
     ratio_matches = []
@@ -226,6 +227,7 @@ def homgraphy_matrix(tx, ty, s = 1.):
     ], dtype = np.float64)
 
 def get_homography_matrix(img1, img2, ratio = 0.8):
+    
     (img1, kpts1, img2, kpts2, matches) = ejercicio2_lowe(img1, img2, ratio)
     
     points1 = np.array([ kpts1[match.queryIdx].pt for match in matches])
@@ -305,18 +307,38 @@ def ejercicio4(imgs, s = 0.8):
     
     return compose_image
     
+# Bonus
+
+def find_homography_bonus(pnts1, pnts2):
+    
+    # Get 4 Points
+    pnts14 = random.sample(pnts1, 4)
+    
+    print(pnts14)
+    
+    # Using Ransac
+
+def ejercicioBonus(img1, img2):
+    
+    (img1, kpts1, img2, kpts2, matches) = ejercicio2_lowe(img1, img2, 0.8)
+    
+    points1 = np.array([ kpts1[match.queryIdx].pt for match in matches])
+    points2 = np.array([ kpts2[match.trainIdx].pt for match in matches])
+    
+    find_homography_bonus(points1, points2)
+    
 
 #./imagenes/yosemite7.jpg
-img1 = cv2.imread("./imagenes/yosemite5.jpg", cv2.IMREAD_COLOR)
-img2 = cv2.imread("./imagenes/yosemite1.jpg", cv2.IMREAD_COLOR)
+img1 = cv2.imread("./imagenes/yosemite1.jpg", cv2.IMREAD_COLOR)
+img2 = cv2.imread("./imagenes/yosemite2.jpg", cv2.IMREAD_COLOR)
 
 #cv2.imshow("Ejercicio 1", ejercicio1(img1, 3, 0.1))
 #cv2.waitKey(0)
 #cv2.destroyAllWindows()
 
-cv2.imshow("Ejercicio 2", draw_matches(*ejercicio2_brute_cross(img1, img2), 100))
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+cv2.imshow("Ejercicio 2", draw_matches(*ejercicio2_lowe(img1, img2), 100))
+#cv2.waitKey(0)
+#cv2.destroyAllWindows()
 
 #cv2.imshow("Ejercicio 3", ejercicio3(img1, img2))
 #cv2.waitKey(0)
@@ -352,3 +374,6 @@ yosemite_mosaic_2 = [
 #cv2.imshow("Ejercicio 4", ejercicio4(etsiit_mosaic))
 #cv2.waitKey(0)
 #cv2.destroyAllWindows()
+
+
+ejercicioBonus(img1, img2)

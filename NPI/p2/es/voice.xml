@@ -3,18 +3,18 @@
 <vxml version="2.0" lang="en">
     
     <!-- Salir en cualquier momento -->
-    <link next="#exit">
+    <!--<link next="#exit">
         <grammar xml:lang="en-US">exit</grammar>
         <grammar xml:lang="es-ES">salir</grammar>
         <grammar xml:lang="de-DE">schließen</grammar>
-    </link>
+    </link>-->
 
     <!-- Cambiar Idioma en cualquier momento -->
-    <link next="#chlang">
+<!--    <link next="#chlang">
         <grammar xml:lang="en-US">change language</grammar>
         <grammar xml:lang="es-ES">cambiar idioma</grammar>
         <grammar xml:lang="de-DE">sprache wechseln</grammar>
-    </link>
+    </link>-->
     
     <!-- Formulario de bienvenida -->
     <form id="welcome" scope="document">
@@ -34,18 +34,18 @@
         <prompt xml:lang="de-DE">bitte wählen sie die sprache</prompt>
     
         <!-- English -->
-        <choice next="./es/voice.xml"><prompt xml:lang="en-US">english</prompt></choice>
-        <choice next="./es/voice.xml"><prompt xml:lang="es-ES">ingles</prompt></choice>
-        <choice next="./es/voice.xml"><prompt xml:lang="de-DE">englisch</prompt></choice>
+        <choice next="#lanUS"><prompt xml:lang="en-US">english</prompt></choice>
+        <choice next="#lanUS"><prompt xml:lang="es-ES">ingles</prompt></choice>
+        <choice next="#lanUS"><prompt xml:lang="de-DE">englisch</prompt></choice>
        
         <!-- Spanish -->
-        <choice next="./es/voice.xml"><prompt xml:lang="en-US">english</prompt></choice>
-        <choice next="./es/voice.xml"><prompt xml:lang="es-ES">español</prompt></choice>
-        <choice next="./es/voice.xml"><prompt xml:lang="de-DE">spanisch</prompt></choice>
+        <choice next="#lanES"><prompt xml:lang="en-US">english</prompt></choice>
+        <choice next="#lanES"><prompt xml:lang="es-ES">español</prompt></choice>
+        <choice next="#lanES"><prompt xml:lang="de-DE">spanisch</prompt></choice>
         
         <!-- German -->
-        <choice next="./es/voice.xml"><prompt xml:lang="en-US">german</prompt></choice>
-        <choice next="./es/voice.xml"><prompt xml:lang="es-ES">aleman</prompt></choice>
-        <choice next="./es/voice.xml"><prompt xml:lang="de-DE">deutsch</prompt></choice>
+        <choice next="#lanDE"><prompt xml:lang="en-US">german</prompt></choice>
+        <choice next="#lanDE"><prompt xml:lang="es-ES">aleman</prompt></choice>
+        <choice next="#lanDE"><prompt xml:lang="de-DE">deutsch</prompt></choice>
     </menu>
 </vxml>

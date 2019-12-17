@@ -1,0 +1,47 @@
+lambda * (x', y', 1) = H (x, y, 1) 
+H = (a, b, c)
+    (d, e, f)
+    (g, h, i)
+
+lambda * x' = a * x + b * y + c } 
+lambda * y' = d * x + e * y + f }
+lambda = g *  + h * y + i
+
+Cogemos 1  y 2:
+
+(x y 1 0 0 0 -xx' -yx' -x')
+(0 0 0 x y 1 -xy  -yy' -y') * ((a, b, c, d, e, f, g, h, i) = h)
+
+Cogemos 4 puntos (matriz de 8 x 9) = A
+
+Es una clase de equivalencia porque A * h depende de un parámetro.
+
+A * h = 0 => Min || A * h ||
+             || h || != 0 => || h || = 1 (Clase de equivalencia podemos coger cualquiera)
+
+Lo anterior es equivalente:
+SVD(A) = U E V^t y coger la columna de con el menor auto valor de V (DLT) = h
+
+
+Algoritmo RANSAC:
+   1. Modelo (Mínimos cuadrados por ejemplo)
+   2. Conjunto de puntos
+
+Salida: Conjunto de puntos coherente (Error mínimmo)
+
+Cogemos 2 puntos aleatorios y sacamos una recta.
+Prononemos un "pasillo" de la recta y contamos cuantos puntos están dentro de esa región.
+
+---------------------------
+___________________________
+
+---------------------------
+
+Para la homografía:
+Cogemos 4 puntos aleatorios
+
+200 iteraciones
+d(x', Hx) < epsilon (< 1px, para comenzar, 1.5px - 2px)
+
+
+2º Fase: Refinamiento Geométrico (No hay que implementarlo)
