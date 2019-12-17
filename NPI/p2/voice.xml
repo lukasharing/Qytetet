@@ -6,7 +6,7 @@
     <link next="#exit">
         <grammar xml:lang="en-US">exit</grammar>
         <grammar xml:lang="es-ES">salir</grammar>
-        <grammar xml:lang="de-DE">schließen</grammar>
+        <grammar xml:lang="de-DE">schliessen</grammar>
     </link>
 
     <!-- Cambiar Idioma en cualquier momento -->
