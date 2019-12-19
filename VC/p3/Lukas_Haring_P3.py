@@ -13,12 +13,12 @@ def sigma2tam(sigma):
     return 2 * np.uint(sigma * 3) + 1;
 
 # Draw Keypoints because cv2 is ***
-def drawKeypoints(img, keypoints, color = (0, 0, 255)):
+def drawKeypoints(img, keypoints, scalef, color = (0, 0, 255)):
     
     result = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
     
     for keypoint in keypoints:
-        position = (int(round(keypoint.pt[0])), int(round(keypoint.pt[1])))
+        position = (int(round(keypoint.pt[0] * scalef)), int(round(keypoint.pt[1] * scalef)))
         radius = int(round(keypoint.size / 2.))
         
         cv2.circle(result, position, radius, color, 1, cv2.LINE_AA)
@@ -48,51 +48,34 @@ def padding_image(img):
     
     return new_image
 
-# Returns the gradient (x derivate and y derivate of the image)
-def gradient(img, sigma):
-    ksize = sigma2tam(sigma)
-    
-    # Calculate x and y derivate
-    grad_x = cv2.Sobel(img, cv2.CV_64F, 1, 0, ksize = ksize)
-    grad_y = cv2.Sobel(img, cv2.CV_64F, 0, 1, ksize = ksize)
-    
-    # Pair each gradient x and gradient y
-    return np.dstack((grad_x, grad_y))
-
 # Returns next gaussian scale
 def gaussian_scale(img, sigma):
     gs_image = cv2.GaussianBlur(img, None, sigma, sigma)
     gs_image = cv2.resize(gs_image, None, fx = 0.5, fy = 0.5, interpolation = cv2.INTER_NEAREST)
     return gs_image
 
-def gaussian_scales(img, num_scales):
-    
+def gaussian_scales(img, sigma, num_scales):
     last_scale = img
     scales = [img]
     
-    # Paper constant
-    integration_scale = 1.5 # Gaussian coefficient
-    
     for i in range(num_scales - 1):
-        last_scale = gaussian_scale(last_scale, integration_scale)
+        last_scale = gaussian_scale(last_scale, sigma)
         scales.append(last_scale)
     
     return scales
 
 # Gaussian Scale of the harmonic means
-def harris_scales(gaussian_scales):
+def harris_scales(gaussian_scales, blockSize = 5.0):
     harris_scales = []
     # Paper constant
     derivate_scale    = 1.0 # Derivate coefficient
     
     num_scales = len(gaussian_scales)
     for i in range(num_scales):
-        scale_block = int(np.power(2, i))
-        
         # Eigen Values / Vectors of each pixel
         eigen_image = cv2.cornerEigenValsAndVecs(
             gaussian_scales[i],
-            blockSize = scale_block,
+            blockSize = blockSize,
             ksize = sigma2tam(derivate_scale),
             borderType = cv2.BORDER_CONSTANT
         )
@@ -104,70 +87,157 @@ def harris_scales(gaussian_scales):
     return harris_scales
 
 # Non-Maximum Supression and High Pass Supression
-def maximums_harris_scale(grad, scales, high_pass = 10.):
-    # Non Maximum Supression For Each Scale
+def maximums_harris_scale(scales, gradient_x, gradient_y, high_pass = 10.):
+    # Non Maximum Supression and High pass For Each Scale
     maximums = []
     for k in range(len(scales)):
         scale_maximums = []
         scale = scales[k]
-        width, height = scale.shape        
-        # Factor Scales
-        scalef = np.power(2, k)
+        width, height = scale.shape
+
         for j in range(1, height):
             for i in range(1, width):
                 px = scale[j, i]
-                if not(np.isnan(px)) and px >= high_pass:
+                if not(np.isnan(px)) and px > high_pass:
                     nmax = np.amax(scale[j - 1 : j + 2, i - 1 : i + 2])
                     if px >= nmax:
-                        sx = i * scalef
-                        sy = j * scalef
-                        angle = np.arctan2(grad[sy][sx][1], grad[sy][sx][0])
-                        scale_maximums.append(cv2.KeyPoint(sx, sy, scalef * 16., angle))
+                        angle = np.arctan2(gradient_y[k][j][i], gradient_x[k][j][i])
+                        scale_maximums.append(cv2.KeyPoint(i, j, (k + 1) * 16., angle, 0., k))
+        # Add Maximums found on the scale
         maximums.append(scale_maximums)
     
     return maximums
 
+def ejercicio1_d(img, maximums, random_points = 3):
+    ## Get SubPixel
+    # Corner Matrix (n, 1, 2) https://stackoverflow.com/questions/40461469/how-to-use-opencv-cornersubpix-in-python
+    corners_preprocess = np.zeros((len(maximums), 1, 2), dtype = np.float32);
+    
+    # Set X, Y for the pre-processing
+    for i in range(len(maximums)):
+        corners_preprocess[i][0][0] = maximums[i].pt[0] # set X
+        corners_preprocess[i][0][1] = maximums[i].pt[1] # set Y
+    
+    # https://docs.opencv.org/2.4/doc/tutorials/features2d/trackingmotion/corner_subpixeles/corner_subpixeles.html
+    cv2.cornerSubPix(
+        img,                # Image
+        corners_preprocess, # out Vector variable
+        (5, 5),             # Window Size for Edges
+        (-1, -1),           # "zero zone" to avoid possible singularities of the autocorrelation matrix
+        (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 50, 0.001) # Error of 0.001 in 50 iterations
+    )
+    
+    subpixels = corners_preprocess.reshape(-1, 2)
+    
+    # List of N Random Integers with no repetition
+    random_unique_ints = random.sample(range(len(maximums)), random_points)
+    random_subpixel = [subpixels[i] for i in random_unique_ints]
+    random_pixels   = [list(maximums[i].pt) for i in random_unique_ints]
+    
+    # Scale the Image
+    z = 
+    resized = cv2.resize(img, None, fx = z, fy = z, interpolation = cv2.INTER_NEAREST)
+    
+    # Draw points
+    # Draw Fixed Pixels
+    for subpixel in random_subpixel:
+        cv2.drawMarker(
+            resized,
+            (int(subpixel[0] * z), int(subpixel[1] * z)),
+            (0, 0, 255),
+            markerType = cv2.MARKER_STAR, 
+            markerSize = 2,
+            thickness = 1,
+            line_type = cv2.LINE_AA
+        )
+    
+    # Draw Original Pixels
+    for pixel in random_pixels:
+        cv2.drawMarker(
+            resized,
+            (int(pixel[0] * z), int(pixel[1] * z)),
+            (255, 0, 0),
+            markerType = cv2.MARKER_DIAMOND, 
+            markerSize = 2,
+            thickness = 1,
+            line_type=cv2.LINE_AA
+        )
+    
+    # Crop Each Region
+    r = int(7 * z)
+    rh = r // 2
+    # Put padding to avoid memory
+    resized = np.pad(resized, (r, r), mode = 'constant')
+    
+    result = np.zeros((r, r * random_points), dtype = np.uint8)
+    for i in range(random_points):
+        x = int(random_pixels[i][0] * z)
+        y = int(random_pixels[i][1] * z)
+        result[:, r * i : r * (i + 1)] = i * 10#resized[y - rh : y + rh + 1, x - rh : x + rh + 1]
+        
+        
+    return result
 
 # Ejercicio 1
-def ejercicio1(img, num_scales = 3, high_pass = 10.):
+def ejercicio1(img, random_points, num_scales = 3, high_pass = 10.):
     # Sizes image
     height, width = img.shape
     # Resize Image to a power of two
     rimg = padding_image(img)
-
-    # Gradient and Gaussian Scales    
-    igrad = gradient(img, 4.5)
-    gaussians = gaussian_scales(rimg, num_scales)
+    
+    # Gradient
+    ksize = sigma2tam(4.5) # Sigma for the orientation
+    grad_x = cv2.Sobel(img, cv2.CV_64F, 1, 0, ksize = ksize)
+    grad_y = cv2.Sobel(img, cv2.CV_64F, 0, 1, ksize = ksize)
+    
+    # Gradient and Gaussian Scales
+    scale_gradient_x = gaussian_scales(grad_x, 0.01, num_scales) # sigma = 0.1, smol smoothing
+    scale_gradient_y = gaussian_scales(grad_y, 0.01, num_scales) #sigma = 0.1, smol smoothing
+    gaussian_scale = gaussian_scales(rimg, 1.5, num_scales) # Paper constant Gaussian coefficient
     
     # Harris Gaussian Scales
-    scales = harris_scales(gaussians)
-
+    scales = harris_scales(gaussian_scale, 5) # Use window 5x5 to find corners
     # Maximum Scale Supression
-    maximums = maximums_harris_scale(igrad, scales, high_pass)
+    maximums = maximums_harris_scale(scales, scale_gradient_x, scale_gradient_y, high_pass)
+    
+    # Print Maximums per scale
+    for i in range(num_scales):
+        print("Escala {}: Total de {} puntos Harris".format(i, len(maximums[i])))
+    
+    # Unroll the matrix 
+    maximums = [j for sub in maximums for j in sub]
+    
+    result = ejercicio1_d(img, maximums)
+    
+    """
     
     # Draw one next to another
-    result = np.zeros((height, width * num_scales, 3), dtype = rimg.dtype)
+    result = np.zeros((height, width * num_scales), dtype = np.uint8)
+    result = img[:height,:width]
     
-    for i in range(len(gaussians)):
+    for i in range(num_scales):
+        maximums_scale = maximums[i]
         scalef = np.power(2, i)
-        scale_resize = cv2.resize(gaussians[i], None, fx = scalef, fy = scalef, interpolation = cv2.INTER_NEAREST)
+        scale_resize = cv2.resize(gaussian_scale[i], None, fx = scalef, fy = scalef, interpolation = cv2.INTER_NEAREST)
         keypoints = drawKeypoints(
             scale_resize,
-            maximums[i]
+            maximums_scale,
+            scalef
         )
         result[:height, width * i: width * (i + 1)] = keypoints[:height, :width]
+    """
     
     return result
 
 # Ejercicio 2  AKAZE
 def create_akaze(img1, img2):
+    
     akaze = cv2.AKAZE_create()
     kpts1, desc1 = akaze.detectAndCompute(img1, None)
     kpts2, desc2 = akaze.detectAndCompute(img2, None)
     return ((kpts1, desc1), (kpts2, desc2))
 
 def match_akaze(desc1, desc2, crossCheck = True, k = 1):
-    
     # Create Matcher
     bfmatcher = cv2.BFMatcher(
         crossCheck = crossCheck
@@ -178,7 +248,6 @@ def match_akaze(desc1, desc2, crossCheck = True, k = 1):
     
 
 def draw_matches(img1, kpts1, img2, kpts2, matches, number_sample):
-    
     # Random Sample
     matches = random.sample(matches, number_sample)
     
@@ -329,14 +398,15 @@ def ejercicioBonus(img1, img2):
     
 
 #./imagenes/yosemite7.jpg
-img1 = cv2.imread("./imagenes/yosemite1.jpg", cv2.IMREAD_COLOR)
-img2 = cv2.imread("./imagenes/yosemite2.jpg", cv2.IMREAD_COLOR)
+img2 = cv2.imread("./imagenes/yosemite2.jpg", cv2.IMREAD_GRAYSCALE)
 
-#cv2.imshow("Ejercicio 1", ejercicio1(img1, 3, 0.1))
-#cv2.waitKey(0)
-#cv2.destroyAllWindows()
+tablero = cv2.imread("./imagenes/Tablero1.jpg", cv2.IMREAD_GRAYSCALE)
 
-cv2.imshow("Ejercicio 2", draw_matches(*ejercicio2_lowe(img1, img2), 100))
+cv2.imshow("Ejercicio 1", ejercicio1(tablero, 3, 4, 0.1))
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+cv2.imshow("Ejercicio 2", draw_matches(*ejercicio2_lowe(tablero, img2), 100))
 #cv2.waitKey(0)
 #cv2.destroyAllWindows()
 
@@ -376,4 +446,4 @@ yosemite_mosaic_2 = [
 #cv2.destroyAllWindows()
 
 
-ejercicioBonus(img1, img2)
+#ejercicioBonus(img1, img2)
