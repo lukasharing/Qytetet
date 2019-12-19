@@ -62,7 +62,34 @@
 	%\node[fill=black,rounded corners] at (box.west) {\color{white}$\boldsymbol{>}$};
 	%\end{tikzpicture}
 	
-	
+	\section{Phoronix}
+	Phoronix Test Suite es la plataforma de pruebas y evaluación comparativa más completa disponible para Linux
+	\newline
+	\newline
+	El primer test, es para la CPU, consiste en resolver un número de sudokus y devuelve la media de los tiempos.
+	\newline
+	\newline
+	El tiempo medio obtenido es de 25 segundos aproximadamente en nuestra máquina virtual de Ubuntu.
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=1.0\textwidth]{images/sudokut-ubuntu-test.png}
+		\caption{Test CPU, Resolución de sudoku}
+	\end{figure}
+	\newpage
+	El segundo test se trata de introducir una gran cantidad de enteros en la RAM y sacarlos, así comprobar la velocidad de nuestra memoria (ancho de banda).
+	\newline
+	\newline
+	El test es realizado una única vez, con un tiempo estimado de 11 minutos.
+	\newline
+	\newline
+	El resultado obtenido fue de 9052.47 MB/s de ancho de banda.
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=1.0\textwidth]{images/ramspeed-ubuntu-test.png}
+		\caption{Test memoria RAM, Entrada y salida de valores enteros}
+	\end{figure}
+
+	\newpage
 	\section{JMeter}
 	Apache JMeter es un software de código abierto, diseñada para cargar el comportamiento funcional de las pruebas y medir el rendimiento.
 	
@@ -188,7 +215,7 @@
 		\caption{Noveno paso, creación de variables del entorno}
 	\end{figure}
 
-	Para los administradores, a diferencia de los Alumnos, van a realizar todas las peticiones que tiene el archivo \textbf{TCP Log} que vamos a utilizar sobre los Alumnos.
+	Para los administradores, a diferencia de los Alumnos de una única , van a realizar todas las peticiones que tiene el archivo \textbf{TCP Log} que vamos a utilizar sobre los Alumnos.
 	
 
 	\begin{figure}[h]
