@@ -1,0 +1,207 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+
+
+% Math
+\usepackage{bm}
+\usepackage{amsmath} 
+
+\begin{document}
+	\begin{titlepage}
+		\centering
+		{\scshape\LARGE Universidad de Granada \par}
+		{\large \date{\specialdate\today}\par}
+		\vspace{1cm}
+		{\LARGE\bfseries Cuestionario 3\par}
+		\vspace{1.5cm}
+		{\scshape\large Visión por computador\par}
+		\vspace{2cm}
+		{\Large\itshape Lukas Häring García\par}
+	\end{titlepage}
+	
+	
+	\newpage
+	
+	1. ¿Cuál es la transformación más fuerte de la geometría de una escena que puede introducir se al tomar una foto de ella? Dar algún ejemplo.
+	\newpage
+	2. Por qué es necesario usar el plano proyectivo para estudiar las transformaciones en las imágenes de fotos de escenas? Dar algún ejemplo.
+	\newpage
+	3. Sabemos que en el plano proyectivo un punto no existe en el sentido del plano afín,sino que se define por una clase de equivalencia de vectores definida por ${k(x,y,1),k\ne 0}$. Razone usando las coordenadas proyectivas de los puntos afines de una recta que pase por el $(0,0)$ del plano afín y verifique que los punto de la recta del infinito del plano proyectivo son necesariamente vectores del tipo $(*,*,0)$ con *=cualquier número.
+	\newpage
+	4. ¿Qué propiedades de la geometría de un plano quedan invariantes cuando se toma una foto de él? Justificar la respuesta.
+	\newpage
+	5. En  coordenadas  homogéneas  los  puntos y  rectas  del  plano  se representan  por  vectores  de  tres  coordenadas(notados  x  y  l respectivamente), de manera que si una recta contiene a un punto se verifica la ecuación $x^Tl=0$, es decir 
+	$\begin{pmatrix}
+		x1 & x2 & x3\\
+	\end{pmatrix}
+	\begin{pmatrix}
+		x1 \\ x2 \\ x3\\
+	\end{pmatrix} = 0$. 
+	Considere una homografía H que transforma vectores de puntos, $x'=Hx$. Dado que una homografía transforma vectores de tres coordenadas también existen homografías G para transformar vectores de rectas $l'=Gl$.Suponga una recta l y un punto x que verifican $x^Tl=0$ en el plano proyectivo y suponga  que  conoce  una  homografía  H  que transforma vectores  de puntos. En estas condiciones ¿cuál es la homografía G que transforma los vectores de las rectas? Deducirla matemáticamente.
+	\newpage
+	6. ¿Cuál es el mínimo número de escalares necesarios para fijar 
+	una homografía general? ¿Y si la homografía es afín?Justificar la respuesta
+	\newpage
+	7. Defina una homografía entre planos proyectivos que haga que el punto (3,0,2) del plano proyectivo-1 se transforme en un punto de la recta del infinito del plano proyectivo-2? Justificar la respuesta
+	\newpage
+	8. Una homografía general $H, det(H)\ne0$ admite una descomposición única en movimiento elementales de la siguiente forma $H=H_SH_AH_P$ donde $H_S$ representa la homografía de una similaridad (escala, giro y traslación), $H_A$ la homografía de un movimiento afín puro y  $H_P$ una transformación proyectiva pura.
+	
+	$$H = H_S \cdot H_A \cdot H_P$$
+	$$
+	\begin{pmatrix}
+		a & b & c\\
+		d & e & f\\
+		g & h & i\\
+	\end{pmatrix}
+	= 
+	\begin{pmatrix}
+		s\cos(\theta) & -s\sin(\theta) & t_x\\
+		s\sin(\theta) & s\cos(\theta) & t_y\\
+		0 & 0 & 1\\
+	\end{pmatrix}
+	\cdot
+	\begin{pmatrix}
+		a & c & 0 \\
+		0 & b & 0 \\
+		0 & 0 & 1\\
+	\end{pmatrix}
+	 \cdot
+	 \begin{pmatrix}
+		 1 & 0 & 0 \\
+		 0 & 1 & 0 \\
+		 v_1 & v_2 & v\\
+	 \end{pmatrix}
+	$$
+	$$
+	\begin{pmatrix}
+	a & b & c\\
+	d & e & f\\
+	g & h & i\\
+	\end{pmatrix}
+	= 
+	\begin{pmatrix}
+	as\cos(\theta) & cs\cos(\theta)-bs\sin(\theta) & t_x\\
+	as\sin(\theta) & cs\sin(\theta)+bs\cos(\theta) & t_y\\
+	0 & 0 & 1\\
+	\end{pmatrix}
+	\cdot
+	\begin{pmatrix}
+	1 & 0 & 0 \\
+	0 & 1 & 0 \\
+	v_1 & v_2 & v\\
+	\end{pmatrix}
+	$$
+	$$
+	\begin{pmatrix}
+	a & b & c\\
+	d & e & f\\
+	g & h & i\\
+	\end{pmatrix}
+	= 
+	\begin{pmatrix}
+	as\cos(\theta) + t_xv_1 & cs\cos(\theta)-bs\sin(\theta)+t_xv_2 & t_xv\\
+	as\sin(\theta) + t_yv_1 & cs\sin(\theta)+bs\cos(\theta)+t_yv_2 & t_yv\\
+	v_1 & v_2 & v\\
+	\end{pmatrix}
+	$$
+	\newline
+	Vemos que la última fila ya está resuelta y tenemos que $v_1=g$, $v_2=h$ y $v=i$.
+	Además, con $v=i$ podemos también resolver la última columna, por lo que $t_x=\frac{c}{i}$ y $t_y=\frac{f}{i}$.
+	\newline
+	Finalmente resolvemos para $\theta$ y $s$:
+		$$ a = a\cdot s\cdot \cos(\theta)+t_xv_1\Rightarrow \dfrac{a-t_xv_1}{a}=\dfrac{ai-cg}{ai}=s\cdot cos(\theta)  $$
+		$$ d = a\cdot s\cdot \sin(\theta)+t_yv_1\Rightarrow \dfrac{b-t_yv_1}{a}=\dfrac{di-fg}{ai}=s\cdot sin(\theta)  $$
+	Dividimos el segundo con el primero y obtenemos:
+		$$ \frac{s\cdot sin(\theta)}{s\cdot cos(\theta)} = tan(\theta) = \dfrac{\dfrac{di-fg}{ia}}{\dfrac{ai-cg}{ia}} = \dfrac{id-fg}{ia-cg}\Rightarrow\theta=\arctan\left(\dfrac{id-fg}{ia-cg}\right) $$
+	Resolvemos para $scos(\theta)$, conociendo la siguiente igualdad $cos(arctan(x))=\dfrac{1}{\sqrt{x^2+1}}$
+	\newline
+		$$ s\cdot cos\left(\arctan\left(\dfrac{id-fg}{ia-cg}\right)\right)=\dfrac{s}{\sqrt{\left(\dfrac{id-fg}{ia-cg}\right)^2+1}}$$
+		Finalmente,
+		$$ s = \left(\dfrac{ai-cg}{ai}\right) \sqrt{\left(\dfrac{id-fg}{ia-cg}\right)^2+1} $$
+	\newline
+	
+	Vamos ahora aplicar las ecuaciones obtenidas para resolver el siguiente ejemplo.
+	
+	$H=\begin{pmatrix}
+		1.707 & 0.586 & 1.0\\
+		2.707 & 8.242 & 2.0\\
+		1.0 & 2.0 & 1.0\\
+	\end{pmatrix}$
+	
+	$$
+	\left\{
+	\begin{array}{ll}
+		v_1=g = 1.0\\
+		v_2=h = 2.0\\
+		v=i = 1.0\\
+		t_x=\dfrac{c}{i}=\dfrac{1.0}{1.0}=1.0\\
+		t_y=\dfrac{f}{i}=\dfrac{2.0}{1.0}=2.0\\
+		\theta = \arctan\left(\dfrac{id-fg}{ia-cg}\right)=\arctan\left(\dfrac{2.707\cdot 1.0 - 2.0\cdot 1.0}{1.0\cdot 1.707-1.0\cdot 1.0}\right) = \arctan(1)=\dfrac{\pi}{4} \\
+		
+		s = \left(\dfrac{ai-cg}{ai}\right) \sqrt{\left(\dfrac{ib-fg}{ia-cg}\right)^2+1} = \left(1 - \dfrac{1.0\cdot 1.0}{1.707\cdot 1.0}\right)\sqrt{1^2+1}=\dfrac{707}{1707}\cdot\sqrt{2}
+	\end{array}
+	\right.
+	$$
+	\newline
+	\textbf{Nota}: Si implementáramos estas equivalencias en un computador, tendremos pequeños errores de precisión.
+	
+	$
+	\begin{pmatrix}
+	1.707 & 0.586 & 1.0\\
+	2.707 & 8.242 & 2.0\\
+	1.0 & 2.0 & 1.0\\
+	\end{pmatrix}
+	= H_S\cdot H_A\cdot H_P
+	$\newline
+	Calculamos el seno y el coseno con los datos anteriores,\newline
+	$s\cdot\sin(\theta)=\dfrac{707}{1707}\cdot\sqrt{2}\cdot \sin\left(\dfrac{\pi}{4}\right)=\dfrac{707}{1707}\cdot\sqrt{2}\cdot\dfrac{1}{\sqrt{2}}=\dfrac{707}{1707} = s\cdot\cos(\theta)$\newline
+	$
+	H_S=
+	\begin{pmatrix}
+	\dfrac{707}{1707} & -\dfrac{707}{1707} & 1.0\\
+	\dfrac{707}{1707} & \dfrac{707}{1707} & 2.0\\
+	0 & 0 & 1\\
+	\end{pmatrix}
+	$\newline
+	$
+	H_A=
+	\begin{pmatrix}
+	1.707 & 1.0 & 0 \\
+	0 & 0.586 & 0 \\
+	0 & 0 & 1.0\\
+	\end{pmatrix}
+	$\newline
+	$
+	H_P=
+	\begin{pmatrix}
+	1 & 0 & 0 \\
+	0 & 1 & 0 \\
+	1.0 & 2.0 & 1.0\\
+	\end{pmatrix}
+	$
+	
+	\newpage
+	9. ¿Cuáles son las propiedades necesarias y suficientes para que una matriz defina un movimiento geométrico no degenerado entre planos? Justificar la respuesta
+	\newpage
+	
+	10. ¿Qué información de la imagen usa el detector de Harris para seleccionar puntos? ¿El detector de Harris detecta patrones geométricos o fotométricos? Justificar la contestación.
+	\newpage
+	
+	11. ¿Sería adecuado usar como descriptor de un punto Harris los valores de los píxeles de su región de soporte? Identifique ventajas, inconvenientes y mecanismos de superación de estos últimos.
+	
+	\newpage
+	
+	12. Describa un par de criterios que sirvan para seleccionar parejas de puntos en correspondencias ("matching") a partir de descriptores de regiones extraídos de dos imágenes. ¿Por qué no es posible garantizar que todas las parejas son correctas?
+	
+	\newpage
+	13. Cual es el objetivo principal del uso de la técnica RANSAC en el cálculo de una homografía. Justificar la respuesta
+	
+	\newpage
+	14. Si tengo 4 imágenes de una escena de manera que se solapan la 1-2, 2-3 y 3-4. ¿Cuál es el número mínimo de parejas de puntos en correspondencias necesarios para montar un mosaico? Justificar la respuesta
+	
+	\newpage
+	15. ¿En la confección de un mosaico con proyección rectangular es esperable que aparezcan deformaciones geométricas de la escena real?¿Cuáles y por qué? ¿Bajo qué condiciones esas deformaciones podrían no estar presentes? Justificar la respuesta.
+\end{document}
