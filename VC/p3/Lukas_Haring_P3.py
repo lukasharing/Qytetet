@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Práctica 0 Realizada por Lukas Häring García
+# Práctica 3 Realizada por Lukas Häring García
 import cv2
 import numpy as np
 
@@ -11,22 +11,6 @@ os.path.dirname(os.path.abspath(__file__))
 # Sigma to Sobel Matriz length
 def sigma2tam(sigma):
     return 2 * np.uint(sigma * 3) + 1;
-
-# Draw Keypoints because cv2 is ***
-def drawKeypoints(img, keypoints, color = (0, 0, 255)):
-    
-    result = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
-    
-    for keypoint in keypoints:
-        scalef = np.int(np.power(2., keypoint.octave))
-        position = (int(round(keypoint.pt[0] * scalef)), int(round(keypoint.pt[1] * scalef)))
-        radius = int(round(keypoint.size / 2.))
-        
-        cv2.circle(result, position, radius, color, 1, cv2.LINE_AA)
-        direction = (position[0] + int(np.cos(keypoint.angle) * radius), position[1] + int(np.sin(keypoint.angle) * radius)) 
-        cv2.line(result, position, direction, color, 1, cv2.LINE_AA)
-        
-    return result
     
 # Returns the image with a size of a power of two (the reminder is a padding of 0)
 def padding_image(img):
@@ -49,18 +33,14 @@ def padding_image(img):
     
     return new_image
 
-# Returns next gaussian scale
-def gaussian_scale(img, sigma):
-    gs_image = cv2.GaussianBlur(img, None, sigma, sigma)
-    gs_image = cv2.resize(gs_image, None, fx = 0.5, fy = 0.5, interpolation = cv2.INTER_NEAREST)
-    return gs_image
-
-def gaussian_scales(img, sigma, num_scales):
+# Returns gaussian scales
+def gaussian_scales(img, num_scales):
     last_scale = img
-    scales = [img]
+    last_scale.astype(np.float32)
     
+    scales = [last_scale]
     for i in range(num_scales - 1):
-        last_scale = gaussian_scale(last_scale, sigma)
+        last_scale = cv2.pyrDown(last_scale)
         scales.append(last_scale)
     
     return scales
@@ -95,15 +75,16 @@ def maximums_harris_scale(scales, gradient_x, gradient_y, blockSize = 5., high_p
         scale_maximums = []
         scale = scales[k]
         width, height = scale.shape
-
+        
+        scalef = np.power(2.0, k)
         for j in range(1, height):
             for i in range(1, width):
                 px = scale[j, i]
                 if not(np.isnan(px)) and px > high_pass:
                     nmax = np.amax(scale[j - 1 : j + 2, i - 1 : i + 2])
                     if px >= nmax:
-                        angle = np.arctan2(gradient_y[k][j][i], gradient_x[k][j][i])
-                        scale_maximums.append(cv2.KeyPoint(i, j, (k + 1) * blockSize * 2.0, angle, 0., k))
+                        angle = np.degrees(np.arctan2(gradient_y[k][j][i], gradient_x[k][j][i]))
+                        scale_maximums.append(cv2.KeyPoint(i * scalef, j * scalef, (k + 1) * blockSize * 2.0, angle, 0., k))
         # Add Maximums found on the scale
         maximums.append(scale_maximums)
     
@@ -117,9 +98,8 @@ def supress_near_border(original, points, border):
     
     for i in range(len(points)):
         ppoints = []
-        fc = np.power(2., -i) # 2^(-scale) Factor
-        fwidth = width * fc
-        fheight = height * fc
+        fwidth = width
+        fheight = height
         for point in points[i]:
             if (point.pt[0] >= border and point.pt[0] < (fwidth - border)) and (point.pt[1] >= border and point.pt[1] < (fheight - border)):
                 ppoints.append(point)
@@ -134,126 +114,139 @@ def ejercicio1_d(img, maximums, random_points = 5):
     
     ## Get SubPixel
     # Corner Matrix (n, 1, 2) https://stackoverflow.com/questions/40461469/how-to-use-opencv-cornersubpix-in-python
-    corners_preprocess = np.zeros((len(maximums), 1, 2), dtype = np.float32);
+    corners_preprocess = np.zeros((random_points, 1, 2), dtype = np.float32);
     
-    # Set X, Y for the pre-processing
-    for i in range(len(maximums)):
-        scale = np.power(2, maximums[i].octave)
-        corners_preprocess[i][0][0] = maximums[i].pt[0] * scale # set X
-        corners_preprocess[i][0][1] = maximums[i].pt[1] * scale # set Y
+    # List of N Random Integers with no repetition
+    random_unique_ints = random.sample(range(len(maximums)), random_points)
+    
+    # Set X, Y for the pre-processing corners in the same scale
+    for i in range(random_points):
+        random_i = random_unique_ints[i]
+        corners_preprocess[i][0][0] = maximums[random_i].pt[0] # set X
+        corners_preprocess[i][0][1] = maximums[random_i].pt[1] # set Y
     
     # https://docs.opencv.org/2.4/doc/tutorials/features2d/trackingmotion/corner_subpixeles/corner_subpixeles.html
     cv2.cornerSubPix(
         img,                # Image
         corners_preprocess, # out Vector variable
-        (2, 2),             # Window Size for Edges
+        (5, 5),             # Window Size for Edges
         (-1, -1),           # "zero zone" to avoid possible singularities of the autocorrelation matrix
-        (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 50, 0.001) # Error of 0.001 in 50 iterations
+        (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 100, 0.01) # Error of 0.001 in 50 iterations
     )
     
     subpixels = corners_preprocess.reshape(-1, 2)
     
-    # List of N Random Integers with no repetition
-    random_unique_ints = random.sample(range(len(maximums)), random_points)
+    # Result Image
+    r = 4 # Radius from the center
+    z = 5 # Zoom
+    result = np.zeros(((2 * r + 1) * z, (2 * r + 1) * z * random_points, 3), dtype = np.uint8)
     
-    # Scale the Image
-    z = 10
-    resized = cv2.resize(img, None, fx = z, fy = z, interpolation = cv2.INTER_NEAREST)
-    
-    # Draw points
-    # Draw Fixed Pixels
     for i in range(random_points):
+        subregion = np.zeros((r * z, r * z, 3), dtype = np.uint8)
+        # First Point
         rand = random_unique_ints[i]
+        # Pixels
+        mx = int(maximums[rand].pt[0])
+        my = int(maximums[rand].pt[1])
+        # Subpixels
+        smx = subpixels[i][0]
+        smy = subpixels[i][1]
+        
+        # dx, dy
+        dx = smx - mx
+        dy = smy - my
+        
+
+        # Take rubregion
+        subregion = img[my - r: my + r + 1, mx - r : mx + r + 1]
+        # Zoom it
+        subregion = cv2.resize(subregion, None, fx = z, fy = z, interpolation = cv2.INTER_NEAREST)
+        subregion = cv2.cvtColor(subregion, cv2.COLOR_GRAY2BGR)
+        
+        # Draw Pixel Corner
         cv2.drawMarker(
-            resized,
-            (int(subpixels[rand][0] * z), int(subpixels[rand][0] * z)),
+            subregion,
+            (r * z, r * z),
             (0, 0, 255),
             markerType = cv2.MARKER_STAR, 
-            markerSize = 5,
+            markerSize = z,
             thickness = 1,
             line_type = cv2.LINE_AA
         )
-    
-    # Draw Original Pixels
-    for i in range(random_points):
-        rand = random_unique_ints[i]
+        
+        # Draw Sub Cornel
         cv2.drawMarker(
-            resized,
-            (int(maximums[rand].pt[0] * z), int(maximums[rand].pt[1] * z)),
-            (255, 0, 0),
+            subregion,
+            (int((r + dx) * z), int((r + dy) * z)),
+            (0, 255, 0),
             markerType = cv2.MARKER_DIAMOND, 
-            markerSize = 5,
+            markerSize = z,
             thickness = 1,
-            line_type=cv2.LINE_AA
+            line_type = cv2.LINE_AA
         )
-    
-    # Crop Each Region
-    r = int(9 * z)
-    r += int(1 - np.mod(9 * z, 2))
-    rh = r // 2
-    # Put padding to avoid out of range
-    resized = np.pad(resized, (r, r), mode = 'constant')
-    
-    result = np.zeros((r, r * random_points), dtype = np.uint8)
-    for i in range(random_points):
-        rand = random_unique_ints[i]
-        x = int(maximums[rand].pt[0] * z) + r
-        y = int(maximums[rand].pt[1] * z) + r
-        result[:, r * i : r * (i + 1)] = resized[y - rh : y + rh + 1, x - rh : x + rh + 1]
         
-        
+        result[:, i * subregion.shape[0] : (i + 1) * subregion.shape[0], :] = subregion
+    
     return result
 
-# Ejercicio 1
-def ejercicio1(img, random_points, num_scales = 3, high_pass = 10.):
+def ejercicio1_c(img, maximums):
+    num_scales = len(maximums)
+    # Print Maximums per scale
+    for i in range(num_scales):
+        print("Escala {}: Total de {} puntos Harris".format(i, len(maximums[i])))
+    print("Total de puntos: {} puntos Harris".format(sum(len(m) for m in maximums)))
+    
     # Sizes image
     height, width = img.shape
+    
+    # Gaussian Scale
+    gaussian_scale = gaussian_scales(img, num_scales)
+    
+    # Draw one next to another
+    result = np.zeros((height, width * num_scales, 3), dtype = np.uint8)
+    #result = img[:height,:width]
+    
+    for i in range(len(maximums)):
+        scalef = np.power(2, i)
+        resized = cv2.resize(gaussian_scale[i], None, fx = scalef, fy = scalef, interpolation = cv2.INTER_NEAREST)
+        
+        # Scale Keypoints
+        keypoints = cv2.drawKeypoints(
+            resized,
+            maximums[i],
+            outImage = np.uint8([]),
+            color = (0, 0, 255),
+            flags = cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS    
+        )
+        result[:height, width * i: width * (i + 1)] = keypoints[:height, :width]
+    
+    
+    return result
+    
+# Ejercicio 1
+def ejercicio1(img, random_points, num_scales = 3, high_pass = 10.):
     # Resize Image to a power of two
     rimg = padding_image(img)
-    
-    #smoothed = cv2.GaussianBlur(rimg, None, 1.5, 1.5) # Gaussian Original Image by 1
     
     # Gradient
     ksize = sigma2tam(4.5) # Sigma for the orientation
     grad_x = cv2.Sobel(img, cv2.CV_64F, 1, 0, ksize = ksize)
     grad_y = cv2.Sobel(img, cv2.CV_64F, 0, 1, ksize = ksize)
     
-    
     # Gradient and Gaussian Scales
-    scale_gradient_x = gaussian_scales(grad_x, 0.001, num_scales) # sigma = 0.001, not noticeable smoothing
-    scale_gradient_y = gaussian_scales(grad_y, 0.001, num_scales) # sigma = 0.001, not noticeable smoothing
-    gaussian_scale = gaussian_scales(rimg, 1.5, num_scales) # Paper constant Gaussian coefficient
+    scale_gradient_x = gaussian_scales(grad_x, num_scales) # Derivate x Space Scale
+    scale_gradient_y = gaussian_scales(grad_y, num_scales) # Derivate y Space Scale
+    gaussian_scale = gaussian_scales(rimg, num_scales) # Paper constant Gaussian coefficient
     
     # Harris Gaussian Scales
     scales = harris_scales(gaussian_scale, 5) # Use window 5x5 to find corners
     # Maximum Scale Supression
     maximums = maximums_harris_scale(scales, scale_gradient_x, scale_gradient_y, 5, high_pass)
     # Supress Maximum near borders
-    maximums = supress_near_border(img, maximums, 5)
+    maximums = supress_near_border(img, maximums, 10)
     
-    # Print Maximums per scale
-    for i in range(num_scales):
-        print("Escala {}: Total de {} puntos Harris".format(i, len(maximums[i])))
-    print("Total de puntos: {} puntos Harris".format(sum(len(m) for m in maximums)))
+    return img, maximums
     
-    #return ejercicio1_d(img, maximums)
-    
-    # Draw one next to another
-    result = np.zeros((height, width * num_scales, 3), dtype = np.uint8)
-    #result = img[:height,:width]
-    
-    for i in range(num_scales):
-        scalef = np.power(2, i)
-        scale_resize = cv2.resize(gaussian_scale[i], None, fx = scalef, fy = scalef, interpolation = cv2.INTER_NEAREST)
-        keypoints = drawKeypoints(
-            scale_resize,
-            maximums[i]
-        )
-        result[:height, width * i: width * (i + 1)] = keypoints[:height, :width]
-    
-    
-    return result
-
 # Ejercicio 2  AKAZE
 def create_akaze(img1, img2):
     
@@ -264,7 +257,7 @@ def create_akaze(img1, img2):
 
 def draw_matches(img1, kpts1, img2, kpts2, matches, number_sample):
     # Random Sample
-    matches = random.sample(matches, number_sample)
+    matches = random.sample(matches, min(len(matches), number_sample))
     # Draw
     return cv2.drawMatches(
         img1, kpts1,
@@ -276,7 +269,7 @@ def draw_matches(img1, kpts1, img2, kpts2, matches, number_sample):
 
 def draw_matches_knn(img1, kpts1, img2, kpts2, matches, number_sample):
     # Random Sample
-    matches = random.sample(matches, number_sample)
+    matches = random.sample(matches, min(len(matches), number_sample))
     # Draw
     return cv2.drawMatchesKnn(
         img1, kpts1,
@@ -306,15 +299,6 @@ def ejercicio2_brute_cross(img1, img2):
 def ejercicio2_lowe(img1, img2, ratio = 0.4):
     (kpts1, desc1), (kpts2, desc2) = create_akaze(img1, img2)
     
-    # Get Matches from descriptors - BruteForce
-    bfmatcher = cv2.BFMatcher(
-        cv2.NORM_HAMMING, # Because are binary vectors
-        crossCheck = True
-    )
-    
-    # Generate matches for the descriptors
-    matches_cross = bfmatcher.match(desc1, desc2)
-    
     # Get Matches from descriptors without crosscheck
     bfmatcher = cv2.BFMatcher(
         cv2.NORM_HAMMING, # Because are binary vectors
@@ -327,11 +311,10 @@ def ejercicio2_lowe(img1, img2, ratio = 0.4):
     lowes_matches = []
     
     # Find matches from crosscheck and no crosscheck
-    for match_cross in matches_cross:
-        for match_nocross in matches_nocross:
-            lowes_ratio = match_nocross[0].distance / match_nocross[1].distance
-            if match_nocross[0].queryIdx == match_cross.queryIdx and lowes_ratio < ratio: 
-                lowes_matches.append([match_cross])
+    for match_nocross in matches_nocross:
+        lowes_ratio = match_nocross[0].distance / match_nocross[1].distance
+        if lowes_ratio < ratio:
+            lowes_matches.append(match_nocross[:-1])
     
     return (img1, kpts1, img2, kpts2, lowes_matches)
 
@@ -346,7 +329,6 @@ def homgraphy_matrix(tx, ty, s = 1.):
 
 def get_homography_matrix(img1, img2, ratio = 0.8):
     (_, points1, _, points2, matches) = ejercicio2_lowe(img1, img2, ratio)
-    print("Hola {}".format(len(matches)))
     
     k_from = np.array([points1[match[0].queryIdx].pt for match in matches])
     k_to   = np.array([points2[match[0].trainIdx].pt for match in matches])
@@ -356,7 +338,7 @@ def get_homography_matrix(img1, img2, ratio = 0.8):
     
 def ejercicio3(img1, img2, ratio = 0.4):
     # Matches
-    homography = get_homography_matrix(img2, img1, ratio)
+    homography = get_homography_matrix(img1, img2, ratio)
     
     # Create Result Image
     width = 1500
@@ -366,13 +348,21 @@ def ejercicio3(img1, img2, ratio = 0.4):
     # Center Image    
     dw = (width - img1.shape[1])//2
     dh = (height - img1.shape[0])//2
-    compose_image[dh : dh + img1.shape[0], dw : dw + img1.shape[1]] = img1
     
     # Center Translation
     t_matrix = homgraphy_matrix(dw, dh)
     
+    # Move first image
+    compose_image = cv2.warpPerspective(
+        img1,
+        t_matrix,
+        (width, height),
+        dst = compose_image,
+        borderMode = cv2.BORDER_TRANSPARENT
+    )
+    
     # Concat Transoformations (dot product of the transformations)
-    transform = t_matrix @ homography
+    transform = t_matrix @ np.linalg.inv(homography)
     
     # Warp the img 
     compose_image = cv2.warpPerspective(
@@ -400,8 +390,6 @@ def homographies_queue(imgs, dx = 0., dy = 0., s = 1., ratio = 0.8):
 
 def ejercicio4(imgs, dx = 0., dy = 0., ratio = 0.8, scale = 0.4):
     if len(imgs) <= 1: return;
-    # Sort by image size, Biggest image always in the middle
-    imgs.sort(key = lambda x: x.shape[0] * x.shape[1])
     
     width = 1600
     height = 700
@@ -425,56 +413,164 @@ def ejercicio4(imgs, dx = 0., dy = 0., ratio = 0.8, scale = 0.4):
     return compose_image
     
 # Bonus
+# https://cseweb.ucsd.edu/classes/wi07/cse252a/homography_estimation/homography_estimation.pdf
+def find_homography(pnts1, pnts2):
+    T = []
+    # Homography Matrix Solver
+    for i in range(len(pnts1)):
+        x, y = pnts1[i][0], pnts1[i][1]
+        xp, yp = pnts2[i][0], pnts2[i][1]
 
-def find_homography_bonus(pnts1, pnts2):
+        T.append([-x, -y, -1, 0, 0, 0, xp * x, xp * y, xp])
+        T.append([0, 0, 0, -x, -y, -1, yp * x, yp * y, yp])
     
-    # Get 4 Points
-    pnts14 = random.sample(range(pnts1), 4)
     
-    np.array([
-                
-    ])
+    # Convert it into matrix
+    T = np.matrix(T)
     
-    print(pnts14)
+    # T = U * D * V^t
+    _, _, V = np.linalg.svd(T)
     
-    # Using Ransac
+    # Last Row has the smallest eigenvalue
+    H = np.reshape(V[8], (3, 3))
+    
+    # Normalize the matrix dividing by the last cell
+    H = H / H[2, 2]
+        
+    return H
 
-def ejercicioBonus(img1, img2, ratio = 0.8):
+# Geometric Function
+def error_homography(pnt1, pnt2, H):
+    # Apply Homography
+    pnt1H2 = H @ pnt1
+    # Normalize
+    pnt1H2 = pnt1H2 / pnt1[2]
+
+    # Error Distance
+    error = pnt2 - pnt1H2
+    
+    # Return Norm of the error
+    return np.linalg.norm(error)
+
+
+def ransac(pnts1, pnts2, threshold = 0.1):
+    # Pre-process data
+    zeros = np.full((len(pnts1), 1), 1., dtype = np.float16)
+    pnts1 = np.append(pnts1, zeros, axis = 1)
+    pnts2 = np.append(pnts2, zeros, axis = 1)
+    
+    H_result = None # Final Homography
+    max_good = [] # Array with the best points
+    # 1000 iterations
+    for i in range(1000):
+        # Pick 4 Points
+        rnd = random.sample(range(len(pnts1)), 4)
+        
+        random_pnts1 = [pnts1[i] for i in rnd]
+        random_pnts2 = [pnts2[i] for i in rnd]
+        
+        H = find_homography(random_pnts1, random_pnts2)
+        
+        # Count Good Matches
+        good = []
+        for pt in range(len(pnts1)):
+            # Apply homography to point1
+            error = error_homography(pnts1[pt], pnts2[pt], H)
+            if error < threshold:
+                good.append(pnts1[pt])
+    
+        # If we have found a better match
+        if len(good) >= len(max_good):
+            max_good = good
+            H_result = H
+        
+    return H_result
+    
+
+def ejercicioBonus(img1, img2, ratio = 0.8, threshold = 1.0):
     
     (_, points1, _, points2, matches) = ejercicio2_lowe(img1, img2, ratio)
     
     k_from = np.array([points1[match[0].queryIdx].pt for match in matches])
     k_to   = np.array([points2[match[0].trainIdx].pt for match in matches])
     
-    find_homography_bonus(k_from, k_to)
+    # Bonus
+    H = ransac(k_from, k_to, threshold)
     
+    # Create Result Image
+    width = 1500
+    height = 700
+    compose_image = np.zeros((height, width, 3), np.uint8)
 
-#./imagenes/yosemite7.jpg
+    # Center Image    
+    dw = (width - img1.shape[1])//2
+    dh = (height - img1.shape[0])//2
+    
+    # Center Translation
+    t_matrix = homgraphy_matrix(dw, dh)
+    
+    # Move first image
+    compose_image = cv2.warpPerspective(
+        img1,
+        t_matrix,
+        (width, height),
+        dst = compose_image,
+        borderMode = cv2.BORDER_TRANSPARENT
+    )
+    
+    # Concat Transoformations (dot product of the transformations)
+    transform = t_matrix @ np.linalg.inv(H)
+    
+    # Warp the img 
+    compose_image = cv2.warpPerspective(
+        img2,
+        transform,
+        (width, height),
+        dst = compose_image,
+        borderMode = cv2.BORDER_TRANSPARENT
+    )
+    
+    return compose_image
 
-tablero = cv2.imread("./imagenes/yosemite1.jpg", cv2.IMREAD_GRAYSCALE)
+###### Ejercicios
 
-#cv2.imshow("Ejercicio 1", ejercicio1(tablero, 3, 4, 0.1))
-#cv2.waitKey(0)
-#cv2.destroyAllWindows()
+# Ejercicio 1
+yosemite = cv2.imread("./imagenes/Tablero1.jpg", cv2.IMREAD_GRAYSCALE)
 
-# Ejercicio 2
-img1 = cv2.imread("./imagenes/yosemite5.jpg", cv2.IMREAD_COLOR)
-img2 = cv2.imread("./imagenes/yosemite6.jpg", cv2.IMREAD_COLOR)
+img, maximums = ejercicio1(yosemite, 3, 3, 0.1)
 
-# Ejercicio 2 Bruteforce
-#cv2.imshow("Ejercicio 2 - Bruteforce", draw_matches(*ejercicio2_brute_cross(img1, img2), 100))
-#cv2.waitKey(0)
-#cv2.destroyAllWindows()
-
-# Ejercicio 2 Bruteforce + Lowe
-cv2.imshow("Ejercicio 2 - Lowe's criteria", draw_matches_knn(*ejercicio2_lowe(img1, img2), 100))
+# C
+cv2.imshow("Ejercicio 1", ejercicio1_c(img, maximums))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
+# D
+cv2.imshow("Ejercicio 1", ejercicio1_d(img, maximums))
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+cv2.absdiff(-1)
+
+# Ejercicio 2
+img1 = cv2.imread("./imagenes/yosemite3.jpg", cv2.IMREAD_COLOR)
+img2 = cv2.imread("./imagenes/yosemite4.jpg", cv2.IMREAD_COLOR)
+
+# Ejercicio 2 Bruteforce
+cv2.imshow("Ejercicio 2 - Bruteforce", draw_matches(*ejercicio2_brute_cross(img1, img2), 100))
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+# Ejercicio 2 Bruteforce + Lowe
+cv2.imshow("Ejercicio 2 - Lowe's criteria", draw_matches_knn(*ejercicio2_lowe(img1, img2, 0.55), 100))
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+# Ejercicio 3 Mosaico 2 Imágenes
 cv2.imshow("Ejercicio 3", ejercicio3(img1, img2))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
+# Ejercicio 4 Mosaico todas las imágenes
 etsiit_mosaic = [
  cv2.imread("./imagenes/mosaico003.jpg", cv2.IMREAD_COLOR),
  cv2.imread("./imagenes/mosaico004.jpg", cv2.IMREAD_COLOR),
@@ -501,16 +597,11 @@ yosemite_mosaic_2 = [
  cv2.imread("./imagenes/yosemite7.jpg", cv2.IMREAD_COLOR),
 ]
 
-# s
-tablero = [
- cv2.imread("./imagenes/Tablero1.jpg", cv2.IMREAD_COLOR),
- cv2.imread("./imagenes/Tablero2.jpg", cv2.IMREAD_COLOR)
-]
-
-
 cv2.imshow("Ejercicio 4", ejercicio4(yosemite_mosaic_2, +300, 0, 0.8, 0.6))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
-
-#ejercicioBonus(img1, img2)
+# Bonus
+cv2.imshow("Bonus", ejercicioBonus(img1, img2, threshold = 1.0))
+cv2.waitKey(0)
+cv2.destroyAllWindows()
