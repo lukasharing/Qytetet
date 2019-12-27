@@ -45,7 +45,7 @@ def gaussian_scales(img, num_scales):
     
     return scales
 
-# Gaussian Scale of the harmonic means
+# Scale of the harmonic means
 def harris_scales(gaussian_scales, blockSize = 5.0):
     harris_scales = []
     # Paper constant
@@ -61,7 +61,7 @@ def harris_scales(gaussian_scales, blockSize = 5.0):
             borderType = cv2.BORDER_CONSTANT
         )
         
-        # Harmonic Means
+        # Harmonic Means for each pixel
         harris_scales.append(
             eigen_image[:,:,0] * eigen_image[:,:,1] / (eigen_image[:,:,0] + eigen_image[:,:,1])
         )
@@ -69,22 +69,26 @@ def harris_scales(gaussian_scales, blockSize = 5.0):
 
 # Non-Maximum Supression and High Pass Supression
 def maximums_harris_scale(scales, gradient_x, gradient_y, blockSize = 5., high_pass = 10.):
-    # Non Maximum Supression and High pass For Each Scale
+    
     maximums = []
+    # Non Maximum Supression and High pass For Each Scale
     for k in range(len(scales)):
         scale_maximums = []
         scale = scales[k]
         width, height = scale.shape
         
         scalef = np.power(2.0, k)
+        # For each pixel check if it is maximum of the neighbourhood and pass the harmonic ratio threshold and return Keypoint
+        # Because the mean can be infinity, we have to check that it is a number
         for j in range(1, height):
             for i in range(1, width):
                 px = scale[j, i]
                 if not(np.isnan(px)) and px > high_pass:
                     nmax = np.amax(scale[j - 1 : j + 2, i - 1 : i + 2])
                     if px >= nmax:
+                        # The angle of the gradient is the arctan(dy / dx) in each scale 
                         angle = np.degrees(np.arctan2(gradient_y[k][j][i], gradient_x[k][j][i]))
-                        scale_maximums.append(cv2.KeyPoint(i * scalef, j * scalef, (k + 1) * blockSize * 2.0, angle, 0., k))
+                        scale_maximums.append(cv2.KeyPoint(i * scalef, j * scalef, (k + 1) * blockSize * 2.0, angle))
         # Add Maximums found on the scale
         maximums.append(scale_maximums)
     
@@ -95,11 +99,12 @@ def supress_near_border(original, points, border):
     
     result = []
     (height, width) = original.shape
-    
+    # For each maximum
     for i in range(len(points)):
         ppoints = []
         fwidth = width
         fheight = height
+        # Check if it is near to a border, if so, remove
         for point in points[i]:
             if (point.pt[0] >= border and point.pt[0] < (fwidth - border)) and (point.pt[1] >= border and point.pt[1] < (fheight - border)):
                 ppoints.append(point)
@@ -218,13 +223,13 @@ def ejercicio1_c(img, maximums):
             color = (0, 0, 255),
             flags = cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS    
         )
-        result[:height, width * i: width * (i + 1)] = keypoints[:height, :width]
+        result[:, width * i: width* (i + 1)] = keypoints[:height, :width]
     
     
     return result
     
 # Ejercicio 1
-def ejercicio1(img, random_points, num_scales = 3, high_pass = 10.):
+def ejercicio1(img, num_scales = 3, high_pass = 10.):
     # Resize Image to a power of two
     rimg = padding_image(img)
     
@@ -250,7 +255,7 @@ def ejercicio1(img, random_points, num_scales = 3, high_pass = 10.):
 # Ejercicio 2  AKAZE
 def create_akaze(img1, img2):
     
-    akaze = cv2.AKAZE_create(  )
+    akaze = cv2.AKAZE_create()
     kpts1, desc1 = akaze.detectAndCompute(img1, None)
     kpts2, desc2 = akaze.detectAndCompute(img2, None)
     return ((kpts1, desc1), (kpts2, desc2))
@@ -336,15 +341,13 @@ def get_homography_matrix(img1, img2, ratio = 0.8):
     # Works with , cv2.RANSAC, 5.0
     return cv2.findHomography(k_from, k_to, cv2.RANSAC, 1.)[0]
     
-def ejercicio3(img1, img2, ratio = 0.4):
-    # Matches
-    homography = get_homography_matrix(img1, img2, ratio)
+def ejercicio3(img1, img2, ratio = 0.5):
     
     # Create Result Image
     width = 1500
     height = 700
     compose_image = np.zeros((height, width, 3), np.uint8)
-
+    
     # Center Image    
     dw = (width - img1.shape[1])//2
     dh = (height - img1.shape[0])//2
@@ -361,8 +364,11 @@ def ejercicio3(img1, img2, ratio = 0.4):
         borderMode = cv2.BORDER_TRANSPARENT
     )
     
+    # Homography img2 over img1
+    homography = get_homography_matrix(img2, img1, ratio)
+    
     # Concat Transoformations (dot product of the transformations)
-    transform = t_matrix @ np.linalg.inv(homography)
+    transform = t_matrix @ homography
     
     # Warp the img 
     compose_image = cv2.warpPerspective(
@@ -376,9 +382,9 @@ def ejercicio3(img1, img2, ratio = 0.4):
     return compose_image
 
 def homographies_queue(imgs, dx = 0., dy = 0., s = 1., ratio = 0.8):
-    # Matches    
+    # Matches
     homographies = [
-        homgraphy_matrix((1. + s) * dx, (1. + s) * dy, s)
+        homgraphy_matrix(s * dx, s * dy, s)
     ]
     
     for i in range(1, len(imgs)):
@@ -391,7 +397,7 @@ def homographies_queue(imgs, dx = 0., dy = 0., s = 1., ratio = 0.8):
 def ejercicio4(imgs, dx = 0., dy = 0., ratio = 0.8, scale = 0.4):
     if len(imgs) <= 1: return;
     
-    width = 1600
+    width = 1500
     height = 700
     compose_image = np.zeros((height, width, 3), np.uint8)
     
@@ -535,9 +541,9 @@ def ejercicioBonus(img1, img2, ratio = 0.8, threshold = 1.0):
 ###### Ejercicios
 
 # Ejercicio 1
-yosemite = cv2.imread("./imagenes/Tablero1.jpg", cv2.IMREAD_GRAYSCALE)
+yosemite = cv2.imread("./imagenes/Yosemite3.jpg", cv2.IMREAD_GRAYSCALE)
 
-img, maximums = ejercicio1(yosemite, 3, 3, 0.1)
+img, maximums = ejercicio1(yosemite, 3, 0.33)
 
 # C
 cv2.imshow("Ejercicio 1", ejercicio1_c(img, maximums))
@@ -549,8 +555,6 @@ cv2.imshow("Ejercicio 1", ejercicio1_d(img, maximums))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
-cv2.absdiff(-1)
-
 # Ejercicio 2
 img1 = cv2.imread("./imagenes/yosemite3.jpg", cv2.IMREAD_COLOR)
 img2 = cv2.imread("./imagenes/yosemite4.jpg", cv2.IMREAD_COLOR)
@@ -561,7 +565,7 @@ cv2.waitKey(0)
 cv2.destroyAllWindows()
 
 # Ejercicio 2 Bruteforce + Lowe
-cv2.imshow("Ejercicio 2 - Lowe's criteria", draw_matches_knn(*ejercicio2_lowe(img1, img2, 0.55), 100))
+cv2.imshow("Ejercicio 2 - Lowe's criteria", draw_matches_knn(*ejercicio2_lowe(img1, img2, 0.60), 100))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
@@ -569,6 +573,7 @@ cv2.destroyAllWindows()
 cv2.imshow("Ejercicio 3", ejercicio3(img1, img2))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
+
 
 # Ejercicio 4 Mosaico todas las imágenes
 etsiit_mosaic = [
@@ -597,7 +602,7 @@ yosemite_mosaic_2 = [
  cv2.imread("./imagenes/yosemite7.jpg", cv2.IMREAD_COLOR),
 ]
 
-cv2.imshow("Ejercicio 4", ejercicio4(yosemite_mosaic_2, +300, 0, 0.8, 0.6))
+cv2.imshow("Ejercicio 4", ejercicio4(etsiit_mosaic, 450, 150, 0.8, 1.4))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 

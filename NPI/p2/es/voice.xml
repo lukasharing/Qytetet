@@ -1,5 +1,5 @@
 <!-- http://www1.se.cuhk.edu.hk/~hccl/publications/pub/0300769.pdf -->
-
+<!-- https://github.com/krishnamuraleedharan/Voice-xml/blob/master/FoodMenu.xml -->
 <!-- https://www.w3.org/Voice/Guide/ -->
 <?vxml version="1.0" encoding="ISO-8859-1" ?>
 <vxml version="2.0">
@@ -14,31 +14,49 @@
         </block>
     </form>-->
 
-    <form id="one" scope="document">
-        <!--<block>
-            <prompt>1</prompt>
-        </block>-->
-    </form>
-    
-    <form id="group" scope="document">
-        <!--<block>
-            <prompt>grupo</prompt>
-        </block>-->
-    </form>
+    <form id="visitor-es" scope="document">
 
-    <form id="family" scope="document">
-        <!--<block>
-            <prompt>familia</prompt>
-        </block>-->
-    </form>
-
-    <menu id="num-visitor-es" scope="document">
-
-        <prompt xml:lang="es-ES">recuerde que la entrada a menores es gratuita. porfavor, seleccione el numero de visitantes individual, grupal o familia numerosa</prompt>
+        <block xml:lang="es-ES">bienvenido a alambrapp, recuerde que la entrada a menores es gratuita</block>
         
-        <choice next="#one"><prompt xml:lang="es-ES">individual</prompt></choice>
-        <choice next="#group"><prompt xml:lang="es-ES">grupal</prompt></choice>
-        <choice next="#family"><prompt xml:lang="es-ES">familia numerosa</prompt></choice>
-    
-    </menu>
+        <field name="total-visitor">
+            <prompt xml:lang="es-ES">porfavor, seleccione el numero de visitantes</promt>
+            <grammar mode="voice" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>1</item>
+                        <item>2</item>
+                        <item>3</item>
+                        <item>4</item>
+                        <item>5</item>
+                        <item>6</item>
+                        <item>7</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <!-- Si llenamos -->
+            <filled>
+                <prompt bargein="false">
+                    usted dijo <break size="small"/> <value expr="total-visitor"/> visitantes
+                </prompt>
+                <!--
+                Si estamos editando esta sección, nos enviará a la edición 
+                <if cond="dialog.check=='0'">
+                    <goto nextitem="edit"/>
+                </if>
+                -->
+            </filled>
+            <!-- Si pedimos ayuda al sistema -->
+            <catch event="help">debe indicar el numero de visitantes, diga el número uno si es usted el unico visitante.</catch>
+        </field>
+
+        <field name="edit">
+            <!--
+            <value expr="2+3+1+(0.5*(lettuce))+(0.5*(tomato))+(0.5*(olives))+(0.5*(pickles))"/>
+            -->
+        </field>
+
+        <block>
+            <submit next="../form.php" namelist="visitor-es"/>
+        </block>
+    </form>
 </vxml>
