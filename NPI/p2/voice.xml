@@ -1,7 +1,11 @@
 <!-- http://www1.se.cuhk.edu.hk/~hccl/publications/pub/0300769.pdf -->
-<?vxml version="1.0" encoding="UTF-8" ?>
-<vxml version="2.0">
-    
+<?xml version="1.0" encoding="UTF-8"?>
+<vxml xmlns="http://www.w3.org/2001/vxml" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.w3.org/2001/vxml 
+   http://www.w3.org/TR/voicexml20/vxml.xsd"
+   version="2.0">
+
     <!-- Si no escucha nada, le volvemos a preguntar -->
     <noinput>
         <prompt xml:lang="en-US">I'm sorry, I didn't hear anything. Could you please try that again?</prompt>

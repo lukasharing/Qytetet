@@ -1,8 +1,12 @@
 <!-- http://www1.se.cuhk.edu.hk/~hccl/publications/pub/0300769.pdf -->
 <!-- https://github.com/krishnamuraleedharan/Voice-xml/blob/master/FoodMenu.xml -->
 <!-- https://www.w3.org/Voice/Guide/ -->
-<?vxml version="1.0" encoding="UTF-8" ?>
-<vxml version="2.0">
+<?xml version="1.0" encoding="UTF-8"?>
+<vxml xmlns="http://www.w3.org/2001/vxml" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.w3.org/2001/vxml 
+   http://www.w3.org/TR/voicexml20/vxml.xsd"
+   version="2.0">
 
     <!--<link next="#help">
         <grammar>ayuda</grammar>
@@ -50,7 +54,7 @@
                 -->
             </filled>
             <!-- Si pedimos ayuda al sistema-->
-            <help xml:lang="es-ES">
+            <help>
                 debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante
             </help>
         </field>
