@@ -1,7 +1,7 @@
 <!-- http://www1.se.cuhk.edu.hk/~hccl/publications/pub/0300769.pdf -->
 <!-- https://github.com/krishnamuraleedharan/Voice-xml/blob/master/FoodMenu.xml -->
 <!-- https://www.w3.org/Voice/Guide/ -->
-<?vxml version="1.0" encoding="ISO-8859-1" ?>
+<?vxml version="1.0" encoding="UTF-8" ?>
 <vxml version="2.0">
 
     <!--<link next="#help">
@@ -16,20 +16,20 @@
 
     <form id="visitor-es" scope="document">
 
-        <block xml:lang="es-ES">bienvenido a alambrapp, recuerde que la entrada a menores es gratuita</block>
+        <block xml:lang="es-ES">bienvenido a alambrapp<break/> recuerde que la entrada a menores es gratuita</block>
         
         <field name="total-visitor">
-            <prompt xml:lang="es-ES">porfavor, seleccione el numero de visitantes</promt>
-            <grammar mode="voice" root="root">
+            <prompt xml:lang="es-ES">porfavor<break/> seleccione el numero de visitantes</promt>
+            <grammar mode="voice" root="root" xml:lang="es-ES">
                 <rule id="root" scope="public">
                     <one-of>
-                        <item>1</item>
-                        <item>2</item>
-                        <item>3</item>
-                        <item>4</item>
-                        <item>5</item>
-                        <item>6</item>
-                        <item>7</item>
+                        <item>uno</item>
+                        <item>dos</item>
+                        <item>tres</item>
+                        <item>cuatro</item>
+                        <item>cinco</item>
+                        <item>seis</item>
+                        <item>siete</item>
                     </one-of>
                 </rule>
             </grammar>
@@ -46,7 +46,7 @@
                 -->
             </filled>
             <!-- Si pedimos ayuda al sistema -->
-            <catch event="help" xml:lang="es-ES">debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante.</catch>
+            <catch event="help" xml:lang="es-ES">debe indicar el numero de visitantes <break/> diga el numero uno si es usted el unico visitante</catch>
         </field>
 
         <field name="edit">
