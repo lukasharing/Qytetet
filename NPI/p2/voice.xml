@@ -27,12 +27,12 @@
         <prompt xml:lang="de-DE">Vielen Dank, dass Sie AlambraApp verwenden</prompt>
         <exit/>
     </catch>
-    -->
     
-    <!-- Cambiar Idioma en cualquier momento -->
+    <- Cambiar Idioma en cualquier momento ->
     <link next="#chlang">
         <grammar type="application/x-jsgf"> Change language | Cambiar idioma | Sprache wechseln</grammar>
     </link>
+    -->
     
     <!-- Bienvenida selección del Idioma -->
     <menu id="chlang" scope="document">
@@ -43,19 +43,19 @@
         <prompt xml:lang="de-DE">Wilkomen bie AlambraApp. Bitte wählen sie die sprache</prompt>
     
         <!-- English -->
-        <choice next="./es/welcome.xml"><prompt xml:lang="en-US">English</prompt></choice>
-        <choice next="./es/welcome.xml"><prompt xml:lang="es-ES">Inglés</prompt></choice>
-        <choice next="./es/welcome.xml"><prompt xml:lang="de-DE">Englisch</prompt></choice>
+        <choice next="./es/welcome.xml" xml:lang="en-US">English</choice>
+        <choice next="./es/welcome.xml" xml:lang="es-ES">Inglés</choice>
+        <choice next="./es/welcome.xml" xml:lang="de-DE">Englisch</choice>
         
         <!-- Spanish -->
-        <choice next="./es/welcome.xml"><prompt xml:lang="en-US">Espanish</prompt></choice>
-        <choice next="./es/welcome.xml"><prompt xml:lang="es-ES">Español</prompt></choice>
-        <choice next="./es/welcome.xml"><prompt xml:lang="de-DE">Spanisch</prompt></choice>
+        <choice next="./es/welcome.xml" xml:lang="en-US">Espanish</choice>
+        <choice next="./es/welcome.xml" xml:lang="es-ES">Español</choice>
+        <choice next="./es/welcome.xml" xml:lang="de-DE">Spanisch</choice>
 
         <!-- German -->
-        <choice next="./es/welcome.xml"><prompt xml:lang="en-US">German</prompt></choice>
-        <choice next="./es/welcome.xml"><prompt xml:lang="es-ES">Alemán</prompt></choice>
-        <choice next="./es/welcome.xml"><prompt xml:lang="de-DE">Deutsch</prompt></choice>
+        <choice next="./es/welcome.xml" xml:lang="en-US">German</choice>
+        <choice next="./es/welcome.xml" xml:lang="es-ES">Alemán</choice>
+        <choice next="./es/welcome.xml" xml:lang="de-DE">Deutsch</choice>
         
         <!-- Si no escucha nada, le volvemos a preguntar
         <noinput>
