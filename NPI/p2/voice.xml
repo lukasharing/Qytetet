@@ -7,8 +7,8 @@
     <!-- Si no escucha nada, le volvemos a preguntar -->
     <noinput>
         <prompt xml:lang="en-US">I'm sorry, I didn't hear anything. Could you please try that again?</prompt>
-        <prompt xml:lang="es-ES">Lo siento no pude escuchar nada<break/> podría intentarlo de nuevo?</prompt>
-        <prompt xml:lang="de-DE">Es tut mir leid, ich habe nichts gehort <break/> Konnten Sie das bitte noch einmal versuchen?</prompt>
+        <prompt xml:lang="es-ES">Lo siento no pude escuchar nada. Podría intentarlo de nuevo?</prompt>
+        <prompt xml:lang="de-DE">Es tut mir leid, ich habe nichts gehort. Konnten Sie das bitte noch einmal versuchen?</prompt>
         <reprompt/>
     </noinput>
 
@@ -27,7 +27,7 @@
 
     <!-- Salir en cualquier momento -->
     <link event="exit">
-        <grammar type="application/x-jsgf">exit|salir|schliessen</grammar>
+        <grammar type="application/x-jsgf"> Exit | Salir | Schliessen</grammar>
     </link>
     <catch event="exit">
         <prompt xml:lang="en-US">Thank you for using AlambraApp</prompt>
@@ -38,7 +38,7 @@
 
     <!-- Cambiar Idioma en cualquier momento -->
     <link next="#chlang">
-        <grammar type="application/x-jsgf">change language|cambiar idioma|sprache untaushen</grammar>
+        <grammar type="application/x-jsgf"> Change language| Cambiar idioma | Sprache wechseln</grammar>
     </link>
     
     <!-- Bienvenida selección del Idioma -->
@@ -51,7 +51,7 @@
     
         <!-- English -->
         <choice next="./es/welcome.xml"><prompt xml:lang="en-US">English</prompt></choice>
-        <choice next="./es/welcome.xml"><prompt xml:lang="es-ES">Ingles</prompt></choice>
+        <choice next="./es/welcome.xml"><prompt xml:lang="es-ES">Inglés</prompt></choice>
         <choice next="./es/welcome.xml"><prompt xml:lang="de-DE">Englisch</prompt></choice>
         
         <!-- Spanish -->
@@ -61,11 +61,11 @@
 
         <!-- German -->
         <choice next="./es/welcome.xml"><prompt xml:lang="en-US">German</prompt></choice>
-        <choice next="./es/welcome.xml"><prompt xml:lang="es-ES">Aleman</prompt></choice>
+        <choice next="./es/welcome.xml"><prompt xml:lang="es-ES">Alemán</prompt></choice>
         <choice next="./es/welcome.xml"><prompt xml:lang="de-DE">Deutsch</prompt></choice>
         
         <help>
-            Diga la palabra español para activar el lenguaje español
+            Diga la palabra español para ir al menú en idioma Español
         </help>
     </menu>
 </vxml>
