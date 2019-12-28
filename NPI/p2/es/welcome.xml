@@ -16,13 +16,15 @@
 
     <form id="visitor-es" scope="document">
 
+        <property name="bargein" value="false"/>
+
         <block>
             <prompt xml:lang="es-ES">bienvenido a alambrapp en español. recuerde que la entrada a menores es gratuita</prompt>
         </block>
         
         <field name="total-visitor">
             <prompt xml:lang="es-ES">porfavor, seleccione el numero de visitantes</prompt>
-            <!--<grammar mode="voice" root="root" xml:lang="es-ES">
+            <grammar mode="voice" root="root" xml:lang="es-ES">
                 <rule id="root" scope="public">
                     <one-of>
                         <item>uno</item>
@@ -34,11 +36,11 @@
                         <item>siete</item>
                     </one-of>
                 </rule>
-            </grammar>-->
+            </grammar>
             <!-- Si llenamos -->
             <filled>
-                <prompt bargein="false" xml:lang="es-ES">
-                    usted dijo <break size="small"/> <value expr="total-visitor"/> visitantes
+                <prompt xml:lang="es-ES">
+                    usted dijo, <value expr="total-visitor"/> visitantes
                 </prompt>
                 <!-- 
                 Si estamos editando esta sección, nos enviará a la edición 
