@@ -20,11 +20,17 @@
 
 
     <!-- Salir en cualquier momento -->
-    <!--<link next="#exit">
-        <grammar xml:lang="en-US">exit</grammar>
-        <grammar xml:lang="es-ES">salir</grammar>
-        <grammar xml:lang="de-DE">schliessen</grammar>
-    </link>-->
+    <link event="exit">
+        <grammar type="application/x-jsgf" xml:lang="en-US">exit</grammar>
+        <grammar type="application/x-jsgf" xml:lang="es-ES">salir</grammar>
+        <grammar type="application/x-jsgf" xml:lang="de-DE">schliessen</grammar>
+    </link>
+    <catch event="exit">
+        <prompt xml:lang="en-US">Thank you for using AlambraApp</prompt>
+        <prompt xml:lang="es-ES">Gracias por utilizar AlambraApp</prompt>
+        <prompt xml:lang="de-DE">Vielen Dank, dass Sie AlambraApp verwenden</prompt>
+        <exit/>
+    </catch>
 
     <!-- Cambiar Idioma en cualquier momento -->
     <!--<link next="#chlang">
