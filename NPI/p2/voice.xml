@@ -31,33 +31,15 @@
     </catch>
 
     <!-- Cambiar Idioma en cualquier momento -->
-    <!--<link next="#chlang">
-        <grammar mode="voice" root="root_rule" tag-format="semantics/1.0" type="application/srgs+xml" version="1.0" xml:lang="en-US">
-            <rule id="root_rule" scope="public"><one-of><item weight="1.0">help</item></one-of></rule>
-        </grammar>
-        <grammar mode="voice" root="root_rule" tag-format="semantics/1.0" type="application/srgs+xml" version="1.0" xml:lang="es-ES">
-            <rule id="root_rule" scope="public"><one-of><item weight="1.0">ayuda</item></one-of></rule>
-        </grammar>
-        <grammar mode="voice" root="root_rule" tag-format="semantics/1.0" type="application/srgs+xml" version="1.0" xml:lang="de-DE">
-            <rule id="root_rule" scope="public"><one-of><item weight="1.0">hilfe</item></one-of></rule>
-        </grammar>
-    </link>-->
+    <link next="#chlang">
+        <grammar type="application/x-jsgf">change language|cambiar idioma|sprache untaushen</grammar>
+    </link>
     
-    <!-- Formulario de bienvenida -->
-    <form id="welcome" scope="document">
-        <block>
-            <prompt xml:lang="en-US">Welcome to AlambraApp</prompt>
-            <prompt xml:lang="es-ES">Bienvenido a AlambraApp</prompt>
-            <prompt xml:lang="de-DE">Wilkomen bie AlambraApp</prompt>
-            <goto next="#chlang"/>
-        </block>
-    </form>
-
-    <!-- Elección de Idioma -->
+    <!-- Bienvenida selección del Idioma -->
     <menu id="chlang" scope="document">
-        <prompt xml:lang="en-US">Please select language</prompt>
-        <prompt xml:lang="es-ES">Porfavor seleccione el idioma</prompt>
-        <prompt xml:lang="de-DE">Bitte wählen sie die sprache</prompt>
+        <prompt xml:lang="en-US">Welcome to AlambraApp. Please select language</prompt>
+        <prompt xml:lang="es-ES">Bienvenido a AlambraApp. Porfavor seleccione el idioma</prompt>
+        <prompt xml:lang="de-DE">Wilkomen bie AlambraApp. Bitte wählen sie die sprache</prompt>
     
         <!-- English -->
         <choice next="./es/welcome.xml"><prompt xml:lang="en-US">English</prompt></choice>
