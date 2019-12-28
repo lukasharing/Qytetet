@@ -1,6 +1,9 @@
 <!-- http://www1.se.cuhk.edu.hk/~hccl/publications/pub/0300769.pdf -->
 <?vxml version="1.0" encoding="UTF-8" ?>
-<vxml version="2.0"> 
+<vxml version="2.0">
+<meta name="author" content="Lukas Haring"/>
+<meta name="maintainer" content="lukasharing@correo.ugr.es"/>
+
     <!-- Si no escucha nada, le volvemos a preguntar -->
     <noinput>
         <prompt xml:lang="en-US">I'm sorry, I didn't hear anything. Could you please try that again?</prompt>
