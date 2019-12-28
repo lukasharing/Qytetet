@@ -33,20 +33,19 @@
         <prompt xml:lang="es-ES">porfavor seleccione el idioma</prompt>
         <prompt xml:lang="de-DE">bitte wählen sie die sprache</prompt>
     
-        <!-- English
+        <!-- English -->
         <choice next="./es/voice.xml"><prompt xml:lang="en-US">english</prompt></choice>
         <choice next="./es/voice.xml"><prompt xml:lang="es-ES">ingles</prompt></choice>
         <choice next="./es/voice.xml"><prompt xml:lang="de-DE">englisch</prompt></choice>
-        -->
-        <!-- Spanish
+        
+        <!-- Spanish -->
         <choice next="./es/voice.xml"><prompt xml:lang="en-US">english</prompt></choice>
         <choice next="./es/voice.xml"><prompt xml:lang="es-ES">español</prompt></choice>
         <choice next="./es/voice.xml"><prompt xml:lang="de-DE">spanisch</prompt></choice>
-         -->
-        <!-- German
+
+        <!-- German -->
         <choice next="./es/voice.xml"><prompt xml:lang="en-US">german</prompt></choice>
         <choice next="./es/voice.xml"><prompt xml:lang="es-ES">aleman</prompt></choice>
         <choice next="./es/voice.xml"><prompt xml:lang="de-DE">deutsch</prompt></choice>
-         -->
     </menu>
 </vxml>
