@@ -2,7 +2,7 @@
 <!-- https://github.com/krishnamuraleedharan/Voice-xml/blob/master/FoodMenu.xml -->
 <!-- https://www.w3.org/Voice/Guide/ -->
 <?vxml version="1.0" encoding="UTF-8" ?>
-<vxml version="2.0">
+<vxml version="2.0" lang="es-ES">
 
     <!--<link next="#help">
         <grammar>ayuda</grammar>
@@ -16,7 +16,7 @@
 
     <form id="visitor-es" scope="document">
 
-        <block xml:lang="es-ES">bienvenido a alambrapp<break/> recuerde que la entrada a menores es gratuita</block>
+        <block>bienvenido a alambrapp<break/> recuerde que la entrada a menores es gratuita</block>
         
         <!--<field name="total-visitor">
             <prompt xml:lang="es-ES">porfavor<break/> seleccione el numero de visitantes</promt>
