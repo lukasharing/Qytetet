@@ -46,38 +46,36 @@
     <!-- Formulario de bienvenida -->
     <form id="welcome" scope="document">
         <block>
-            <prompt xml:lang="en-US">welcome to AlambraApp</prompt>
-            <prompt xml:lang="es-ES">bienvenido a AlambraApp</prompt>
-            <prompt xml:lang="de-DE">wilkomen bie AlambraApp</prompt>
+            <prompt xml:lang="en-US">Welcome to AlambraApp</prompt>
+            <prompt xml:lang="es-ES">Bienvenido a AlambraApp</prompt>
+            <prompt xml:lang="de-DE">Wilkomen bie AlambraApp</prompt>
             <goto next="#chlang"/>
         </block>
     </form>
 
     <!-- Elección de Idioma -->
     <menu id="chlang" scope="document">
-        <property name="bargein" value="false"/>
-
-        <prompt xml:lang="en-US">please select language</prompt>
-        <prompt xml:lang="es-ES">porfavor seleccione el idioma</prompt>
-        <prompt xml:lang="de-DE">bitte wählen sie die sprache</prompt>
+        <prompt xml:lang="en-US">Please select language</prompt>
+        <prompt xml:lang="es-ES">Porfavor seleccione el idioma</prompt>
+        <prompt xml:lang="de-DE">Bitte wählen sie die sprache</prompt>
     
         <!-- English -->
-        <choice next="./es/welcome.xml"><prompt xml:lang="en-US">english</prompt></choice>
-        <choice next="./es/welcome.xml"><prompt xml:lang="es-ES">ingles</prompt></choice>
-        <choice next="./es/welcome.xml"><prompt xml:lang="de-DE">englisch</prompt></choice>
+        <choice next="./es/welcome.xml"><prompt xml:lang="en-US">English</prompt></choice>
+        <choice next="./es/welcome.xml"><prompt xml:lang="es-ES">Ingles</prompt></choice>
+        <choice next="./es/welcome.xml"><prompt xml:lang="de-DE">Englisch</prompt></choice>
         
         <!-- Spanish -->
-        <choice next="./es/welcome.xml"><prompt xml:lang="en-US">english</prompt></choice>
-        <choice next="./es/welcome.xml"><prompt xml:lang="es-ES">español</prompt></choice>
-        <choice next="./es/welcome.xml"><prompt xml:lang="de-DE">spanisch</prompt></choice>
+        <choice next="./es/welcome.xml"><prompt xml:lang="en-US">Espanish</prompt></choice>
+        <choice next="./es/welcome.xml"><prompt xml:lang="es-ES">Español</prompt></choice>
+        <choice next="./es/welcome.xml"><prompt xml:lang="de-DE">Spanisch</prompt></choice>
 
         <!-- German -->
-        <choice next="./es/welcome.xml"><prompt xml:lang="en-US">german</prompt></choice>
-        <choice next="./es/welcome.xml"><prompt xml:lang="es-ES">aleman</prompt></choice>
-        <choice next="./es/welcome.xml"><prompt xml:lang="de-DE">deutsch</prompt></choice>
+        <choice next="./es/welcome.xml"><prompt xml:lang="en-US">German</prompt></choice>
+        <choice next="./es/welcome.xml"><prompt xml:lang="es-ES">Aleman</prompt></choice>
+        <choice next="./es/welcome.xml"><prompt xml:lang="de-DE">Deutsch</prompt></choice>
         
-        <help xml:lang="es-ES">
+        <!--<help xml:lang="es-ES">
             Diga la palabra español para activar el lenguaje español
-        </help>
+        </help>-->
     </menu>
 </vxml>
