@@ -2,23 +2,19 @@
 <!-- https://github.com/krishnamuraleedharan/Voice-xml/blob/master/FoodMenu.xml -->
 <!-- https://www.w3.org/Voice/Guide/ -->
 <?vxml version="1.0" encoding="UTF-8" ?>
-<vxml version="2.0" lang="es-es">
+<vxml version="2.1">
 <meta name="author" content="Lukas Haring"/>
 <meta name="maintainer" content="lukasharing@correo.ugr.es"/>
 
     <!-- Si no escucha nada, le volvemos a preguntar -->
     <noinput>
-        <prompt xml:lang="en-US">I'm sorry, I didn't hear anything. Could you please try that again?</prompt>
         <prompt xml:lang="es-ES">Lo siento no pude escuchar nada<break/> podría intentarlo de nuevo?</prompt>
-        <prompt xml:lang="de-DE">Es tut mir leid, ich habe nichts gehort <break/> Konnten Sie das bitte noch einmal versuchen?</prompt>
         <reprompt/>
     </noinput>
 
     <!-- Si no existe esa seleccion, le deceimos que no lo hemos entendido -->
     <nomatch>
-        <prompt xml:lang="en-US">I'm sorry, I didn't understand. Could you please repeat that again?</prompt>
         <prompt xml:lang="es-ES">Lo siento no le pude entender. Podría repetirlo de nuevo?</prompt>
-        <prompt xml:lang="de-DE">Es tut mir leid, ich habe es nicht verstanden. Könnten Sie das bitte noch einmal wiederholen?</prompt>
         <reprompt/>
     </nomatch>
 
