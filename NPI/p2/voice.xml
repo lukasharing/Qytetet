@@ -70,5 +70,7 @@
         <choice next="./es/welcome.xml"><prompt xml:lang="en-US">german</prompt></choice>
         <choice next="./es/welcome.xml"><prompt xml:lang="es-ES">aleman</prompt></choice>
         <choice next="./es/welcome.xml"><prompt xml:lang="de-DE">deutsch</prompt></choice>
+        
+        <catch event="help" xml:lang="es-ES">debe indicar el numero de visitantes <break/> diga el numero uno si es usted el unico visitante</catch>
     </menu>
 </vxml>

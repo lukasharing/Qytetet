@@ -17,12 +17,12 @@
     <form id="visitor-es" scope="document">
 
         <block>
-            <prompt xml:lang="es-ES">bienvenido a alambrapp en español<break/> recuerde que la entrada a menores es gratuita</prompt>
+            <prompt xml:lang="es-ES">bienvenido a alambrapp en español. recuerde que la entrada a menores es gratuita</prompt>
         </block>
         
         <field name="total-visitor">
-            <prompt xml:lang="es-ES">porfavor<break/> seleccione el numero de visitantes</promt>
-            <grammar mode="voice" root="root" xml:lang="es-ES">
+            <prompt xml:lang="es-ES">porfavor, seleccione el numero de visitantes</promt>
+            <!--<grammar mode="voice" root="root" xml:lang="es-ES">
                 <rule id="root" scope="public">
                     <one-of>
                         <item>uno</item>
@@ -34,7 +34,7 @@
                         <item>siete</item>
                     </one-of>
                 </rule>
-            </grammar>
+            </grammar>-->
             <!-- Si llenamos -->
             <filled>
                 <prompt bargein="false" xml:lang="es-ES">
