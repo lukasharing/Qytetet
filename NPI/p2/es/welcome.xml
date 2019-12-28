@@ -48,7 +48,9 @@
                 -->
             </filled>
             <!-- Si pedimos ayuda al sistema-->
-            <catch event="help" xml:lang="es-ES">debe indicar el numero de visitantes <break/> diga el numero uno si es usted el unico visitante</catch>
+            <help xml:lang="es-ES">
+                debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante
+            </help>
         </field>
 
         <!--
