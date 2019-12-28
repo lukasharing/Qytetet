@@ -2,7 +2,7 @@
 <?vxml version="1.0" encoding="UTF-8" ?>
 <vxml version="2.0">
     
-    <!-- Si no lo entiende, le volvemos a preguntar -->
+    <!-- Si no escucha nada, le volvemos a preguntar -->
     <noinput>
         <prompt xml:lang="en-US">I'm sorry, I didn't hear anything. Could you please try that again?</prompt>
         <prompt xml:lang="es-ES">Lo siento no pude escuchar nada<break/> podría intentarlo de nuevo?</prompt>
@@ -43,9 +43,9 @@
     <!-- Elección de Idioma -->
     <menu id="chlang" scope="document">
 
-        <prompt xml:lang="en-US">please select language</prompt>
-        <prompt xml:lang="es-ES">porfavor seleccione el idioma</prompt>
-        <prompt xml:lang="de-DE">bitte wählen sie die sprache</prompt>
+        <prompt xml:lang="en-US" bargein="false">please select language</prompt>
+        <prompt xml:lang="es-ES" bargein="false">porfavor seleccione el idioma</prompt>
+        <prompt xml:lang="de-DE" bargein="false">bitte wählen sie die sprache</prompt>
     
         <!-- English -->
         <choice next="./es/welcome.xml"><prompt xml:lang="en-US">english</prompt></choice>

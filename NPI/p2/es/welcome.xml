@@ -17,10 +17,10 @@
     <form id="visitor-es" scope="document">
 
         <block>
-            <prompt xml:lang="es-ES">bienvenido a alambrapp<break/> recuerde que la entrada a menores es gratuita</prompt>
+            <prompt xml:lang="es-ES">bienvenido a alambrapp en español<break/> recuerde que la entrada a menores es gratuita</prompt>
         </block>
         
-        <!--<field name="total-visitor">
+        <field name="total-visitor">
             <prompt xml:lang="es-ES">porfavor<break/> seleccione el numero de visitantes</promt>
             <grammar mode="voice" root="root" xml:lang="es-ES">
                 <rule id="root" scope="public">
@@ -35,22 +35,23 @@
                     </one-of>
                 </rule>
             </grammar>
-            # Si llenamos
+            <!-- Si llenamos -->
             <filled>
                 <prompt bargein="false" xml:lang="es-ES">
                     usted dijo <break size="small"/> <value expr="total-visitor"/> visitantes
                 </prompt>
-                #
+                <!-- 
                 Si estamos editando esta sección, nos enviará a la edición 
                 <if cond="dialog.check=='0'">
                     <goto nextitem="edit"/>
                 </if>
-
+                -->
             </filled>
-            # Si pedimos ayuda al sistema
+            <!-- Si pedimos ayuda al sistema-->
             <catch event="help" xml:lang="es-ES">debe indicar el numero de visitantes <break/> diga el numero uno si es usted el unico visitante</catch>
         </field>
 
+        <!--
         <field name="edit">
             <value expr="2+3+1+(0.5*(lettuce))+(0.5*(tomato))+(0.5*(olives))+(0.5*(pickles))"/>
         </field>
