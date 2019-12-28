@@ -35,7 +35,7 @@
             </grammar>
             <!-- Si llenamos -->
             <filled>
-                <prompt bargein="false">
+                <prompt bargein="false" xml:lang="es-ES">
                     usted dijo <break size="small"/> <value expr="total-visitor"/> visitantes
                 </prompt>
                 <!--
@@ -46,7 +46,7 @@
                 -->
             </filled>
             <!-- Si pedimos ayuda al sistema -->
-            <catch event="help">debe indicar el numero de visitantes, diga el número uno si es usted el unico visitante.</catch>
+            <catch event="help" xml:lang="es-ES">debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante.</catch>
         </field>
 
         <field name="edit">
@@ -55,8 +55,8 @@
             -->
         </field>
 
-        <block>
+        <!--<block>
             <submit next="../form.php" namelist="visitor-es"/>
-        </block>
+        </block>-->
     </form>
 </vxml>
