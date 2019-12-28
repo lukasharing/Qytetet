@@ -1,12 +1,8 @@
 <!-- http://www1.se.cuhk.edu.hk/~hccl/publications/pub/0300769.pdf -->
 <!-- https://github.com/krishnamuraleedharan/Voice-xml/blob/master/FoodMenu.xml -->
 <!-- https://www.w3.org/Voice/Guide/ -->
-<?xml version="1.0" encoding="UTF-8"?>
-<vxml xmlns="http://www.w3.org/2001/vxml" 
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-  xsi:schemaLocation="http://www.w3.org/2001/vxml 
-   http://www.w3.org/TR/voicexml20/vxml.xsd"
-   version="2.0">
+<?vxml version="1.0" encoding="UTF-8" ?>
+<vxml version="2.0" lang="es-es">
 
     <!--<link next="#help">
         <grammar>ayuda</grammar>
@@ -23,12 +19,12 @@
         <property name="bargein" value="false"/>
 
         <block>
-            <prompt xml:lang="es-ES">bienvenido a alambrapp en español. recuerde que la entrada a menores es gratuita</prompt>
+            <prompt>bienvenido a alambrapp en español. recuerde que la entrada a menores es gratuita</prompt>
         </block>
         
         <field name="total-visitor">
-            <prompt xml:lang="es-ES">porfavor, seleccione el numero de visitantes</prompt>
-            <grammar mode="voice" root="root" xml:lang="es-ES">
+            <prompt>porfavor, seleccione el numero de visitantes</prompt>
+            <grammar mode="voice" root="root">
                 <rule id="root" scope="public">
                     <one-of>
                         <item>uno</item>
@@ -43,7 +39,7 @@
             </grammar>
             <!-- Si llenamos -->
             <filled>
-                <prompt xml:lang="es-ES">
+                <prompt>
                     usted dijo, <value expr="total-visitor"/> visitantes
                 </prompt>
                 <!-- 
