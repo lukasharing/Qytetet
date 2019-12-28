@@ -11,9 +11,15 @@
 
     <!-- Cambiar Idioma en cualquier momento -->
     <link next="#chlang">
-        <grammar xml:lang="en-US">change language</grammar>
-        <grammar xml:lang="es-ES">cambiar idioma</grammar>
-        <grammar xml:lang="de-DE">sprache wechseln</grammar>
+        <grammar mode="voice" root="root_rule" tag-format="semantics/1.0" type="application/srgs+xml" version="1.0" xml:lang="en-US">
+            <rule id="root_rule" scope="public"><one-of><item weight="1.0">help</item></one-of></rule>
+        </grammar>
+        <grammar mode="voice" root="root_rule" tag-format="semantics/1.0" type="application/srgs+xml" version="1.0" xml:lang="es-ES">
+            <rule id="root_rule" scope="public"><one-of><item weight="1.0">ayuda</item></one-of></rule>
+        </grammar>
+        <grammar mode="voice" root="root_rule" tag-format="semantics/1.0" type="application/srgs+xml" version="1.0" xml:lang="de-DE">
+            <rule id="root_rule" scope="public"><one-of><item weight="1.0">hilfe</item></one-of></rule>
+        </grammar>
     </link>
     
     <!-- Formulario de bienvenida -->
