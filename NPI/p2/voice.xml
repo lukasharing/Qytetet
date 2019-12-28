@@ -21,9 +21,7 @@
 
     <!-- Salir en cualquier momento -->
     <link event="exit">
-        <grammar type="application/x-jsgf" xml:lang="en-US">exit</grammar>
-        <grammar type="application/x-jsgf" xml:lang="es-ES">salir</grammar>
-        <grammar type="application/x-jsgf" xml:lang="de-DE">schliessen</grammar>
+        <grammar type="application/x-jsgf">exit|salir|schliessen</grammar>
     </link>
     <catch event="exit">
         <prompt xml:lang="en-US">Thank you for using AlambraApp</prompt>
