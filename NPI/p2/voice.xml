@@ -4,22 +4,6 @@
 <meta name="author" content="Lukas Haring"/>
 <meta name="maintainer" content="lukasharing@correo.ugr.es"/>
 
-    <!-- Si no escucha nada, le volvemos a preguntar -->
-    <noinput>
-        <prompt xml:lang="en-US">I'm sorry, I didn't hear anything. Could you please try that again?</prompt>
-        <prompt xml:lang="es-ES">Lo siento no pude escuchar nada<break/> podría intentarlo de nuevo?</prompt>
-        <prompt xml:lang="de-DE">Es tut mir leid, ich habe nichts gehort <break/> Konnten Sie das bitte noch einmal versuchen?</prompt>
-        <reprompt/>
-    </noinput>
-
-    <!-- Si no existe esa seleccion, le deceimos que no lo hemos entendido -->
-    <nomatch>
-        <prompt xml:lang="en-US">I'm sorry, I didn't understand. Could you please repeat that again?</prompt>
-        <prompt xml:lang="es-ES">Lo siento no le pude entender. Podría repetirlo de nuevo?</prompt>
-        <prompt xml:lang="de-DE">Es tut mir leid, ich habe es nicht verstanden. Könnten Sie das bitte noch einmal wiederholen?</prompt>
-        <reprompt/>
-    </nomatch>
-
     <!-- Phrases to say when need help -->
     <link event="help">
         <grammar type="application/x-jsgf"> [necesito] ayuda | no entiendo | [I need] help | I don't get it | [Ich brauche] hilfe</grammar>
@@ -43,9 +27,11 @@
     
     <!-- Bienvenida selección del Idioma -->
     <menu id="chlang" scope="document">
-        <prompt xml:lang="en-US">Welcome to AlambraApp. Please select language</prompt>
-        <prompt xml:lang="es-ES">Bienvenido a AlambraApp. Porfavor seleccione el idioma</prompt>
-        <prompt xml:lang="de-DE">Wilkomen bie AlambraApp. Bitte wählen sie die sprache</prompt>
+        <property name="bargein" value="false"/>
+
+        <prompt xml:lang="en-US">Welcome to AlambraApp. Please select language<enumerate/></prompt>
+        <prompt xml:lang="es-ES">Bienvenido a AlambraApp. Porfavor seleccione el idioma<enumerate/></prompt>
+        <prompt xml:lang="de-DE">Wilkomen bie AlambraApp. Bitte wählen sie die sprache<enumerate/></prompt>
     
         <!-- English -->
         <choice next="./es/welcome.xml"><prompt xml:lang="en-US">English</prompt></choice>
@@ -62,7 +48,23 @@
         <choice next="./es/welcome.xml"><prompt xml:lang="es-ES">Aleman</prompt></choice>
         <choice next="./es/welcome.xml"><prompt xml:lang="de-DE">Deutsch</prompt></choice>
         
-        <help xml:lang="es-ES">
+        <!-- Si no escucha nada, le volvemos a preguntar -->
+        <noinput>
+            <prompt xml:lang="en-US">I'm sorry, I didn't hear anything. Could you please try that again?</prompt>
+            <prompt xml:lang="es-ES">Lo siento no pude escuchar nada, podría intentarlo de nuevo?</prompt>
+            <prompt xml:lang="de-DE">Es tut mir leid, ich habe nichts gehort, Konnten Sie das bitte noch einmal versuchen?</prompt>
+            <enumerate/>
+        </noinput>
+
+        <!-- Si no existe esa seleccion, le deceimos que no lo hemos entendido -->
+        <nomatch>
+            <prompt xml:lang="en-US">I'm sorry, I didn't understand. Could you please repeat that again?</prompt>
+            <prompt xml:lang="es-ES">Lo siento no le pude entender. Podría repetirlo de nuevo?</prompt>
+            <prompt xml:lang="de-DE">Es tut mir leid, ich habe es nicht verstanden. Könnten Sie das bitte noch einmal wiederholen?</prompt>
+            <enumerate/>
+        </nomatch>
+
+        <help>
             Diga la palabra español para activar el lenguaje español
         </help>
     </menu>
