@@ -51,10 +51,11 @@
 
     <!-- Elección de Idioma -->
     <menu id="chlang" scope="document">
+        <property name="bargein" value="false"/>
 
-        <prompt xml:lang="en-US" bargein="false">please select language</prompt>
-        <prompt xml:lang="es-ES" bargein="false">porfavor seleccione el idioma</prompt>
-        <prompt xml:lang="de-DE" bargein="false">bitte wählen sie die sprache</prompt>
+        <prompt xml:lang="en-US">please select language</prompt>
+        <prompt xml:lang="es-ES">porfavor seleccione el idioma</prompt>
+        <prompt xml:lang="de-DE">bitte wählen sie die sprache</prompt>
     
         <!-- English -->
         <choice next="./es/welcome.xml"><prompt xml:lang="en-US">english</prompt></choice>

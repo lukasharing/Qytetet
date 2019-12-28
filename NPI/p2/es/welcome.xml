@@ -21,7 +21,7 @@
         </block>
         
         <field name="total-visitor">
-            <prompt xml:lang="es-ES">porfavor, seleccione el numero de visitantes</promt>
+            <prompt xml:lang="es-ES">porfavor, seleccione el numero de visitantes</prompt>
             <!--<grammar mode="voice" root="root" xml:lang="es-ES">
                 <rule id="root" scope="public">
                     <one-of>
