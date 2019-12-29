@@ -59,7 +59,7 @@
         </field>
 
         <field name="totalChildren">
-            <prompt timeout="3s">Indice cuántos menores hay en el grupo, su entrada será gratuita trás la acreditación en puerta</prompt>
+            <prompt timeout="3s">Indique cuántos menores hay en el grupo, su entrada será gratuita trás la acreditación en puerta</prompt>
             <grammar src="./grammatics/num_children.jsgf" />
 
             <filled>
@@ -69,10 +69,10 @@
                     <prompt bargein="false">Usted dijo un menor, recuerde que deberá acreditarlo en puerta</prompt>
                 <elseif cond="parseInt(totalChildren) > 2"/>
                     <prompt bargein="false">Usted dijo <value expr="totalChildren"/> menores, recuerde que deberá acreditarlo en puerta</prompt>
+                -->
                 <else/>
                     <clear namelist="totalChildren" />
                     <throw event="nomatch"/>
-                -->
                 </if>
             </filled>
 

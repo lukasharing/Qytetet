@@ -1,8 +1,8 @@
 #JSGF V1.0;
 grammar total_visitantes;
-public <total_visitantes> = <cero> { this.numChildren = "0" }
-                          | <uno> { this.numChildren = "1" }
-                          | ([hay] [solo] | [son]) <masuno> [menores] { this.numChildren = $masuno };
+public <total_visitantes> = <cero> { this.totalChildren = "0" }
+                          | <uno> { this.totalChildren = "1" }
+                          | ([hay] [solo] | [son]) <masuno> [menores] { this.totalChildren = $masuno };
 
 <cero> = ningun
        | cero
