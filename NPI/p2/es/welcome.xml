@@ -37,10 +37,10 @@
             <prompt timeout="3s">Porfavor, seleccione el numero total de visitantes, <emp>incluído menores</emp></prompt>
             <grammar src="./grammatics/num_visitantes.jsgf"  type="application/x-jsgf" />
 
-            <filled>
+            <!--<filled>
                 <prompt cond="totalVisitor == 1" bargein="false">Perfecto, es solo usted</prompt>
                 <prompt cond="totalVisitor > 1" bargein="false">Usted dijo <value expr="totalVisitor"/> visitantes</prompt>
-            </filled>
+            </filled>-->
 
             <!-- Si pedimos ayuda al sistema-->
             <help>
