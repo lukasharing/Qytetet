@@ -22,41 +22,27 @@
 
     <!-- Phrases to say when need help -->
     <link event="help">
-        <grammar type="application/x-jsgf"> [necesito] ayuda | no entiendo</grammar>
+        <grammar type="application/x-jsgf"> [necesito] ayuda | no [lo] entiendo | explicamelo</grammar>
     </link>
 
-    <property name="timeout" value="10s"/>
-    <form id="visitor-es" scope="dialog">
-
+    <!--<property name="timeout" value="10s"/>-->
+    <form id="visitor-es">
         <property name="inputmodes" value="voice"/>
-        <property name="bargein" value="false"/>
+        
+        <grammar src="./grammatics/num_visitantes.jsgf"  type="application/x-jsgf" />
 
         <block>
             <prompt bargein="false">Bienvenido a Alambrapp en español.</prompt>
         </block>
         
-        <field name="total_visitor">
+        <initial name="total_visitor">
             <prompt>Porfavor, seleccione el numero total de visitantes, <emp>incluído menores</emp></prompt>
-            <grammar src="./grammatics/num_visitantes.jsgf"  type="application/x-jsgf" />
-            <!-- Si llenamos -->
-            <filled>
-                <prompt bargein="false">
-                    usted dijo, <value expr="total_visitor"/> visitantes
-                </prompt>
-                <!-- 
-                Si estamos editando esta sección, nos enviará a la edición 
-                <if cond="dialog.check=='0'">
-                    <goto nextitem="edit"/>
-                </if>
-                -->
-            </filled>
-            
             <!-- Si pedimos ayuda al sistema-->
             <help>
                 Debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante.
                 <reprompt/>
             </help>
-        </field>
+        </initial>
 
         <field name="are_children">
             <prompt>Indice cuántos menores hay en el grupo, recuerde que su entrada será gratuita trás la acreditación en puerta.</prompt>
