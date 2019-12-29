@@ -39,8 +39,8 @@
             <grammar src="./grammatics/num_visitantes.jsgf"  type="application/x-jsgf" />
 
             <filled>
-                <prompt cond="totalVisitor == 1" bargein="false">Perfecto, es solo usted</prompt>
-                <prompt cond="totalVisitor > 1" bargein="false">Usted dijo <value expr="totalVisitor"/> visitantes</prompt>
+                <prompt cond="parseInt(totalVisitor) == 1" bargein="false">Perfecto, es solo usted</prompt>
+                <prompt cond="parseInt(totalVisitor) > 1" bargein="false">Usted dijo <value expr="totalVisitor"/> visitantes</prompt>
             </filled>
 
             <!-- Si pedimos ayuda al sistema
