@@ -1,4 +1,4 @@
-#JSGF v1.0;
+#JSGF V1.0;
 grammar total_visitantes;
 public <total_visitantes> = [somos] <masuno> [personas | visitantes] { this.value = $masuno }
                           | [soy] (un [visitante] | una persona) { this.value =  "1" };

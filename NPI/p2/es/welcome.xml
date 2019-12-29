@@ -28,13 +28,11 @@
         <!--<property name="inputmodes" value="voice"/>
         <property name="bargein" value="false"/>-->
 
-        <block>
-            <prompt>Bienvenido a alambrapp en español.</prompt>
-        </block>
+        <block>Bienvenido a alambrapp en español.</block>
         
-        <field name="total_visitor">
-            <prompt timeout="15s">porfavor, seleccione el numero total de visitantes, incluído menores</prompt>
-            <grammar src="./grammatics/num_visitantes.jsgf"></grammar>
+        <initial name="total_visitor">
+            <prompt timeout="15s">Porfavor, seleccione el numero total de visitantes, incluído menores</prompt>
+            <grammar src="./grammatics/num_visitantes.jsgf"  type="application/x-jsgf"></grammar>
             <!-- Si llenamos -->
             <filled>
                 <prompt>
@@ -51,11 +49,11 @@
             <!--<help>
                 debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante
             </help>-->
-        </field>
+        </initial>
 
         <field name="are_children">
             <prompt timeout="15s">Indice cuántos menores hay en el grupo, recuerde que su entrada será gratuita trás la acreditación en puerta.</prompt>
-            <grammar src="./grammatics/num_children.jsgf"></grammar>
+            <grammar src="./grammatics/num_children.jsgf" type="application/x-jsgf"></grammar>
             <!-- Si llenamos -->
             <filled>
                 <prompt>
@@ -83,7 +81,7 @@
 
         <field name="visit_type">
             <prompt timeout="15s">Indique el tipo de visita que quiere realizar</prompt>
-            <grammar src="./grammatics/visit_type.jsgf"></grammar>
+            <grammar src="./grammatics/visit_type.jsgf" type="application/x-jsgf"></grammar>
             <!-- Si llenamos -->
             <filled>
                 <prompt>
