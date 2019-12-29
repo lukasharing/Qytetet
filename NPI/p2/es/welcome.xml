@@ -63,22 +63,19 @@
             <grammar src="./grammatics/num_children.jsgf" type="application/x-jsgf" />
             <!-- Si llenamos -->
             <filled>
-                
+
                 <if cond="parseInt(totalChildren) >= parseInt(totalVisitor)">
                     <prompt bargein="false">Deben haber menos menores que mayores, volvamos a intentrarlo.</prompt>
                     <goto nextitem="totalVisitor"/>
                 <elseif cond="parseInt(totalChildren) === 0"/>
                     <prompt bargein="false">Usted dijo que no hay menores.</prompt>
-                <else/>
+                <elseif cond="parseInt(totalChildren) > 1"/>
                     <prompt bargein="false">Usted dijo <value expr="totalChildren"/> menores, recuerde que deberá acreditarlo en puerta.</prompt>
+                <else/>
+                    <clear/>
+                    <throw event="nomatch"/>
                 </if>
 
-                <!--
-                Si estamos editando esta sección, nos enviará a la edición 
-                <if cond="dialog.check=='0'">
-                    <goto nextitem="edit"/>
-                </if>
-                -->
             </filled>
             <!-- Si pedimos ayuda al sistema
             <help>
@@ -86,6 +83,7 @@
             </help> -->
         </field>
 
+        <!--
         <field name="visit_type">
             <prompt>Indique el tipo de visita que quiere realizar</prompt>
             <grammar src="./grammatics/visit_type.jsgf" type="application/x-jsgf" />
