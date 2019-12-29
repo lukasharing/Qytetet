@@ -63,16 +63,18 @@
             <grammar src="./grammatics/num_children.jsgf" />
 
             <filled>
-                <if cond="parseInt(totalChildren) == 1">
-                    <prompt bargein="false">Perfecto, es solo usted</prompt>
-                <elseif cond="parseInt(totalChildren) > 1"/>
-                    <prompt bargein="false">Usted dijo <value expr="totalChildren"/> children</prompt>
+                <if cond="parseInt(totalChildren) == 0"/>
+                    <prompt bargein="false">Usted dijo que no hay menores</prompt>
+                <elseif cond="parseInt(totalChildren) == 1">
+                    <prompt bargein="false">Usted dijo un menor, recuerde que deberá acreditarlo en puerta</prompt>
+                <elseif cond="parseInt(totalChildren) > 2"/>
+                    <prompt bargein="false">Usted dijo <value expr="totalChildren"/> menores, recuerde que deberá acreditarlo en puerta</prompt>
                 <else/>
                     <clear namelist="totalChildren" />
                     <throw event="nomatch"/>
                 </if>
             </filled>
-            
+
             <!-- Si pedimos ayuda al sistema
             <help>
                 Debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante.
