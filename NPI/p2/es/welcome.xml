@@ -32,16 +32,16 @@
         <grammar src="./grammatics/num_visitantes.jsgf"  type="application/x-jsgf" />
 
         <block>
-            <prompt bargein="false">Bienvenido a Alambrapp en español.</prompt>
+            <prompt bargein="false">Bienvenido a Alambrapp.</prompt>
         </block>
         
         <initial name="total_visitor">
             <prompt>Porfavor, seleccione el numero total de visitantes, <emp>incluído menores</emp></prompt>
             <!-- Si pedimos ayuda al sistema-->
-            <help>
+            <!--<help>
                 Debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante.
                 <reprompt/>
-            </help>
+            </help>-->
         </initial>
 
         <field name="are_children">
