@@ -20,11 +20,12 @@
     </nomatch>
      -->
 
-    <!-- Phrases to say when need help -->
+    <!-- Phrases to say when need help
     <link event="help">
         <grammar type="application/x-jsgf"> [necesito] ayuda | no [lo] entiendo | explicamelo</grammar>
     </link>
-    
+     -->
+     
     <!--<property name="timeout" value="10s"/>-->
     <form id="visitorES">
         <!--<property name="inputmodes" value="voice"/>-->
@@ -42,11 +43,12 @@
                 <prompt cond="totalVisitor > 1" bargein="false">Usted dijo <value expr="totalVisitor"/> visitantes</prompt>
             </filled>-->
 
-            <!-- Si pedimos ayuda al sistema-->
+            <!-- Si pedimos ayuda al sistema
             <help>
                 Debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante.
                 <reprompt/>
             </help>
+            -->
         </field>
 
         <!--<field name="are_children">
