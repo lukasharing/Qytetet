@@ -1,7 +1,7 @@
 #JSGF V1.0;
 grammar total_visitantes;
-public <total_visitantes> = [somos] <masuno> [personas | visitantes] { this.numVisitors = $masuno }
-                          | <uno> { this.numVisitors =  "1" };
+public <total_visitantes> = [somos] <masuno> [personas | visitantes] { this.totalVisitor = $masuno }
+                          | <uno> { this.totalVisitor =  "1" };
 
 <uno> = [soy] (un visitante | una persona)
       | solo (yo | uno) ;
