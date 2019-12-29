@@ -60,7 +60,7 @@
 
         <field name="totalChildren">
             <prompt timeout="3s">Indice cuántos menores hay en el grupo, su entrada será gratuita trás la acreditación en puerta</prompt>
-            <grammar src="./grammatics/num_children.jsgf" type="application/x-jsgf" />
+            <grammar src="./grammatics/num_children.jsgf" />
             
             <filled>
                 <if cond="parseInt(totalChildren) >= parseInt(totalVisitor)">
