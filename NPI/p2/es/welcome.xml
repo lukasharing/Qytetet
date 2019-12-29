@@ -121,7 +121,7 @@
         </field>
         -->
         <field name="edit">
-            <!-- Resumen -->
+            <!-- Resumen ->
             <var name="diff" expr="parseInt(totalVisitor) - parseInt(totalChildren)"/>
             <prompt bargein="false"> Le voy a resumir los datos introducidos <break> </prompt>
             
@@ -131,13 +131,13 @@
                 <prompt bargein="false"> Un grupo de <break/><value expr="totalChildren"/> niños acompañados</prompt>
             </if>
 
-            <!--<if cond="diff == 1">
+            <!-<if cond="diff == 1">
                 <prompt bargein="false"> por <break/> un adulto </prompt>
             <else/>
                 <prompt bargein="false"> por un grupo de <break/> <value expr="diff.toString()"/> adultos</prompt>
-            </if>-->
+            </if>->
             
-            <!-- Modificar -->
+            <!- Modificar -->
             <prompt>Quiere modificar alguno de los datos anteriores. Sí o No?</prompt>
 
             <!--<value expr="2+3+1+(0.5*(lettuce))+(0.5*(tomato))+(0.5*(olives))+(0.5*(pickles))"/>-->
