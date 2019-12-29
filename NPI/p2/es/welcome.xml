@@ -38,11 +38,12 @@
             <grammar src="./grammatics/num_visitantes.jsgf" />
 
             <filled>
-                <if cond="parseInt(totalVisitor.value) == 1">
+                <prompt> Valor <value expr="totalVisitor"> </prompt>
+                <if cond="parseInt(totalVisitor) == 1">
                     <prompt bargein="false">Perfecto, es solo usted</prompt>
-                </elseif cond="parseInt(totalVisitor.value) > 1">
-                    <prompt  bargein="false">Usted dijo <value expr="totalVisitor.value"/> visitantes</prompt>
-                </else>
+                <elseif cond="parseInt(totalVisitor) > 1"/>
+                    <prompt  bargein="false">Usted dijo <value expr="totalVisitor"/> visitantes</prompt>
+                <else/>
                     <throw event="nomatch"/>
                 </if>
             </filled>
