@@ -6,26 +6,27 @@
 <meta name="author" content="Lukas Haring"/>
 <meta name="maintainer" content="lukasharing@correo.ugr.es"/>
 
-    <!-- Si no escucha nada, le volvemos a preguntar -->
+    <!-- Si no escucha nada, le volvemos a preguntar ->
     <noinput>
         <prompt xml:lang="es-ES">Lo siento no pude escuchar nada<break/> podría intentarlo de nuevo?</prompt>
         <reprompt/>
     </noinput>
 
-    <!-- Si no existe esa seleccion, le deceimos que no lo hemos entendido -->
+    <!- Si no existe esa seleccion, le deceimos que no lo hemos entendido ->
     <nomatch>
         <prompt xml:lang="es-ES">Lo siento no le pude entender. Podría repetirlo de nuevo?</prompt>
         <reprompt/>
     </nomatch>
 
-    <!-- Phrases to say when need help -->
+    <!- Phrases to say when need help ->
     <link event="help">
         <grammar type="application/x-jsgf"> [necesito] ayuda | no entiendo</grammar>
-    </link>
+    </link>-->
 
     <form id="visitor-es" scope="document">
 
-        <property name="bargein" value="false"/>
+        <!--<property name="inputmodes" value="voice"/>
+        <property name="bargein" value="false"/>-->
 
         <block>
             <prompt xml:lang="es-ES">Bienvenido a alambrapp en español.</prompt>
