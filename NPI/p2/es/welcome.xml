@@ -8,17 +8,18 @@
     <!-- https://github.com/krishnamuraleedharan/Voice-xml/blob/master/FoodMenu.xml -->
     <!-- https://www.w3.org/Voice/Guide/ -->
 
-    <!-- Si no escucha nada, le volvemos a preguntar -->
+    <!-- Si no escucha nada, le volvemos a preguntar
     <noinput>
         Lo siento no pude escuchar nada. Podría intentarlo de nuevo?
         <reprompt/>
     </noinput>
-
-    <!-- Si no existe esa seleccion, le deceimos que no lo hemos entendido -->
+    -->
+    <!-- Si no existe esa seleccion, le deceimos que no lo hemos entendido
     <nomatch>
         Lo siento no le pude entender. Podría repetirlo de nuevo?
         <reprompt/>
     </nomatch>
+     -->
 
     <!-- Phrases to say when need help -->
     <link event="help">
@@ -34,7 +35,7 @@
         </block>
         
         <field name="total_visitor">
-            <prompt>Porfavor, seleccione el numero total de visitantes, <emp>incluído menores</emp></prompt>
+            <prompt timeout="10s">ABC Error o No<!--Porfavor, seleccione el numero total de visitantes, <emp>incluído menores</emp>--></prompt>
             <grammar mode="voice" root="root">
                 <rule id="root" scope="public">
                     <one-of>
@@ -44,11 +45,11 @@
                     </one-of>
                 </rule>
             </grammar>
-            <filled>
+            <!--<filled>
                 <prompt bargein="false">
                     Usted dijo <value expr="total_visitor"/> visitantes
                 </prompt>
-            </filled>
+            </filled>-->
             <!--<grammar src="./grammatics/num_visitantes.jsgf"  type="application/x-jsgf" />-->
 
             <!-- Si pedimos ayuda al sistema-->
