@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?> 
-<!DOCTYPE vxml PUBLIC "-//W3C//DTD VOICEXML 2.0//EN" "http://www.w3.org/TR/voicexml20/vxml.dtd">
 <vxml version="2.0" xml:lang="es-ES">
-<meta name="author" content="Lukas Haring"/>
-<meta name="maintainer" content="lukasharing@correo.ugr.es"/>
+<!--<meta name="author" content="Lukas Haring"/>
+<meta name="maintainer" content="lukasharing@correo.ugr.es"/>-->
 
     <!-- http://www1.se.cuhk.edu.hk/~hccl/publications/pub/0300769.pdf -->
     <!-- https://github.com/krishnamuraleedharan/Voice-xml/blob/master/FoodMenu.xml -->
@@ -21,14 +20,14 @@
     </nomatch>
      -->
 
-    <!-- Phrases to say when need help -->
+    <!-- Phrases to say when need help 
     <link event="help">
         <grammar type="application/x-jsgf"> [necesito] ayuda | no [lo] entiendo | explicamelo</grammar>
-    </link>
+    </link>-->
 
     <!--<property name="timeout" value="10s"/>-->
     <form id="visitor-es">
-        <property name="inputmodes" value="voice"/>
+        <!--<property name="inputmodes" value="voice"/>-->
 
         <block>
             <prompt bargein="false">Bienvenido a Alambrapp.</prompt>
