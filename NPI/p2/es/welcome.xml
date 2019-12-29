@@ -120,11 +120,30 @@
             </help>->
         </field>
         -->
-        <!--
         <field name="edit">
-            <value expr="2+3+1+(0.5*(lettuce))+(0.5*(tomato))+(0.5*(olives))+(0.5*(pickles))"/>
+            <!-- Resumen -->
+            <var name="diff" expr="parseInt(totalVisitor) - parseInt(totalChildren)"/>
+            <prompt bargein="false">
+                Le voy a resumir los datos introducidos <break>
+            </promt>
+            
+            <if cond="parseInt(totalChildren) == 1">
+                <prompt bargein="false"> Un niño </prompt> acompañado
+            <elseif cond="parseInt(totalChildren) > 1" />
+                <prompt bargein="false"> Un grupo de <value expr="totalChildren"/> niños acompañados
+            </if>
+
+            <if cond="diff == 1">
+                <prompt bargein="false"> por un adulto </prompt>
+            <else/>
+                <prompt bargein="false"> por un grupo de <value expr="diff.toString()"/> adultos
+            </if>
+            
+            <!-- Modificar -->
+            <prompt>Quiere modificar alguno de los datos anteriores. Sí o No?</prompt>
+
+            <!--<value expr="2+3+1+(0.5*(lettuce))+(0.5*(tomato))+(0.5*(olives))+(0.5*(pickles))"/>-->
         </field>
-        -->
         <block>
             <var name="code" expr="getCode()"/>
             <prompt>Gracias por realizar su reserva, su código de reserva es <break/> <value expr="code"/>, de nuevo el código de reserva es <break/> <value expr="code"/>  </prompt>
