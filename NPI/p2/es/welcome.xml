@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE vxml PUBLIC "-//W3C//DTD VOICEXML 2.0//EN" "http://www.w3.org/TR/voicexml20/vxml.dtd">
 <vxml version="2.0" xml:lang="es-ES">
 <!--<meta name="author" content="Lukas Haring"/>
 <meta name="maintainer" content="lukasharing@correo.ugr.es"/>-->
@@ -27,26 +28,27 @@
 
     <!--<property name="timeout" value="10s"/>-->
     <form id="visitorES">
-        <!--<property name="inputmodes" value="voice"/>-->
 
         <block>
-            Bienvenido a Alhambrapp
+            <prompt bargein="false">
+                Bienvenido a Alhambrapp 
+            </prompt>
         </block>
 
         <field name="totalVisitor">
-            <prompt timeout="3s">Porfavor, seleccione el numero total de visitantes, <emp>incluído menores</emp></prompt>
+            <prompt timeout="3s">Porfavor, seleccione el numero total de visitantes, incluído menores</prompt>
             <grammar src="./grammatics/num_visitantes.jsgf" />
 
             <filled>
                 <prompt> Valor <value expr="totalVisitor"/> </prompt>
-                <if cond="parseInt(totalVisitor) == 1">
+                <!--<if cond="parseInt(totalVisitor) == 1">
                     <prompt bargein="false">Perfecto, es solo usted</prompt>
                 <elseif cond="parseInt(totalVisitor) > 1"/>
                     <prompt  bargein="false">Usted dijo <value expr="totalVisitor"/> visitantes</prompt>
                 <else/>
                     <clear/>
                     <throw event="nomatch"/>
-                </if>
+                </if>-->
             </filled>
 
             <!-- Si pedimos ayuda al sistema
