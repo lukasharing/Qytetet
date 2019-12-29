@@ -1,10 +1,14 @@
 #JSGF V1.0;
 grammar total_visitantes;
-public <total_visitantes> = [somos] <masuno> [personas | visitantes] { this.totalChildren = $masuno }
-                          | <uno> { this.totalChildren =  "1" };
+public <total_visitantes> = <cero> { this.numChildren = "0" }
+                      | <uno> { this.numChildren = "1" }
+                      | ([hay] [solo] | [son]) <masuno> [menores] { this.numChildren = $masuno };
 
-<uno> = [soy] (un visitante | una persona)
-      | solo (yo | uno) ;
+<cero> = ningun
+       | cero
+       | no hay;
+
+<uno> = [hay] [solo] (un menor | uno);
 
 <masuno> = dos    { this.$value = "2" }
          | tres   { this.$value = "3" }
