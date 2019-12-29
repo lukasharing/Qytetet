@@ -25,14 +25,21 @@
         <grammar type="application/x-jsgf"> [necesito] ayuda | no [lo] entiendo | explicamelo</grammar>
     </link>-->
 
+    <form id="welcome">
+        <block>
+            Bienvenido a Alhambrapp
+            <goto next="#visitorES" />
+        </block>
+    </form>
+
     <!--<property name="timeout" value="10s"/>-->
     <form id="visitorES">
         <!--<property name="inputmodes" value="voice"/>-->
 
-        <block>bienvenido a alambrapp</block>
-        
         <field name="totalVisitor">
             <prompt timeout="3s">Porfavor, seleccione el numero total de visitantes, <emp>incluído menores</emp></prompt>
+            <!--<grammar src="./grammatics/num_visitantes.jsgf"  type="application/x-jsgf" />-->
+
             <grammar mode="voice" root="root">
                 <rule id="root" scope="public">
                     <one-of>
@@ -42,12 +49,12 @@
                     </one-of>
                 </rule>
             </grammar>
+
             <filled>
                 <prompt bargein="false">
                     Usted dijo <value expr="totalVisitor"/> visitantes
                 </prompt>
             </filled>
-            <!--<grammar src="./grammatics/num_visitantes.jsgf"  type="application/x-jsgf" />-->
 
             <!-- Si pedimos ayuda al sistema-->
             <!--<help>
