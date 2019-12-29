@@ -1,8 +1,5 @@
-<!-- http://www1.se.cuhk.edu.hk/~hccl/publications/pub/0300769.pdf -->
-<!-- https://github.com/krishnamuraleedharan/Voice-xml/blob/master/FoodMenu.xml -->
-<!-- https://www.w3.org/Voice/Guide/ -->
-<!DOCTYPE vxml PUBLIC "-//W3C//DTD VOICEXML 2.0//EN" "http://www.w3.org/TR/voicexml20/vxml.dtd">
 <?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE vxml PUBLIC "-//W3C//DTD VOICEXML 2.0//EN" "http://www.w3.org/TR/voicexml20/vxml.dtd">
 <vxml xmlns="http://www.w3.org/2001/vxml" 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
   xsi:schemaLocation="http://www.w3.org/2001/vxml 
@@ -10,6 +7,10 @@
    version="2.0">
 <meta name="author" content="Lukas Haring"/>
 <meta name="maintainer" content="lukasharing@correo.ugr.es"/>
+
+    <!-- http://www1.se.cuhk.edu.hk/~hccl/publications/pub/0300769.pdf -->
+    <!-- https://github.com/krishnamuraleedharan/Voice-xml/blob/master/FoodMenu.xml -->
+    <!-- https://www.w3.org/Voice/Guide/ -->
 
     <!-- Si no escucha nada, le volvemos a preguntar -->
     <noinput>
@@ -112,7 +113,6 @@
         <field name="edit">
             <value expr="2+3+1+(0.5*(lettuce))+(0.5*(tomato))+(0.5*(olives))+(0.5*(pickles))"/>
         </field>
-        -->
         <block>
             <script><![CDATA[
 
@@ -121,16 +121,16 @@
                     var r = toString(parseInt(Math.random() * 1000) + 1000);
                     var code = "";
                     /* Cogemos los 3 últimos y le añadimos un break */
-                    for(ver i = r.length - 1; i > 0; --i){
-                        code += r[i] + '<break size="medium"/>';
+                    for(ver i = r.length - 1; i > 0; #-i){
+                        code += r[i] + '<break/>';
                     }
                     return code;
                 }
 
             ]]></script>
             <var name="code" expr="getCode()"/>
-            <prompt>Gracias por realizar su reserva, su código de reserva es <break size="large" /> <value expr="code"/>, de nuevo el código de reserva es <break size="large" /> <value expr="code"/>  </prompt>
-            <!--<submit next="../form.php" namelist="visitor-es"/>-->
-        </block>
+            <prompt>Gracias por realizar su reserva, su código de reserva es <break/> <value expr="code"/>, de nuevo el código de reserva es <break/> <value expr="code"/>  </prompt>
+            <!-<submit next="../form.php" namelist="visitor-es"/>
+        </block>-->
     </form>
 </vxml>
