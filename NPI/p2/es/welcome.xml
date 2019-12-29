@@ -41,16 +41,16 @@
 
             <filled>
                 <prompt bargein="false"> 
-                    Valor <value expr="totalVisitor"/>
+                    Valor <value expr="totalVisitor$.numVisitors"/>
                 </prompt>
-                <!--<if cond="parseInt(totalVisitor) == 1">
+                <if cond="parseInt(totalVisitor) == 1">
                     <prompt bargein="false">Perfecto, es solo usted</prompt>
                 <elseif cond="parseInt(totalVisitor) > 1"/>
-                    <prompt  bargein="false">Usted dijo <value expr="totalVisitor"/> visitantes</prompt>
+                    <prompt bargein="false">Usted dijo <value expr="totalVisitor"/> visitantes</prompt>
                 <else/>
                     <clear/>
                     <throw event="nomatch"/>
-                </if>-->
+                </if>
             </filled>
 
             <!-- Si pedimos ayuda al sistema
