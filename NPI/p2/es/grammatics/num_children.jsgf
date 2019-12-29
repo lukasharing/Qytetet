@@ -2,7 +2,7 @@
 grammar num_children;
 public <num_children> = (ningún | cero | no hay) { this.value = "0" }
                       | [hay] [solo] (un menor | uno) { this.value = 1; }
-                      | [hay] [solo] <masuno> [menores] { this.value = masuno }
+                      | [hay] [solo] <masuno> [menores] { this.value = $masuno }
 
 <masuno> = dos    { this.value = "2" }
          | tres   { this.value = "3" }
