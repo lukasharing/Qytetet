@@ -1,22 +1,10 @@
 <!-- http://www1.se.cuhk.edu.hk/~hccl/publications/pub/0300769.pdf -->
 <!-- https://github.com/krishnamuraleedharan/Voice-xml/blob/master/FoodMenu.xml -->
 <!-- https://www.w3.org/Voice/Guide/ -->
-<?vxml version="1.0" encoding="UTF-8" ?>
+<?vxml version="1.0" ?>
 <vxml version="2.1" xml:lang="es-ES">
 <meta name="author" content="Lukas Haring"/>
 <meta name="maintainer" content="lukasharing@correo.ugr.es"/>
-
-    <!-- Si no escucha nada, le volvemos a preguntar -->
-    <noinput>
-        <prompt>Lo siento no pude escuchar nada. Podría intentarlo de nuevo?</prompt>
-        <reprompt/>
-    </noinput>
-
-    <!-- Si no existe esa seleccion, le deceimos que no lo hemos entendido -->
-    <nomatch>
-        <prompt>Lo siento no le pude entender. Podría repetirlo de nuevo?</prompt>
-        <reprompt/>
-    </nomatch>
 
     <!-- Phrases to say when need help -->
     <link event="help">
@@ -29,7 +17,7 @@
         <property name="inputmodes" value="voice"/>
         <property name="bargein" value="false"/>
 
-        <block>Bienvenido a alambrapp en español.</block>
+        <block>Bienvenido a Alambrapp en español.</block>
         
         <initial name="total_visitor">
             <prompt>Porfavor, seleccione el numero total de visitantes, incluído menores</prompt>
@@ -46,6 +34,20 @@
                 </if>
                 -->
             </filled>
+
+            <!-- Si no escucha nada, le volvemos a preguntar -->
+            <noinput>
+                <prompt>Lo siento no pude escuchar nada. Podría intentarlo de nuevo?</prompt>
+                <reprompt/>
+            </noinput>
+
+            <!-- Si no existe esa seleccion, le deceimos que no lo hemos entendido -->
+            <nomatch>
+                <prompt>Lo siento no le pude entender. Podría repetirlo de nuevo?</prompt>
+                <reprompt/>
+            </nomatch>
+
+            
             <!-- Si pedimos ayuda al sistema-->
             <help>
                 Debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante.
