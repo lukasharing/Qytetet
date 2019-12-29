@@ -40,7 +40,9 @@
             <grammar src="./grammatics/num_visitantes.jsgf" />
 
             <filled>
-                <prompt> Valor <value expr="totalVisitor"/> </prompt>
+                <prompt bargein="false"> 
+                    Valor <value expr="totalVisitor$.numVisitors"/>
+                </prompt>
                 <!--<if cond="parseInt(totalVisitor) == 1">
                     <prompt bargein="false">Perfecto, es solo usted</prompt>
                 <elseif cond="parseInt(totalVisitor) > 1"/>

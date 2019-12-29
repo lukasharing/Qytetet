@@ -6,4 +6,13 @@ public <total_visitantes> = [somos] <masuno> [personas | visitantes] { this.numV
 <uno> = [soy] (un visitante | una persona)
       | solo (yo | uno) ;
 
-<masuno> = 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 ;
+<masuno> = dos    { this.numVisitors = "2" }
+         | tres   { this.numVisitors = "3" }
+         | cuatro { this.numVisitors = "4" }
+         | cinco  { this.numVisitors = "5" }
+         | seis   { this.numVisitors = "6" }
+         | siete  { this.numVisitors = "7" }
+         | ocho   { this.numVisitors = "8" }
+         | nueve  { this.numVisitors = "9" }
+         | diez   { this.numVisitors = "10" }
+         | once   { this.numVisitors = "11" };
