@@ -5,10 +5,11 @@ public <total_visitantes> = <cero> { this.totalChildren = "0" }
                           | ([hay] [solo] | [son]) <masuno> [menores] { this.totalChildren = $masuno };
 
 <cero> = ningun
+       | ninguno
        | cero
-       | no hay;
+       | no hay ;
 
-<uno> = ([hay] [solo] | [es]) (un menor | uno);
+<uno> = ([hay] [solo] | [es]) (un menor | uno) ;
 
 <masuno> = dos    { this.$value = "2" }
          | tres   { this.$value = "3" }
