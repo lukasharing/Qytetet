@@ -7,18 +7,17 @@
     <!-- https://github.com/krishnamuraleedharan/Voice-xml/blob/master/FoodMenu.xml -->
     <!-- https://www.w3.org/Voice/Guide/ -->
 
-    <!-- Si no escucha nada, le volvemos a preguntar
+    <!-- Si no escucha nada, le volvemos a preguntar -->
     <noinput>
         Lo siento no pude escuchar nada. Podría intentarlo de nuevo?
         <reprompt/>
     </noinput>
-    -->
-    <!-- Si no existe esa seleccion, le deceimos que no lo hemos entendido
+
+    <!-- Si no existe esa seleccion, le deceimos que no lo hemos entendido -->
     <nomatch>
         Lo siento no le pude entender. Podría repetirlo de nuevo?
         <reprompt/>
     </nomatch>
-     -->
 
     <!-- Phrases to say when need help
     <link event="help">
