@@ -32,7 +32,7 @@
         </block>
         
         <field name="total_visitor">
-            <prompt xml:lang="es-ES" timeout="6s">porfavor, seleccione el numero total de visitantes, incluído menores</prompt>
+            <prompt xml:lang="es-ES" timeout="15s">porfavor, seleccione el numero total de visitantes, incluído menores</prompt>
             <grammar src="./grammatics/num_visitantes.jsgf"></grammar>
             <!-- Si llenamos -->
             <filled>
@@ -53,7 +53,7 @@
         </field>
 
         <field name="are_children">
-            <prompt xml:lang="es-ES" timeout="6s">Indice cuántos menores hay en el grupo, recuerde que su entrada será gratuita trás la acreditación en puerta.</prompt>
+            <prompt xml:lang="es-ES" timeout="15s">Indice cuántos menores hay en el grupo, recuerde que su entrada será gratuita trás la acreditación en puerta.</prompt>
             <grammar src="./grammatics/num_children.jsgf"></grammar>
             <!-- Si llenamos -->
             <filled>

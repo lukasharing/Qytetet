@@ -35,7 +35,7 @@
     
     <!-- Bienvenida selección del Idioma -->
     <menu id="chlang" scope="document">
-        <property name="bargein" value="false"/>
+        <property name="bargein" value="true"/>
         
         <prompt xml:lang="en-US">Welcome to AlambraApp. Please select language</prompt>
         <prompt xml:lang="es-ES">Bienvenido a AlambraApp. Porfavor seleccione el idioma</prompt>
@@ -56,12 +56,12 @@
         <choice next="./es/welcome.xml" xml:lang="es-ES">Alemán</choice>
         <choice next="./es/welcome.xml" xml:lang="de-DE">Deutsch</choice>
         
-        <!-- Si no escucha nada, le volvemos a preguntar
+        <!-- Si no escucha nada, le volvemos a preguntar -->
         <noinput>
             <prompt xml:lang="en-US">I'm sorry, I didn't hear anything. Could you please try that again?</prompt>
             <prompt xml:lang="es-ES">Lo siento no pude escuchar nada. Podría intentarlo de nuevo?</prompt>
             <prompt xml:lang="de-DE">Es tut mir leid, ich habe nichts gehort. Konnten Sie das bitte noch einmal versuchen?</prompt>
             <reprompt/>
-        </noinput> -->
+        </noinput>
     </menu>
 </vxml>
