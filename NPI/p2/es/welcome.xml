@@ -24,17 +24,13 @@
     <link event="help">
         <grammar type="application/x-jsgf"> [necesito] ayuda | no [lo] entiendo | explicamelo</grammar>
     </link>-->
-
-    <form id="welcome">
-        <block>
-            Bienvenido a Alhambrapp
-            <goto next="#visitorES" />
-        </block>
-    </form>
-
     <!--<property name="timeout" value="10s"/>-->
     <form id="visitorES">
         <!--<property name="inputmodes" value="voice"/>-->
+
+        <block>
+            Bienvenido a Alhambrapp
+        </block>
 
         <field name="totalVisitor">
             <prompt timeout="3s">Porfavor, seleccione el numero total de visitantes, <emp>incluído menores</emp></prompt>
@@ -47,10 +43,10 @@
             </filled>
 
             <!-- Si pedimos ayuda al sistema-->
-            <!--<help>
+            <help>
                 Debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante.
                 <reprompt/>
-            </help>-->
+            </help>
         </field>
 
         <!--<field name="are_children">
