@@ -40,9 +40,6 @@
             <grammar src="./grammatics/num_visitantes.jsgf" />
 
             <filled>
-                <prompt bargein="false"> 
-                    Valoreo <value expr="totalVisitor"/>
-                </prompt>
                 <if cond="parseInt(totalVisitor) == 1">
                     <prompt bargein="false">Perfecto, es solo usted</prompt>
                 <elseif cond="parseInt(totalVisitor) > 1"/>
@@ -61,32 +58,30 @@
             -->
         </field>
 
-        <!--<field name="are_children">
+        <field name="totalChildren">
             <prompt>Indice cuántos menores hay en el grupo, recuerde que su entrada será gratuita trás la acreditación en puerta.</prompt>
             <grammar src="./grammatics/num_children.jsgf" type="application/x-jsgf" />
-            <!- Si llenamos ->
+            <!-- Si llenamos -->
             <filled>
                 <prompt>
-                    Usted dijo, <value expr="are_children"/> menores
+                    Usted dijo, <value expr="totalChildren"/> menores
                 </prompt>
-                <!- Numero de niños es mayor al número de personas que hemos introducido ->
-                <if cond="parseInt(are_children.value) > parseInt(total_visitor.value)">
-                    <prompt bargein="false">
-                        No pueden haber más menores que visitantes.
-                    </prompt>
-                    <goto nextitem="total_visitor"/>
+                <!-- Numero de niños es mayor al número de personas que hemos introducido -->
+                <if cond="parseInt(totalChildren) >= parseInt(totalVisitor)">
+                    <prompt bargein="false">Deben haber menos menores que mayores, volvamos a intentrarlo.</prompt>
+                    <goto nextitem="totalVisitor"/>
                 </if>
-                <!-
+                <!--
                 Si estamos editando esta sección, nos enviará a la edición 
                 <if cond="dialog.check=='0'">
                     <goto nextitem="edit"/>
                 </if>
-                ->
+                -->
             </filled>
-            <!- Si pedimos ayuda al sistema->
+            <!-- Si pedimos ayuda al sistema
             <help>
                 debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante
-            </help>
+            </help> -->
         </field>
 
         <field name="visit_type">
