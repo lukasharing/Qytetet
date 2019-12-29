@@ -32,7 +32,7 @@
         <block>bienvenido a alambrapp</block>
         
         <field name="totalVisitor">
-            <prompt timeout="5s">ABC Error o No<!--Porfavor, seleccione el numero total de visitantes, <emp>incluído menores</emp>--></prompt>
+            <prompt timeout="3s">Porfavor, seleccione el numero total de visitantes, <emp>incluído menores</emp></prompt>
             <grammar mode="voice" root="root">
                 <rule id="root" scope="public">
                     <one-of>
