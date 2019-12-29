@@ -20,11 +20,10 @@
         <reprompt/>
     </nomatch>
 
-    <!-- Phrases to say when need help
+    <!-- Phrases to say when need help-->
     <link event="help">
-        <grammar type="application/x-jsgf"> [necesito] ayuda | no [lo] entiendo | explicamelo</grammar>
+        <grammar src="./grammatics/help.jsgf" />
     </link>
-     -->
 
     <!--<property name="timeout" value="10s"/>-->
     <form id="visitorES">
@@ -50,12 +49,11 @@
                 </if>
             </filled>
 
-            <!-- Si pedimos ayuda al sistema
+            <!-- Si pedimos ayuda al sistema -->
             <help>
                 Debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante.
                 <reprompt/>
             </help>
-            -->
         </field>
 
         <field name="totalChildren">
@@ -65,7 +63,7 @@
             <filled>
                 <if cond="parseInt(totalChildren) >= parseInt(totalVisitor)">
                     <clear namelist="totalChildren" />
-                    <prompt bargein="false">Deben haber menos menores que mayores, volvamos a intentrarlo</prompt>
+                    <prompt bargein="false">Deben haber menos menores que mayores, volvamos a intentarlo</prompt>
                 <elseif cond="parseInt(totalChildren) == 0"/>
                     <prompt bargein="false">Usted dijo que no hay menores</prompt>
                 <elseif cond="parseInt(totalChildren) == 1"/>
