@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<vxml version="2.0">
+<vxml version="2.0" xml:lang="es-ES">
 <!--<meta name="author" content="Lukas Haring"/>
 <meta name="maintainer" content="lukasharing@correo.ugr.es"/>-->
 
@@ -29,9 +29,7 @@
     <form id="visitorES">
         <!--<property name="inputmodes" value="voice"/>-->
 
-        <block>
-            <prompt bargein="false">bienvenido a alambrapp</prompt>
-        </block>
+        <block>bienvenido a alambrapp</block>
         
         <field name="totalVisitor">
             <prompt timeout="5s">ABC Error o No<!--Porfavor, seleccione el numero total de visitantes, <emp>incluído menores</emp>--></prompt>
