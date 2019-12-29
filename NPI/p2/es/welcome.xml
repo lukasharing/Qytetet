@@ -11,7 +11,7 @@
             var r = toString(parseInt(Math.random() * 1000) + 1000);
             var code = "";
             /* Cogemos los 3 últimos y le añadimos un break */
-            for(ver i = r.length - 1; i > 0; --i){
+            for(var i = r.length - 1; i > 0; --i){
                 code += r[i] + '<break/>';
             }
             return code;
@@ -91,12 +91,11 @@
                 </if>
             </filled>
 
-            <!-- Si pedimos ayuda al sistema
+            <!-- Si pedimos ayuda al sistema -->
             <help>
                 Debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante.
                 <reprompt/>
             </help>
-            -->
         </field>
 
         <!--
