@@ -29,7 +29,16 @@
     <form id="visitor-es">
         <property name="inputmodes" value="voice"/>
         
-        <grammar src="./grammatics/num_visitantes.jsgf"  type="application/x-jsgf" />
+        <grammar mode="voice" root="root">
+            <rule id="root" scope="public">
+                <one-of>
+                    <item>wheat</item>
+                    <item>rye</item>
+                    <item>soured dough</item>
+                </one-of>
+            </rule>
+        </grammar>
+        <!--<grammar src="./grammatics/num_visitantes.jsgf"  type="application/x-jsgf" />-->
 
         <block>
             <prompt bargein="false">Bienvenido a Alambrapp.</prompt>
