@@ -1,5 +1,5 @@
-<?vxml version="1.0" encoding="ISO-8859-1" ?>
-<vxml version="2.1">
+<?vxml version="1.0" encoding="UTF-8" ?>
+<vxml version="2.1" xmlns="http://www.w3.org/2001/vxml">
 <meta name="author" content="Lukas Haring"/>
 <meta name="maintainer" content="lukasharing@correo.ugr.es"/>
 

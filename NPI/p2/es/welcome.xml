@@ -2,7 +2,7 @@
 <!-- https://github.com/krishnamuraleedharan/Voice-xml/blob/master/FoodMenu.xml -->
 <!-- https://www.w3.org/Voice/Guide/ -->
 <?vxml version="1.0" encoding="UTF-8" ?>
-<vxml version="2.1">
+<vxml version="2.1" xmlns="http://www.w3.org/2001/vxml">
 <meta name="author" content="Lukas Haring"/>
 <meta name="maintainer" content="lukasharing@correo.ugr.es"/>
 
@@ -20,37 +20,24 @@
 
     <!-- Phrases to say when need help -->
     <link event="help">
-        <grammar type="application/x-jsgf"> [necesito] ayuda | no entiendo | [I need] help | I don't get it | [Ich brauche] hilfe</grammar>
+        <grammar type="application/x-jsgf"> [necesito] ayuda | no entiendo</grammar>
     </link>
-
 
     <form id="visitor-es" scope="document">
 
         <property name="bargein" value="false"/>
 
         <block>
-            <prompt>bienvenido a alambrapp en español. recuerde que la entrada a menores es gratuita</prompt>
+            <prompt xml:lang="es-ES">Bienvenido a alambrapp en español.</prompt>
         </block>
         
-        <field name="total-visitor">
-            <prompt>porfavor, seleccione el numero de visitantes</prompt>
-            <grammar mode="voice" root="root">
-                <rule id="root" scope="public">
-                    <one-of>
-                        <item>uno</item>
-                        <item>dos</item>
-                        <item>tres</item>
-                        <item>cuatro</item>
-                        <item>cinco</item>
-                        <item>seis</item>
-                        <item>siete</item>
-                    </one-of>
-                </rule>
-            </grammar>
+        <field name="total_visitor">
+            <prompt xml:lang="es-ES" timeout="6s">porfavor, seleccione el numero total de visitantes, incluído menores</prompt>
+            <grammar src="./grammatics/num_visitantes.jsgf"></grammar>
             <!-- Si llenamos -->
             <filled>
-                <prompt>
-                    usted dijo, <value expr="total-visitor"/> visitantes
+                <prompt xml:lang="es-ES">
+                    usted dijo, <value expr="total_visitor"/> visitantes
                 </prompt>
                 <!-- 
                 Si estamos editando esta sección, nos enviará a la edición 
@@ -60,9 +47,58 @@
                 -->
             </filled>
             <!-- Si pedimos ayuda al sistema-->
-            <help>
+            <!--<help>
                 debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante
-            </help>
+            </help>-->
+        </field>
+
+        <field name="are_children">
+            <prompt xml:lang="es-ES" timeout="6s">Indice cuántos menores hay en el grupo, recuerde que su entrada será gratuita trás la acreditación en puerta.</prompt>
+            <grammar src="./grammatics/num_children.jsgf"></grammar>
+            <!-- Si llenamos -->
+            <filled>
+                <prompt xml:lang="es-ES">
+                    Usted dijo, <value expr="are_children"/> menores
+                </prompt>
+                <!-- Numero de niños es mayor al número de personas que hemos introducido -->
+                <if cond="parseInt(are_children.value) > parseInt(total_visitor.value)">
+                    <prompt xml:lang="es-ES">
+                        No pueden haber más menores que visitantes.
+                    </prompt>
+                    <goto nextitem="total_visitor"/>
+                </if>
+                <!-- 
+                Si estamos editando esta sección, nos enviará a la edición 
+                <if cond="dialog.check=='0'">
+                    <goto nextitem="edit"/>
+                </if>
+                -->
+            </filled>
+            <!-- Si pedimos ayuda al sistema-->
+            <!--<help>
+                debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante
+            </help>-->
+        </field>
+
+        <field name="visit_type">
+            <prompt xml:lang="es-ES" timeout="6s">Indique el tipo de visita que quiere realizar</prompt>
+            <grammar src="./grammatics/visit_type.jsgf"></grammar>
+            <!-- Si llenamos -->
+            <filled>
+                <prompt xml:lang="es-ES">
+                    Usted dijo, <value expr="total-visitor"/> visitantes
+                </prompt>
+                <!-- 
+                Si estamos editando esta sección, nos enviará a la edición 
+                <if cond="dialog.check=='0'">
+                    <goto nextitem="edit"/>
+                </if>
+                -->
+            </filled>
+            <!-- Si pedimos ayuda al sistema-->
+            <!--<help>
+                debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante
+            </help>-->
         </field>
 
         <!--
@@ -70,8 +106,24 @@
             <value expr="2+3+1+(0.5*(lettuce))+(0.5*(tomato))+(0.5*(olives))+(0.5*(pickles))"/>
         </field>
         -->
-        <!--<block>
-            <submit next="../form.php" namelist="visitor-es"/>
-        </block>-->
+        <block>
+            <script><![CDATA[
+
+                function getCode(){
+                    /* Generamos número aleatorio de 4 dígitos */
+                    var r = toString(parseInt(Math.random() * 1000) + 1000);
+                    var code = "";
+                    /* Cogemos los 3 últimos y le añadimos un break */
+                    for(ver i = r.length - 1; i > 0; --i){
+                        code += r[i] + '<break size="medium"/>';
+                    }
+                    return code;
+                }
+
+            ]]></script>
+            <var name="code" expr="getCode()"/>
+            <prompt xml:lang="es-ES">Gracias por realizar su reserva, su código de reserva es <break size="large" /> <value expr="code"/>, de nuevo el código de reserva es <break size="large" /> <value expr="code"/>  </prompt>
+            <!--<submit next="../form.php" namelist="visitor-es"/>-->
+        </block>
     </form>
 </vxml>

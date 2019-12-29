@@ -1,0 +1,16 @@
+#JSGF v1.0;
+grammar num_children;
+public <num_children> = (ningún | cero | no hay) { this.value = "0" }
+                      | [hay] [solo] (un menor | uno) { this.value = 1; }
+                      | [hay] [solo] <masuno> [menores] { this.value = masuno }
+
+<masuno> = dos    { this.value = "2" }
+         | tres   { this.value = "3" }
+         | cuatro { this.value = "4" }
+         | cinco  { this.value = "5" }
+         | seis   { this.value = "6" }
+         | siete  { this.value = "7" }
+         | ocho   { this.value = "8" }
+         | nueve  { this.value = "9" }
+         | diez   { this.value = "10" }
+         | once   { this.value = "11" };

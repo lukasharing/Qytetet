@@ -1,6 +1,6 @@
 <!-- http://www1.se.cuhk.edu.hk/~hccl/publications/pub/0300769.pdf -->
 <?vxml version="1.0" encoding="UTF-8" ?>
-<vxml version="2.1">
+<vxml version="2.1" xmlns="http://www.w3.org/2001/vxml">
 <meta name="author" content="Lukas Haring"/>
 <meta name="maintainer" content="lukasharing@correo.ugr.es"/>
 
@@ -12,14 +12,14 @@
         <reprompt/>
     </nomatch>
 
-    <!-- Phrases to say when need help ->
+    <!-- Phrases to say when need help -->
     <link event="help">
         <grammar type="application/x-jsgf"> [necesito] ayuda | no entiendo | [I need] help | I don't get it | [Ich brauche] hilfe</grammar>
     </link>
 
-    <- Salir en cualquier momento ->
+    <!-- Salir en cualquier momento -->
     <link event="exit">
-        <grammar type="application/x-jsgf"> Exit | Salir | Schliessen</grammar>
+        <grammar type="application/x-jsgf"> Exit | Salir | Schliessen </grammar>
     </link>
     <catch event="exit">
         <prompt xml:lang="en-US">Thank you for using AlambraApp</prompt>
@@ -28,11 +28,10 @@
         <exit/>
     </catch>
     
-    <- Cambiar Idioma en cualquier momento ->
+    <!-- Cambiar Idioma en cualquier momento -->
     <link next="#chlang">
         <grammar type="application/x-jsgf"> Change language | Cambiar idioma | Sprache wechseln</grammar>
     </link>
-    -->
     
     <!-- Bienvenida selección del Idioma -->
     <menu id="chlang" scope="document">
