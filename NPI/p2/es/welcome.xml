@@ -1,8 +1,13 @@
 <!-- http://www1.se.cuhk.edu.hk/~hccl/publications/pub/0300769.pdf -->
 <!-- https://github.com/krishnamuraleedharan/Voice-xml/blob/master/FoodMenu.xml -->
 <!-- https://www.w3.org/Voice/Guide/ -->
-<?xml version="1.0" encoding="UTF-8" ?>
-<vxml version="2.1" xml:lang="es-ES">
+<!DOCTYPE vxml PUBLIC "-//W3C//DTD VOICEXML 2.0//EN" "http://www.w3.org/TR/voicexml20/vxml.dtd">
+<?xml version="1.0" encoding="UTF-8"?> 
+<vxml xmlns="http://www.w3.org/2001/vxml" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.w3.org/2001/vxml 
+   http://www.w3.org/TR/voicexml20/vxml.xsd"
+   version="2.0">
 <meta name="author" content="Lukas Haring"/>
 <meta name="maintainer" content="lukasharing@correo.ugr.es"/>
 
@@ -31,9 +36,9 @@
 
         <block>Bienvenido a Alambrapp en español.</block>
         
-        <initial name="total_visitor">
+        <field name="total_visitor">
             <prompt>Porfavor, seleccione el numero total de visitantes, incluído menores</prompt>
-            <grammar src="./grammatics/num_visitantes.jsgf"  type="application/x-jsgf"></grammar>
+            <grammar src="./grammatics/num_visitantes.jsgf"  type="application/x-jsgf" />
             <!-- Si llenamos -->
             <filled>
                 <prompt bargein="false">
@@ -52,11 +57,11 @@
                 Debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante.
                 <reprompt/>
             </help>
-        </initial>
+        </field>
 
         <field name="are_children">
             <prompt>Indice cuántos menores hay en el grupo, recuerde que su entrada será gratuita trás la acreditación en puerta.</prompt>
-            <grammar src="./grammatics/num_children.jsgf" type="application/x-jsgf"></grammar>
+            <grammar src="./grammatics/num_children.jsgf" type="application/x-jsgf" />
             <!-- Si llenamos -->
             <filled>
                 <prompt>
@@ -84,7 +89,7 @@
 
         <field name="visit_type">
             <prompt>Indique el tipo de visita que quiere realizar</prompt>
-            <grammar src="./grammatics/visit_type.jsgf" type="application/x-jsgf"></grammar>
+            <grammar src="./grammatics/visit_type.jsgf" type="application/x-jsgf" />
             <!-- Si llenamos -->
             <filled>
                 <prompt bargein="false">
