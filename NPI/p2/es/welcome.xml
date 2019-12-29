@@ -66,7 +66,7 @@
 
             <!-- Si pedimos ayuda al sistema -->
             <help>
-                Debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante.
+                Debe indicar el numero de visitantes, diga <break/>Un visitante<break/> si es usted el unico visitante.
                 <reprompt/>
             </help>
         </field>
@@ -93,7 +93,7 @@
 
             <!-- Si pedimos ayuda al sistema -->
             <help>
-                Debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante.
+                Debe indicar el numero de menores que van a asistir. diga <break/>Ninguno<break/>, si no asistirá ningún menor.
                 <reprompt/>
             </help>
         </field>
@@ -131,11 +131,11 @@
                 <prompt bargein="false"> Un grupo de <break/><value expr="totalChildren"/> niños acompañados por</prompt>
             </if>
             
-            <!--<if cond="diff == 1">
+            <if cond="diff == 1">
                 <prompt bargein="false"> <break/> Un adulto </prompt>
             <else/>
                 <prompt bargein="false">  un grupo de <break/> <value expr="diff.toString()"/> adultos</prompt>
-            </if>->
+            </if>
             
             <!- Modificar -->
             <prompt>Quiere modificar alguno de los datos anteriores?</prompt>
@@ -146,20 +146,21 @@
                 <if cond="Edit == 1">
                     <goto nextitem="ToEdit"/>
                 <else/>
-                    <prompt>El precio es </prompt><!--<value expr="2+3+1+(0.5*(lettuce))+(0.5*(tomato))+(0.5*(olives))+(0.5*(pickles))"/>-->
+                    <prompt>El precio es <break/><value expr="15 * diff"/> euros <break type="long" /></prompt>
                     <goto nextitem="ThankYou"/>
                 </if>
             </filled>
         </field>
 
         <field name="ToEdit">
-            <prompt>Edición</prompt>
+            <prompt>Cuál de los siguientes datos quiere modificar?</prompt>
         </field>
 
         <block name="ThankYou">
             <var name="code" expr="getCode()"/>
             <prompt>Gracias por realizar su reserva, su código de reserva es <break/> <value expr="code"/>, de nuevo el código de reserva es <break/> <value expr="code"/>  </prompt>
             <!--<submit next="../form.php" namelist="visitor-es"/>-->
+            <disconnect/>
         </block>
     </form>
 </vxml>
