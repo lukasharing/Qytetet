@@ -6,32 +6,33 @@
 <meta name="author" content="Lukas Haring"/>
 <meta name="maintainer" content="lukasharing@correo.ugr.es"/>
 
-    <!-- Si no escucha nada, le volvemos a preguntar ->
+    <!-- Si no escucha nada, le volvemos a preguntar -->
     <noinput>
-        <prompt>Lo siento no pude escuchar nada<break/> podría intentarlo de nuevo?</prompt>
+        <prompt>Lo siento no pude escuchar nada. Podría intentarlo de nuevo?</prompt>
         <reprompt/>
     </noinput>
 
-    <!- Si no existe esa seleccion, le deceimos que no lo hemos entendido ->
+    <!-- Si no existe esa seleccion, le deceimos que no lo hemos entendido -->
     <nomatch>
         <prompt>Lo siento no le pude entender. Podría repetirlo de nuevo?</prompt>
         <reprompt/>
     </nomatch>
-    -->
+
     <!-- Phrases to say when need help -->
     <link event="help">
         <grammar type="application/x-jsgf"> [necesito] ayuda | no entiendo</grammar>
     </link>
 
+    <property name="timeout" value="4s"/>
     <form id="visitor-es" scope="dialog">
 
-        <!--<property name="inputmodes" value="voice"/>
-        <property name="bargein" value="false"/>-->
+        <property name="inputmodes" value="voice"/>
+        <!--<property name="bargein" value="false"/>-->
 
         <block>Bienvenido a alambrapp en español.</block>
         
         <initial name="total_visitor">
-            <prompt timeout="15s">Porfavor, seleccione el numero total de visitantes, incluído menores</prompt>
+            <prompt>Porfavor, seleccione el numero total de visitantes, incluído menores</prompt>
             <grammar src="./grammatics/num_visitantes.jsgf"  type="application/x-jsgf"></grammar>
             <!-- Si llenamos -->
             <filled>
@@ -53,7 +54,7 @@
         </initial>
 
         <field name="are_children">
-            <prompt timeout="15s">Indice cuántos menores hay en el grupo, recuerde que su entrada será gratuita trás la acreditación en puerta.</prompt>
+            <prompt>Indice cuántos menores hay en el grupo, recuerde que su entrada será gratuita trás la acreditación en puerta.</prompt>
             <grammar src="./grammatics/num_children.jsgf" type="application/x-jsgf"></grammar>
             <!-- Si llenamos -->
             <filled>
@@ -81,7 +82,7 @@
         </field>
 
         <field name="visit_type">
-            <prompt timeout="15s">Indique el tipo de visita que quiere realizar</prompt>
+            <prompt>Indique el tipo de visita que quiere realizar</prompt>
             <grammar src="./grammatics/visit_type.jsgf" type="application/x-jsgf"></grammar>
             <!-- Si llenamos -->
             <filled>
