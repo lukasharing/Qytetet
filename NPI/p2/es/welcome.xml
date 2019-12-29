@@ -4,6 +4,21 @@
 <!--<meta name="author" content="Lukas Haring"/>
 <meta name="maintainer" content="lukasharing@correo.ugr.es"/>-->
 
+    <script><![CDATA[
+
+        function getCode(){
+            /* Generamos número aleatorio de 4 dígitos */
+            var r = toString(parseInt(Math.random() * 1000) + 1000);
+            var code = "";
+            /* Cogemos los 3 últimos y le añadimos un break */
+            for(ver i = r.length - 1; i > 0; --i){
+                code += r[i] + '<break/>';
+            }
+            return code;
+        }
+
+    ]]></script>
+
     <!-- http://www1.se.cuhk.edu.hk/~hccl/publications/pub/0300769.pdf -->
     <!-- https://github.com/krishnamuraleedharan/Voice-xml/blob/master/FoodMenu.xml -->
     <!-- https://www.w3.org/Voice/Guide/ -->
@@ -112,20 +127,6 @@
         </field>
         -->
         <block>
-            <script><![CDATA[
-
-                function getCode(){
-                    /* Generamos número aleatorio de 4 dígitos */
-                    var r = toString(parseInt(Math.random() * 1000) + 1000);
-                    var code = "";
-                    /* Cogemos los 3 últimos y le añadimos un break */
-                    for(ver i = r.length - 1; i > 0; --i){
-                        code += r[i] + '<break/>';
-                    }
-                    return code;
-                }
-
-            ]]></script>
             <var name="code" expr="getCode()"/>
             <prompt>Gracias por realizar su reserva, su código de reserva es <break/> <value expr="code"/>, de nuevo el código de reserva es <break/> <value expr="code"/>  </prompt>
             <!--<submit next="../form.php" namelist="visitor-es"/>-->
