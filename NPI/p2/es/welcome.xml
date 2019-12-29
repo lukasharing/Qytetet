@@ -1,132 +1,584 @@
-<!-- http://www1.se.cuhk.edu.hk/~hccl/publications/pub/0300769.pdf -->
-<!-- https://github.com/krishnamuraleedharan/Voice-xml/blob/master/FoodMenu.xml -->
-<!-- https://www.w3.org/Voice/Guide/ -->
-<?vxml version="1.0" ?>
-<vxml version="2.1" xml:lang="es-ES">
-<meta name="author" content="Lukas Haring"/>
-<meta name="maintainer" content="lukasharing@correo.ugr.es"/>
-
-    <!-- Phrases to say when need help -->
-    <link event="help">
-        <grammar type="application/x-jsgf"> [necesito] ayuda | no entiendo</grammar>
-    </link>
-
-    <property name="timeout" value="10s"/>
-    <form id="visitor-es" scope="dialog">
-
+<?xml version="1.0" encoding="UTF-8" ?>
+<vxml version="2.0">
+    <nomatch>
+        No Match! I'm sorry, I didn't understand you. Could you please try that again?
+        <reprompt/>
+    </nomatch>
+    <noinput>
+        No Input! I'm sorry, I didn't hear anything. Could you please try that again?
+        <reprompt/>
+    </noinput>
+    <menu id="menu">
         <property name="inputmodes" value="voice"/>
-        <property name="bargein" value="false"/>
-
-        <block>Bienvenido a Alambrapp en español.</block>
-        
-        <initial name="total_visitor">
-            <prompt>Porfavor, seleccione el numero total de visitantes, incluído menores</prompt>
-            <grammar src="./grammatics/num_visitantes.jsgf"  type="application/x-jsgf"></grammar>
-            <!-- Si llenamos -->
+        <prompt bargein="false">
+            hello. What do you want to order?
+            <enumerate>
+                <value expr="_prompt"/>
+            </enumerate>
+        </prompt>
+        <choice next="#sandwich">sandwich</choice>
+        <choice next="#drink">or drink</choice>
+        <choice next="#sandwich_and_drink">both</choice>
+    </menu>
+    <form id="sandwich">
+        <property name="inputmodes" value="voice"/>
+        <var expr="1" name="check"/>
+        <field name="bread">
+            <prompt>
+                Select the type of bread for sandwich. Wheat or Rye or Soured dough
+            </prompt>
+            <grammar mode="voice" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>wheat</item>
+                        <item>rye</item>
+                        <item>soured dough</item>
+                    </one-of>
+                </rule>
+            </grammar>
             <filled>
-                <prompt>
-                    usted dijo, <value expr="total_visitor"/> visitantes
+                <prompt bargein="false">
+                    Looks like you said
+                    <value expr="bread"/>
                 </prompt>
-                <!-- 
-                Si estamos editando esta sección, nos enviará a la edición 
                 <if cond="dialog.check=='0'">
                     <goto nextitem="edit"/>
                 </if>
-                -->
             </filled>
-
-            <!-- Si no escucha nada, le volvemos a preguntar -->
-            <noinput>
-                <prompt>Lo siento no pude escuchar nada. Podría intentarlo de nuevo?</prompt>
-                <reprompt/>
-            </noinput>
-
-            <!-- Si no existe esa seleccion, le deceimos que no lo hemos entendido -->
-            <nomatch>
-                <prompt>Lo siento no le pude entender. Podría repetirlo de nuevo?</prompt>
-                <reprompt/>
-            </nomatch>
-
-            
-            <!-- Si pedimos ayuda al sistema-->
-            <help>
-                Debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante.
-                <reprompt/>
-            </help>
-        </initial>
-
-        <field name="are_children">
-            <prompt>Indice cuántos menores hay en el grupo, recuerde que su entrada será gratuita trás la acreditación en puerta.</prompt>
-            <grammar src="./grammatics/num_children.jsgf" type="application/x-jsgf"></grammar>
-            <!-- Si llenamos -->
-            <filled>
-                <prompt>
-                    Usted dijo, <value expr="are_children"/> menores
-                </prompt>
-                <!-- Numero de niños es mayor al número de personas que hemos introducido -->
-                <if cond="parseInt(are_children.value) > parseInt(total_visitor.value)">
-                    <prompt>
-                        No pueden haber más menores que visitantes.
-                    </prompt>
-                    <goto nextitem="total_visitor"/>
-                </if>
-                <!-- 
-                Si estamos editando esta sección, nos enviará a la edición 
-                <if cond="dialog.check=='0'">
-                    <goto nextitem="edit"/>
-                </if>
-                -->
-            </filled>
-            <!-- Si pedimos ayuda al sistema-->
-            <!--<help>
-                debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante
-            </help>-->
         </field>
-
-        <field name="visit_type">
-            <prompt>Indique el tipo de visita que quiere realizar</prompt>
-            <grammar src="./grammatics/visit_type.jsgf" type="application/x-jsgf"></grammar>
-            <!-- Si llenamos -->
+        <field name="meat">
+            <prompt>
+                Select the type of meat. chicken or meat balls or tuna fish
+            </prompt>
+            <grammar mode="voice" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>chicken</item>
+                        <item>meat balls</item>
+                        <item>tuna fish</item>
+                        <item>none</item>
+                    </one-of>
+                </rule>
+            </grammar>
             <filled>
-                <prompt>
-                    Usted dijo, <value expr="total-visitor"/> visitantes
+                <prompt bargein="false">
+                    Looks like you said
+                    <value expr="meat"/>
                 </prompt>
-                <!-- 
-                Si estamos editando esta sección, nos enviará a la edición 
                 <if cond="dialog.check=='0'">
                     <goto nextitem="edit"/>
                 </if>
-                -->
             </filled>
-            <!-- Si pedimos ayuda al sistema-->
-            <!--<help>
-                debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante
-            </help>-->
         </field>
-
-        <!--
+        <field name="lettuce">
+            <prompt>
+                Select the number of toppings for veggies, available veggies are lettuce, tomato, olives and pickles. How many toppings of lettuce do you wish to have? Select between 0 to 2.
+            </prompt>
+            <grammar mode="voice" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>0</item>
+                        <item>1</item>
+                        <item>2</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled>
+                <prompt bargein="false">
+                    Looks like you said
+                    <value expr="lettuce"/>
+                </prompt>
+                <if cond="dialog.check=='0'">
+                    <goto nextitem="edit"/>
+                </if>
+            </filled>
+        </field>
+        <field name="tomato">
+            <prompt>
+                How many toppings of tomato do you wish to have? Select between 0 to 2.
+            </prompt>
+            <grammar mode="voice" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>0</item>
+                        <item>1</item>
+                        <item>2</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled>
+                <prompt bargein="false">
+                    Looks like you said
+                    <value expr="tomato"/>
+                </prompt>
+                <if cond="dialog.check=='0'">
+                    <goto nextitem="edit"/>
+                </if>
+            </filled>
+        </field>
+        <field name="olives">
+            <prompt>
+                How many toppings of olives do you wish to have? Select between 0 to 2.
+            </prompt>
+            <grammar mode="voice" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>0</item>
+                        <item>1</item>
+                        <item>2</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled>
+                <prompt bargein="false">
+                    Looks like you said
+                    <value expr="olives"/>
+                </prompt>
+                <if cond="dialog.check=='0'">
+                    <goto nextitem="edit"/>
+                </if>
+            </filled>
+        </field>
+        <field name="pickles">
+            <prompt>
+                How many toppings of pickles do you wish to have? Select between 0 to 2.
+            </prompt>
+            <grammar mode="voice" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>0</item>
+                        <item>1</item>
+                        <item>2</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled>
+                <prompt bargein="false">
+                    Looks like you said
+                    <value expr="pickles"/>
+                </prompt>
+                <if cond="dialog.check=='0'">
+                    <goto nextitem="edit"/>
+                </if>
+            </filled>
+        </field>
         <field name="edit">
-            <value expr="2+3+1+(0.5*(lettuce))+(0.5*(tomato))+(0.5*(olives))+(0.5*(pickles))"/>
+            <prompt bargein="false">
+                <break/>
+                You have ordered
+                <value expr="bread"/>
+                bread with
+                <value expr="meat"/>
+                and
+                <value expr="lettuce"/>
+                toppings of lettuce,
+                <value expr="tomato"/>
+                toppings of tomato,
+                <value expr="olives"/>
+                toppings of olives,
+                <value expr="pickles"/>
+                toppings of pickles.
+            </prompt>
+            <prompt>Would you like to edit your order . Yes or No?</prompt>
+            <grammar mode="voice" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>Yes</item>
+                        <item>No</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled>
+                <prompt bargein="false">
+                    <value expr="edit"/>
+                </prompt>
+                <if cond="edit=='Yes'">
+                    <goto nextitem="toedit"/>
+                    <else/>
+                    <prompt>
+                        Your bill is
+                        <value expr="2+3+(0.5*(lettuce))+(0.5*(tomato))+(0.5*(olives))+(0.5*(pickles))"/>
+                        dollars and your order will be processed soon, thankyou.
+                    </prompt>
+                    <disconnect/>
+                </if>
+            </filled>
         </field>
-        -->
-        <block>
-            <script><![CDATA[
-
-                function getCode(){
-                    /* Generamos número aleatorio de 4 dígitos */
-                    var r = toString(parseInt(Math.random() * 1000) + 1000);
-                    var code = "";
-                    /* Cogemos los 3 últimos y le añadimos un break */
-                    for(ver i = r.length - 1; i > 0; --i){
-                        code += r[i] + '<break size="medium"/>';
-                    }
-                    return code;
-                }
-
-            ]]></script>
-            <var name="code" expr="getCode()"/>
-            <prompt>Gracias por realizar su reserva, su código de reserva es <break size="large" /> <value expr="code"/>, de nuevo el código de reserva es <break size="large" /> <value expr="code"/>  </prompt>
-            <!--<submit next="../form.php" namelist="visitor-es"/>-->
-        </block>
+        <field name="toedit">
+            <prompt>
+                What do you want to edit? Bread or meat or veggies?
+            </prompt>
+            <grammar mode="voice" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>bread</item>
+                        <item>meat</item>
+                        <item>veggies</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled>
+                <assign expr="0" name="dialog.check"/>
+                <prompt bargein="false">
+                    <value expr="toedit"/>
+                </prompt>
+                <if cond="toedit=='bread'">
+                    <goto nextitem="bread"/>
+                    <elseif cond="toedit=='meat'"/>
+                    <goto nextitem="meat"/>
+                    <elseif cond="toedit=='veggies'"/>
+                    <goto nextitem="veggies"/>
+                    <else/>
+                    <disconnect/>
+                </if>
+            </filled>
+        </field>
+        <field name="veggies">
+            <prompt>
+                What do you want to edit? lettuce or tomato or olives or pickles?
+            </prompt>
+            <grammar mode="voice" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>lettuce</item>
+                        <item>tomato</item>
+                        <item>olives</item>
+                        <item>pickles</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled>
+                <prompt bargein="false">
+                    <value expr="veggies"/>
+                </prompt>
+                <if cond="veggies=='lettuce'">
+                    <goto nextitem="lettuce"/>
+                    <elseif cond="veggies=='tomato'"/>
+                    <goto nextitem="tomato"/>
+                    <elseif cond="veggies=='olives'"/>
+                    <goto nextitem="olives"/>
+                    <elseif cond="veggies=='pickles'"/>
+                    <goto nextitem="pickles"/>
+                </if>
+            </filled>
+        </field>
+    </form>
+    <form id="drink">
+        <property name="inputmodes" value="voice"/>
+        <field name="drink">
+            <prompt>What type of drink. Coke or pepsi or 7 up.</prompt>
+            <grammar mode="voice" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>coke</item>
+                        <item>pepsi</item>
+                        <item>7 up</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled>
+                <prompt bargein="false">
+                    Looks like you said
+                    <value expr="drink"/>
+                </prompt>
+                <goto nextitem="edit"/>
+            </filled>
+        </field>
+        <field name="edit">
+            <prompt>Would you like to edit your order . Yes or No?</prompt>
+            <grammar mode="voice" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>Yes</item>
+                        <item>No</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled>
+                <prompt bargein="false">
+                    <value expr="edit"/>
+                </prompt>
+                <if cond="edit=='Yes'">
+                    <goto nextitem="drink"/>
+                </if>
+                <prompt>
+                    Your bill is
+                    <value expr="1"/>
+                    $
+                    <break/>
+                    your order will be processed soon, thankyou.
+                </prompt>
+            </filled>
+        </field>
+    </form>
+    <form id="sandwich_and_drink">
+        <property name="inputmodes" value="voice"/>
+        <var expr="1" name="check"/>
+        <field name="bread">
+            <prompt>
+                May i take your order please. Select the type of bread for sandwich. Wheat or Rye or Soured dough
+            </prompt>
+            <grammar mode="voice" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>wheat</item>
+                        <item>rye</item>
+                        <item>soured dough</item>
+                        <item>none</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled>
+                <prompt bargein="false">
+                    Looks like you said
+                    <value expr="bread"/>
+                </prompt>
+                <if cond="dialog.check=='0'">
+                    <goto nextitem="edit"/>
+                </if>
+            </filled>
+        </field>
+        <field name="meat">
+            <prompt>
+                Select the type of meat. chicken or meat balls or tuna fish
+            </prompt>
+            <grammar mode="voice" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>chicken</item>
+                        <item>meat balls</item>
+                        <item>tuna fish</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled>
+                <prompt bargein="false">
+                    Looks like you said
+                    <value expr="meat"/>
+                </prompt>
+                <if cond="dialog.check=='0'">
+                    <goto nextitem="edit"/>
+                </if>
+            </filled>
+        </field>
+        <field name="lettuce">
+            <prompt>
+                Select the number of toppings for veggies, available veggies are lettuce, tomato, olives and pickles. How many toppings of lettuce do you wish to have? Select between 0 to 2.
+            </prompt>
+            <grammar mode="voice" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>0</item>
+                        <item>1</item>
+                        <item>2</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled>
+                <prompt bargein="false">
+                    Looks like you said
+                    <value expr="lettuce"/>
+                </prompt>
+                <if cond="dialog.check=='0'">
+                    <goto nextitem="edit"/>
+                </if>
+            </filled>
+        </field>
+        <field name="tomato">
+            <prompt>
+                How many toppings of tomato do you wish to have? Select between 0 to 2.
+            </prompt>
+            <grammar mode="voice" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>0</item>
+                        <item>1</item>
+                        <item>2</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled>
+                <prompt bargein="false">
+                    Looks like you said
+                    <value expr="tomato"/>
+                </prompt>
+                <if cond="dialog.check=='0'">
+                    <goto nextitem="edit"/>
+                </if>
+            </filled>
+        </field>
+        <field name="olives">
+            <prompt>
+                How many toppings of olives do you wish to have? Select between 0 to 2.
+            </prompt>
+            <grammar mode="voice" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>0</item>
+                        <item>1</item>
+                        <item>2</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled>
+                <prompt bargein="false">
+                    Looks like you said
+                    <value expr="olives"/>
+                </prompt>
+                <if cond="dialog.check=='0'">
+                    <goto nextitem="edit"/>
+                </if>
+            </filled>
+        </field>
+        <field name="pickles">
+            <prompt>
+                How many toppings of pickles do you wish to have? Select between 0 to 2.
+            </prompt>
+            <grammar mode="voice" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>0</item>
+                        <item>1</item>
+                        <item>2</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled>
+                <prompt bargein="false">
+                    Looks like you said
+                    <value expr="pickles"/>
+                </prompt>
+                <if cond="dialog.check=='0'">
+                    <goto nextitem="edit"/>
+                </if>
+            </filled>
+        </field>
+        <field name="drink">
+            <prompt>Select the drink. coke or pepsi or 7 up.</prompt>
+            <grammar mode="voice" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>coke</item>
+                        <item>pepsi</item>
+                        <item>7 up</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled>
+                <prompt bargein="false">
+                    Looks like you said
+                    <value expr="drink"/>
+                </prompt>
+                <if cond="dialog.check=='0'">
+                    <goto nextitem="edit"/>
+                </if>
+            </filled>
+        </field>
+        <field name="edit">
+            <prompt bargein="false">
+                <break/>
+                You have ordered
+                <value expr="bread"/>
+                bread with
+                <value expr="meat"/>
+                and
+                <value expr="lettuce"/>
+                toppings of lettuce,
+                <value expr="tomato"/>
+                toppings of tomato,
+                <value expr="olives"/>
+                toppings of olives,
+                <value expr="pickles"/>
+                toppings of pickles, along with
+                <value expr="drink"/>
+            </prompt>
+            <prompt>Would you like to edit your order . Yes or No?</prompt>
+            <grammar mode="voice" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>Yes</item>
+                        <item>No</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled>
+                <prompt bargein="false">
+                    <value expr="edit"/>
+                </prompt>
+                <if cond="edit=='Yes'">
+                    <goto nextitem="toedit"/>
+                    <else/>
+                    <prompt>
+                        Your bill is
+                        <value expr="2+3+1+(0.5*(lettuce))+(0.5*(tomato))+(0.5*(olives))+(0.5*(pickles))"/>
+                        dollars
+                        <break/>
+                        your order will be processed soon, thankyou.
+                    </prompt>
+                    <disconnect/>
+                </if>
+            </filled>
+        </field>
+        <field name="toedit">
+            <prompt>
+                What do you want to edit? Bread or meat or veggies or drink?
+            </prompt>
+            <grammar mode="voice" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>bread</item>
+                        <item>meat</item>
+                        <item>veggies</item>
+                        <item>drink</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled>
+                <assign expr="0" name="dialog.check"/>
+                <prompt bargein="false">
+                    <value expr="toedit"/>
+                </prompt>
+                <if cond="toedit=='bread'">
+                    <goto nextitem="bread"/>
+                    <elseif cond="toedit=='meat'"/>
+                    <goto nextitem="meat"/>
+                    <elseif cond="toedit=='veggies'"/>
+                    <goto nextitem="veggies"/>
+                    <elseif cond="toedit=='drink'"/>
+                    <goto nextitem="drink"/>
+                    <else/>
+                    <disconnect/>
+                </if>
+            </filled>
+        </field>
+        <field name="veggies">
+            <prompt>
+                What do you want to edit? lettuce or tomato or olives or pickles?
+            </prompt>
+            <grammar mode="voice" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>lettuce</item>
+                        <item>tomato</item>
+                        <item>olives</item>
+                        <item>pickles</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled>
+                <prompt bargein="false">
+                    <value expr="veggies"/>
+                </prompt>
+                <if cond="veggies=='lettuce'">
+                    <goto nextitem="lettuce"/>
+                    <elseif cond="veggies=='tomato'"/>
+                    <goto nextitem="tomato"/>
+                    <elseif cond="veggies=='olives'"/>
+                    <goto nextitem="olives"/>
+                    <elseif cond="veggies=='pickles'"/>
+                    <goto nextitem="pickles"/>
+                </if>
+            </filled>
+        </field>
     </form>
 </vxml>
