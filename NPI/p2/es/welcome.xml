@@ -17,11 +17,11 @@
         <prompt>Lo siento no le pude entender. Podría repetirlo de nuevo?</prompt>
         <reprompt/>
     </nomatch>
-
-    <!- Phrases to say when need help ->
+    -->
+    <!-- Phrases to say when need help -->
     <link event="help">
         <grammar type="application/x-jsgf"> [necesito] ayuda | no entiendo</grammar>
-    </link>-->
+    </link>
 
     <form id="visitor-es" scope="dialog">
 
@@ -46,9 +46,10 @@
                 -->
             </filled>
             <!-- Si pedimos ayuda al sistema-->
-            <!--<help>
-                debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante
-            </help>-->
+            <help>
+                Debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante.
+                <reprompt/>
+            </help>
         </initial>
 
         <field name="are_children">
