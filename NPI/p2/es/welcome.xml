@@ -105,11 +105,12 @@
                 debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante
             </help>->
         </field>
-        ->
-        <!-
+        -->
+        <!--
         <field name="edit">
             <value expr="2+3+1+(0.5*(lettuce))+(0.5*(tomato))+(0.5*(olives))+(0.5*(pickles))"/>
         </field>
+        -->
         <block>
             <script><![CDATA[
 
@@ -118,7 +119,7 @@
                     var r = toString(parseInt(Math.random() * 1000) + 1000);
                     var code = "";
                     /* Cogemos los 3 últimos y le añadimos un break */
-                    for(ver i = r.length - 1; i > 0; #-i){
+                    for(ver i = r.length - 1; i > 0; --i){
                         code += r[i] + '<break/>';
                     }
                     return code;
@@ -127,7 +128,7 @@
             ]]></script>
             <var name="code" expr="getCode()"/>
             <prompt>Gracias por realizar su reserva, su código de reserva es <break/> <value expr="code"/>, de nuevo el código de reserva es <break/> <value expr="code"/>  </prompt>
-            <!-<submit next="../form.php" namelist="visitor-es"/>
-        </block>-->
+            <!--<submit next="../form.php" namelist="visitor-es"/>-->
+        </block>
     </form>
 </vxml>
