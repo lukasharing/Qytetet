@@ -63,14 +63,16 @@
             <grammar src="./grammatics/num_children.jsgf" type="application/x-jsgf" />
             <!-- Si llenamos -->
             <filled>
-                <prompt>
-                    Usted dijo, <value expr="totalChildren"/> menores
-                </prompt>
-                <!-- Numero de niños es mayor al número de personas que hemos introducido -->
+                
                 <if cond="parseInt(totalChildren) >= parseInt(totalVisitor)">
                     <prompt bargein="false">Deben haber menos menores que mayores, volvamos a intentrarlo.</prompt>
                     <goto nextitem="totalVisitor"/>
+                <elseif cond="parseInt(totalChildren) === 0"/>
+                    <prompt bargein="false">Usted dijo que no hay menores.</prompt>
+                <else/>
+                    <prompt bargein="false">Usted dijo <value expr="totalChildren"/> menores, recuerde que deberá acreditarlo en puerta.</prompt>
                 </if>
+
                 <!--
                 Si estamos editando esta sección, nos enviará a la edición 
                 <if cond="dialog.check=='0'">
