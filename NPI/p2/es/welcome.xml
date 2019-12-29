@@ -63,6 +63,8 @@
             <grammar src="./grammatics/num_children.jsgf" />
 
             <filled>
+                
+                <prompt bargein="false"><value expr="totalChildren"/></prompt>
                 <if cond="parseInt(totalChildren) == 0">
                     <prompt bargein="false">Usted dijo que no hay menores</prompt>
                 <!--<elseif cond="parseInt(totalChildren) == 1"/>
