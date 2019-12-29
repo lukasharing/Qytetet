@@ -120,7 +120,7 @@
             </help>->
         </field>
         -->
-        <field name="edit">
+        <field name="Edit">
             <!-- Resumen -->
             <var name="diff" expr="parseInt(totalVisitor) - parseInt(totalChildren)"/>
             <prompt bargein="false"> Le voy a resumir los datos introducidos <break/> </prompt>
@@ -138,12 +138,25 @@
             </if>->
             
             <!- Modificar -->
-            <prompt>Quiere modificar alguno de los datos anteriores. Sí o No?</prompt>
+            <prompt>Quiere modificar alguno de los datos anteriores?</prompt>
 
-            <!--<value expr="2+3+1+(0.5*(lettuce))+(0.5*(tomato))+(0.5*(olives))+(0.5*(pickles))"/>-->
+            <grammar src="./grammatics/yes_no.jsgf" />
+    
+            <filled>
+                <if cond="Edit == 1">
+                    <goto nextitem="ToEdit"/>
+                <else/>
+                    <prompt>El precio es </prompt><!--<value expr="2+3+1+(0.5*(lettuce))+(0.5*(tomato))+(0.5*(olives))+(0.5*(pickles))"/>-->
+                    <goto nextitem="ThankYou"/>
+                </if>
+            </filled>
         </field>
 
-        <block>
+        <field name="ToEdit">
+            <prompt>Edición</prompt>
+        </field>
+
+        <block name="ThankYou">
             <var name="code" expr="getCode()"/>
             <prompt>Gracias por realizar su reserva, su código de reserva es <break/> <value expr="code"/>, de nuevo el código de reserva es <break/> <value expr="code"/>  </prompt>
             <!--<submit next="../form.php" namelist="visitor-es"/>-->
