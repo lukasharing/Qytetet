@@ -63,7 +63,7 @@
             <grammar src="./grammatics/num_children.jsgf" />
 
             <filled>
-                <if cond="parseInt(totalChildren) == 0">
+                <!--<if cond="parseInt(totalChildren) == 0">
                     <prompt bargein="false">Usted dijo que no hay menores</prompt>
                 <elseif cond="parseInt(totalChildren) == 1"/>
                     <prompt bargein="false">Usted dijo un menor, recuerde que deberá acreditarlo en puerta</prompt>
@@ -72,7 +72,7 @@
                 <else/>
                     <clear namelist="totalChildren" />
                     <throw event="nomatch"/>
-                </if>
+                </if>-->
             </filled>
 
             <!-- Si pedimos ayuda al sistema
