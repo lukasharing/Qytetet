@@ -2,19 +2,19 @@
 <!-- https://github.com/krishnamuraleedharan/Voice-xml/blob/master/FoodMenu.xml -->
 <!-- https://www.w3.org/Voice/Guide/ -->
 <?vxml version="1.0" encoding="UTF-8" ?>
-<vxml version="2.1" xmlns="http://www.w3.org/2001/vxml">
+<vxml version="2.1" xml:lang="es-ES">
 <meta name="author" content="Lukas Haring"/>
 <meta name="maintainer" content="lukasharing@correo.ugr.es"/>
 
     <!-- Si no escucha nada, le volvemos a preguntar ->
     <noinput>
-        <prompt xml:lang="es-ES">Lo siento no pude escuchar nada<break/> podría intentarlo de nuevo?</prompt>
+        <prompt>Lo siento no pude escuchar nada<break/> podría intentarlo de nuevo?</prompt>
         <reprompt/>
     </noinput>
 
     <!- Si no existe esa seleccion, le deceimos que no lo hemos entendido ->
     <nomatch>
-        <prompt xml:lang="es-ES">Lo siento no le pude entender. Podría repetirlo de nuevo?</prompt>
+        <prompt>Lo siento no le pude entender. Podría repetirlo de nuevo?</prompt>
         <reprompt/>
     </nomatch>
 
@@ -23,21 +23,21 @@
         <grammar type="application/x-jsgf"> [necesito] ayuda | no entiendo</grammar>
     </link>-->
 
-    <form id="visitor-es" scope="document">
+    <form id="visitor-es" scope="dialog">
 
         <!--<property name="inputmodes" value="voice"/>
         <property name="bargein" value="false"/>-->
 
         <block>
-            <prompt xml:lang="es-ES">Bienvenido a alambrapp en español.</prompt>
+            <prompt>Bienvenido a alambrapp en español.</prompt>
         </block>
         
         <field name="total_visitor">
-            <prompt xml:lang="es-ES" timeout="15s">porfavor, seleccione el numero total de visitantes, incluído menores</prompt>
+            <prompt timeout="15s">porfavor, seleccione el numero total de visitantes, incluído menores</prompt>
             <grammar src="./grammatics/num_visitantes.jsgf"></grammar>
             <!-- Si llenamos -->
             <filled>
-                <prompt xml:lang="es-ES">
+                <prompt>
                     usted dijo, <value expr="total_visitor"/> visitantes
                 </prompt>
                 <!-- 
@@ -54,16 +54,16 @@
         </field>
 
         <field name="are_children">
-            <prompt xml:lang="es-ES" timeout="15s">Indice cuántos menores hay en el grupo, recuerde que su entrada será gratuita trás la acreditación en puerta.</prompt>
+            <prompt timeout="15s">Indice cuántos menores hay en el grupo, recuerde que su entrada será gratuita trás la acreditación en puerta.</prompt>
             <grammar src="./grammatics/num_children.jsgf"></grammar>
             <!-- Si llenamos -->
             <filled>
-                <prompt xml:lang="es-ES">
+                <prompt>
                     Usted dijo, <value expr="are_children"/> menores
                 </prompt>
                 <!-- Numero de niños es mayor al número de personas que hemos introducido -->
                 <if cond="parseInt(are_children.value) > parseInt(total_visitor.value)">
-                    <prompt xml:lang="es-ES">
+                    <prompt>
                         No pueden haber más menores que visitantes.
                     </prompt>
                     <goto nextitem="total_visitor"/>
@@ -82,11 +82,11 @@
         </field>
 
         <field name="visit_type">
-            <prompt xml:lang="es-ES" timeout="6s">Indique el tipo de visita que quiere realizar</prompt>
+            <prompt timeout="15s">Indique el tipo de visita que quiere realizar</prompt>
             <grammar src="./grammatics/visit_type.jsgf"></grammar>
             <!-- Si llenamos -->
             <filled>
-                <prompt xml:lang="es-ES">
+                <prompt>
                     Usted dijo, <value expr="total-visitor"/> visitantes
                 </prompt>
                 <!-- 
@@ -123,7 +123,7 @@
 
             ]]></script>
             <var name="code" expr="getCode()"/>
-            <prompt xml:lang="es-ES">Gracias por realizar su reserva, su código de reserva es <break size="large" /> <value expr="code"/>, de nuevo el código de reserva es <break size="large" /> <value expr="code"/>  </prompt>
+            <prompt>Gracias por realizar su reserva, su código de reserva es <break size="large" /> <value expr="code"/>, de nuevo el código de reserva es <break size="large" /> <value expr="code"/>  </prompt>
             <!--<submit next="../form.php" namelist="visitor-es"/>-->
         </block>
     </form>
