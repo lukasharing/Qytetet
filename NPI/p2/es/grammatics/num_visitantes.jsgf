@@ -1,6 +1,6 @@
 #JSGF V1.0;
 grammar total_visitantes;
-public <total_visitantes> = [somos] <masuno> [personas | visitantes] { this.value = $masuno }
+public <total_visitantes> = [somos] <masuno> [personas | visitantes]
                           | <uno> { this.value =  "1" };
 
 <uno> = [soy] (un visitante | una persona)
