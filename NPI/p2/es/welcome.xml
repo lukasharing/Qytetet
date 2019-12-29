@@ -34,7 +34,7 @@
         </block>
         
         <field name="totalVisitor">
-            <prompt timeout="10s">ABC Error o No<!--Porfavor, seleccione el numero total de visitantes, <emp>incluído menores</emp>--></prompt>
+            <prompt timeout="5s">ABC Error o No<!--Porfavor, seleccione el numero total de visitantes, <emp>incluído menores</emp>--></prompt>
             <grammar mode="voice" root="root">
                 <rule id="root" scope="public">
                     <one-of>
@@ -44,11 +44,11 @@
                     </one-of>
                 </rule>
             </grammar>
-            <!--<filled>
+            <filled>
                 <prompt bargein="false">
-                    Usted dijo <value expr="total_visitor"/> visitantes
+                    Usted dijo <value expr="totalVisitor"/> visitantes
                 </prompt>
-            </filled>-->
+            </filled>
             <!--<grammar src="./grammatics/num_visitantes.jsgf"  type="application/x-jsgf" />-->
 
             <!-- Si pedimos ayuda al sistema-->
