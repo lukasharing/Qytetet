@@ -35,12 +35,16 @@
 
         <field name="totalVisitor">
             <prompt timeout="3s">Porfavor, seleccione el numero total de visitantes, <emp>incluído menores</emp></prompt>
-            <grammar src="./grammatics/num_visitantes.jsgf"  type="application/x-jsgf" />
+            <grammar src="./grammatics/num_visitantes.jsgf" />
 
             <filled>
-                <prompt>Valor es <value expr="totalVisitor.value"/></prompt>
-                <prompt cond="parseInt(totalVisitor.value) == 1" bargein="false">Perfecto, es solo usted</prompt>
-                <prompt cond="parseInt(totalVisitor.value) > 1" bargein="false">Usted dijo <value expr="totalVisitor.value"/> visitantes</prompt>
+                <if cond="parseInt(totalVisitor.value) == 1">
+                    <prompt bargein="false">Perfecto, es solo usted</prompt>
+                </elseif cond="parseInt(totalVisitor.value) > 1">
+                    <prompt  bargein="false">Usted dijo <value expr="totalVisitor.value"/> visitantes</prompt>
+                </else>
+                    <throw event="nomatch"/>
+                </if>
             </filled>
 
             <!-- Si pedimos ayuda al sistema
