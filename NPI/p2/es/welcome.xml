@@ -38,17 +38,7 @@
 
         <field name="totalVisitor">
             <prompt timeout="3s">Porfavor, seleccione el numero total de visitantes, <emp>incluído menores</emp></prompt>
-            <!--<grammar src="./grammatics/num_visitantes.jsgf"  type="application/x-jsgf" />-->
-
-            <grammar mode="voice" root="root">
-                <rule id="root" scope="public">
-                    <one-of>
-                        <item>wheat</item>
-                        <item>rye</item>
-                        <item>soured dough</item>
-                    </one-of>
-                </rule>
-            </grammar>
+            <grammar src="./grammatics/num_visitantes.jsgf"  type="application/x-jsgf" />
 
             <filled>
                 <prompt bargein="false">
