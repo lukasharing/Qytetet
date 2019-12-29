@@ -1,6 +1,6 @@
 #JSGF v1.0;
 grammar num_children;
-public <num_children> = (ningún | cero | no hay) { this.value = "0" }
+public <num_children> = (ningun | cero | no hay) { this.value = "0" }
                       | [hay] [solo] (un menor | uno) { this.value = "1"; }
                       | [hay] [solo] <masuno> [menores] { this.value = $masuno }
 

@@ -23,11 +23,11 @@
         <grammar type="application/x-jsgf"> [necesito] ayuda | no entiendo</grammar>
     </link>
 
-    <property name="timeout" value="4s"/>
+    <property name="timeout" value="10s"/>
     <form id="visitor-es" scope="dialog">
 
         <property name="inputmodes" value="voice"/>
-        <!--<property name="bargein" value="false"/>-->
+        <property name="bargein" value="false"/>
 
         <block>Bienvenido a alambrapp en español.</block>
         
