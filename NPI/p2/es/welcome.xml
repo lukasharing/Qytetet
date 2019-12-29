@@ -126,15 +126,15 @@
             <prompt bargein="false"> Le voy a resumir los datos introducidos <break/> </prompt>
             
             <if cond="parseInt(totalChildren) == 1">
-                <prompt bargein="false"> Un niño acompañado</prompt>
+                <prompt bargein="false"> Un niño acompañado por</prompt>
             <elseif cond="parseInt(totalChildren) > 1" />
-                <prompt bargein="false"> Un grupo de <break/><value expr="totalChildren"/> niños acompañados</prompt>
+                <prompt bargein="false"> Un grupo de <break/><value expr="totalChildren"/> niños acompañados por</prompt>
             </if>
             
             <!--<if cond="diff == 1">
-                <prompt bargein="false"> por <break/> un adulto </prompt>
+                <prompt bargein="false"> <break/> Un adulto </prompt>
             <else/>
-                <prompt bargein="false"> por un grupo de <break/> <value expr="diff.toString()"/> adultos</prompt>
+                <prompt bargein="false">  un grupo de <break/> <value expr="diff.toString()"/> adultos</prompt>
             </if>->
             
             <!- Modificar -->
