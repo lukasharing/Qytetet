@@ -28,81 +28,86 @@
     <!--<property name="timeout" value="10s"/>-->
     <form id="visitor-es">
         <property name="inputmodes" value="voice"/>
-        
-        <grammar mode="voice" root="root">
-            <rule id="root" scope="public">
-                <one-of>
-                    <item>wheat</item>
-                    <item>rye</item>
-                    <item>soured dough</item>
-                </one-of>
-            </rule>
-        </grammar>
-        <!--<grammar src="./grammatics/num_visitantes.jsgf"  type="application/x-jsgf" />-->
 
         <block>
             <prompt bargein="false">Bienvenido a Alambrapp.</prompt>
         </block>
         
-        <initial name="total_visitor">
+        <field name="total_visitor">
             <prompt>Porfavor, seleccione el numero total de visitantes, <emp>incluído menores</emp></prompt>
+            <grammar mode="voice" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>wheat</item>
+                        <item>rye</item>
+                        <item>soured dough</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled>
+                <prompt bargein="false">
+                    Usted dijo <value expr="total_visitor"/> visitantes
+                </prompt>
+            </filled>
+            <!--<grammar src="./grammatics/num_visitantes.jsgf"  type="application/x-jsgf" />-->
+
             <!-- Si pedimos ayuda al sistema-->
             <!--<help>
                 Debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante.
                 <reprompt/>
             </help>-->
-        </initial>
+        </field>
 
-        <field name="are_children">
+        <!--<field name="are_children">
             <prompt>Indice cuántos menores hay en el grupo, recuerde que su entrada será gratuita trás la acreditación en puerta.</prompt>
             <grammar src="./grammatics/num_children.jsgf" type="application/x-jsgf" />
-            <!-- Si llenamos -->
+            <!- Si llenamos ->
             <filled>
                 <prompt>
                     Usted dijo, <value expr="are_children"/> menores
                 </prompt>
-                <!-- Numero de niños es mayor al número de personas que hemos introducido -->
+                <!- Numero de niños es mayor al número de personas que hemos introducido ->
                 <if cond="parseInt(are_children.value) > parseInt(total_visitor.value)">
                     <prompt bargein="false">
                         No pueden haber más menores que visitantes.
                     </prompt>
                     <goto nextitem="total_visitor"/>
                 </if>
-                <!-- 
+                <!-
                 Si estamos editando esta sección, nos enviará a la edición 
                 <if cond="dialog.check=='0'">
                     <goto nextitem="edit"/>
                 </if>
-                -->
+                ->
             </filled>
-            <!-- Si pedimos ayuda al sistema-->
-            <!--<help>
+            <!- Si pedimos ayuda al sistema->
+            <help>
                 debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante
-            </help>-->
+            </help>
         </field>
 
         <field name="visit_type">
             <prompt>Indique el tipo de visita que quiere realizar</prompt>
             <grammar src="./grammatics/visit_type.jsgf" type="application/x-jsgf" />
-            <!-- Si llenamos -->
+            <!- Si llenamos ->
             <filled>
                 <prompt bargein="false">
-                    El tipo de visita seleecionada es <value expr="visit_type"/>
+                    El tipo de visita selecionada es <value expr="visit_type"/>
                 </prompt>
-                <!-- 
+                <!-
                 Si estamos editando esta sección, nos enviará a la edición 
                 <if cond="dialog.check=='0'">
                     <goto nextitem="edit"/>
                 </if>
-                -->
+                ->
             </filled>
-            <!-- Si pedimos ayuda al sistema-->
-            <!--<help>
+            <!- Si pedimos ayuda al sistema->
+            <!-<help>
                 debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante
-            </help>-->
+            </help>->
         </field>
-
-        <!--
+        ->
+        <!-
         <field name="edit">
             <value expr="2+3+1+(0.5*(lettuce))+(0.5*(tomato))+(0.5*(olives))+(0.5*(pickles))"/>
         </field>
