@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<vxml version="2.0">
+<?xml version="1.0" encoding="UTF-8"?> 
+<vxml version="2.0" xml:lang="es-ES">
 <!--<meta name="author" content="Lukas Haring"/>
 <meta name="maintainer" content="lukasharing@correo.ugr.es"/>-->
 
@@ -26,11 +26,11 @@
     </link>-->
 
     <!--<property name="timeout" value="10s"/>-->
-    <form id="visitorES">
+    <form id="visitor-es">
         <!--<property name="inputmodes" value="voice"/>-->
 
         <block>
-            <prompt bargein="false">bienvenido a alambrapp</prompt>
+            <prompt bargein="false">Bienvenido a Alambrapp.</prompt>
         </block>
         
         <field name="totalVisitor">
