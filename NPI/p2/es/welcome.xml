@@ -59,24 +59,23 @@
         </field>
 
         <field name="totalChildren">
-            <prompt>Indice cuántos menores hay en el grupo, recuerde que su entrada será gratuita trás la acreditación en puerta.</prompt>
+            <prompt timeout="3s">Indice cuántos menores hay en el grupo, su entrada será gratuita trás la acreditación en puerta</prompt>
             <grammar src="./grammatics/num_children.jsgf" type="application/x-jsgf" />
-            <!-- Si llenamos -->
+            
             <filled>
-
                 <if cond="parseInt(totalChildren) >= parseInt(totalVisitor)">
-                    <prompt bargein="false">Deben haber menos menores que mayores, volvamos a intentrarlo.</prompt>
+                    <prompt bargein="false">Deben haber menos menores que mayores, volvamos a intentrarlo</prompt>
                     <goto nextitem="totalVisitor"/>
                 <elseif cond="parseInt(totalChildren) === 0"/>
-                    <prompt bargein="false">Usted dijo que no hay menores.</prompt>
+                    <prompt bargein="false">Usted dijo que no hay menores</prompt>
                 <elseif cond="parseInt(totalChildren) > 1"/>
-                    <prompt bargein="false">Usted dijo <value expr="totalChildren"/> menores, recuerde que deberá acreditarlo en puerta.</prompt>
+                    <prompt bargein="false">Usted dijo <value expr="totalChildren"/> menores, recuerde que deberá acreditarlo en puerta</prompt>
                 <else/>
                     <clear/>
                     <throw event="nomatch"/>
                 </if>
-
             </filled>
+
             <!-- Si pedimos ayuda al sistema
             <help>
                 debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante
