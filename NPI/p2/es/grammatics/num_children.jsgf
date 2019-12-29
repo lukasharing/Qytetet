@@ -8,7 +8,7 @@ public <total_visitantes> = <cero> { this.numChildren = "0" }
        | cero
        | no hay;
 
-<uno> = [hay] [solo] (un menor | uno);
+<uno> = ([hay] [solo] | [es]) (un menor | uno);
 
 <masuno> = dos    { this.$value = "2" }
          | tres   { this.$value = "3" }
