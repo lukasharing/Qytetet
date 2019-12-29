@@ -20,10 +20,11 @@
     </nomatch>
      -->
 
-    <!-- Phrases to say when need help 
+    <!-- Phrases to say when need help -->
     <link event="help">
         <grammar type="application/x-jsgf"> [necesito] ayuda | no [lo] entiendo | explicamelo</grammar>
-    </link>-->
+    </link>
+    
     <!--<property name="timeout" value="10s"/>-->
     <form id="visitorES">
         <!--<property name="inputmodes" value="voice"/>-->
