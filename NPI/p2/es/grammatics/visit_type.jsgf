@@ -3,7 +3,7 @@ grammar visit_type;
 public <visit_type> = (precios) { this.visitaType = "-2" }
                     | ([volver] [atras] | [me he] equivocado) { this.visitaType = "-1" } 
                     | [<quiero>] (reservar un asistente) [turistico virtual] { this.visitaType = "0" }
-                    | [<quiero> un] abono [general] { this.visitaType = "1" };
+                    | [<quiero> un] (abono) [general] { this.visitaType = "1" };
 
 <quiero> = un
          | una
