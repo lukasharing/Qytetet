@@ -90,7 +90,7 @@
             <filled>
                 <!-- Go Back -->
                 <if cond="parseInt(totalChildren) == -1">
-                    <clear namelist="totalVisitor" />
+                    <clear namelist="totalVisitor totalChildren" />
                     <goto nextitem="totalVisitor"/>
                 <!-- Error Number of Children is greater than Adults-->
                 <elseif cond="parseInt(totalChildren) >= parseInt(totalVisitor)"/>
@@ -126,18 +126,18 @@
             </help>
         </field>
 
-        <field name="VisitType">
+        <field name="visitType">
             <prompt timeout="3s"><break/>Indique el tipo de visita que quiere realizar</prompt>
             <grammar src="./grammatics/visit_type.jsgf" />
 
             <!-- The value of the field is Set -->
             <filled>
                 <!-- Get String from Number-->
-                <var name="VisitNT" expr="VisitTypeName(VisitType)"/>
+                <var name="VisitNT" expr="VisitTypeName(visitType)"/>
 
                 <!-- Go Back -->
-                <if cond="VisitType == '-1'">
-                    <clear namelist="totalChildren" />
+                <if cond="visitType == '-1'">
+                    <clear namelist="totalChildren visitType" />
                     <goto nextitem="totalChildren"/>
                 <!-- Valid Type of Visit -->
                 <elseif cond="VisitNT !== null"/>
@@ -146,7 +146,7 @@
                     </prompt>
                 <!-- Non Valid Value -->
                 <else/>
-                    <clear namelist="VisitType" />
+                    <clear namelist="visitType" />
                     <throw event="nomatch"/>
                 </if>
                 <!-- Go to Summary -->

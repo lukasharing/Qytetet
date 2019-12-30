@@ -1,6 +1,6 @@
 #JSGF V1.0;
 grammar total_visitantes;
-public <total_visitantes> = [volver] atras { this.totalChildren = "-1"; } 
+public <total_visitantes> = ([volver] [atras] | [me he] equivocado) { this.totalChildren = "-1" } 
                           | <cero> { this.totalChildren = "0" }
                           | <uno> { this.totalChildren = "1" }
                           | ([hay] [solo] | [son] | [grupo de]) <masuno> [menores | niños | niñas] { this.totalChildren = $masuno };
