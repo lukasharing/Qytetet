@@ -46,7 +46,7 @@
 
         <block>
             <prompt bargein="false">
-                Bienvenido a Alhambrapp en Español, puede pedir "Ayuda" en cualquier momento si la requiere.<break/>
+                Bienvenido a Alhambrapp en Español, puede pedir "Ayuda" en cualquier momento si la requiere.
             </prompt>
         </block>
 
@@ -143,7 +143,7 @@
                     <goto nextitem="totalChildren"/>
                 <!-- Valid Type of Visit -->
                 <elseif cond="parseInt(visitaType) &lt; 3"/>
-                    <prompt bargein="false">El tipo de visita selecionada es <value expr="nameVisitType(visitNT)" /></prompt>
+                    <prompt bargein="false">El tipo de visita selecionada es <value expr="nameVisitType(visitaType)" /></prompt>
                 <!-- Non Valid Value -->
                 <else/>
                     <clear namelist="visitaType" />
@@ -183,7 +183,7 @@
             </if>
 
             <!-- Type Of Visit, say this: -->
-            <prompt bargein="false"> para una visita <value expr="VisitTypeName(visitType)"/>  </prompt>
+            <prompt bargein="false"> para una visita <value expr="nameVisitType(visitaType)"/>  </prompt>
             
             <!-- Go to Last Step, If we Want to Edit it -->
             <goto nextitem="Edit"/>
