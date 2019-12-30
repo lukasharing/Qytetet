@@ -12,7 +12,7 @@
             var code = "";
             /* Cogemos los 3 últimos y le añadimos un break */
             for(var i = r.length - 1; i > 0; --i){
-                code += r[i] + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                code += r[i] + "               ";
             }
             return code;
         }
@@ -137,7 +137,7 @@
                 <prompt bargein="false">  un grupo de <break/> <value expr="diff.toString()"/> adultos</prompt>
             </if>
             
-            <!- Modificar -->
+            <!-- Modificar -->
             <prompt>Quiere modificar alguno de los datos anteriores?</prompt>
 
             <grammar src="./grammatics/yes_no.jsgf" />
