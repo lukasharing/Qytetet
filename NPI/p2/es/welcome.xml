@@ -122,9 +122,9 @@
             </if>
             
             <if cond="parseInt(diff) == 1">
-                <prompt bargein="false"> <break/> Un adulto </prompt>
+                <prompt bargein="false"> un adulto </prompt>
             <else/>
-                <prompt bargein="false">  un grupo de <break/> <value expr="diff"/> adultos</prompt>
+                <prompt bargein="false"> un grupo de <value expr="diff"/> adultos</prompt>
             </if>
 
             <!-- Modificar -->
@@ -140,21 +140,21 @@
                 <if cond="parseInt(Edit) == 1">
                     <goto nextitem="ToEdit"/>
                 <else/>
-                    <prompt>El precio es <break/><value expr="15 * diff"/> euros <break/></prompt>
+                    <prompt>El precio es de <value expr="(15 * (parseInt(totalVisitor) - parseInt(totalChildren))).toString()"/> euros </prompt>
                     <goto nextitem="ThankYou"/>
                 </if>
             </filled>
         </field>
 
         <field name="ToEdit">
-            <prompt>Cuál de los siguientes datos quiere modificar?</prompt>
+            <prompt><break/>Cuál de los siguientes datos quiere modificar?</prompt>
         </field>
 
         <block name="ThankYou">
             <var name="code1" expr="parseInt(Math.random() * 10)"/>
             <var name="code2" expr="parseInt(Math.random() * 10)"/>
             <var name="code3" expr="parseInt(Math.random() * 10)"/>
-            <prompt>Gracias por realizar su reserva, su código de reserva es 
+            <prompt><break/>Gracias por realizar su reserva, su código de reserva es 
                 <break/> <value expr="code1"/> <break/> <value expr="code2"/> <break/> <value expr="code3"/> <break/>,
                 de nuevo el código de reserva es 
                 <break/> <value expr="code1"/> <break/> <value expr="code2"/> <break/> <value expr="code3"/> <break/>.
