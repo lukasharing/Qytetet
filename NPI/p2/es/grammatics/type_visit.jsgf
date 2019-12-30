@@ -1,8 +1,5 @@
 #JSGF V1.0;
 grammar visit;
-public <visit> = ([volver] [atras] | [me he] equivocado) { this.$value = "-1" } 
-                | [somos] <masuno> [personas | visitantes] { this.$value = $masuno }
-                | <uno> { this.$value =  "1" };
-
-<uno> = [soy] (un visitante | una persona)
-      | solo (yo | uno) ;
+public <visit>  = (precios) { this.$value = "-2" }
+                | ([volver] [atras] | [me he] equivocado) { this.$value = "-1" } 
+                | (reservar un asistente) [turistico virtual] { this.$value = "0" };

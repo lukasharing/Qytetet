@@ -48,10 +48,6 @@
         <choice next="./es/welcome.vxml" xml:lang="en-US">Espanish</choice>
         <choice next="./es/welcome.vxml" xml:lang="es-ES">Español</choice>
 
-        <!-- German -->
-        <choice next="./de/welcome.vxml" xml:lang="en-US">German</choice>
-        <choice next="./de/welcome.vxml" xml:lang="es-ES">Alemán</choice>
-
         <help>
             <prompt xml:lang="en-US">Say "English" to access the Alhambra App in English</prompt>
             <prompt xml:lang="es-ES">Diga "Español" para acceder a AlambraApp en Español</prompt>

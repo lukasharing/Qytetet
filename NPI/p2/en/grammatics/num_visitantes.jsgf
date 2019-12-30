@@ -1,5 +1,19 @@
 #JSGF V1.0;
 grammar total_visitantes;
-public <total_visitantes> = (prices) { this.$value = "-2" }
-                          | (back | return) { this.$value = "-1" } 
-                          | virtual assistant { this.$value = "0" };
+public <total_visitantes> = (back | return) { this.$value = "-1" } 
+                          | [we are] <masuno> [persons | visitors] { this.$value = $masuno }
+                          | <uno> { this.$value =  "1" };
+
+<uno> = [i am the] one (visitor | person)
+      | just (me | one) ;
+
+<masuno> = two    { this.$value = "2" }
+         | three   { this.$value = "3" }
+         | four { this.$value = "4" }
+         | five  { this.$value = "5" }
+         | six   { this.$value = "6" }
+         | seven  { this.$value = "7" }
+         | eight   { this.$value = "8" }
+         | nine  { this.$value = "9" }
+         | ten   { this.$value = "10" }
+         | eleven   { this.$value = "11" };
