@@ -114,7 +114,7 @@
 
         <field name="VisitType">
             <prompt>Indique el tipo de visita que quiere realizar</prompt>
-            <grammar src="./grammatics/visit_type.jsgf" type="application/x-jsgf" />
+            <grammar src="./grammatics/visit_type.jsgf" />
 
             <filled>
                 <var name="VisitNT" expr="VisitTypeName(VisitType)"/>
@@ -135,7 +135,7 @@
             </filled>
             <!-- Si pedimos ayuda al sistema-->
             <help>
-                Diga "Visita Guiada" si desea que un guía le acompañe en su recorrido.
+                Diga "Visita Guiada" si desea que un guía le acompañe en su recorrido, o "Abono General" si quiere una entrada normal.
             </help>
         </field>
 
