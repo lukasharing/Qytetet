@@ -47,6 +47,11 @@
         <!-- Form Variables -->
         <var name="IsEditing" expr="0" />
 
+        <block>
+            <prompt bargein="false"><break/>Comencemos con su reserva.</prompt>
+        </block>
+
+
         <field name="totalVisitor">
             <prompt timeout="3s"><break/>Porfavor, diga el numero total de visitantes, incluído menores</prompt>
             <grammar src="./grammatics/num_visitantes.jsgf" />
