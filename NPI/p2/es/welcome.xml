@@ -46,7 +46,7 @@
 
         <block>
             <prompt bargein="false">
-                Bienvenido a Alhambrapp en Español, puede pedir "Ayuda" en cualquier momento si la requiere.
+                Bienvenido a Alhambrapp Beta en Español, puede pedir "Ayuda" en cualquier momento si la requiere.
             </prompt>
         </block>
 
@@ -248,8 +248,8 @@
             <prompt><break/>Gracias por realizar su reserva, su código de reserva es 
                 <break/> <value expr="code1"/> <break size="small" /> <value expr="code2"/> <break size="small"/> <value expr="code3"/> <break size="small"/>
                 de nuevo, el código de reserva es 
-                <break size="small" /> <value expr="code1"/> <break size="small" /> <value expr="code2"/> <break size="small"/> <value expr="code3"/> <break size="small"/>,
-                Se efectuará la compra una vez se haya realizado el pago en nuestra página web <break size="small" />"alhambrapp.es/compra"<break size="small" /> o en taquilla.  
+                <break size="small" /> <value expr="code1"/> <break size="small" /> <value expr="code2"/> <break size="small"/> <value expr="code3"/> <break size="small"/>
+                Se efectuará la compra una vez se haya realizado el pago en nuestra página web <break size="small" />Alhambrapp.es/compra o en taquilla.  
             </prompt>
             <!--<submit next="../form.php" namelist="visitor-es"/>-->
             <disconnect/>
