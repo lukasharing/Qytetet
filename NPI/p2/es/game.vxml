@@ -13,9 +13,29 @@
                     correct: "Isabel la Católica"
                 },
                 {
-                    text: "¿Sabías que la Alhambra es el cuarto monumento más visitado en España el año pasado?",
+                    text: "En qué puesto se quedó el año pasado la Alhambra de los monumentos más visitados",
                     correct: "Cuarto"
                 },
+                {
+                    text: "Diga si o no, si es verdadera la siguiente afirmación: La Alhambra mantuvo una carta escondida una carta de amor durante 92 años entre sus paredes",
+                    correct: "Si"
+                },
+                {
+                    text: "Diga si o no, si es verdadera la siguiente afirmación: La Alhmabra fué invadidad por los chinos",
+                    correct: "No"
+                },
+                {
+                    text: "Diga Norte Sur Este o Oeste donde se encuentra la siguiente entrada, Arrabal",
+                    correct: "Norte"
+                },
+                {
+                    text: "Diga Norte Sur Este o Oeste donde se encuentra la siguiente entrada, Plaza Nueva",
+                    correct: "Sur"
+                },
+                {
+                    text: "En qué puesto se quedó en 2016 la Alhambra de los monumentos más visitados",
+                    correct: "Segundo"
+                }
             ]
             return options[(seed + next) % options.length];
         }
