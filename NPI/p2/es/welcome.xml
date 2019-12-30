@@ -120,11 +120,11 @@
                 <prompt bargein="false"> Un grupo de <break/><value expr="totalChildren"/> niños acompañados por</prompt>
             </if>
             
-            <if cond="diff == 1">
+            <!--<if cond="diff == 1">
                 <prompt bargein="false"> <break/> Un adulto </prompt>
             <else/>
                 <prompt bargein="false">  un grupo de <break/> <value expr="diff.toString()"/> adultos</prompt>
-            </if>
+            </if>-->
             
             <!-- Modificar -->
             <prompt>Quiere modificar alguno de los datos anteriores?</prompt>
