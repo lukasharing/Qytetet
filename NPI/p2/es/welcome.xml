@@ -129,8 +129,8 @@
             <!-- Modificar -->
             <prompt>Quiere modificar alguno de los datos anteriores?</prompt>
 
-            <grammar src="./grammatics/yes_no.jsgf" />
-    
+            <!--<grammar src="./grammatics/yes_no.jsgf" />-->
+            <!--
             <filled>
                 <if cond="Edit == 1">
                     <goto nextitem="ToEdit"/>
@@ -138,7 +138,7 @@
                     <prompt>El precio es <break/><value expr="15 * diff"/> euros <break/></prompt>
                     <goto nextitem="ThankYou"/>
                 </if>
-            </filled>
+            </filled>-->
         </field>
 
         <field name="ToEdit">
