@@ -37,7 +37,7 @@
         <grammar src="./grammatics/exit.jsgf" />
     </link>
     <catch event="exit">
-        <prompt>Gracias por utilizar AlambraApp en Español, vuelva pronto</prompt>
+        <prompt>Gracias por utilizar AlambraApp Beta en Español, vuelva pronto</prompt>
         <exit/>
     </catch>
 
