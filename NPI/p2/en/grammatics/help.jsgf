@@ -1,0 +1,3 @@
+#JSGF V1.0;
+grammar help;
+public <help> = [need] help | I dont entiendo | explain it;

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE vxml PUBLIC "-//W3C//DTD VOICEXML 2.0//EN" "http://www.w3.org/TR/voicexml20/vxml.dtd">
+<vxml version="2.0" xml:lang="es-ES">
+<meta name="author" content="Lukas Haring"/>
+<meta name="maintainer" content="lukasharing@correo.ugr.es"/>
+
+    <!-- Si no escucha nada, le volvemos a preguntar -->
+    <noinput>
+        I have not received any action. Could you try again?
+        <reprompt/>
+    </noinput>
+
+    <!-- Phrases to say when need help-->
+    <link event="help">
+        <grammar src="./grammatics/help.jsgf" />
+    </link>
+
+    <!-- Salir en cualquier momento -->
+    <link event="exit">
+        <grammar src="./grammatics/exit.jsgf" />
+    </link>
+    <catch event="exit">
+        <prompt>Thank you for using AlambraApp in English, come back soon</prompt>
+        <exit/>
+    </catch>
+
+    <!-- Menu -->
+    <menu dtmf="true">
+        <prompt bargein="false">Welcome to Alhambrapp in English, you can ask for "Help" at any time if you need it.</prompt>
+        <prompt><break/> What do you want to do? Use your numeric keypad. </prompt>
+        <prompt><break/><enumerate>Press <value expr="_dtmf"/> for <value expr="_prompt"/>.</enumerate> </prompt>
+
+        <choice next="./book.vxml">Book a visit</choice>
+        <choice next="./game.vxml">Quiz</choice>
+
+        <help>
+            <prompt>Select the option that most interests you, for example, you can book a guided tour by saying "Book Visit"</prompt>
+            <reprompt/>
+        </help>
+    </menu>
+</vxml>

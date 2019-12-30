@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE vxml PUBLIC "-//W3C//DTD VOICEXML 2.0//EN" "http://www.w3.org/TR/voicexml20/vxml.dtd">
+<vxml version="2.0" xml:lang="es-ES">
+<meta name="author" content="Lukas Haring"/>
+<meta name="maintainer" content="lukasharing@correo.ugr.es"/>
+
+    <script><![CDATA[
+
+        function nameVisitType(name){
+            if(name == "0") return "Asistente Turístico Virtual";
+            else if(name == "1") return "General";
+            else if(name == "2") return "Guíada";
+            return null;
+        }
+
+    ]]></script>
+    
+    <!-- Si no escucha nada, le volvemos a preguntar -->
+    <noinput>
+        I'm sorry I couldn't hear anything. Could you try again?
+        <reprompt/>
+    </noinput>
+
+    <!-- Si no existe esa seleccion, le deceimos que no lo hemos entendido -->
+    <nomatch>
+        I'm sorry I couldn't understand you. Could you repeat it again?
+        <reprompt/>
+    </nomatch>
+
+    <!-- Phrases to say when need help-->
+    <link event="help">
+        <grammar src="./grammatics/help.jsgf" />
+    </link>
+
+    <!-- Salir en cualquier momento -->
+    <link event="exit">
+        <grammar src="./grammatics/exit.jsgf" />
+    </link>
+    <catch event="exit">
+        <prompt>Thank you for using AlambraApp in English, come back soon</prompt>
+        <exit/>
+    </catch>
+
+    
+    <!--<property name="timeout" value="10s"/>-->
+    <form id="visitorES">
+        <!-- Form Variables -->
+        <var name="IsEditing" expr="0" />
+
+        <block>
+            <prompt bargein="false"><break/>Let's start with your reservation.</prompt>
+        </block>
+
+
+        <field name="totalVisitor">
+            <prompt timeout="3s"><break/>Please say the total number of visitors, including children</prompt>
+            <grammar src="./grammatics/num_visitantes.jsgf" />
+
+            <!-- The value of the field is Set -->
+            <filled>
+                <!-- If only the speaker is the visitant -->
+                <if cond="parseInt(totalVisitor) == -1">
+                    <clear namelist="totalVisitor" />
+                    <goto next="./welcome.vxml"/>
+                <elseif cond="parseInt(totalVisitor) == 1"/>
+                    <prompt bargein="false">Perfect, It is just you</prompt>
+                <elseif cond="parseInt(totalVisitor) > 1"/>
+                    <prompt bargein="false">You said <value expr="totalVisitor"/> visitors</prompt>
+                <else/>
+                    <clear namelist="totalVisitor" />
+                    <throw event="nomatch"/>
+                </if>
+
+                <!-- If Editing, go to summary -->
+                <if cond="IsEditing === '1'">
+                    <goto nextitem="Summary"/>
+                </if>
+            </filled>
+
+            <!-- ¡¡¡¡¡¡¡¡¡¡HELP!!!!!!!!!!! -->
+            <help>
+                You must indicate the number of visitors, say <break size="small" />one visitor<break size="small" /> if you are the only visitor.
+                <reprompt/>
+            </help>
+        </field>
+
+        <field name="totalChildren">
+            <prompt timeout="3s"><break/>Indicate how many children are in the group, your entry will be free after accreditation at the door</prompt>
+            <grammar src="./grammatics/num_children.jsgf" />
+
+            <!-- The value of the field is Set -->
+            <filled>
+                <!-- Go Back -->
+                <if cond="parseInt(totalChildren) == -1">
+                    <clear namelist="totalVisitor totalChildren" />
+                    <goto nextitem="totalVisitor"/>
+                <!-- Error Number of Children is greater than Adults-->
+                <elseif cond="parseInt(totalChildren) >= parseInt(totalVisitor)"/>
+                    <clear namelist="totalChildren" />
+                    <prompt bargein="false">There must be fewer children than adults, let's try again</prompt>
+                    <clear namelist="totalChildren" />
+                    <throw event="nomatch"/>
+                <!-- No children -->
+                <elseif cond="parseInt(totalChildren) == 0"/>
+                    <prompt bargein="false">You said there are no children</prompt>
+                <!-- Only One Child -->
+                <elseif cond="parseInt(totalChildren) == 1"/>
+                    <prompt bargein="false">You said one child, remember to prove it at the door</prompt>
+                <!-- > Children -->
+                <elseif cond="parseInt(totalChildren) > 1"/>
+                    <prompt bargein="false">You said <value expr="totalChildren"/> children, remember to prove it at the door</prompt>
+                <!-- Error No Valid Value -->
+                <else/>
+                    <clear namelist="totalChildren" />
+                    <throw event="nomatch"/>
+                </if>
+
+                <!-- If Editing, go to summary -->
+                <if cond="IsEditing === '1'">
+                    <goto nextitem="Summary"/>
+                </if>
+            </filled>
+
+            <!-- ¡¡¡¡¡¡¡¡¡¡HELP!!!!!!!!!!! -->
+            <help>
+                You must indicate the number of children who are going to attend. say<break size="small" />None<break size="small" /> if no children will attend.
+                <reprompt/>
+            </help>
+        </field>
+
+        <field name="visitaType">
+            <prompt timeout="3s"><break/>Indicate the type of visit you want to make, you can check the price saying "Prices"</prompt>
+            <grammar src="./grammatics/type_visit.jsgf" />
+
+            <!-- The value of the field is Set -->
+            <filled>
+                <!-- Precios -->
+                <prompt><value expr="visitaType"/></prompt>
+                <if cond="visitaType == '-2'">
+                    <prompt bargein="false">The general admission price is 15 euros, the entrance with a virtual assistant is 23 euros and with a guide is 30 euros</prompt>
+                    <clear namelist="visitaType" />
+                    <goto nextitem="visitaType"/>
+                <!-- Go Back -->
+                <elseif cond="visitaType == '-1'"/>
+                    <clear namelist="totalChildren visitaType" />
+                    <goto nextitem="totalChildren"/>
+                <!-- Valid Type of Visit -->
+                <elseif cond="parseInt(visitaType) &lt; 3"/>
+                    <prompt bargein="false">The type of visit selected is <value expr="nameVisitType(visitaType)" /></prompt>
+                <!-- Non Valid Value -->
+                <else/>
+                    <clear namelist="visitaType" />
+                    <throw event="nomatch"/>
+                </if>
+                <!-- Go to Summary -->
+                <goto nextitem="Summary"/>
+            </filled>
+
+            <!-- ¡¡¡¡¡¡¡¡¡¡HELP!!!!!!!!!!! -->
+            <help>
+                Say "Guided Visit" if you want a guide to accompany you on your tour, or "General Pass" if you want a normal ticket.
+                <reprompt/>
+            </help>
+        </field>
+
+        <!-- Summary -->
+        <block name="Summary">
+            
+            <!-- Number of person that have to pay -->
+            <var name="diff" expr="(parseInt(totalVisitor) - parseInt(totalChildren)).toString()" />
+            
+            <prompt bargein="false"><break/> I will summarize the data entered <break size="small" /> </prompt>
+            
+            <!-- If there are at least one child, then say this: -->
+            <if cond="parseInt(totalChildren) == 1">
+                <prompt bargein="false"> A child accompanied by</prompt>
+            <elseif cond="parseInt(totalChildren) > 1" />
+                <prompt bargein="false"> A group of <value expr="totalChildren"/> children accompanied by</prompt>
+            </if>
+            
+            <!-- If one adult or a group, say this: -->
+            <if cond="parseInt(diff) == 1">
+                <prompt bargein="false"> an adult </prompt>
+            <else/>
+                <prompt bargein="false"> a group of <value expr="diff"/> adults</prompt>
+            </if>
+
+            <!-- Type Of Visit, say this: -->
+            <prompt bargein="false"> for a visit <value expr="nameVisitType(visitaType)" /> </prompt>
+            
+            <!-- Go to Last Step, If we Want to Edit it -->
+            <goto nextitem="Edit"/>
+        </block>
+
+        <!-- Edit Field -->
+        <field name="editFields">
+            <prompt>Do you want to modify any of the data entered above?</prompt>
+            <grammar src="./grammatics/yes_no.jsgf" />
+            
+            <!-- The value of the field is Set -->
+            <filled>
+                <prompt bargein="false"> EDITAR <value expr="editFields"/>  </prompt>
+                <if cond="editFields == '1'">
+                    <goto nextitem="ToEdit"/>
+                <elseif cond="editFields == '0'"/>
+                    <goto nextitem="ThankYou"/>
+                <else/>
+                    <clear namelist="visitaType" />
+                    <throw event="nomatch"/>
+                </if>
+            </filled>
+
+            <!-- ¡¡¡¡¡¡¡¡¡¡HELP!!!!!!!!!!! -->
+            <help>
+                Say "Yes" or "No", if you want to modify any of the data.
+            </help>            
+        </field>
+
+        <field name="ToEdit">
+            <prompt><break/>Which of the following data do you want to modify?</prompt>
+            
+            <grammar src="./grammatics/field_edit.jsgf" />
+
+            <filled>
+                <var name="IsEditing" expr="1" />
+
+                <if cond="ToEdit == '0'">
+                    <goto nextitem="ThankYou"/>
+                <elseif cond="ToEdit == '1'" />
+                    <clear namelist="totalVisitor" />
+                    <goto nextitem="totalVisitor"/>
+                <elseif cond="ToEdit == '2'" />
+                    <clear namelist="totalChildren" />
+                    <goto nextitem="totalChildren"/>
+                <else />
+                    <clear namelist="ToEdit" />
+                    <throw event="nomatch"/>
+                </if>
+
+            </filled>
+
+        </field>
+
+        <block name="ThankYou">
+            <!-- Number of person to paid -->
+            <var name="diff" expr="parseInt(totalVisitor) - parseInt(totalChildren)" />
+            <!-- Precio por entrada -->
+            <var name="price" expr="(visitaType == '0' ? 23 : (visitaType == '1' ? 15 : 30)).toString()" />
+
+            <prompt><break/>The price is <value expr="(parseInt(price) * parseInt(diff)).toString()"/> euros </prompt>        
+            
+            <var name="code1" expr="parseInt(Math.random() * 10)"/>
+            <var name="code2" expr="parseInt(Math.random() * 10)"/>
+            <var name="code3" expr="parseInt(Math.random() * 10)"/>
+            <prompt><break/>Thank you for making your reservation, your reservation code is 
+                <break/> <value expr="code1"/> <break size="small" /> <value expr="code2"/> <break size="small"/> <value expr="code3"/> <break size="small"/>
+                Again, the reservation code is
+                <break size="small" /> <value expr="code1"/> <break size="small" /> <value expr="code2"/> <break size="small"/> <value expr="code3"/> <break size="small"/>
+                The purchase will be made once payment has been made on our website <break size="small" /> Alhambrapp.es/compra or at the box office.  
+            </prompt>
+            <!--<submit next="../form.php" namelist="visitor-es"/>-->
+            <disconnect/>
+        </block>
+    </form>
+</vxml>

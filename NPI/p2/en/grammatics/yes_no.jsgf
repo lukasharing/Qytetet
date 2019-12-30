@@ -1,0 +1,11 @@
+#JSGF V1.0;
+grammar yes_no;
+public <yes_no> = <yes> { this.editFields = "1" }
+                | <no> { this.editFields = "0" };
+
+<yes> = modificar
+      | yes [I want to modify it];
+
+
+<no> = no modificar
+      | no [I dont want to modify it];

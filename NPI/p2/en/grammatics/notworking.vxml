@@ -1,0 +1,14 @@
+#JSGF V1.0;
+grammar visit;
+public <visit> = ([volver] atras | [me he] equivocado) { this.$value = "-1" } 
+               | [<quiero>] (reservar un asistente) [turistico virtual] { this.$value = "0" }
+               | [<quiero> un] (abono) [general] { this.$value = "1" }
+               | [<quiero>] (reservar un guia) [turistico] { this.$value = "2" };
+               
+<quiero> = un
+         | una
+         | quiero
+         | querria
+         | quisiera
+         | quisieramos
+         | querriamos ;

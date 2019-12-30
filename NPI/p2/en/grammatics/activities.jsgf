@@ -1,0 +1,4 @@
+#JSGF V1.0;
+grammar yes_no;
+public <yes_no> = yes [modify]   { this.$value = "1"; }
+                | no [don't modify] { this.$value = "0"; };

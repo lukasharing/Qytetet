@@ -9,32 +9,32 @@
         function generate(next, seed){
             var options = [
                 {
-                    text: "¿Quién estuvo enterrada en la Alhambra?",
+                    text: "Who was buried in the Alhambra?",
                     correct: "isabel la catolica"
                 },
                 {
-                    text: "En qué puesto se quedó el año pasado la Alhambra de los monumentos más visitados",
-                    correct: "cuarto"
+                    text: "In what position the Alhambra of the most visited monuments stayed last year",
+                    correct: "forth"
                 },
                 {
-                    text: "Diga si o no, si es verdadera la siguiente afirmación: La Alhambra mantuvo una carta escondida una carta de amor durante 92 años entre sus paredes",
-                    correct: "si"
+                    text: "Say yes or no, if the following statement is true: The Alhambra kept a hidden letter a love letter for 92 years between its walls",
+                    correct: "yes"
                 },
                 {
-                    text: "Diga si o no, si es verdadera la siguiente afirmación: La Alhmabra fué invadidad por los chinos",
+                    text: "Say yes or no, if the following statement is true: The Alhmabra was invaded by the Chinese",
                     correct: "no"
                 },
                 {
-                    text: "Diga Norte Sur Este o Oeste donde se encuentra la siguiente entrada, Arrabal",
-                    correct: "norte"
+                    text: "Say North South East or West where the next entrance is located, Arrabal",
+                    correct: "north"
                 },
                 {
-                    text: "Diga Norte Sur Este o Oeste donde se encuentra la siguiente entrada, Plaza Nueva",
-                    correct: "sur"
+                    text: "Say North South East or West where the next entrance is located, Plaza Nueva",
+                    correct: "south"
                 },
                 {
-                    text: "En qué puesto se quedó en 2016 la Alhambra de los monumentos más visitados",
-                    correct: "segundo"
+                    text: "In which position the Alhambra of the most visited monuments stayed in 2016",
+                    correct: "second"
                 }
             ]
             return options[(seed + next) % options.length];
@@ -60,14 +60,14 @@
 
         <!-- Initial -->
         <block>
-            <prompt bargein="false"><break/>Si acierta las cuatro preguntas obtendrá una recompensa en su próxima visita. Puede salir en cualquier momento diciendo "Salir".</prompt>
+            <prompt bargein="false"><break/>If you hit all four questions you will get a reward on your next visit. You can leave at any time by saying "Exit".</prompt>
         </block>
 
         <!-- Iterative Field -->
         <field name="questionRan" modal="false">
             
             <!-- Ask the question -->
-            <prompt bargein="false">Pregunta numero <value expr="question" /> <break/></prompt>
+            <prompt bargein="false">Question number <value expr="question" /> <break/></prompt>
             <prompt bargein="false" timeout="10s"><value expr="generate(parseInt(question), parseInt(seed)).text" /></prompt>
             
             <grammar src="./grammatics/price.jsgf" />
@@ -76,14 +76,14 @@
             <filled>
                 <var name="correctq" expr="generate(parseInt(question), parseInt(seed)).correct" />
                 <if cond="correctq == questionRan">
-                    <prompt bargein="false">Correcto!</prompt>
+                    <prompt bargein="false">Right!</prompt>
                     <var name="correct" expr="parseInt(correct) + 1" />
                 <else />
-                    <prompt bargein="false">Incorrecto!</prompt>
+                    <prompt bargein="false">Wrong!</prompt>
                 </if>
 
                 <if cond="question &lt; 4">
-                    <prompt bargein="false">Prosigamos con la siguiente pregunta</prompt>
+                    <prompt bargein="false">Next question,</prompt>
                     <var name="question" expr="parseInt(question) + 1" />    
                     <clear namelist="questionRan" />
                     <goto nextitem="questionRan"/>
@@ -93,9 +93,9 @@
         </field>
         <!-- Result -->
         <block>
-            <prompt bargein="false">Usted ha acertado <value expr="correct" /> de las preguntas realizadas</prompt>
+            <prompt bargein="false">You have succeeded <value expr="correct" /> of the questions asked</prompt>
             <if cond="correct == 4">
-                <prompt bargein="false">¡Felicidades ha obtenido un 20 porciento de descuento con el código WIN20!</prompt>
+                <prompt bargein="false">Congratulations you have obtained a 20 percent discount with the code WIN20!</prompt>
             </if>
             <goto next="./welcome.vxml"/>
         </block>
