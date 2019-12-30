@@ -76,6 +76,8 @@
             <prompt bargein="false">Pregunta numero <value expr="question" /> <break/></prompt>
             <prompt bargein="false" timeout="5s"><value expr="generate(question, seed).text" /></prompt>
             
+            <grammar>Isabel la Católica | Cuarto | Si | No | Norte | Segundo | Sur</grammar>
+
             <!-- Check the answer -->
             <filled>
 
@@ -95,6 +97,10 @@
                 </if>
             </filled>
             
+            <noinput>
+                <throw event="nomatch" />
+            </noinput>
+
             <!-- Catch for next question -->
             <catch event="noinput nomatch">
                 <clear namelist="questionRan" />
