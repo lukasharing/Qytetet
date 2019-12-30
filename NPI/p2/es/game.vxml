@@ -91,13 +91,6 @@
                     <throw event="nomatch" />
                 </if>
             </filled>
-            
-            <noinput>
-                <throw event="nomatch" />
-            </noinput>
-            <nomatch>
-                <throw event="nomatch" />
-            </nomatch>
 
             <!-- Catch for next question -->
             <catch event="noinput nomatch">
