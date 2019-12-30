@@ -190,17 +190,20 @@
         </block>
 
         <!-- Edit Field -->
-        <field name="Edit">
+        <field name="editFields">
             <prompt>Desea modificar alguno de los datos introducidos anteriormente?</prompt>
             <grammar src="./grammatics/yes_no.jsgf" />
             
             <!-- The value of the field is Set -->
             <filled>
-                <prompt bargein="false"> EDITAR <value expr="Edit"/>  </prompt>
-                <if cond="Edit == '1'">
+                <prompt bargein="false"> EDITAR <value expr="editFields"/>  </prompt>
+                <if cond="editFields == '1'">
                     <goto nextitem="ToEdit"/>
-                <else/>
+                <elseif cond="editFields == '0'"/>
                     <goto nextitem="ThankYou"/>
+                <else/>
+                    <clear namelist="visitaType" />
+                    <throw event="nomatch"/>
                 </if>
             </filled>
 
