@@ -133,16 +133,16 @@
             <!-- The value of the field is Set -->
             <filled>
                 <!-- Get String from Number-->
-                <var name="VisitNT" expr="VisitTypeName(visitType)"/>
+                <var name="visitNT" expr="VisitTypeName(visitType)"/>
 
                 <!-- Go Back -->
                 <if cond="visitType == '-1'">
                     <clear namelist="totalChildren visitType" />
                     <goto nextitem="totalChildren"/>
                 <!-- Valid Type of Visit -->
-                <elseif cond="VisitNT !== null"/>
+                <elseif cond="visitNT !== null"/>
                     <prompt bargein="false">
-                        El tipo de visita selecionada es <value name="VisitNT" />
+                        El tipo de visita selecionada es <value expr="visitNT" />
                     </prompt>
                 <!-- Non Valid Value -->
                 <else/>
@@ -183,7 +183,7 @@
             </if>
 
             <!-- Type Of Visit, say this: -->
-            <prompt bargein="false"> para una visita <value expr="VisitTypeName(VisitType)"/>  </prompt>
+            <prompt bargein="false"> para una visita <value expr="VisitTypeName(visitType)"/>  </prompt>
             
             <!-- Go to Last Step, If we Want to Edit it -->
             <goto nextitem="Edit"/>
