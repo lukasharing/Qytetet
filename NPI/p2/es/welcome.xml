@@ -191,7 +191,7 @@
 
         <!-- Edit Field -->
         <field name="Edit">
-            <prompt>Desea modificar alguno de los introducidos datos anteriormente?</prompt>
+            <prompt>Desea modificar alguno de los datos introducidos anteriormente?</prompt>
             <grammar src="./grammatics/yes_no.jsgf" />
             
             <!-- The value of the field is Set -->
