@@ -77,7 +77,7 @@
 
             <!-- ¡¡¡¡¡¡¡¡¡¡HELP!!!!!!!!!!! -->
             <help>
-                <break/>Debe indicar el numero de visitantes, diga <break size="small" />Un visitante<break size="small" /> si es usted el unico visitante.
+                Debe indicar el numero de visitantes, diga <break size="small" />Un visitante<break size="small" /> si es usted el unico visitante.
                 <reprompt/>
             </help>
         </field>
@@ -121,7 +121,7 @@
 
             <!-- ¡¡¡¡¡¡¡¡¡¡HELP!!!!!!!!!!! -->
             <help>
-                <break/>Debe indicar el numero de menores que van a asistir. diga <break size="small" />Ninguno<break size="small" /> si no asistirá ningún menor.
+                Debe indicar el numero de menores que van a asistir. diga <break size="small" />Ninguno<break size="small" /> si no asistirá ningún menor.
                 <reprompt/>
             </help>
         </field>
@@ -140,7 +140,7 @@
                     <clear namelist="totalChildren visitType" />
                     <goto nextitem="totalChildren"/>
                 <!-- Valid Type of Visit -->
-                <elseif cond="parseInt(visitNT) <= 3"/>
+                <elseif cond="parseInt(visitType) &lt; 3"/>
                     <prompt bargein="false">El tipo de visita selecionada es <value expr="VisitTypeName(visitNT)" /></prompt>
                 <!-- Non Valid Value -->
                 <else/>
@@ -153,7 +153,7 @@
 
             <!-- ¡¡¡¡¡¡¡¡¡¡HELP!!!!!!!!!!! -->
             <help>
-                <break/>Diga "Visita Guiada" si desea que un guía le acompañe en su recorrido, o "Abono General" si quiere una entrada normal.
+                Diga "Visita Guiada" si desea que un guía le acompañe en su recorrido, o "Abono General" si quiere una entrada normal.
                 <reprompt/>
             </help>
         </field>
@@ -236,7 +236,7 @@
             <!-- Number of person to paid -->
             <var name="diff" expr="parseInt(totalVisitor) - parseInt(totalChildren)" />
             <!-- Precio por entrada -->
-            <var name="price" expr="(visitType == '0' ? 23 : (visitType == '1' ? 15 : '30') ).toString()" />
+            <var name="price" expr="(visitType == '0' ? 23 : (visitType == '1' ? 15 : 30)).toString()" />
 
             <prompt><break/>El precio es de <value expr="(parseInt(price) * parseInt(diff)).toString()"/> euros </prompt>        
             
