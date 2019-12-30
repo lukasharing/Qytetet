@@ -1,6 +1,0 @@
-#JSGF V1.0;
-grammar edit;
-public <edit> = [<sin_edit>] numero visitantes { this.ToEdit = "0"; }
-              | [<sin_edit>] numero [niños | menores] { this.ToEdit = "1"; };
-
-<sin_edit> = editar | modificar | cambiar ;

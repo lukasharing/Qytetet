@@ -1,3 +1,13 @@
 #JSGF v1.0;
 grammar visit_type;
-public <visit_type> = almabra;
+public <visit_type> = [<quiero>] [reservar un] asistente [turistico] [virtual] { this.VisitType = "0"; }
+                    | [<quiero>] abono [general | normal] { this.VisitType = "1"; }
+                    | [<quiero>] [reservar (un | una)](guia | guiado | acompañante) [turistico] { this.VisitType = "2"; };
+
+<quiero> = un
+         | una
+         | quiero
+         | querria
+         | quisiera
+         | quisiéramos
+         | querriamos ;

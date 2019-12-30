@@ -4,9 +4,16 @@
 <!--<meta name="author" content="Lukas Haring"/>
 <meta name="maintainer" content="lukasharing@correo.ugr.es"/>-->
 
-    <!--<script><![CDATA[
+    <script><![CDATA[
 
-    ]]></script>-->
+        function VisitTypeName(name){
+            if(name == "0") return "Asistente Turístico Virtual";
+            else if(name == "1") return "General";
+            else if(name == "2") return "Guíada";
+            return null;
+        }
+
+    ]]></script>
 
     <!-- Si no escucha nada, le volvemos a preguntar -->
     <noinput>
@@ -43,6 +50,9 @@
             </prompt>
         </block>
 
+        <!-- Form Variables -->
+        <var name="IsEditing" expr="0" />
+
         <field name="totalVisitor">
             <prompt timeout="3s"><break/>Porfavor, diga el numero total de visitantes, incluído menores</prompt>
             <grammar src="./grammatics/num_visitantes.jsgf" />
@@ -55,6 +65,10 @@
                 <else/>
                     <clear/>
                     <throw event="nomatch"/>
+                </if>
+                <!-- Si estamos editando esta sección, nos enviará a la edición -->
+                <if cond="IsEditing === '1'">
+                    <goto nextitem="Summary"/>
                 </if>
             </filled>
 
@@ -73,6 +87,8 @@
                 <if cond="parseInt(totalChildren) >= parseInt(totalVisitor)">
                     <clear namelist="totalChildren" />
                     <prompt bargein="false">Deben haber menos menores que mayores, volvamos a intentarlo</prompt>
+                    <clear namelist="totalChildren" />
+                    <throw event="nomatch"/>
                 <elseif cond="parseInt(totalChildren) == 0"/>
                     <prompt bargein="false">Usted dijo que no hay menores</prompt>
                 <elseif cond="parseInt(totalChildren) == 1"/>
@@ -83,7 +99,10 @@
                     <clear namelist="totalChildren" />
                     <throw event="nomatch"/>
                 </if>
-                <goto nextitem="Summary"/>
+                <!-- Si estamos editando esta sección, nos enviará a la edición -->
+                <if cond="IsEditing === '1'">
+                    <goto nextitem="Summary"/>
+                </if>
             </filled>
 
             <!-- Si pedimos ayuda al sistema -->
@@ -93,30 +112,35 @@
             </help>
         </field>
 
-        <!--
-        <field name="visit_type">
+        <field name="VisitType">
             <prompt>Indique el tipo de visita que quiere realizar</prompt>
             <grammar src="./grammatics/visit_type.jsgf" type="application/x-jsgf" />
-            <!- Si llenamos ->
+
             <filled>
-                <prompt bargein="false">
-                    El tipo de visita selecionada es <value expr="visit_type"/>
-                </prompt>
-                <!-
-                Si estamos editando esta sección, nos enviará a la edición 
-                <if cond="dialog.check=='0'">
-                    <goto nextitem="edit"/>
+                <var name="VisitNT" expr="VisitTypeName(VisitType)"/>
+                
+                <if cond="VisitNT !== null">
+                    <prompt bargein="false">
+                        El tipo de visita selecionada es <value name="VisitNT" />
+                    </prompt>
+                <else/>
+                    <clear namelist="VisitType" />
+                    <throw event="nomatch"/>
                 </if>
-                ->
+                <goto nextitem="Summary"/>
+                <!-- Si estamos editando esta sección, nos enviará a la edición -->
+                <if cond="IsEditing === '1'">
+                    <goto nextitem="Summary"/>
+                </if>
             </filled>
-            <!- Si pedimos ayuda al sistema->
-            <!-<help>
-                debe indicar el numero de visitantes, diga el numero uno si es usted el unico visitante
-            </help>->
+            <!-- Si pedimos ayuda al sistema-->
+            <help>
+                Diga "Visita Guiada" si desea que un guía le acompañe en su recorrido.
+            </help>
         </field>
-        -->
+
         <block name="Summary">
-            <var name="diff" expr="(parseInt(totalVisitor) - parseInt(totalChildren)).toString()" />
+            <var name="diff" expr="((parseInt(totalVisitor) - parseInt(totalChildren)).toString()" />
             <!-- Resumen -->
             <prompt bargein="false"><break/> Le voy a resumir los datos introducidos <break size="small" /> </prompt>
             
@@ -132,21 +156,21 @@
                 <prompt bargein="false"> un grupo de <value expr="diff"/> adultos</prompt>
             </if>
 
+            <prompt bargein="false"> para una visita <value expr="VisitTypeName(VisitType)"/>  </prompt>
+            
             <!-- Modificar -->
             <goto nextitem="Edit"/>
         </block>
 
         <field name="Edit">
-            <prompt>Quiere modificar alguno de los datos anteriores?</prompt>
+            <prompt>Desea modificar alguno de los introducidos datos anteriormente?</prompt>
 
             <grammar src="./grammatics/yes_no.jsgf" />
             
             <filled>
-                <prompt>Edit es <value expr="Edit"/></prompt> 
-                <if cond="parseInt(Edit) == 1">
+                <if cond="Edit == '1'">
                     <goto nextitem="ToEdit"/>
                 <else/>
-                    <prompt>El precio es de <value expr="(15 * (parseInt(totalVisitor) - parseInt(totalChildren))).toString()"/> euros </prompt>
                     <goto nextitem="ThankYou"/>
                 </if>
             </filled>
@@ -154,9 +178,34 @@
 
         <field name="ToEdit">
             <prompt><break/>Cuál de los siguientes datos quiere modificar?</prompt>
+            
+            <grammar src="./grammatics/field_edit.jsgf" />
+
+            <filled>
+                <var name="IsEditing" expr="1" />
+
+                <if cond="ToEdit == '0'">
+                    <goto nextitem="ThankYou"/>
+                <elseif cond="ToEdit == '1'" />
+                    <clear namelist="totalVisitor" />
+                    <goto nextitem="totalVisitor"/>
+                <elseif cond="ToEdit == '2'" />
+                    <clear namelist="totalChildren" />
+                    <goto nextitem="totalChildren"/>
+                <else />
+                    <clear namelist="ToEdit" />
+                    <throw event="nomatch"/>
+                </if>
+
+            </filled>
+
         </field>
 
         <block name="ThankYou">
+            
+            <var name="diff" expr="parseInt(totalVisitor) - parseInt(totalChildren)" />
+            <prompt><break/>El precio es de <value expr="((15 ) * parseInt(diff)).toString()"/> euros </prompt>        
+            
             <var name="code1" expr="parseInt(Math.random() * 10)"/>
             <var name="code2" expr="parseInt(Math.random() * 10)"/>
             <var name="code3" expr="parseInt(Math.random() * 10)"/>
