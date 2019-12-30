@@ -6,15 +6,9 @@
 
     <!-- Si no escucha nada, le volvemos a preguntar -->
     <noinput>
-        Lo siento no pude escuchar nada. Podría intentarlo de nuevo?
+        No he recibido ninguna acción. Podría intentarlo de nuevo?
         <reprompt/>
     </noinput>
-
-    <!-- Si no existe esa seleccion, le deceimos que no lo hemos entendido -->
-    <nomatch>
-        Lo siento no le pude entender. Podría repetirlo de nuevo?
-        <reprompt/>
-    </nomatch>
 
     <!-- Phrases to say when need help-->
     <link event="help">
@@ -33,7 +27,8 @@
     <!-- Menu -->
     <menu dtmf="true">
         <prompt bargein="false">Bienvenido a Alhambrapp en Español, puede pedir "Ayuda" en cualquier momento si la requiere.</prompt>
-        <prompt bargein="false"><break/> Qué desea realizar? Utilice el teclado numérico <enumerate>Para <value expr="_prompt"/>, pulse <value expr="_dtmf"/>.</enumerate> </prompt>
+        <prompt><break/> Qué desea realizar? Utilice su teclado numérico.</prompt>
+        <prompt><break/><enumerate>Pulse <value expr="_dtmf"/> para <value expr="_prompt"/>.</enumerate> </prompt>
 
         <choice next="./book.vxml">Reservar una visita</choice>
 
