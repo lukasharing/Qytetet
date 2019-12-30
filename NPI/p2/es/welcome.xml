@@ -46,7 +46,7 @@
 
         <block>
             <prompt bargein="false">
-                Bienvenido a Alhambrapp en Español, puede decir "Ayuda" en cualquier momento si lo requiere.
+                Bienvenido a Alhambrapp en Español, puede decir "Ayuda" en cualquier momento si la requiere.
             </prompt>
         </block>
 
@@ -134,7 +134,8 @@
                     <goto nextitem="Summary"/>
                 </if>
             </filled>
-            <!-- Si pedimos ayuda al sistema-->
+            
+            <!-- Si pedimos ayuda al sistema -->
             <help>
                 Diga "Visita Guiada" si desea que un guía le acompañe en su recorrido, o "Abono General" si quiere una entrada normal.
             </help>
