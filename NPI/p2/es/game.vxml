@@ -57,7 +57,6 @@
         <var name="seed" expr="parseInt(Math.random() * 7)" />
         <var name="correct" expr="0" />
         <var name="question" expr="1" />
-        <var name="next" expr="generate(question, seed)" />
 
         <!-- Initial -->
         <block>
@@ -86,7 +85,6 @@
                 <if cond="question &lt; 4">
                     <prompt bargein="false">Prosigamos con la siguiente pregunta</prompt>
                     <var name="question" expr="question + 1" />    
-                    <var name="next" expr="generate(question, seed)" />
                     <clear namelist="questionRan" />
                     <goto nextitem="questionRan"/>
                 </if>
@@ -96,7 +94,6 @@
             <noinput>
                 <prompt bargein="false">Prosigamos con la siguiente pregunta</prompt>
                 <var name="question" expr="question + 1" />
-                <var name="next" expr="generate(question, seed)" />
                 <clear namelist="questionRan" />
                 <goto nextitem="questionRan"/>
             </noinput>
@@ -104,7 +101,6 @@
             <nomatch>
                 <prompt bargein="false">Prosigamos con la siguiente pregunta</prompt>
                 <var name="question" expr="question + 1" />
-                <var name="next" expr="generate(question, seed)" />
                 <clear namelist="questionRan" />
                 <goto nextitem="questionRan"/>
             </nomatch>
