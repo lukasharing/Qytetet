@@ -1,8 +1,8 @@
-#JSGF v1.0;
+#JSGF V1.0;
 grammar visit_type;
 public <visit_type> = [volver] atras { this.visitType = "-1" } 
                     | [<quiero>] [reservar un] asistente [turistico] [virtual] { this.visitType = "0" }
-                    | [<quiero>] abono [general | normal] { this.visitType = "1" }
+                    | [<quiero>] abono [general] { this.visitType = "1" }
                     | [<quiero>] [reservar un] guia [turistico] { this.visitType = "2" };
 
 <quiero> = un

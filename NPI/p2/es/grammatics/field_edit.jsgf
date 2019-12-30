@@ -1,4 +1,4 @@
-#JSGF v1.0;
+#JSGF V1.0;
 grammar field_edit;
 public <field_edit> = (Nada | Ninguno | No editar) { this.ToEdit = "0"; }
                     | [<sin_edit>] [el] numero de visitantes { this.ToEdit = "1"; }
