@@ -46,7 +46,7 @@
 
         <block>
             <prompt bargein="false">
-                Bienvenido a Alhambrapp en Español, puede decir "Ayuda" en cualquier momento si la requiere.<break/>
+                Bienvenido a Alhambrapp en Español, puede pedir "Ayuda" en cualquier momento si la requiere.<break/>
             </prompt>
         </block>
 
@@ -121,7 +121,7 @@
 
             <!-- ¡¡¡¡¡¡¡¡¡¡HELP!!!!!!!!!!! -->
             <help>
-                <break/>Debe indicar el numero de menores que van a asistir. diga <break size="small" />Ninguno<break size="small" />, si no asistirá ningún menor.
+                <break/>Debe indicar el numero de menores que van a asistir. diga <break size="small" />Ninguno<break size="small" /> si no asistirá ningún menor.
                 <reprompt/>
             </help>
         </field>
@@ -132,18 +132,13 @@
 
             <!-- The value of the field is Set -->
             <filled>
-                <!-- Get String from Number-->
-                <var name="visitNT" expr="VisitTypeName(visitType)"/>
-
                 <!-- Go Back -->
                 <if cond="visitType == '-1'">
                     <clear namelist="totalChildren visitType" />
                     <goto nextitem="totalChildren"/>
                 <!-- Valid Type of Visit -->
-                <elseif cond="visitNT !== null"/>
-                    <prompt bargein="false">
-                        El tipo de visita selecionada es <value expr="visitNT" />
-                    </prompt>
+                <elseif cond="parseInt(visitNT) <= 3"/>
+                    <prompt bargein="false">El tipo de visita selecionada es <value expr="VisitTypeName(visitNT)" /></prompt>
                 <!-- Non Valid Value -->
                 <else/>
                     <clear namelist="visitType" />
@@ -164,7 +159,7 @@
         <block name="Summary">
             
             <!-- Number of person that have to pay -->
-            <var name="diff" expr="((parseInt(totalVisitor) - parseInt(totalChildren)).toString()" />
+            <var name="diff" expr="(parseInt(totalVisitor) - parseInt(totalChildren)).toString()" />
             
             <prompt bargein="false"><break/> Le voy a resumir los datos introducidos <break size="small" /> </prompt>
             
