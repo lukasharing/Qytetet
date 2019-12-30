@@ -1,10 +1,10 @@
 #JSGF V1.0;
 grammar total_visitantes;
-public <total_visitantes> = ([volver] [atras] | [me he] equivocado) { this.$value = "-1" } 
-                          | [somos] <masuno> [personas | visitantes] { this.$value = $masuno }
+public <total_visitantes> = (back | return) { this.$value = "-1" } 
+                          | [we are] <masuno> [persons | visitors] { this.$value = $masuno }
                           | <uno> { this.$value =  "1" };
 
-<uno> = [I am the] one (visitor | person)
+<uno> = [i am the] one (visitor | person)
       | just (me | one) ;
 
 <masuno> = two    { this.$value = "2" }

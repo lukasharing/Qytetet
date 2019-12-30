@@ -1,6 +1,6 @@
 #JSGF V1.0;
 grammar field_edit;
-public <field_edit> = (nothing | None | dont edit) { this.$value = "0"; }
+public <field_edit> = (nothing | none | dont edit) { this.$value = "0"; }
                     | [<sin_edit>] [the] number of visitors { this.$value = "1"; }
                     | [<sin_edit>] [the] number of [kids | children] { this.$value = "2"; }
                     | [<sin_edit>] (the) <visit_type> { this.$value = "3"; };

@@ -33,10 +33,6 @@
         <exit/>
     </catch>
     
-    <!-- Cambiar Idioma en cualquier momento -->
-    <!--<link next="#chlang">
-        <grammar type="application/x-jsgf"> Change language | Cambiar idioma | Sprache wechseln</grammar>
-    </link>-->
     
     <!-- Bienvenida selección del Idioma -->
     <menu id="chlang" scope="document">

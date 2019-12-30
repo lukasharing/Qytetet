@@ -1,11 +1,9 @@
 #JSGF V1.0;
 grammar total_visitantes;
-public <total_visitantes> = ([volver] [atras] | [me he] equivocado) { this.$value = "-1" } 
+public <total_visitantes> = (precios) { this.$value = "-2" }
+                          | ([volver] [atras] | [me he] equivocado) { this.$value = "-1" } 
                           | [somos] <masuno> [personas | visitantes] { this.$value = $masuno }
-                          | <uno> { this.$value =  "1" };
-
-<uno> = [soy] (un visitante | una persona)
-      | solo (yo | uno) ;
+                          | (reservar un asistente) [turistico virtual] { this.$value = "0" };
 
 <masuno> = dos    { this.$value = "2" }
          | tres   { this.$value = "3" }
