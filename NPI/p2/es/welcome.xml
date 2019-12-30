@@ -39,7 +39,7 @@
 
         <block>
             <prompt bargein="false">
-                Bienvenido a Alhambrapp 
+                Bienvenido a Alhambrapp en Español
             </prompt>
         </block>
 
@@ -142,6 +142,7 @@
             <grammar src="./grammatics/yes_no.jsgf" />
             
             <filled>
+                <prompt>Edit es <value expr="Edit"/></prompt> 
                 <if cond="parseInt(Edit) == 1">
                     <goto nextitem="ToEdit"/>
                 <else/>

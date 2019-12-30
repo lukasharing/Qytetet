@@ -43,7 +43,7 @@
     
     <!-- Bienvenida selección del Idioma -->
     <menu id="chlang" scope="document">
-        
+
         <prompt xml:lang="en-US">Welcome to AlambraApp. Please select language</prompt>
         <prompt xml:lang="es-ES">Bienvenido a AlambraApp. Porfavor seleccione el idioma</prompt>
         <prompt xml:lang="de-DE">Wilkomen bie AlambraApp. Bitte wählen sie die sprache</prompt>
@@ -64,9 +64,10 @@
         <choice next="./es/welcome.xml" xml:lang="de-DE">Deutsch</choice>
 
         <help>
-            <prompt xml:lang="en-US">Help me</prompt>
-            <prompt xml:lang="es-ES">Help me</prompt>
-            <prompt xml:lang="de-DE">Help me</prompt>
+            <prompt xml:lang="en-US">Say "English" to access the Alhambra App in English</prompt>
+            <prompt xml:lang="es-ES">Diga "Español" para acceder a AlambraApp en Español</prompt>
+            <prompt xml:lang="de-DE">Sagen Sie "Deutsch", um auf die deutsche Alhambra-App zuzugreifen</prompt>
+            <reprompt/>
         </help>
     </menu>
 </vxml>
