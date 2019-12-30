@@ -128,7 +128,7 @@
 
         <field name="visitType">
             <prompt timeout="3s"><break/>Indique el tipo de visita que quiere realizar</prompt>
-            <grammar src="./grammatics/visit_type.jsgf" />
+            <grammar src="./grammatics/num_children.jsgf" />
 
             <!-- The value of the field is Set -->
             <filled>
@@ -156,6 +156,7 @@
             <!-- ¡¡¡¡¡¡¡¡¡¡HELP!!!!!!!!!!! -->
             <help>
                 Diga "Visita Guiada" si desea que un guía le acompañe en su recorrido, o "Abono General" si quiere una entrada normal.
+                <reprompt/>
             </help>
         </field>
 
