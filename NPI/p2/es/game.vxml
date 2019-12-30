@@ -96,7 +96,6 @@
             <noinput>
                 <prompt bargein="false">Prosigamos con la siguiente pregunta</prompt>
                 <var name="question" expr="question + 1" />
-                <var name="correctq" expr="generate(question, seed).correct" />
                 <var name="next" expr="generate(question, seed)" />
                 <clear namelist="questionRan" />
                 <goto nextitem="questionRan"/>
@@ -105,7 +104,6 @@
             <nomatch>
                 <prompt bargein="false">Prosigamos con la siguiente pregunta</prompt>
                 <var name="question" expr="question + 1" />
-                <var name="correctq" expr="generate(question, seed).correct" />
                 <var name="next" expr="generate(question, seed)" />
                 <clear namelist="questionRan" />
                 <goto nextitem="questionRan"/>
