@@ -247,7 +247,7 @@
             <var name="code3" expr="parseInt(Math.random() * 10)"/>
             <prompt><break/>Gracias por realizar su reserva, su código de reserva es 
                 <break/> <value expr="code1"/> <break size="small" /> <value expr="code2"/> <break size="small"/> <value expr="code3"/> <break size="small"/>
-                de nuevo el código de reserva es 
+                de nuevo, el código de reserva es 
                 <break size="small" /> <value expr="code1"/> <break size="small" /> <value expr="code2"/> <break size="small"/> <value expr="code3"/> <break size="small"/>,
                 Se efectuará la compra una vez se haya realizado el pago en nuestra página web <break size="small" />"alhambrapp.es/compra"<break size="small" /> o en taquilla.  
             </prompt>
