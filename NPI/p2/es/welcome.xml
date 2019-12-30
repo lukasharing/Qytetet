@@ -59,6 +59,7 @@
 
             <!-- The value of the field is Set -->
             <filled>
+                <!-- If only the speaker is the visitant -->
                 <if cond="parseInt(totalVisitor) == 1">
                     <prompt bargein="false">Perfecto, es solo usted</prompt>
                 <elseif cond="parseInt(totalVisitor) > 1"/>
@@ -87,13 +88,12 @@
 
             <!-- The value of the field is Set -->
             <filled>
-
                 <!-- Go Back -->
                 <if cond="parseInt(totalChildren) == -1">
                     <clear namelist="totalVisitor" />
                     <goto nextitem="totalVisitor"/>
                 <!-- Error Number of Children is greater than Adults-->
-                <elseif cond="parseInt(totalChildren) >= parseInt(totalVisitor)">
+                <elseif cond="parseInt(totalChildren) >= parseInt(totalVisitor)"/>
                     <clear namelist="totalChildren" />
                     <prompt bargein="false">Deben haber menos menores que adultos, volvamos a intentarlo</prompt>
                     <clear namelist="totalChildren" />
@@ -128,12 +128,10 @@
 
         <field name="VisitType">
             <prompt timeout="3s"><break/>Indique el tipo de visita que quiere realizar</prompt>
-            
             <grammar src="./grammatics/visit_type.jsgf" />
 
             <!-- The value of the field is Set -->
             <filled>
-                
                 <!-- Get String from Number-->
                 <var name="VisitNT" expr="VisitTypeName(VisitType)"/>
 
@@ -142,7 +140,7 @@
                     <clear namelist="totalChildren" />
                     <goto nextitem="totalChildren"/>
                 <!-- Valid Type of Visit -->
-                <elseif cond="VisitNT !== null">
+                <elseif cond="VisitNT !== null"/>
                     <prompt bargein="false">
                         El tipo de visita selecionada es <value name="VisitNT" />
                     </prompt>
@@ -246,7 +244,8 @@
             <prompt><break/>Gracias por realizar su reserva, su código de reserva es 
                 <break/> <value expr="code1"/> <break size="small" /> <value expr="code2"/> <break size="small"/> <value expr="code3"/> <break size="small"/>
                 de nuevo el código de reserva es 
-                <break/> <value expr="code1"/> <break size="small" /> <value expr="code2"/> <break size="small"/> <value expr="code3"/> <break size="small"/>
+                <break size="small" /> <value expr="code1"/> <break size="small" /> <value expr="code2"/> <break size="small"/> <value expr="code3"/> <break size="small"/>,
+                Se efectuará la compra una vez se haya realizado el pago en nuestra página web <break size="small" />"alhambrapp.es/compra"<break size="small" /> o en taquilla.  
             </prompt>
             <!--<submit next="../form.php" namelist="visitor-es"/>-->
             <disconnect/>
