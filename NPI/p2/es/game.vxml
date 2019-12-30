@@ -41,18 +41,22 @@
         <!-- Form Variables -->
         <var name="seed" expr="parseInt(Math.random() * 7)" />
         <var name="correct" expr="0" />
-        <var name="question" expr="0" />
+        <var name="question" expr="1" />
         <var name="next" expr="generate(question, seed)" />
 
+        <!-- Initial -->
         <block>
             <prompt bargein="false"><break/>Si acierta las cuatro preguntas obtendrá una recompensa en su próxima visita.</prompt>
         </block>
 
-        <field name="questionRan">
+        <!-- Iterative Field -->
+        <field name="questionRan" modal="false">
             
+            <!-- Ask the question -->
             <prompt bargein="false">Pregunta numero <value expr="question" /> <break/></prompt>
             <prompt bargein="false" timeout="5s"><value expr="generate(question, seed).text" /></prompt>
             
+            <!-- Check the answer -->
             <filled>
 
                 <var name="correctq" expr="generate(question, seed).correct" />
@@ -66,17 +70,19 @@
                     <prompt bargein="false">Incorrecto!</prompt>
                 </if>
 
-                <throw event="nomatch" />
+                <if cond="question &lt; 4">
+                    <throw event="nomatch" />
+                </if>
             </filled>
             
-            
+            <!-- Catch for next question -->
             <catch event="noinput nomatch">
                 <clear namelist="questionRan" />
                 <goto nextitem="questionRan"/>
             </catch>
             
         </field>
-
+        <!-- Result -->
         <block>
             <prompt bargein="false">Usted ha acetado <value expr="correct" /> de las preguntas realizadas</prompt>
             <if cond="correct == 4">

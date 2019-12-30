@@ -30,8 +30,8 @@
         <prompt><break/> Qué desea realizar? Utilice su teclado numérico.</prompt>
         <prompt><break/><enumerate>Pulse <value expr="_dtmf"/> para <value expr="_prompt"/>.</enumerate> </prompt>
 
-        <choice next="./game.vxml">Reservar una visita</choice>
-        <choice next="./book.vxml">Ponerme a prueba</choice>
+        <choice next="./book.vxml">Reservar una visita</choice>
+        <choice next="./game.vxml">Ponerme a prueba</choice>
 
         <help>
             <prompt>Seleccione la opción que más le interese, por ejemplo, puede Reservar una visita guiada diciendo "Reservar Visita"</prompt>
