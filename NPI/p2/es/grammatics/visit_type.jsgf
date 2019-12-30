@@ -1,9 +1,9 @@
 #JSGF V1.0;
 grammar visit_type;
-public <visit_type> = (precios) { this.visitaType = "-2" } |
-                      ([volver] [atras] | [me he] equivocado) { this.visitaType = "-1" }  |
-                      [<quiero>] (reservar un asistente) [turistico virtual] { this.visitaType = "0" } |
-                      [<quiero> un] (abono) [general] { this.visitaType = "1" };
+public <visit_type> = (precios) { this.$value = "-2" } |
+                      ([volver] [atras] | [me he] equivocado) { this.$value = "-1" }  |
+                      [<quiero>] (reservar un asistente) [turistico virtual] { this.$value = "0" } |
+                      [<quiero> un] (abono) [general] { this.$value = "1" };
 
 <quiero> = un
          | una
