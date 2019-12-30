@@ -127,13 +127,16 @@
         </field>
 
         <field name="visitType">
-            <prompt timeout="3s"><break/>Indique el tipo de visita que quiere realizar</prompt>
+            <prompt timeout="3s"><break/>Indique el tipo de visita que quiere realizar, puede consultar el precio diciendo "Precios"</prompt>
             <grammar src="./grammatics/visit_type.jsgf" />
 
             <!-- The value of the field is Set -->
             <filled>
+                <!-- Precios -->
+                <if cond="visitType == '-2'">
+                    <prompt bargein="false">El precios de la entrada general es de 15 euros, la entrada con un asistente virtual es de 23 euros y con un guía es de 30 euros</prompt>
                 <!-- Go Back -->
-                <if cond="visitType == '-1'">
+                <elseif cond="visitType == '-1'"/>
                     <clear namelist="totalChildren visitType" />
                     <goto nextitem="totalChildren"/>
                 <!-- Valid Type of Visit -->
@@ -230,9 +233,12 @@
         </field>
 
         <block name="ThankYou">
-            
+            <!-- Number of person to paid -->
             <var name="diff" expr="parseInt(totalVisitor) - parseInt(totalChildren)" />
-            <prompt><break/>El precio es de <value expr="((15 ) * parseInt(diff)).toString()"/> euros </prompt>        
+            <!-- Precio por entrada -->
+            <var name="price" expr="(visitType == '0' ? 23 : (visitType == '1' ? 15 : '30') ).toString()" />
+
+            <prompt><break/>El precio es de <value expr="(parseInt(price) * parseInt(diff)).toString()"/> euros </prompt>        
             
             <var name="code1" expr="parseInt(Math.random() * 10)"/>
             <var name="code2" expr="parseInt(Math.random() * 10)"/>
