@@ -132,7 +132,7 @@
 
             <!-- The value of the field is Set -->
             <filled>
-                <prompt bargein="false">Entro <value expr="visitaType"/></prompt>
+                <prompt bargein="false"><value expr="visitaType"/></prompt>
 
                 <!-- Precios -->
                 <if cond="visitaType == '-2'">
