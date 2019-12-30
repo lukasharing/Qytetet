@@ -34,7 +34,7 @@
     <menu id="chlang" scope="document">
         <prompt bargein="false">Bienvenido a Alhambrapp en Español, puede pedir "Ayuda" en cualquier momento si la requiere.</prompt>
 
-        <choice next="./book.xml">Reservar Visita</choice>
+        <choice next="./book.vxml">Reservar Visita</choice>
 
         <help>
             <prompt>Seleccione la opción que más le interese, por ejemplo, puede Reservar una visita guiada diciendo "Reservar Visita"</prompt>

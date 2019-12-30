@@ -49,19 +49,19 @@
         <prompt xml:lang="de-DE">Wilkomen bie AlambraApp. Bitte wählen sie die sprache</prompt>
     
         <!-- English -->
-        <choice next="./es/welcome.xml" xml:lang="en-US">English</choice>
-        <choice next="./es/welcome.xml" xml:lang="es-ES">Inglés</choice>
-        <choice next="./es/welcome.xml" xml:lang="de-DE">Englisch</choice>
+        <choice next="./en/welcome.vxml" xml:lang="en-US">English</choice>
+        <choice next="./en/welcome.xml" xml:lang="es-ES">Inglés</choice>
+        <choice next="./en/welcome.xml" xml:lang="de-DE">Englisch</choice>
         
         <!-- Spanish -->
-        <choice next="./es/welcome.xml" xml:lang="en-US">Espanish</choice>
-        <choice next="./es/welcome.xml" xml:lang="es-ES">Español</choice>
-        <choice next="./es/welcome.xml" xml:lang="de-DE">Spanisch</choice>
+        <choice next="./es/welcome.vxml" xml:lang="en-US">Espanish</choice>
+        <choice next="./es/welcome.vxml" xml:lang="es-ES">Español</choice>
+        <choice next="./es/welcome.vxml" xml:lang="de-DE">Spanisch</choice>
 
         <!-- German -->
-        <choice next="./es/welcome.xml" xml:lang="en-US">German</choice>
-        <choice next="./es/welcome.xml" xml:lang="es-ES">Alemán</choice>
-        <choice next="./es/welcome.xml" xml:lang="de-DE">Deutsch</choice>
+        <choice next="./de/welcome.vxml" xml:lang="en-US">German</choice>
+        <choice next="./de/welcome.vxml" xml:lang="es-ES">Alemán</choice>
+        <choice next="./de/welcome.vxml" xml:lang="de-DE">Deutsch</choice>
 
         <help>
             <prompt xml:lang="en-US">Say "English" to access the Alhambra App in English</prompt>
