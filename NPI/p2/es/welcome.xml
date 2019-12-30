@@ -132,7 +132,7 @@
             <!--<grammar src="./grammatics/yes_no.jsgf" />-->
             <!--
             <filled>
-                <if cond="Edit == 1">
+                <if cond="parseInt(Edit) == 1">
                     <goto nextitem="ToEdit"/>
                 <else/>
                     <prompt>El precio es <break/><value expr="15 * diff"/> euros <break/></prompt>
