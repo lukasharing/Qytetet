@@ -39,7 +39,7 @@
         </block>
 
         <field name="totalVisitor">
-            <prompt timeout="3s">Porfavor, seleccione el numero total de visitantes, incluído menores</prompt>
+            <prompt timeout="3s"><break/>Porfavor, seleccione el numero total de visitantes, incluído menores</prompt>
             <grammar src="./grammatics/num_visitantes.jsgf" />
 
             <filled>
@@ -61,7 +61,7 @@
         </field>
 
         <field name="totalChildren">
-            <prompt timeout="3s">Indique cuántos menores hay en el grupo, su entrada será gratuita trás la acreditación en puerta</prompt>
+            <prompt timeout="3s"><break/>Indique cuántos menores hay en el grupo, su entrada será gratuita trás la acreditación en puerta</prompt>
             <grammar src="./grammatics/num_children.jsgf" />
 
             <filled>
@@ -111,8 +111,9 @@
         -->
         <field name="Edit">
             <!-- Resumen -->
+            <prompt bargein="false"><break/>Test </prompt>
             <var name="diff" expr="parseInt(totalVisitor) - parseInt(totalChildren)"/>
-            <prompt bargein="false"> Le voy a resumir los datos introducidos <break/> <value expr="diff" /> </prompt>
+            <prompt bargein="false"><break/> Le voy a resumir los datos introducidos <break/> <value expr="diff" /> </prompt>
             
             <if cond="parseInt(totalChildren) == 1">
                 <prompt bargein="false"> Un niño acompañado por</prompt>
@@ -152,7 +153,7 @@
             <prompt>Gracias por realizar su reserva, su código de reserva es 
                 <break/> <value expr="code1"/> <break/> <value expr="code2"/> <break/> <value expr="code3"/> <break/>,
                 de nuevo el código de reserva es 
-                <break/> <value expr="code1"/> <break/> <value expr="code2"/> <break/> <value expr="code3"/> <break/>,
+                <break/> <value expr="code1"/> <break/> <value expr="code2"/> <break/> <value expr="code3"/> <break/>.
             </prompt>
             <!--<submit next="../form.php" namelist="visitor-es"/>-->
             <disconnect/>
