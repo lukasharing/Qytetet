@@ -46,7 +46,7 @@
 
         <block>
             <prompt bargein="false">
-                Bienvenido a Alhambrapp Beta en Español, puede pedir "Ayuda" en cualquier momento si la requiere.
+                Bienvenido a Alhambrapp en Español, puede pedir "Ayuda" en cualquier momento si la requiere.
             </prompt>
         </block>
 
@@ -137,6 +137,7 @@
                 <!-- Precios -->
                 <if cond="visitaType == '-2'">
                     <prompt bargein="false">El precios de la entrada general es de 15 euros, la entrada con un asistente virtual es de 23 euros y con un guía es de 30 euros</prompt>
+                    <clear namelist="visitaType" />
                 <!-- Go Back -->
                 <elseif cond="visitaType == '-1'"/>
                     <clear namelist="totalChildren visitaType" />
