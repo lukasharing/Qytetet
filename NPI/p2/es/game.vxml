@@ -77,14 +77,14 @@
                 <var name="correctq" expr="generate(parseInt(question), parseInt(seed)).correct" />
                 <if cond="correctq == questionRan">
                     <prompt bargein="false">Correcto!</prompt>
-                    <var name="correct" expr="parseInt(correct) + 1" />
+                    <assign name="correct" expr="correct + 1" />
                 <else />
                     <prompt bargein="false">Incorrecto!</prompt>
                 </if>
 
                 <if cond="question &lt; 4">
                     <prompt bargein="false">Prosigamos con la siguiente pregunta</prompt>
-                    <var name="question" expr="parseInt(question) + 1" />    
+                    <assign name="question" expr="question + 1" />
                     <clear namelist="questionRan" />
                     <goto nextitem="questionRan"/>
                 </if>

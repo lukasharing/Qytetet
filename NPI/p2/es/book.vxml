@@ -222,7 +222,8 @@
             <grammar src="./grammatics/field_edit.jsgf" />
 
             <filled>
-                <var name="IsEditing" expr="1" />
+            
+                <assign name="IsEditing" expr="IsEditing + 1" />
 
                 <if cond="ToEdit == '0'">
                     <goto nextitem="ThankYou"/>
