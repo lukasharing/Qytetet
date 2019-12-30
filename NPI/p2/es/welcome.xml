@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE vxml PUBLIC "-//W3C//DTD VOICEXML 2.0//EN" "http://www.w3.org/TR/voicexml20/vxml.dtd">
 <vxml version="2.0" xml:lang="es-ES">
-<!--<meta name="author" content="Lukas Haring"/>
-<meta name="maintainer" content="lukasharing@correo.ugr.es"/>-->
+<meta name="author" content="Lukas Haring"/>
+<meta name="maintainer" content="lukasharing@correo.ugr.es"/>
 
     <script><![CDATA[
 
-        function VisitTypeName(name){
+        function nameVisitType(name){
             if(name == "0") return "Asistente Turístico Virtual";
             else if(name == "1") return "General";
             else if(name == "2") return "Guíada";
@@ -126,27 +126,27 @@
             </help>
         </field>
 
-        <field name="visitType">
+        <field name="visitaType">
             <prompt timeout="3s"><break/>Indique el tipo de visita que quiere realizar, puede consultar el precio diciendo "Precios"</prompt>
             <grammar src="./grammatics/visit_type.jsgf" />
 
             <!-- The value of the field is Set -->
             <filled>
-                <prompt bargein="false">Entro <value expr="visitType"/></prompt>
+                <prompt bargein="false">Entro <value expr="visitaType"/></prompt>
 
                 <!-- Precios -->
-                <if cond="visitType == '-2'">
+                <if cond="visitaType == '-2'">
                     <prompt bargein="false">El precios de la entrada general es de 15 euros, la entrada con un asistente virtual es de 23 euros y con un guía es de 30 euros</prompt>
                 <!-- Go Back -->
-                <elseif cond="visitType == '-1'"/>
-                    <clear namelist="totalChildren visitType" />
+                <elseif cond="visitaType == '-1'"/>
+                    <clear namelist="totalChildren visitaType" />
                     <goto nextitem="totalChildren"/>
                 <!-- Valid Type of Visit -->
-                <elseif cond="parseInt(visitType) &lt; 3"/>
-                    <prompt bargein="false">El tipo de visita selecionada es <value expr="VisitTypeName(visitNT)" /></prompt>
+                <elseif cond="parseInt(visitaType) &lt; 3"/>
+                    <prompt bargein="false">El tipo de visita selecionada es <value expr="nameVisitType(visitNT)" /></prompt>
                 <!-- Non Valid Value -->
                 <else/>
-                    <clear namelist="visitType" />
+                    <clear namelist="visitaType" />
                     <throw event="nomatch"/>
                 </if>
                 <!-- Go to Summary -->
