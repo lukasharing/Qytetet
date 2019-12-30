@@ -112,7 +112,7 @@
         <field name="Edit">
             <!-- Resumen -->
             <var name="diff" expr="(parseInt(totalVisitor) - parseInt(totalChildren)).toString()" />
-            <prompt bargein="false"><break/> Le voy a resumir los datos introducidos <break/> </prompt>
+            <prompt bargein="false"><break/> Le voy a resumir los datos <value expr="totalChildren"/> CON <value expr="diff"/> introducidos <break/> </prompt>
             
             <if cond="parseInt(totalChildren) == 1">
                 <prompt bargein="false"> Un niño acompañado por</prompt>
