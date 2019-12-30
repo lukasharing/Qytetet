@@ -42,11 +42,6 @@
 
     ]]></script>
 
-    <!-- Phrases to say when need help-->
-    <link event="help">
-        <grammar src="./grammatics/help.jsgf" />
-    </link>
-
     <!-- Salir en cualquier momento -->
     <link event="exit">
         <grammar src="./grammatics/exit.jsgf" />
@@ -76,7 +71,7 @@
             <prompt bargein="false">Pregunta numero <value expr="question" /> <break/></prompt>
             <prompt bargein="false" timeout="5s"><value expr="generate(question, seed).text" /></prompt>
             
-            <grammar>Isabel la Católica | Cuarto | Si | No | Norte | Segundo | Sur</grammar>
+            <grammar src="./grammatics/price.jsgf" />
 
             <!-- Check the answer -->
             <filled>

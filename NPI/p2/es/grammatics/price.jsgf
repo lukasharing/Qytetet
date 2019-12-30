@@ -1,0 +1,3 @@
+#JSGF V1.0;
+grammar price;
+public <price> = no lo se | isabel la catolica | cuarto | si | no | norte | segundo | sur;
