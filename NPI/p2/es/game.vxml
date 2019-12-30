@@ -75,11 +75,7 @@
 
             <!-- Check the answer -->
             <filled>
-
                 <var name="correctq" expr="generate(question, seed).correct" />
-                <var name="question" expr="question + 1" />
-                <var name="next" expr="generate(question, seed)" />
-                
                 <if cond="correctq == questionRan">
                     <prompt bargein="false">Correcto!</prompt>
                     <var name="correct" expr="correct + 1" />
@@ -89,7 +85,8 @@
 
                 <if cond="question &lt; 4">
                     <prompt bargein="false">Prosigamos con la siguiente pregunta</prompt>
-                    <var name="question" expr="question + 1" />
+                    <var name="question" expr="question + 1" />    
+                    <var name="next" expr="generate(question, seed)" />
                     <clear namelist="questionRan" />
                     <goto nextitem="questionRan"/>
                 </if>
@@ -99,6 +96,8 @@
             <noinput>
                 <prompt bargein="false">Prosigamos con la siguiente pregunta</prompt>
                 <var name="question" expr="question + 1" />
+                <var name="correctq" expr="generate(question, seed).correct" />
+                <var name="next" expr="generate(question, seed)" />
                 <clear namelist="questionRan" />
                 <goto nextitem="questionRan"/>
             </noinput>
@@ -106,6 +105,8 @@
             <nomatch>
                 <prompt bargein="false">Prosigamos con la siguiente pregunta</prompt>
                 <var name="question" expr="question + 1" />
+                <var name="correctq" expr="generate(question, seed).correct" />
+                <var name="next" expr="generate(question, seed)" />
                 <clear namelist="questionRan" />
                 <goto nextitem="questionRan"/>
             </nomatch>
