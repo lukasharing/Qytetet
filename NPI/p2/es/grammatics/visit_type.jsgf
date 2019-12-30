@@ -3,10 +3,16 @@ grammar visit_type;
 public <visit_type> = (precios) { this.visitaType = "12" }
                     | ([volver] [atras] | [me he] equivocado) { this.visitaType = "-1" } 
                     | [<quiero>] [reservar un] asistente [turistico] [virtual] { this.visitaType = "0" }
-                    | [<quiero>] abono [general] { this.visitaType = "1" }
+                    | [<quiero> un] abono [general] { this.visitaType = "1" }
                     | ([hay] [solo] | [son] | [grupo de]) <masuno> [menores | niños | niñas] { this.visitaType = $masuno };
 
-<uno> = ([hay] [solo] | [es]) (un (menor | niño | niña) | uno) ;
+<quiero> = un
+         | una
+         | quiero
+         | querria
+         | quisiera
+         | quisieramos
+         | querriamos ;
 
 <masuno> = dos    { this.$value = "2" }
          | tres   { this.$value = "3" }
