@@ -1,0 +1,3 @@
+#JSGF V1.0;
+grammar edit;
+public <edit> = salir | abandonar | terminar;

@@ -2,14 +2,14 @@
 grammar total_visitantes;
 public <total_visitantes> = <cero> { this.totalChildren = "0" }
                           | <uno> { this.totalChildren = "1" }
-                          | ([hay] [solo] | [son]) <masuno> [menores] { this.totalChildren = $masuno };
+                          | ([hay] [solo] | [son] | [grupo de]) <masuno> [menores | niños | niñas] { this.totalChildren = $masuno };
 
 <cero> = ningun
        | ninguno
        | cero
        | no hay ;
 
-<uno> = ([hay] [solo] | [es]) (un menor | uno) ;
+<uno> = ([hay] [solo] | [es]) (un (menor | niño | niña) | uno) ;
 
 <masuno> = dos    { this.$value = "2" }
          | tres   { this.$value = "3" }

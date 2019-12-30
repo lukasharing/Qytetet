@@ -8,10 +8,6 @@
 
     ]]></script>-->
 
-    <!-- http://www1.se.cuhk.edu.hk/~hccl/publications/pub/0300769.pdf -->
-    <!-- https://github.com/krishnamuraleedharan/Voice-xml/blob/master/FoodMenu.xml -->
-    <!-- https://www.w3.org/Voice/Guide/ -->
-
     <!-- Si no escucha nada, le volvemos a preguntar -->
     <noinput>
         Lo siento no pude escuchar nada. Podría intentarlo de nuevo?
@@ -29,6 +25,15 @@
         <grammar src="./grammatics/help.jsgf" />
     </link>
 
+    <!-- Salir en cualquier momento -->
+    <link event="exit">
+        <grammar src="./grammatics/exit.jsgf" />
+    </link>
+    <catch event="exit">
+        <prompt>Gracias por utilizar AlambraApp, vuelva pronto</prompt>
+        <exit/>
+    </catch>
+
     <!--<property name="timeout" value="10s"/>-->
     <form id="visitorES">
 
@@ -39,7 +44,7 @@
         </block>
 
         <field name="totalVisitor">
-            <prompt timeout="3s"><break/>Porfavor, seleccione el numero total de visitantes, incluído menores</prompt>
+            <prompt timeout="3s"><break/>Porfavor, diga el numero total de visitantes, incluído menores</prompt>
             <grammar src="./grammatics/num_visitantes.jsgf" />
 
             <filled>
@@ -55,7 +60,7 @@
 
             <!-- Si pedimos ayuda al sistema -->
             <help>
-                Debe indicar el numero de visitantes, diga <break/>Un visitante<break/> si es usted el unico visitante.
+                Debe indicar el numero de visitantes, diga <break size="small" />Un visitante<break size="small" /> si es usted el unico visitante.
                 <reprompt/>
             </help>
         </field>
@@ -83,7 +88,7 @@
 
             <!-- Si pedimos ayuda al sistema -->
             <help>
-                Debe indicar el numero de menores que van a asistir. diga <break/>Ninguno<break/>, si no asistirá ningún menor.
+                Debe indicar el numero de menores que van a asistir. diga <break size="small" />Ninguno<break size="small" />, si no asistirá ningún menor.
                 <reprompt/>
             </help>
         </field>
@@ -113,7 +118,7 @@
         <block name="Summary">
             <var name="diff" expr="(parseInt(totalVisitor) - parseInt(totalChildren)).toString()" />
             <!-- Resumen -->
-            <prompt bargein="false"><break/> Le voy a resumir los datos introducidos <break/> </prompt>
+            <prompt bargein="false"><break/> Le voy a resumir los datos introducidos <break size="small" /> </prompt>
             
             <if cond="parseInt(totalChildren) == 1">
                 <prompt bargein="false"> Un niño acompañado por</prompt>
@@ -155,9 +160,9 @@
             <var name="code2" expr="parseInt(Math.random() * 10)"/>
             <var name="code3" expr="parseInt(Math.random() * 10)"/>
             <prompt><break/>Gracias por realizar su reserva, su código de reserva es 
-                <break/> <value expr="code1"/> <break/> <value expr="code2"/> <break/> <value expr="code3"/> <break/>,
+                <break/> <value expr="code1"/> <break size="small" /> <value expr="code2"/> <break size="small"/> <value expr="code3"/> <break size="small"/>
                 de nuevo el código de reserva es 
-                <break/> <value expr="code1"/> <break/> <value expr="code2"/> <break/> <value expr="code3"/> <break/>.
+                <break/> <value expr="code1"/> <break size="small" /> <value expr="code2"/> <break size="small"/> <value expr="code3"/> <break size="small"/>
             </prompt>
             <!--<submit next="../form.php" namelist="visitor-es"/>-->
             <disconnect/>

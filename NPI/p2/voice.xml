@@ -12,14 +12,22 @@
         <reprompt/>
     </nomatch>
 
+    <!-- Si no escucha nada, le volvemos a preguntar -->
+    <noinput>
+        <prompt xml:lang="en-US">I'm sorry, I didn't hear anything. Could you please try that again?</prompt>
+        <prompt xml:lang="es-ES">Lo siento no pude escuchar nada. Podría intentarlo de nuevo?</prompt>
+        <prompt xml:lang="de-DE">Es tut mir leid, ich habe nichts gehort. Konnten Sie das bitte noch einmal versuchen?</prompt>
+        <reprompt/>
+    </noinput>
+
     <!-- Phrases to say when need help -->
     <link event="help">
-        <grammar type="application/x-jsgf"> [necesito] ayuda | no entiendo | [I need] help | I don't get it | [Ich brauche] hilfe</grammar>
+        <grammar src="./es/grammatics/help.jsgf" />
     </link>
 
     <!-- Salir en cualquier momento -->
     <link event="exit">
-        <grammar type="application/x-jsgf"> Exit | Salir | Schliessen </grammar>
+        <grammar src="./es/grammatics/exit.jsgf" />
     </link>
     <catch event="exit">
         <prompt xml:lang="en-US">Thank you for using AlambraApp</prompt>
@@ -29,13 +37,12 @@
     </catch>
     
     <!-- Cambiar Idioma en cualquier momento -->
-    <link next="#chlang">
+    <!--<link next="#chlang">
         <grammar type="application/x-jsgf"> Change language | Cambiar idioma | Sprache wechseln</grammar>
-    </link>
+    </link>-->
     
     <!-- Bienvenida selección del Idioma -->
     <menu id="chlang" scope="document">
-        <property name="bargein" value="true"/>
         
         <prompt xml:lang="en-US">Welcome to AlambraApp. Please select language</prompt>
         <prompt xml:lang="es-ES">Bienvenido a AlambraApp. Porfavor seleccione el idioma</prompt>
@@ -55,13 +62,11 @@
         <choice next="./es/welcome.xml" xml:lang="en-US">German</choice>
         <choice next="./es/welcome.xml" xml:lang="es-ES">Alemán</choice>
         <choice next="./es/welcome.xml" xml:lang="de-DE">Deutsch</choice>
-        
-        <!-- Si no escucha nada, le volvemos a preguntar -->
-        <noinput>
-            <prompt xml:lang="en-US">I'm sorry, I didn't hear anything. Could you please try that again?</prompt>
-            <prompt xml:lang="es-ES">Lo siento no pude escuchar nada. Podría intentarlo de nuevo?</prompt>
-            <prompt xml:lang="de-DE">Es tut mir leid, ich habe nichts gehort. Konnten Sie das bitte noch einmal versuchen?</prompt>
-            <reprompt/>
-        </noinput>
+
+        <help>
+            <prompt xml:lang="en-US">Help me</prompt>
+            <prompt xml:lang="es-ES">Help me</prompt>
+            <prompt xml:lang="de-DE">Help me</prompt>
+        </help>
     </menu>
 </vxml>
