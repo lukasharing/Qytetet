@@ -46,7 +46,7 @@
 
         <block>
             <prompt bargein="false">
-                Bienvenido a Alhambrapp en Español
+                Bienvenido a Alhambrapp en Español, puede decir "Ayuda" en cualquier momento si lo requiere.
             </prompt>
         </block>
 
@@ -113,7 +113,8 @@
         </field>
 
         <field name="VisitType">
-            <prompt>Indique el tipo de visita que quiere realizar</prompt>
+            <prompt timeout="3s"><break/>Indique el tipo de visita que quiere realizar</prompt>
+            
             <grammar src="./grammatics/visit_type.jsgf" />
 
             <filled>
