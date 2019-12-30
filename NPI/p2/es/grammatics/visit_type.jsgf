@@ -1,6 +1,6 @@
 #JSGF V1.0;
 grammar visit_type;
-public <visit_type> = (precios) { this.visitaType = "4" }
+public <visit_type> = (precios) { this.visitaType = "12" }
                     | ([volver] [atras] | [me he] equivocado) { this.visitaType = "-1" } 
                     | <cero> { this.visitaType = "0" }
                     | <uno> { this.visitaType = "1" }
