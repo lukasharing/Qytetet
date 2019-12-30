@@ -1,9 +1,10 @@
 #JSGF V1.0;
-grammar total_visitantes;
-public <total_visitantes> = ([volver] [atras] | [me he] equivocado) { this.visitaType = "-1" } 
-                          | <cero> { this.visitaType = "0" }
-                          | <uno> { this.visitaType = "1" }
-                          | ([hay] [solo] | [son] | [grupo de]) <masuno> [menores | niños | niñas] { this.visitaType = $masuno };
+grammar visit_type;
+public <visit_type> = precios { this.visitaType = "-2" }
+                    | ([volver] [atras] | [me he] equivocado) { this.visitaType = "-1" } 
+                    | <cero> { this.visitaType = "0" }
+                    | <uno> { this.visitaType = "1" }
+                    | ([hay] [solo] | [son] | [grupo de]) <masuno> [menores | niños | niñas] { this.visitaType = $masuno };
 
 <cero> = ningun
        | ninguno
