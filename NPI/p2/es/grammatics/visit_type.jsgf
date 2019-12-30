@@ -1,6 +1,7 @@
 #JSGF v1.0;
 grammar visit_type;
-public <visit_type> = [<quiero>] [reservar un] asistente [turistico] [virtual] { this.VisitType = "0"; }
+public <visit_type> = [volver] atras { this.VisitType = "-1"; } 
+                    | [<quiero>] [reservar un] asistente [turistico] [virtual] { this.VisitType = "0"; }
                     | [<quiero>] abono [general | normal] { this.VisitType = "1"; }
                     | [<quiero>] [reservar (un | una)](guia | guiado | acompañante) [turistico] { this.VisitType = "2"; };
 
@@ -9,5 +10,5 @@ public <visit_type> = [<quiero>] [reservar un] asistente [turistico] [virtual] {
          | quiero
          | querria
          | quisiera
-         | quisiéramos
+         | quisieramos
          | querriamos ;

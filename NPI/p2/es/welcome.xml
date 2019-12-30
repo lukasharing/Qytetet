@@ -57,6 +57,7 @@
             <prompt timeout="3s"><break/>Porfavor, diga el numero total de visitantes, incluído menores</prompt>
             <grammar src="./grammatics/num_visitantes.jsgf" />
 
+            <!-- The value of the field is Set -->
             <filled>
                 <if cond="parseInt(totalVisitor) == 1">
                     <prompt bargein="false">Perfecto, es solo usted</prompt>
@@ -66,13 +67,14 @@
                     <clear/>
                     <throw event="nomatch"/>
                 </if>
-                <!-- Si estamos editando esta sección, nos enviará a la edición -->
+
+                <!-- If Editing, go to summary -->
                 <if cond="IsEditing === '1'">
                     <goto nextitem="Summary"/>
                 </if>
             </filled>
 
-            <!-- Si pedimos ayuda al sistema -->
+            <!-- ¡¡¡¡¡¡¡¡¡¡HELP!!!!!!!!!!! -->
             <help>
                 Debe indicar el numero de visitantes, diga <break size="small" />Un visitante<break size="small" /> si es usted el unico visitante.
                 <reprompt/>
@@ -83,29 +85,41 @@
             <prompt timeout="3s"><break/>Indique cuántos menores hay en el grupo, su entrada será gratuita trás la acreditación en puerta</prompt>
             <grammar src="./grammatics/num_children.jsgf" />
 
+            <!-- The value of the field is Set -->
             <filled>
-                <if cond="parseInt(totalChildren) >= parseInt(totalVisitor)">
+
+                <!-- Go Back -->
+                <if cond="parseInt(totalChildren) == -1">
+                    <clear namelist="totalVisitor" />
+                    <goto nextitem="totalVisitor"/>
+                <!-- Error Number of Children is greater than Adults-->
+                <elseif cond="parseInt(totalChildren) >= parseInt(totalVisitor)">
                     <clear namelist="totalChildren" />
-                    <prompt bargein="false">Deben haber menos menores que mayores, volvamos a intentarlo</prompt>
+                    <prompt bargein="false">Deben haber menos menores que adultos, volvamos a intentarlo</prompt>
                     <clear namelist="totalChildren" />
                     <throw event="nomatch"/>
+                <!-- No children -->
                 <elseif cond="parseInt(totalChildren) == 0"/>
                     <prompt bargein="false">Usted dijo que no hay menores</prompt>
+                <!-- Only One Child -->
                 <elseif cond="parseInt(totalChildren) == 1"/>
                     <prompt bargein="false">Usted dijo un menor, recuerde que deberá acreditarlo en puerta</prompt>
+                <!-- > Children -->
                 <elseif cond="parseInt(totalChildren) > 1"/>
                     <prompt bargein="false">Usted dijo <value expr="totalChildren"/> menores, recuerde que deberá acreditarlo en puerta</prompt>
+                <!-- Error No Valid Value -->
                 <else/>
                     <clear namelist="totalChildren" />
                     <throw event="nomatch"/>
                 </if>
-                <!-- Si estamos editando esta sección, nos enviará a la edición -->
+
+                <!-- If Editing, go to summary -->
                 <if cond="IsEditing === '1'">
                     <goto nextitem="Summary"/>
                 </if>
             </filled>
 
-            <!-- Si pedimos ayuda al sistema -->
+            <!-- ¡¡¡¡¡¡¡¡¡¡HELP!!!!!!!!!!! -->
             <help>
                 Debe indicar el numero de menores que van a asistir. diga <break size="small" />Ninguno<break size="small" />, si no asistirá ningún menor.
                 <reprompt/>
@@ -117,58 +131,71 @@
             
             <grammar src="./grammatics/visit_type.jsgf" />
 
+            <!-- The value of the field is Set -->
             <filled>
-                <var name="VisitNT" expr="VisitTypeName(VisitType)"/>
                 
-                <if cond="VisitNT !== null">
+                <!-- Get String from Number-->
+                <var name="VisitNT" expr="VisitTypeName(VisitType)"/>
+
+                <!-- Go Back -->
+                <if cond="VisitType == '-1'">
+                    <clear namelist="totalChildren" />
+                    <goto nextitem="totalChildren"/>
+                <!-- Valid Type of Visit -->
+                <elseif cond="VisitNT !== null">
                     <prompt bargein="false">
                         El tipo de visita selecionada es <value name="VisitNT" />
                     </prompt>
+                <!-- Non Valid Value -->
                 <else/>
                     <clear namelist="VisitType" />
                     <throw event="nomatch"/>
                 </if>
+                <!-- Go to Summary -->
                 <goto nextitem="Summary"/>
-                <!-- Si estamos editando esta sección, nos enviará a la edición -->
-                <if cond="IsEditing === '1'">
-                    <goto nextitem="Summary"/>
-                </if>
             </filled>
-            
-            <!-- Si pedimos ayuda al sistema -->
+
+            <!-- ¡¡¡¡¡¡¡¡¡¡HELP!!!!!!!!!!! -->
             <help>
                 Diga "Visita Guiada" si desea que un guía le acompañe en su recorrido, o "Abono General" si quiere una entrada normal.
             </help>
         </field>
 
+        <!-- Summary -->
         <block name="Summary">
+            
+            <!-- Number of person that have to pay -->
             <var name="diff" expr="((parseInt(totalVisitor) - parseInt(totalChildren)).toString()" />
-            <!-- Resumen -->
+            
             <prompt bargein="false"><break/> Le voy a resumir los datos introducidos <break size="small" /> </prompt>
             
+            <!-- If there are at least one child, then say this: -->
             <if cond="parseInt(totalChildren) == 1">
                 <prompt bargein="false"> Un niño acompañado por</prompt>
             <elseif cond="parseInt(totalChildren) > 1" />
                 <prompt bargein="false"> Un grupo de <value expr="totalChildren"/> niños acompañados por</prompt>
             </if>
             
+            <!-- If one adult or a group, say this: -->
             <if cond="parseInt(diff) == 1">
                 <prompt bargein="false"> un adulto </prompt>
             <else/>
                 <prompt bargein="false"> un grupo de <value expr="diff"/> adultos</prompt>
             </if>
 
+            <!-- Type Of Visit, say this: -->
             <prompt bargein="false"> para una visita <value expr="VisitTypeName(VisitType)"/>  </prompt>
             
-            <!-- Modificar -->
+            <!-- Go to Last Step, If we Want to Edit it -->
             <goto nextitem="Edit"/>
         </block>
 
+        <!-- Edit Field -->
         <field name="Edit">
             <prompt>Desea modificar alguno de los introducidos datos anteriormente?</prompt>
-
             <grammar src="./grammatics/yes_no.jsgf" />
             
+            <!-- The value of the field is Set -->
             <filled>
                 <if cond="Edit == '1'">
                     <goto nextitem="ToEdit"/>
@@ -176,6 +203,11 @@
                     <goto nextitem="ThankYou"/>
                 </if>
             </filled>
+
+            <!-- ¡¡¡¡¡¡¡¡¡¡HELP!!!!!!!!!!! -->
+            <help>
+                Diga "Si" o "No", si desea modificar alguno de los datos.
+            </help>            
         </field>
 
         <field name="ToEdit">
