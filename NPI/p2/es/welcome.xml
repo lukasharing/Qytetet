@@ -6,17 +6,6 @@
 
     <script><![CDATA[
 
-        function getCode(){
-            /* Generamos número aleatorio de 4 dígitos */
-            var r = (parseInt(Math.random() * 1000) + 1000).toString();
-            var code = "";
-            /* Cogemos los 3 últimos y le añadimos un break */
-            for(var i = r.length - 1; i > 0; --i){
-                code += r[i] + "               ";
-            }
-            return code;
-        }
-
     ]]></script>
 
     <!-- http://www1.se.cuhk.edu.hk/~hccl/publications/pub/0300769.pdf -->
@@ -123,7 +112,7 @@
         <field name="Edit">
             <!-- Resumen -->
             <var name="diff" expr="parseInt(totalVisitor) - parseInt(totalChildren)"/>
-            <prompt bargein="false"> Le voy a resumir los datos introducidos <break/> </prompt>
+            <prompt bargein="false"> Le voy a resumir los datos introducidos <break/> <value expr="diff" /> </prompt>
             
             <if cond="parseInt(totalChildren) == 1">
                 <prompt bargein="false"> Un niño acompañado por</prompt>
@@ -146,7 +135,7 @@
                 <if cond="Edit == 1">
                     <goto nextitem="ToEdit"/>
                 <else/>
-                    <prompt>El precio es <break/><value expr="15 * diff"/> euros <break type="long" /></prompt>
+                    <prompt>El precio es <break/><value expr="15 * diff"/> euros <break/></prompt>
                     <goto nextitem="ThankYou"/>
                 </if>
             </filled>
@@ -157,8 +146,14 @@
         </field>
 
         <block name="ThankYou">
-            <var name="code" expr="getCode()"/>
-            <prompt>Gracias por realizar su reserva, su código de reserva es <break/> <value expr="code"/>, de nuevo el código de reserva es <break/> <value expr="code"/>  </prompt>
+            <var name="code1" expr="parseInt(Math.random() * 10)"/>
+            <var name="code2" expr="parseInt(Math.random() * 10)"/>
+            <var name="code3" expr="parseInt(Math.random() * 10)"/>
+            <prompt>Gracias por realizar su reserva, su código de reserva es 
+                <break/> <value expr="code1"/> <break/> <value expr="code2"/> <break/> <value expr="code3"/> <break/>,
+                de nuevo el código de reserva es 
+                <break/> <value expr="code1"/> <break/> <value expr="code2"/> <break/> <value expr="code3"/> <break/>,
+            </prompt>
             <!--<submit next="../form.php" namelist="visitor-es"/>-->
             <disconnect/>
         </block>
