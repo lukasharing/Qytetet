@@ -2,14 +2,9 @@
 grammar visit_type;
 public <visit_type> = (precios) { this.visitaType = "12" }
                     | ([volver] [atras] | [me he] equivocado) { this.visitaType = "-1" } 
-                    | <cero> { this.visitaType = "0" }
-                    | <uno> { this.visitaType = "1" }
+                    | [<quiero>] [reservar un] asistente [turistico] [virtual] { this.visitaType = "0" }
+                    | [<quiero>] abono [general] { this.visitaType = "1" }
                     | ([hay] [solo] | [son] | [grupo de]) <masuno> [menores | niños | niñas] { this.visitaType = $masuno };
-
-<cero> = ningun
-       | ninguno
-       | cero
-       | no hay ;
 
 <uno> = ([hay] [solo] | [es]) (un (menor | niño | niña) | uno) ;
 
