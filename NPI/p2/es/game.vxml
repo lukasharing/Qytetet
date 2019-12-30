@@ -10,31 +10,31 @@
             var options = [
                 {
                     text: "¿Quién estuvo enterrada en la Alhambra?",
-                    correct: "Isabel la Católica"
+                    correct: "isabel la catolica"
                 },
                 {
                     text: "En qué puesto se quedó el año pasado la Alhambra de los monumentos más visitados",
-                    correct: "Cuarto"
+                    correct: "cuarto"
                 },
                 {
                     text: "Diga si o no, si es verdadera la siguiente afirmación: La Alhambra mantuvo una carta escondida una carta de amor durante 92 años entre sus paredes",
-                    correct: "Si"
+                    correct: "si"
                 },
                 {
                     text: "Diga si o no, si es verdadera la siguiente afirmación: La Alhmabra fué invadidad por los chinos",
-                    correct: "No"
+                    correct: "no"
                 },
                 {
                     text: "Diga Norte Sur Este o Oeste donde se encuentra la siguiente entrada, Arrabal",
-                    correct: "Norte"
+                    correct: "norte"
                 },
                 {
                     text: "Diga Norte Sur Este o Oeste donde se encuentra la siguiente entrada, Plaza Nueva",
-                    correct: "Sur"
+                    correct: "sur"
                 },
                 {
                     text: "En qué puesto se quedó en 2016 la Alhambra de los monumentos más visitados",
-                    correct: "Segundo"
+                    correct: "segundo"
                 }
             ]
             return options[(seed + next) % options.length];
@@ -95,9 +95,13 @@
             <noinput>
                 <throw event="nomatch" />
             </noinput>
+            <nomatch>
+                <throw event="nomatch" />
+            </nomatch>
 
             <!-- Catch for next question -->
             <catch event="noinput nomatch">
+                <var name="question" expr="question + 1" />
                 <clear namelist="questionRan" />
                 <goto nextitem="questionRan"/>
             </catch>
