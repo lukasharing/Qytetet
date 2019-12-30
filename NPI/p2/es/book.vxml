@@ -67,7 +67,7 @@
                 <elseif cond="parseInt(totalVisitor) > 1"/>
                     <prompt bargein="false">Usted dijo <value expr="totalVisitor"/> visitantes</prompt>
                 <else/>
-                    <clear/>
+                    <clear namelist="totalVisitor" />
                     <throw event="nomatch"/>
                 </if>
 
