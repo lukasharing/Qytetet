@@ -1,9 +1,9 @@
 #JSGF V1.0;
 grammar field_edit;
-public <field_edit> = (Nada | Ninguno | No editar) { this.ToEdit = "0"; }
-                    | [<sin_edit>] [el] numero de visitantes { this.ToEdit = "1"; }
-                    | [<sin_edit>] [el] numero de [niños | menores] { this.ToEdit = "2"; }
-                    | [<sin_edit>] (el | la) <visit_type> { this.ToEdit = "3"; };
+public <field_edit> = (Nada | Ninguno | No editar) { this.$value = "0"; }
+                    | [<sin_edit>] [el] numero de visitantes { this.$value = "1"; }
+                    | [<sin_edit>] [el] numero de [niños | menores] { this.$value = "2"; }
+                    | [<sin_edit>] (el | la) <visit_type> { this.$value = "3"; };
 
 <sin_edit> = [me gustaria | querria | quisiera] editar | modificar | cambiar ;
 

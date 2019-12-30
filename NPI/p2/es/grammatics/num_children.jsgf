@@ -1,9 +1,9 @@
 #JSGF V1.0;
 grammar total_visitantes;
-public <total_visitantes> = ([volver] [atras] | [me he] equivocado) { this.totalChildren = "-1" } 
-                          | <cero> { this.totalChildren = "0" }
-                          | <uno> { this.totalChildren = "1" }
-                          | ([hay] [solo] | [son] | [grupo de]) <masuno> [menores | niños | niñas] { this.totalChildren = $masuno };
+public <total_visitantes> = ([volver] [atras] | [me he] equivocado) { this.$value = "-1" } 
+                          | <cero> { this.$value = "0" }
+                          | <uno> { this.$value = "1" }
+                          | ([hay] [solo] | [son] | [grupo de]) <masuno> [menores | niños | niñas] { this.$value = $masuno };
 
 <cero> = ningun
        | ninguno

@@ -134,8 +134,6 @@
 
             <!-- The value of the field is Set -->
             <filled>
-                <prompt bargein="false"><value expr="visitaType"/></prompt>
-
                 <!-- Precios -->
                 <if cond="visitaType == '-2'">
                     <prompt bargein="false">El precios de la entrada general es de 15 euros, la entrada con un asistente virtual es de 23 euros y con un guía es de 30 euros</prompt>
