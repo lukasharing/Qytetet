@@ -78,6 +78,7 @@
                     <clear namelist="totalChildren" />
                     <throw event="nomatch"/>
                 </if>
+                <goto nextitem="Summary"/>
             </filled>
 
             <!-- Si pedimos ayuda al sistema -->
@@ -109,9 +110,9 @@
             </help>->
         </field>
         -->
-        <field name="Edit">
-            <!-- Resumen -->
+        <block name="Summary">
             <var name="diff" expr="(parseInt(totalVisitor) - parseInt(totalChildren)).toString()" />
+            <!-- Resumen -->
             <prompt bargein="false"><break/> Le voy a resumir los datos <value expr="totalChildren"/> CON <value expr="diff"/> introducidos <break/> </prompt>
             
             <if cond="parseInt(totalChildren) == 1">
@@ -127,6 +128,10 @@
             </if>-->
             
             <!-- Modificar -->
+            <goto nextitem="Edit"/>
+        </block>
+
+        <field name="Edit">
             <prompt>Quiere modificar alguno de los datos anteriores?</prompt>
 
             <!--<grammar src="./grammatics/yes_no.jsgf" />-->
