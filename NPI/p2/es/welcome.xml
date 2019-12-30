@@ -238,7 +238,7 @@
             <!-- Number of person to paid -->
             <var name="diff" expr="parseInt(totalVisitor) - parseInt(totalChildren)" />
             <!-- Precio por entrada -->
-            <var name="price" expr="(visitType == '0' ? 23 : (visitType == '1' ? 15 : 30)).toString()" />
+            <var name="price" expr="(visitaType == '0' ? 23 : (visitaType == '1' ? 15 : 30)).toString()" />
 
             <prompt><break/>El precio es de <value expr="(parseInt(price) * parseInt(diff)).toString()"/> euros </prompt>        
             
