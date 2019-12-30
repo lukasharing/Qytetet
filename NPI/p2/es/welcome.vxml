@@ -31,11 +31,11 @@
     </catch>
 
     <!-- Menu -->
-    <menu scope="document">
+    <menu dtmf="true">
         <prompt bargein="false">Bienvenido a Alhambrapp en Español, puede pedir "Ayuda" en cualquier momento si la requiere.</prompt>
-        <prompt bargein="false"><break/> Qué desea realizar?<enumerate/></prompt>
+        <prompt bargein="false"><break/> Qué desea realizar? Utilice el teclado numérico <enumerate>Para <value expr="_prompt"/>, pulse <value expr="_dtmf"/>.</enumerate> </prompt>
 
-        <choice next="./book.vxml">Reservar Visita</choice>
+        <choice next="./book.vxml">Reservar una visita</choice>
 
         <help>
             <prompt>Seleccione la opción que más le interese, por ejemplo, puede Reservar una visita guiada diciendo "Reservar Visita"</prompt>
