@@ -196,6 +196,7 @@
             
             <!-- The value of the field is Set -->
             <filled>
+                <prompt bargein="false"> EDITAR <value expr="Edit"/>  </prompt>
                 <if cond="Edit == '1'">
                     <goto nextitem="ToEdit"/>
                 <else/>
