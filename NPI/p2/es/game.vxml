@@ -61,7 +61,7 @@
 
         <!-- Initial -->
         <block>
-            <prompt bargein="false"><break/>Si acierta las cuatro preguntas obtendrá una recompensa en su próxima visita.</prompt>
+            <prompt bargein="false"><break/>Si acierta las cuatro preguntas obtendrá una recompensa en su próxima visita. Puede salir en cualquier momento diciendo "Salir".</prompt>
         </block>
 
         <!-- Iterative Field -->
@@ -88,17 +88,28 @@
                 </if>
 
                 <if cond="question &lt; 4">
-                    <throw event="nomatch" />
+                    <prompt bargein="false">Prosigamos con la siguiente pregunta</prompt>
+                    <var name="question" expr="question + 1" />
+                    <clear namelist="questionRan" />
+                    <goto nextitem="questionRan"/>
                 </if>
             </filled>
 
             <!-- Catch for next question -->
-            <catch event="noinput nomatch">
+            <noinput>
+                <prompt bargein="false">Prosigamos con la siguiente pregunta</prompt>
                 <var name="question" expr="question + 1" />
                 <clear namelist="questionRan" />
                 <goto nextitem="questionRan"/>
-            </catch>
-            
+            </noinput>
+
+            <nomatch>
+                <prompt bargein="false">Prosigamos con la siguiente pregunta</prompt>
+                <var name="question" expr="question + 1" />
+                <clear namelist="questionRan" />
+                <goto nextitem="questionRan"/>
+            </nomatch>
+
         </field>
         <!-- Result -->
         <block>
