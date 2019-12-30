@@ -1,0 +1,3 @@
+#JSGF V1.0;
+grammar visit;
+public <visit> = ([volver] atras | [me he] equivocado) { this.$value = "-1" };
