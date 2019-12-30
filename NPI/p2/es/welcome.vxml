@@ -26,13 +26,14 @@
         <grammar src="./grammatics/exit.jsgf" />
     </link>
     <catch event="exit">
-        <prompt>Gracias por utilizar AlambraApp, vuelva pronto</prompt>
+        <prompt>Gracias por utilizar AlambraApp en Español, vuelva pronto</prompt>
         <exit/>
     </catch>
 
     <!-- Menu -->
-    <menu id="chlang" scope="document">
+    <menu scope="document">
         <prompt bargein="false">Bienvenido a Alhambrapp en Español, puede pedir "Ayuda" en cualquier momento si la requiere.</prompt>
+        <prompt bargein="false"><break/> Qué desea realizar?<enumerate/></prompt>
 
         <choice next="./book.vxml">Reservar Visita</choice>
 

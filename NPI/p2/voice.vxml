@@ -50,8 +50,8 @@
     
         <!-- English -->
         <choice next="./en/welcome.vxml" xml:lang="en-US">English</choice>
-        <choice next="./en/welcome.xml" xml:lang="es-ES">Inglés</choice>
-        <choice next="./en/welcome.xml" xml:lang="de-DE">Englisch</choice>
+        <choice next="./en/welcome.vxml" xml:lang="es-ES">Inglés</choice>
+        <choice next="./en/welcome.vxml" xml:lang="de-DE">Englisch</choice>
         
         <!-- Spanish -->
         <choice next="./es/welcome.vxml" xml:lang="en-US">Espanish</choice>

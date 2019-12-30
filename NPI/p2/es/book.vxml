@@ -37,7 +37,7 @@
         <grammar src="./grammatics/exit.jsgf" />
     </link>
     <catch event="exit">
-        <prompt>Gracias por utilizar AlambraApp, vuelva pronto</prompt>
+        <prompt>Gracias por utilizar AlambraApp en Español, vuelva pronto</prompt>
         <exit/>
     </catch>
 
@@ -54,7 +54,10 @@
             <!-- The value of the field is Set -->
             <filled>
                 <!-- If only the speaker is the visitant -->
-                <if cond="parseInt(totalVisitor) == 1">
+                <if cond="parseInt(totalVisitor) == -1">
+                    <clear namelist="totalVisitor" />
+                    <goto next="./welcome.vxml"/>
+                <elseif cond="parseInt(totalVisitor) == 1"/>
                     <prompt bargein="false">Perfecto, es solo usted</prompt>
                 <elseif cond="parseInt(totalVisitor) > 1"/>
                     <prompt bargein="false">Usted dijo <value expr="totalVisitor"/> visitantes</prompt>
