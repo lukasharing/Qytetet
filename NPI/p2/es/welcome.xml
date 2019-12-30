@@ -185,7 +185,7 @@
             </if>
 
             <!-- Type Of Visit, say this: -->
-            <prompt bargein="false"> para una visita <value expr="nameVisitType(visitaType)"/>  </prompt>
+            <prompt bargein="false"> para una visita <value expr="nameVisitType(visitaType)" /> </prompt>
             
             <!-- Go to Last Step, If we Want to Edit it -->
             <goto nextitem="Edit"/>
