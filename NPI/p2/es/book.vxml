@@ -14,7 +14,7 @@
         }
 
     ]]></script>
-
+    
     <!-- Si no escucha nada, le volvemos a preguntar -->
     <noinput>
         Lo siento no pude escuchar nada. Podría intentarlo de nuevo?
@@ -41,15 +41,9 @@
         <exit/>
     </catch>
 
+    
     <!--<property name="timeout" value="10s"/>-->
     <form id="visitorES">
-
-        <block>
-            <prompt bargein="false">
-                Bienvenido a Alhambrapp en Español, puede pedir "Ayuda" en cualquier momento si la requiere.
-            </prompt>
-        </block>
-
         <!-- Form Variables -->
         <var name="IsEditing" expr="0" />
 

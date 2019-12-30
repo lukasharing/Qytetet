@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE vxml PUBLIC "-//W3C//DTD VOICEXML 2.0//EN" "http://www.w3.org/TR/voicexml20/vxml.dtd">
+<vxml version="2.0" xml:lang="es-ES">
+<meta name="author" content="Lukas Haring"/>
+<meta name="maintainer" content="lukasharing@correo.ugr.es"/>
+
+    <!-- Si no escucha nada, le volvemos a preguntar -->
+    <noinput>
+        Lo siento no pude escuchar nada. Podría intentarlo de nuevo?
+        <reprompt/>
+    </noinput>
+
+    <!-- Si no existe esa seleccion, le deceimos que no lo hemos entendido -->
+    <nomatch>
+        Lo siento no le pude entender. Podría repetirlo de nuevo?
+        <reprompt/>
+    </nomatch>
+
+    <!-- Phrases to say when need help-->
+    <link event="help">
+        <grammar src="./grammatics/help.jsgf" />
+    </link>
+
+    <!-- Salir en cualquier momento -->
+    <link event="exit">
+        <grammar src="./grammatics/exit.jsgf" />
+    </link>
+    <catch event="exit">
+        <prompt>Gracias por utilizar AlambraApp, vuelva pronto</prompt>
+        <exit/>
+    </catch>
+
+    <!-- Menu -->
+    <menu id="chlang" scope="document">
+        <prompt bargein="false">Bienvenido a Alhambrapp en Español, puede pedir "Ayuda" en cualquier momento si la requiere.</prompt>
+
+        <choice next="./book.xml">Reservar Visita</choice>
+
+        <help>
+            <prompt>Seleccione la opción que más le interese, por ejemplo, puede Reservar una visita guiada diciendo "Reservar Visita"</prompt>
+            <reprompt/>
+        </help>
+    </menu>
+</vxml>
