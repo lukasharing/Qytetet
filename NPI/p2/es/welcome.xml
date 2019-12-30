@@ -111,8 +111,8 @@
         -->
         <field name="Edit">
             <!-- Resumen -->
-            <prompt bargein="false"><break/>Test </prompt>
-            <var name="diff" expr="parseInt(totalVisitor) - parseInt(totalChildren)"/>
+            <prompt bargein="false"><break/>Test <value expr="totalChildren"/> Children </prompt>
+            <var expr="parseInt(totalVisitor) - parseInt(totalChildren)" name="diff" />
             <prompt bargein="false"><break/> Le voy a resumir los datos introducidos <break/> <value expr="diff" /> </prompt>
             
             <if cond="parseInt(totalChildren) == 1">
