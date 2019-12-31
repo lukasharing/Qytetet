@@ -1,3 +1,4 @@
+#JSGF V1.0;
 grammar total_visitantes;
 public <total_visitantes> = ([volver] [atras] | [me he] equivocado) { this.totalVisitor = "-1" } 
                           | [somos] <masuno> [personas | visitantes] { this.totalVisitor = $masuno }
