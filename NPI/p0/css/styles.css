@@ -486,6 +486,14 @@ body.isOnPopup #enviroment, body.isOnPopup #enviroment_labels{
     height: 50px;
 }
 
+/* Telephone */
+
+#telephon-button{
+    right: 20px;
+    bottom: 20px;
+}
+
+
 /* Compass */
 
 #compass{
@@ -571,7 +579,8 @@ body.doubletouch #qr-button, body.isOnPopup #qr-button{
     opacity: 0.;
 }
 
-body.doubletouch #map-button, body.isOnPopup #map-button{
+body.doubletouch #map-button, body.isOnPopup #map-button,
+body.doubletouch #telephon-button, body.isOnPopup #telephon-button{
     right: -100px;
     opacity: 0.;
 }
