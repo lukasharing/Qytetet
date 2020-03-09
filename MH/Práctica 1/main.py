@@ -10,11 +10,13 @@ from scipy import spatial
 
 import random
 
+import time
+
 # Iris : 3 classes
 # Rand : 3 classes
 # Ecoli : 8 classes
 
-name = "iris"
+name = "rand"
 
 # Load Dat File With Numpy
 path_dat = "./dataset/"+ name +"_set.dat"
@@ -110,6 +112,28 @@ def plot2d(X, assigned, mis, restrictions):
     
     plt.show()
 
+def random_centroids(X, k):
+    # Initizalization mis
+    min_val = np.amin(X, axis = 0)
+    max_val = np.amax(X, axis = 0)
+    
+    # Scale Matrix (Diagonal Matrix)
+    dif_val = np.diag(np.subtract(max_val, min_val))
+    
+    # M(n, m) random and transposed
+    rand_mtx = np.random.rand(X.shape[1], k)
+    
+    # R * Dif + Min 
+    return (
+        np.transpose(
+            np.matmul(
+                dif_val,
+                rand_mtx
+            )
+        ) #  R * Dif
+        + min_val
+    )
+
 def COPKM(X, R, k):
 
     seed = 10
@@ -120,28 +144,7 @@ def COPKM(X, R, k):
     size = len(X)
     RSI = random.sample(range(size), size)
     
-    # Initizalization mis
-    min_val = np.amin(X, axis = 0)
-    max_val = np.amax(X, axis = 0)
-    
-    # Scale Matrix (Diagonal Matrix)
-    dif_val = np.diag(np.subtract(max_val, min_val))
-    
-    # M(n, m) random and transposed
-    rand_mtx = np.random.rand(dataset.shape[1], k)
-    
-    print(rand_mtx)
-    print(dif_val)
-    # R * Dif + Min 
-    mis = (
-        np.transpose(
-            np.matmul(
-                dif_val,
-                rand_mtx
-            )
-        ) #  R * Dif
-        + min_val
-    )
+    mis = random_centroids(X, k)
     
     last_assigned = np.full((1, size), -1)
     while True:
@@ -190,13 +193,40 @@ def COPKM(X, R, k):
 
 def LOCAL(X, R, k):
     
+    seed = 10
     
+    random.seed(seed)
+    np.random.seed(seed)
     
-    f(X, C, A, R)
+    size = len(X)
     
+    assigned_result = np.random.randint(k, size = size)
+    result = [[] for i in range(k)]
+    [result[v].append(X[i]) for i, v in enumerate(assigned_result)]
     
+    min_f = f(X, result, assigned_result, R)
+    
+    for i in range(10000):
+        
+        assigned = np.random.permutation(assigned_result)#np.random.randint(k, size = size)
+        clusters = [[] for i in range(k)]
+        [clusters[v].append(X[i]) for i, v in enumerate(assigned)]
+    
+        current_f = f(X, clusters, assigned, R)
+        if current_f < min_f:
+            assigned_result = assigned
+            min_f = current_f
+            result = clusters
+    
+    #mis = [group_centroid(c) for c in clusters]
+    #plot2d(X, assigned_result, mis, R)
+    
+    return result
 
-clusters = COPKM(dataset, constrictions, 3)
+#clusters = COPKM(dataset, constrictions, 3)
+start_time = time.time()
+clusters = LOCAL(dataset, constrictions, 3)
+print("--- %s ms ---" % ((time.time() - start_time) * 1000.))
 
 if(len(clusters) == 0):
     print("No solution found")
