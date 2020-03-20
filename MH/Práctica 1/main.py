@@ -16,7 +16,8 @@ import time
 # Rand : 3 classes
 # Ecoli : 8 classes
 
-name = "rand"
+name = "ecoli"
+k = 8
 
 # Load Dat File With Numpy
 path_dat = "./dataset/"+ name +"_set.dat"
@@ -39,22 +40,9 @@ def distance_intracluster(ci):
     centroid = group_centroid(ci)
     return np.sum([distance(xj, centroid) for xj in ci]) / len(ci)
 
-def general_deviation(C):
-    return np.sum([distance_intracluster(ci) for ci in C]) / len(C)
-
-#def infeasibility(C):
-#    np.sum([np.sum() for ])
-
-def violate_restriction(i, assigned, ri):
-    violations = 0
-    for (j, restriction) in enumerate(ri):
-        if assigned[j] >= 0 and i != j:
-            if restriction == 1:
-                violations += assigned[j] != assigned[i]
-            elif restriction == -1:
-                violations += assigned[j] == assigned[i]
-    
-    return violations
+def general_deviation(X, A, k):
+    C = split_to_clusters(X, A, k)
+    return np.sum([distance_intracluster(ci) for ci in C]) / k
 
 def lambda_factor(X, R):
     # Get Distance Matrix
@@ -66,15 +54,35 @@ def lambda_factor(X, R):
     # Return D / R
     return distance(X[i], X[j]) / num_restrictions
 
-def infeasability(X, A, R):
-    result = 0.
-    for i in range(len(X)):
-        result += violate_restriction(i, A, R[i])
+# Este código está explicado en la memoria
+def infeasability(X, A, p_r, n_r):
     
-    return result
+    A_scale = np.diag(A + 1)
+    A_scalei = np.diag([1/(a + 1) for a in A])
+    A_scalei = np.where(np.isposinf(A_scalei), 0, A_scalei)
+    
+    P_D = np.matmul(
+        A_scalei,
+        np.transpose(np.matmul(A_scale, p_r))
+    )
+    
+    N_D = np.matmul(
+        A_scalei,
+        np.transpose(np.matmul(A_scale, n_r))
+    )
+    
+    positive_violation = np.count_nonzero(np.where(P_D == 1, 0, P_D))
+    negative_violation = np.count_nonzero(np.where(N_D != 1, 0, N_D))
+    
+    return positive_violation + negative_violation
 
-def f(X, C, A, R):
-    return general_deviation(C) + lambda_factor(X, R) * infeasability(X, A, R)
+def split_to_clusters(X, A, k):
+    clusters = [[] for i in range(k)]
+    [clusters[v].append(X[i]) for i, v in enumerate(A)]
+    return clusters
+
+def f(X, A, p_r, n_r, k, flambda):
+    return general_deviation(X, A, k) + flambda * infeasability(X, A, p_r, n_r)
 
 def plot2d(X, assigned, mis, restrictions):
     fig, ax = plt.subplots()
@@ -134,9 +142,13 @@ def random_centroids(X, k):
         + min_val
     )
 
-def COPKM(X, R, k):
+def has_one(assigned_result, k):
+    for i in range(k):
+        if len(np.where(assigned_result == k)) == 0:
+            return False
+    return True
 
-    seed = 10
+def COPKM(X, R, k, seed = 11):
     
     random.seed(seed)
     np.random.seed(seed)
@@ -144,92 +156,113 @@ def COPKM(X, R, k):
     size = len(X)
     RSI = random.sample(range(size), size)
     
+    # Matrix
+    positive_r = R - np.identity(R.shape[0])
+    positive_r[:][:] = 0.5*positive_r[:][:]*(positive_r[:][:] + 1)
+    negative_r = R - np.identity(R.shape[0])
+    negative_r[:][:] = 0.5*negative_r[:][:]*(negative_r[:][:] - 1)
+    
     mis = random_centroids(X, k)
     
-    last_assigned = np.full((1, size), -1)
+    last_assigned = np.repeat(-1, size)
     while True:
-        assigned = np.full((1, size), -1)
-        clusters = [[] for i in range(k)]
-        
+
+        assigned = np.repeat(-1, size)
         for i in RSI:
-            xi = X[i]
-            # Create Index Array
-            nmmis = list(np.arange(len(mis)))
             
-            # Create Distance Array
+            xi = X[i]
             dsmis = [distance(mi, xi) for mi in mis]
             
-            # Find Array index of the minimun distance of a set of cluster
-            idxmin = dsmis.index(min(dsmis))
+            assigned[i] = best_cj = 0
+            min_dinfeasability = infeasability(X, assigned, positive_r, negative_r)
+            min_distance = dsmis[0]
             
-            # Assign Element i to that cluster
-            assigned[0][i] = nmmis[idxmin]
+            for cj in range(1, k):
+                assigned[i] = cj
+                cinfeasability = infeasability(X, assigned, positive_r, negative_r)
+                
+                # Lowest Infeasability and proximal to distance
+                if cinfeasability < min_dinfeasability and dsmis[cj] < min_distance:
+                    min_dinfeasability = cinfeasability
+                    min_distance = dsmis[cj]
+                    best_cj = cj
             
-            # Check if the element in that cluster satisfies the restrictions
-            while violate_restriction(i, assigned[0], R[i]) > 0:
-                dsmis.pop(idxmin)
-                nmmis.pop(idxmin)
-                if len(dsmis) == 0: break
-                idxmin = dsmis.index(min(dsmis))
-                assigned[0][i] = nmmis[idxmin]
             
-            # Check the violation of the change
-            if len(dsmis) == 0:
-                return []
-            else:
-                clusters[nmmis[idxmin]].append(xi)
-        
+            assigned[i] = best_cj
+    
         # Update Centroids
+        clusters = split_to_clusters(X, assigned, k)
         for i in range(k):
             if len(clusters[i]) > 0:
                 mis[i] = group_centroid(clusters[i])
         
-        if (last_assigned[0] == assigned[0]).all():
-            #plot2d(X, assigned[0], mis, R)
-            return clusters
+        if (last_assigned == assigned).all():
+            #plot2d(X, assigned, mis, R)
+            return assigned
         
         last_assigned = assigned
     
 
-def LOCAL(X, R, k):
+EPSILON = 0.0001
+def LOCAL(X, R, k, seed = 10):
     
-    seed = 10
+    # Calculate Lambda Factor (Constant in the whole process)
+    flambda = lambda_factor(X, R)
     
-    random.seed(seed)
-    np.random.seed(seed)
+    #random.seed(seed)
+    #np.random.seed(seed)
     
     size = len(X)
     
-    assigned_result = np.random.randint(k, size = size)
-    result = [[] for i in range(k)]
-    [result[v].append(X[i]) for i, v in enumerate(assigned_result)]
+    # Matrix
+    positive_r = R - np.identity(R.shape[0])
+    positive_r[:][:] = 0.5*positive_r[:][:]*(positive_r[:][:] + 1)
+    negative_r = R - np.identity(R.shape[0])
+    negative_r[:][:] = 0.5*negative_r[:][:]*(negative_r[:][:] - 1)
     
-    min_f = f(X, result, assigned_result, R)
+    # Initialization
+    assigned_result = np.random.randint(k, size = size)
+    min_f = f(X, assigned_result, positive_r, negative_r, k, flambda)
     
     for i in range(10000):
         
-        assigned = np.random.permutation(assigned_result)#np.random.randint(k, size = size)
-        clusters = [[] for i in range(k)]
-        [clusters[v].append(X[i]) for i, v in enumerate(assigned)]
-    
-        current_f = f(X, clusters, assigned, R)
+        # Check that all cluster have at least one element
+        while True:
+            mutate_idx = np.random.randint(size)
+            last_cluster = assigned_result[mutate_idx]
+            rand_cluster = np.random.permutation([i for i in range(k) if i != last_cluster])[0]
+            
+            assigned_result[mutate_idx] = rand_cluster
+            if has_one(assigned_result, k): break
+            else: assigned_result[mutate_idx] = last_cluster
+        
+        current_f = f(X, assigned_result, positive_r, negative_r, k, flambda)
+        
         if current_f < min_f:
-            assigned_result = assigned
             min_f = current_f
-            result = clusters
-    
-    #mis = [group_centroid(c) for c in clusters]
+        else:
+            assigned_result[mutate_idx] = last_cluster
+            # If the value is too small, then just break it
+            """if abs(current_f - min_f) < EPSILON:
+                print(current_f, min_f)
+                print("Break in {} iterations".format(i))
+                break"""
+        
+    #mis = [group_centroid(c) for c in split_to_clusters(X, assigned_result, k)]
     #plot2d(X, assigned_result, mis, R)
     
-    return result
+    return assigned_result
 
-#clusters = COPKM(dataset, constrictions, 3)
 start_time = time.time()
-clusters = LOCAL(dataset, constrictions, 3)
-print("--- %s ms ---" % ((time.time() - start_time) * 1000.))
+clusters = COPKM(dataset, constrictions, k)
+print("--- %s s ---" % round(time.time() - start_time, 2))
+print("Deviation = {}".format(round(general_deviation(dataset, clusters, k), 2)))
 
-if(len(clusters) == 0):
-    print("No solution found")
-else:
-    print("Deviation = {}".format(general_deviation(clusters)))
+
+start_time = time.time()
+clusters = LOCAL(dataset, constrictions, k)
+print("--- %s s ---" % round(time.time() - start_time, 2))
+print("Deviation = {}".format(round(general_deviation(dataset, clusters, k), 2)))
+
+
 
