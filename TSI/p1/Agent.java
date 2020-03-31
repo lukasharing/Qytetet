@@ -5,10 +5,6 @@ import core.player.AbstractPlayer;
 import ontology.Types;
 import tools.ElapsedCpuTimer;
 
-import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Random;
-
 public class Agent extends AbstractPlayer {
 
     public tracks.singlePlayer.advanced.p1.LukasPlayer player;

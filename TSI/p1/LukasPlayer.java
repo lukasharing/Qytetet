@@ -29,9 +29,8 @@ public class LukasPlayer {
     ArrayList<Vector2d> planned;
 
     double factor = 0.f;
-    static double EnemyFactor = 1000.0;
+    static double EnemyFactor = 10000000.0;
     static int INTEGRAL_RADIUS = 2;
-
     static int KERNEL_SIZE = 2;
     static double[][] GaussKernel = new double[][]{
         {0.00366, 0.01465, 0.02564, 0.01465, 0.00366},
@@ -89,7 +88,7 @@ public class LukasPlayer {
 
         ArrayList<Observation>[] resources = gameState.getResourcesPositions();
 
-        if(true || resources == null || (resources != null && resources[0].size() == 0) || gameState.getGameScore() >= 2.0 * 10.) {
+        if(resources == null || (resources != null && resources[0].size() == 0) || gameState.getGameScore() >= 2.0 * 10.) {
             Vector2d door = gameState.getPortalsPositions()[0].get(0).position.mul(factor);
             return backtracking_action(gameState, a_star(gameState, chess_pos, door, 0L));
         }else{
@@ -103,7 +102,7 @@ public class LukasPlayer {
             A_Node best = a_star(gameState, chess_pos, positions.get(0), 0L);
             int best_path_length = backtracking_count(best);
 
-            for (int j = 1; j < s && elapsedTimer.elapsedMillis() < CompetitionParameters.ACTION_TIME_DISQ * 0.8; ++j){
+            for (int j = 1; j < s && elapsedTimer.elapsedMillis() < CompetitionParameters.ACTION_TIME_DISQ * 0.7; ++j){
                 A_Node next = a_star(gameState, chess_pos, positions.get(j), 0L);
                 int path_length = backtracking_count(next);
                 if(path_length < best_path_length){
@@ -154,8 +153,7 @@ public class LukasPlayer {
                     }
                 }
             }
-
-            this.h = metric(pos, goal) + ht / ((2 * INTEGRAL_RADIUS + 1) * (2 * INTEGRAL_RADIUS + 1));//;
+            this.h = metric(pos, goal) + ht;
         };
 
         private void g(){
@@ -181,13 +179,10 @@ public class LukasPlayer {
     // Bresenham's line algorithm https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
     private boolean line_transitable(int x0, int y0, int x1, int y1, ArrayList<Observation>[][] grid){
 
-        double dx = x1 - x0;
-        double dy = y1 - y0;
-
-        dx = Math.abs(dx);
-        dy = -Math.abs(dy);
-        double sx = x0 < x1 ? 1 : -1;
-        double sy = y0 < y1 ? 1 : -1;
+        double dx = Math.abs(x1 - x0);
+        double dy = -Math.abs(y1 - y0);
+        double sx = Math.signum(x1 - x0);
+        double sy = Math.signum(y1 - y0);
         double err = dx + dy;
         while (true) {
 
@@ -196,6 +191,7 @@ public class LukasPlayer {
             }
 
             if (x0 == x1 && y0 == y1) break;
+
             double e2 = 2 * err;
             if (e2 >= dy) {
                 err += dy;
@@ -218,35 +214,6 @@ public class LukasPlayer {
 
         Types.ACTIONS action = Types.ACTIONS.ACTION_NIL;
         ArrayList<Observation>[][] grid = gameState.getObservationGrid();
-
-
-        int xt = (int)from.x;
-        int yt = (int)from.y;
-        System.out.println("C: " + xt + ", " + yt);
-
-        System.out.println("###################");
-        System.out.println("P:" + chess_pos.x + ", " + chess_pos.y);
-        ArrayList<Observation>[] entities = gameState.getNPCPositions();
-        if(entities != null) {
-            ArrayList<Observation> enemies = entities[0];
-            for (Observation enemy : enemies) {
-                System.out.println("E:" + (enemy.position.x * factor) + ", " + (enemy.position.y * factor) + " - d: " + (metric(enemy.position.mul(factor), chess_pos) - 2 * INTEGRAL_RADIUS));
-            }
-        }
-
-
-        for (int j = -INTEGRAL_RADIUS - 1; j <= INTEGRAL_RADIUS + 1; ++j) {
-            for (int i = -INTEGRAL_RADIUS - 1; i <= INTEGRAL_RADIUS + 1; ++i) {
-                if(i == 0 && j == 0) {
-                    System.out.print("XXX \t");
-                }else if(line_transitable(xt + i, yt + j, xt, yt, grid)) {
-                    System.out.print(String.format("%.2f", heatmap[yt + j][xt + i]) + "\t");
-                }else{
-                    System.out.print("--- \t");
-                }
-            }
-            System.out.println("");
-        }
 
         PriorityQueue<A_Node> open = new PriorityQueue<>();
         A_Node a_from = new A_Node(null, from, gameState.getAvatarOrientation());
