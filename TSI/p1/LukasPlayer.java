@@ -1,22 +1,18 @@
 package tracks.singlePlayer.advanced.p1;
 
+import core.competition.CompetitionParameters;
 import core.game.Observation;
 import core.game.StateObservation;
 import ontology.Types;
 import tools.ElapsedCpuTimer;
 import tools.Vector2d;
 
-import javax.swing.*;
-import javax.xml.transform.stream.StreamSource;
-import java.lang.reflect.Array;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Code written by Adrien Couetoux, acouetoux@ulg.ac.be.
- * Date: 15/12/2015
- * @author Adrien Couëtoux
+ * Date: 30/03/2020
+ * @author Lukas Häring García
  */
 
 public class LukasPlayer {
@@ -32,9 +28,9 @@ public class LukasPlayer {
 
     ArrayList<Vector2d> planned;
 
-    float factor = 0.f;
-    static double GemeFactor = 1.0;
+    double factor = 0.f;
     static double EnemyFactor = 1000.0;
+    static int INTEGRAL_RADIUS = 2;
 
     static int KERNEL_SIZE = 2;
     static double[][] GaussKernel = new double[][]{
@@ -46,10 +42,10 @@ public class LukasPlayer {
     };
 
     public LukasPlayer(StateObservation gameState, Agent agent) {
-        factor = (float)(1. / gameState.getBlockSize());
+        factor = 1. / gameState.getBlockSize();
         chess_size = new Vector2d(
-            gameState.getWorldDimension().width * factor,
-            gameState.getWorldDimension().height * factor
+            Math.round(gameState.getWorldDimension().width * factor),
+            Math.round(gameState.getWorldDimension().height * factor)
         );
 
         this.agent = agent;
@@ -63,25 +59,9 @@ public class LukasPlayer {
 
         ArrayList<Observation>[][] grid = gameState.getObservationGrid();
 
-        chess_pos = gameState.getAvatarPosition().mul(1./ gameState.getBlockSize());
-        heatmap = new double[(int)chess_size.y + 2 * KERNEL_SIZE][(int)chess_size.x + 2 * KERNEL_SIZE];
+        chess_pos = gameState.getAvatarPosition().mul(factor);
 
-        // Heatmap for the resources
-        ArrayList<Observation>[] resources = gameState.getResourcesPositions();
-        if(resources != null) {
-            ArrayList<Observation> gemes = resources[0];
-            for (Observation gem : gemes) {
-                int x = (int) (gem.position.x * factor);
-                int y = (int) (gem.position.y * factor);
-
-                for (int j = 0; j <= 2 * KERNEL_SIZE; ++j) {
-                    for (int i = 0; i <= 2 * KERNEL_SIZE; ++i) {
-                        if(!transitable(x + i, y + j, grid)) break;
-                        heatmap[y + j][x + i] -= GaussKernel[j][i] * GemeFactor;
-                    }
-                }
-            }
-        }
+        heatmap = new double[(int)chess_size.y][(int)chess_size.x];
 
         // Heatmap for the enemies
         ArrayList<Observation>[] entities = gameState.getNPCPositions();
@@ -89,13 +69,14 @@ public class LukasPlayer {
             ArrayList<Observation> enemies = entities[0];
             for (Observation enemy : enemies) {
 
-                int x = (int) (enemy.position.x * factor);
-                int y = (int) (enemy.position.y * factor);
+                int x = (int)(enemy.position.x * factor);
+                int y = (int)(enemy.position.y * factor);
 
-                for (int j = 0; j <= 2 * KERNEL_SIZE; ++j) {
-                    for (int i = 0; i <= 2 * KERNEL_SIZE; ++i) {
-                        if(!transitable(x + i, y + j, grid)) break;
-                        heatmap[y + j][x + i] += GaussKernel[j][i] * EnemyFactor;
+                for (int j = -KERNEL_SIZE; j <= KERNEL_SIZE; ++j) {
+                    for (int i = -KERNEL_SIZE; i <= KERNEL_SIZE; ++i) {
+                        if(line_transitable(x + i, y + j, x, y, grid)) {
+                            heatmap[y + j][x + i] += GaussKernel[j + KERNEL_SIZE][i + KERNEL_SIZE] * EnemyFactor;
+                        }
                     }
                 }
             }
@@ -107,19 +88,22 @@ public class LukasPlayer {
         init(gameState);
 
         ArrayList<Observation>[] resources = gameState.getResourcesPositions();
-        A_Node best = null;
-        if(resources == null || (resources != null && resources[0].size() == 0) || gameState.getGameScore() >= 2.0 * 10.) {
+
+        if(true || resources == null || (resources != null && resources[0].size() == 0) || gameState.getGameScore() >= 2.0 * 10.) {
             Vector2d door = gameState.getPortalsPositions()[0].get(0).position.mul(factor);
-            best = a_star(gameState, chess_pos, door, 0L);
+            return backtracking_action(gameState, a_star(gameState, chess_pos, door, 0L));
         }else{
             ArrayList<Observation> gemes = resources[0];
 
             ArrayList<Vector2d> positions = new ArrayList<Vector2d>(gemes.stream().map(observation -> observation.position.copy().mul(factor)).collect(Collectors.toList()));
+            // sort by nearest if we dont have enough time
+            positions.sort((a, b) -> (int)(a.mag() - b.mag()));
+
             int s = positions.size();
-            best = a_star(gameState, chess_pos, positions.get(0), 0L);
+            A_Node best = a_star(gameState, chess_pos, positions.get(0), 0L);
             int best_path_length = backtracking_count(best);
 
-            for (int j = 1; j < s; ++j) {
+            for (int j = 1; j < s && elapsedTimer.elapsedMillis() < CompetitionParameters.ACTION_TIME_DISQ * 0.8; ++j){
                 A_Node next = a_star(gameState, chess_pos, positions.get(j), 0L);
                 int path_length = backtracking_count(next);
                 if(path_length < best_path_length){
@@ -127,12 +111,8 @@ public class LukasPlayer {
                     best = next;
                 }
             }
+            return backtracking_action(gameState, best);
         }
-
-        Types.ACTIONS action = backtracking_action(gameState, best);
-
-
-        return action;
     }
 
 
@@ -163,36 +143,23 @@ public class LukasPlayer {
         };
 
         public void h(Vector2d goal, ArrayList<Observation>[][] grid){
+            // Integral
+            int x = (int) pos.x, y = (int) pos.y;
             // Heatmap
             Double ht = 0.0;
-
-            // Integral
-            int y = (int) pos.y;
-            int x = (int) pos.x;
-            double m = 0.0;
-            for (int j = 0; j <= 2 * KERNEL_SIZE; ++j) {
-                for (int i = 0; i <= 2 * KERNEL_SIZE; ++i) {
-                    if(!transitable(x + i, y + j, grid)) break;
-                    ht += heatmap[y + j][x + i];
-                    ++m;
+            for (int j = -INTEGRAL_RADIUS; j <= INTEGRAL_RADIUS; ++j) {
+                for (int i = -INTEGRAL_RADIUS; i <= INTEGRAL_RADIUS; ++i) {
+                    if(line_transitable(x + i, y + j, x, y, grid)) {
+                        ht += heatmap[y + j][x + i];
+                    }
                 }
             }
-            ht /= m;
 
-            this.h = metric(pos, goal) + ht;
+            this.h = metric(pos, goal) + ht / ((2 * INTEGRAL_RADIUS + 1) * (2 * INTEGRAL_RADIUS + 1));//;
         };
 
         private void g(){
             this.g = this.from.g + 1.0 + (compare(this.lookat, this.from.lookat) ? 0.0 : 1.0);
-        };
-
-        @Override
-        public String toString() {
-            return "A_Node{" +
-                " pos=" + pos +
-                ", g=" + g +
-                ", f=" + fcal +
-            '}';
         };
 
         @Override
@@ -202,25 +169,84 @@ public class LukasPlayer {
     };
 
     private boolean transitable(int x, int y, ArrayList<Observation>[][] grid){
-        if(x < 0 || x >= (int)chess_size.x || y < 0 || y >= (int)chess_size.y) return false;
+        if(x < 0 || x >= chess_size.x || y < 0 || y >= chess_size.y) return false;
         ArrayList<Observation> cell = grid[x][y];
         return (
             cell.size() == 0 || (
-                cell.size() > 0 && !(
-                    cell.get(0).category == 4 ||
-                    cell.get(0).category == 3
-                )
+                cell.size() > 0 && !(cell.get(0).category == 4)
             )
         );
     };
+
+    // Bresenham's line algorithm https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+    private boolean line_transitable(int x0, int y0, int x1, int y1, ArrayList<Observation>[][] grid){
+
+        double dx = x1 - x0;
+        double dy = y1 - y0;
+
+        dx = Math.abs(dx);
+        dy = -Math.abs(dy);
+        double sx = x0 < x1 ? 1 : -1;
+        double sy = y0 < y1 ? 1 : -1;
+        double err = dx + dy;
+        while (true) {
+
+            if (!transitable(x0, y0, grid)) {
+                return false;
+            }
+
+            if (x0 == x1 && y0 == y1) break;
+            double e2 = 2 * err;
+            if (e2 >= dy) {
+                err += dy;
+                x0 += sx;
+            }
+            if (e2 <= dx) {
+                err += dx;
+                y0 += sy;
+            }
+        }
+        return true;
+
+    }
 
     private boolean compare(Vector2d a, Vector2d b){
         return a.copy().subtract(b).mag() < 0.001;
     };
 
     private A_Node a_star(StateObservation gameState, Vector2d from, Vector2d to, long elapsed) {
+
         Types.ACTIONS action = Types.ACTIONS.ACTION_NIL;
         ArrayList<Observation>[][] grid = gameState.getObservationGrid();
+
+
+        int xt = (int)from.x;
+        int yt = (int)from.y;
+        System.out.println("C: " + xt + ", " + yt);
+
+        System.out.println("###################");
+        System.out.println("P:" + chess_pos.x + ", " + chess_pos.y);
+        ArrayList<Observation>[] entities = gameState.getNPCPositions();
+        if(entities != null) {
+            ArrayList<Observation> enemies = entities[0];
+            for (Observation enemy : enemies) {
+                System.out.println("E:" + (enemy.position.x * factor) + ", " + (enemy.position.y * factor) + " - d: " + (metric(enemy.position.mul(factor), chess_pos) - 2 * INTEGRAL_RADIUS));
+            }
+        }
+
+
+        for (int j = -INTEGRAL_RADIUS - 1; j <= INTEGRAL_RADIUS + 1; ++j) {
+            for (int i = -INTEGRAL_RADIUS - 1; i <= INTEGRAL_RADIUS + 1; ++i) {
+                if(i == 0 && j == 0) {
+                    System.out.print("XXX \t");
+                }else if(line_transitable(xt + i, yt + j, xt, yt, grid)) {
+                    System.out.print(String.format("%.2f", heatmap[yt + j][xt + i]) + "\t");
+                }else{
+                    System.out.print("--- \t");
+                }
+            }
+            System.out.println("");
+        }
 
         PriorityQueue<A_Node> open = new PriorityQueue<>();
         A_Node a_from = new A_Node(null, from, gameState.getAvatarOrientation());
@@ -229,12 +255,10 @@ public class LukasPlayer {
         A_Node[][] visited = new A_Node[(int) chess_size.y][(int) chess_size.x];
         visited[(int) from.y][(int) from.x] = a_from;
 
-        A_Node solution = null;
         while (!open.isEmpty()) {
             A_Node expanded = open.poll();
             if (compare(expanded.pos, to)) {
-                solution = expanded;
-                break;
+                return expanded;
             }
 
             // Coords
@@ -247,7 +271,7 @@ public class LukasPlayer {
                 A_Node child = new A_Node(expanded, new Vector2d(x, y - 1), new Vector2d(+0.0, -1.0));
                 child.f(to, grid);
 
-                if (a_top == null || (a_top != null && child.g <= a_top.g)) {
+                if (a_top == null || (a_top != null && child.fcal <= a_top.fcal)) {
                     open.add(child);
                     visited[y - 1][x] = child;
                 }
@@ -259,7 +283,7 @@ public class LukasPlayer {
                 A_Node child = new A_Node(expanded, new Vector2d(x, y + 1), new Vector2d(+0.0, +1.0));
                 child.f(to, grid);
 
-                if (a_top == null || (a_top != null && child.g <= a_top.g)) {
+                if (a_top == null || (a_top != null && child.fcal <= a_top.fcal)) {
                     open.add(child);
                     visited[y + 1][x] = child;
                 }
@@ -271,7 +295,7 @@ public class LukasPlayer {
                 A_Node child = new A_Node(expanded, new Vector2d(x - 1, y), new Vector2d(-1.0, +0.0));
                 child.f(to, grid);
 
-                if (a_top == null || (a_top != null && child.g <= a_top.g)) {
+                if (a_top == null || (a_top != null && child.fcal <= a_top.fcal)) {
                     open.add(child);
                     visited[y][x - 1] = child;
                 }
@@ -282,14 +306,14 @@ public class LukasPlayer {
                 A_Node child = new A_Node(expanded, new Vector2d(x + 1, y), new Vector2d(+1.0, +0.0));
                 child.f(to, grid);
 
-                if (a_top == null || (a_top != null && child.g <= a_top.g)) {
+                if (a_top == null || (a_top != null && child.fcal <= a_top.fcal)) {
                     open.add(child);
                     visited[y][x + 1] = child;
                 }
             }
         }
 
-        return solution;
+        return null;
     }
 
     Types.ACTIONS backtracking_action(StateObservation gameState, A_Node path){
