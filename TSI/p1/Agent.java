@@ -1,5 +1,6 @@
 package tracks.singlePlayer.advanced.p1;
 
+import core.competition.CompetitionParameters;
 import core.game.StateObservation;
 import core.player.AbstractPlayer;
 import ontology.Types;
@@ -15,6 +16,7 @@ public class Agent extends AbstractPlayer {
     }
 
     public Types.ACTIONS act(StateObservation stateObs, ElapsedCpuTimer elapsedTimer) {
+        elapsedTimer.setMaxTimeMillis(30L); // 30 ms = 50 * 0.6
         return player.run(stateObs, elapsedTimer);
     }
 
