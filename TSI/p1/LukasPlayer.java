@@ -29,10 +29,13 @@ public class LukasPlayer {
     ArrayList<Vector2d> planned;
 
     double factor = 0.f;
-    static double EnemyFactor = 100000.0;
-    static int INTEGRAL_RADIUS = 2;
-    static int KERNEL_SIZE = 2;
-    static double[][] GaussKernel = new double[][]{
+    double EnemyFactor = 100000.0;
+    int INTEGRAL_RADIUS = 2;
+    int TOTAL_GEMES = 10;
+    int KERNEL_SIZE = 2;
+    Random generator;
+
+    double[][] GaussKernel = new double[][]{
         {0.00366, 0.01465, 0.02564, 0.01465, 0.00366},
         {0.01465, 0.05860, 0.09523, 0.05860, 0.01465},
         {0.02564, 0.09523, 0.15018, 0.09523, 0.02564},
@@ -40,14 +43,19 @@ public class LukasPlayer {
         {0.00366, 0.01465, 0.02564, 0.01465, 0.00366}
     };
 
-    public LukasPlayer(StateObservation gameState, Agent agent) {
+    private boolean INIT_ENEMIES;
+    private boolean INIT_GEMES;
+
+    public LukasPlayer(StateObservation gameState, Agent _agent) {
         factor = 1. / gameState.getBlockSize();
         chess_size = new Vector2d(
             Math.round(gameState.getWorldDimension().width * factor),
             Math.round(gameState.getWorldDimension().height * factor)
         );
-
-        this.agent = agent;
+        INIT_ENEMIES = gameState.getNPCPositions() != null;
+        INIT_GEMES = gameState.getResourcesPositions() != null;
+        agent = _agent;
+        generator = new Random(2);
     }
 
     private Double metric(Vector2d a, Vector2d b){
@@ -86,11 +94,32 @@ public class LukasPlayer {
 
         init(gameState);
 
+        ArrayList<Observation>[][] grid = gameState.getObservationGrid();
         ArrayList<Observation>[] resources = gameState.getResourcesPositions();
 
-        if(resources == null || (resources != null && resources[0].size() == 0) || gameState.getGameScore() >= 2.0 * 10.) {
+        if(INIT_ENEMIES && !INIT_GEMES && gameState.getGameTick() < 2000){ // Level 3/4
+
+            PriorityQueue<A_Node> posible = new PriorityQueue<>();
+
+            int x = (int) chess_pos.x;
+            int y = (int) chess_pos.y;
+            for(int j = -INTEGRAL_RADIUS; j <= INTEGRAL_RADIUS; ++j){
+                for(int i = -INTEGRAL_RADIUS; i <= INTEGRAL_RADIUS; ++i){
+                    if(i != 0 && j != 0 && transitable(x + i, y + j, grid)) {
+                        A_Node neighbour = a_star(gameState, chess_pos, new Vector2d(x + i, y + j), grid, elapsedTimer);
+                        if (neighbour != null) {
+                            neighbour.fcal += line_transitable(x + i * 2, y + j * 2, x + i, y + j, grid) ? 0.0 : EnemyFactor;
+                            posible.add(neighbour);
+                        }
+                    }
+                }
+            }
+
+            return backtracking_action(gameState, posible.poll());
+
+        }else if(resources == null || gameState.getGameScore() >= 2.0 * TOTAL_GEMES) {
             Vector2d door = gameState.getPortalsPositions()[0].get(0).position.mul(factor);
-            return backtracking_action(gameState, a_star(gameState, chess_pos, door, elapsedTimer));
+            return backtracking_action(gameState, a_star(gameState, chess_pos, door, grid, elapsedTimer));
         }else{
             ArrayList<Observation> gemes = resources[0];
 
@@ -98,12 +127,12 @@ public class LukasPlayer {
             // sort by nearest if we dont have enough time
             positions.sort((a, b) -> (int)(a.mag() - b.mag()));
 
-            int s = positions.size();
-            A_Node best = a_star(gameState, chess_pos, positions.get(0), elapsedTimer);
+            A_Node best = a_star(gameState, chess_pos, positions.get(0), grid, elapsedTimer);
             double best_f = best == null ? 0.0 : best.fcal;
 
+            int s = positions.size();
             for (int j = 1; j < s && !elapsedTimer.exceededMaxTime(); ++j){
-                A_Node next = a_star(gameState, chess_pos, positions.get(j), elapsedTimer);
+                A_Node next = a_star(gameState, chess_pos, positions.get(j), grid, elapsedTimer);
                 double path_f = next.fcal;
                 if(path_f < best_f){
                     best = next;
@@ -113,6 +142,18 @@ public class LukasPlayer {
 
             return backtracking_action(gameState, best);
         }
+    }
+
+    public double discrete_integral(int x, int y, int r, ArrayList<Observation>[][] grid){
+        double ht = 0.0;
+        for (int j = -r; j <= r; ++j) {
+            for (int i = -r; i <= r; ++i) {
+                if(line_transitable(x + i, y + j, x, y, grid)) {
+                    ht += heatmap[y + j][x + i];
+                }
+            }
+        }
+        return ht;
     }
 
 
@@ -143,18 +184,7 @@ public class LukasPlayer {
         };
 
         public void h(Vector2d goal, ArrayList<Observation>[][] grid){
-            // Integral
-            int x = (int) pos.x, y = (int) pos.y;
-            // Heatmap
-            Double ht = 0.0;
-            for (int j = -INTEGRAL_RADIUS; j <= INTEGRAL_RADIUS; ++j) {
-                for (int i = -INTEGRAL_RADIUS; i <= INTEGRAL_RADIUS; ++i) {
-                    if(line_transitable(x + i, y + j, x, y, grid)) {
-                        ht += heatmap[y + j][x + i];
-                    }
-                }
-            }
-            this.h = metric(pos, goal) + ht;
+            this.h = metric(pos, goal) + discrete_integral((int) pos.x, (int) pos.y, INTEGRAL_RADIUS, grid);
         };
 
         private void g(){
@@ -211,10 +241,9 @@ public class LukasPlayer {
         return a.copy().subtract(b).mag() < 0.001;
     };
 
-    private A_Node a_star(StateObservation gameState, Vector2d from, Vector2d to, ElapsedCpuTimer elapsedTimer) {
+    private A_Node a_star(StateObservation gameState, Vector2d from, Vector2d to, ArrayList<Observation>[][] grid, ElapsedCpuTimer elapsedTimer) {
 
         Types.ACTIONS action = Types.ACTIONS.ACTION_NIL;
-        ArrayList<Observation>[][] grid = gameState.getObservationGrid();
 
         PriorityQueue<A_Node> open = new PriorityQueue<>();
         A_Node a_from = new A_Node(null, from, gameState.getAvatarOrientation());
@@ -285,19 +314,7 @@ public class LukasPlayer {
     }
 
     Types.ACTIONS backtracking_action(StateObservation gameState, A_Node path){
-        if(path == null) return Types.ACTIONS.ACTION_NIL;
-
-        // We are hover something
-        if(path.from == null){
-            ArrayList<Observation> current = gameState.getObservationGrid()[(int) path.pos.x][(int) path.pos.y];
-
-            // It is the way out!
-            if (current.size() == 2 && current.get(1).category == 2) {
-                return Types.ACTIONS.ACTION_ESCAPE;
-            }
-
-            return Types.ACTIONS.ACTION_NIL;
-        }
+        if(path == null || path.from == null) return Types.ACTIONS.ACTION_NIL;
 
         // Backtracking
         while (path.from.from != null) {
