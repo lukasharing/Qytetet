@@ -1,6 +1,5 @@
 package tracks.singlePlayer.advanced.p1;
 
-import core.competition.CompetitionParameters;
 import core.game.StateObservation;
 import core.player.AbstractPlayer;
 import ontology.Types;
@@ -12,7 +11,8 @@ public class Agent extends AbstractPlayer {
 
     public Agent(StateObservation so, ElapsedCpuTimer elapsedTimer) {
         //Create the player.
-        player = new tracks.singlePlayer.advanced.p1.LukasPlayer(so, this);
+        elapsedTimer.setMaxTimeMillis(900L);
+        player = new tracks.singlePlayer.advanced.p1.LukasPlayer(so, this, elapsedTimer);
     }
 
     public Types.ACTIONS act(StateObservation stateObs, ElapsedCpuTimer elapsedTimer) {

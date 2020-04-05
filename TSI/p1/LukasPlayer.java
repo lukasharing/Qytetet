@@ -1,6 +1,5 @@
 package tracks.singlePlayer.advanced.p1;
 
-import core.competition.CompetitionParameters;
 import core.game.Observation;
 import core.game.StateObservation;
 import ontology.Types;
@@ -17,23 +16,24 @@ import java.util.stream.Collectors;
 
 public class LukasPlayer {
 
-    public static Random randomGenerator;
-    private StateObservation rootObservation;
     private Agent agent;
 
     Vector2d chess_size;
     Vector2d chess_pos;
+    ArrayList<Vector2d> gemes_position;
+    ArrayList<Observation>[][] grid;
+
 
     double[][] heatmap;
 
-    ArrayList<Vector2d> planned;
+    ArrayList<Integer> best_path;
 
     double factor = 0.f;
-    double EnemyFactor = 100000.0;
+    double EnemyFactor = 10000.0;
     int INTEGRAL_RADIUS = 2;
     int TOTAL_GEMES = 10;
     int KERNEL_SIZE = 2;
-    Random generator;
+    double last_points = 0.0;
 
     double[][] GaussKernel = new double[][]{
         {0.00366, 0.01465, 0.02564, 0.01465, 0.00366},
@@ -46,17 +46,128 @@ public class LukasPlayer {
     private boolean INIT_ENEMIES;
     private boolean INIT_GEMES;
 
-    public LukasPlayer(StateObservation gameState, Agent _agent) {
+    class BranchAndBound implements Comparable<BranchAndBound>{
+
+        BranchAndBound parent;
+        int depth;
+        int value;
+        double f;
+
+        boolean isFinal(){ return this.depth == TOTAL_GEMES; };
+
+
+        BranchAndBound(BranchAndBound parent, int next, double[] start_to, double[][] distance_mtx, double[] end_to){
+            this.depth = parent == null ? 1 : parent.depth + 1;
+            this.parent = parent;
+            this.value = next;
+
+            if(parent == null){
+                this.f = start_to[next];
+            }else{
+                this.f = this.parent.f + distance_mtx[this.parent.value][next];
+
+                if(isFinal()){
+                    this.f += end_to[next];
+                }
+            }
+        };
+
+        boolean used(int i){
+            BranchAndBound next = this;
+            boolean result = false;
+            while(next != null){ result |= next.value == i; next = next.parent; }
+            return result;
+        };
+
+        public ArrayList<Integer> toArrayList(){
+            ArrayList<Integer> result = new ArrayList<>();
+            result.add(0, this.value);
+            BranchAndBound it = this.parent;
+            while(it != null){
+                result.add(0, it.value);
+                it = it.parent;
+            }
+            return result;
+        };
+
+        @Override
+        public int compareTo(BranchAndBound o) {
+            return (int)(o.depth - depth);
+        };
+    }
+
+
+    public LukasPlayer(StateObservation gameState, Agent _agent, ElapsedCpuTimer elapsedTimer) {
         factor = 1. / gameState.getBlockSize();
         chess_size = new Vector2d(
             Math.round(gameState.getWorldDimension().width * factor),
             Math.round(gameState.getWorldDimension().height * factor)
         );
+
+        grid = gameState.getObservationGrid();
+        chess_pos = gameState.getAvatarPosition().mul(factor);
         INIT_ENEMIES = gameState.getNPCPositions() != null;
+
         INIT_GEMES = gameState.getResourcesPositions() != null;
+
         agent = _agent;
-        generator = new Random(2);
+        heatmap = new double[(int)chess_size.y][(int)chess_size.x];
+
+        // Local Search
+        if(INIT_GEMES) {
+            gemes_position = new ArrayList<Vector2d>(gameState.getResourcesPositions()[0].stream().map(observation -> observation.position.copy().mul(factor)).collect(Collectors.toList()));
+
+            // Distance matrix
+            int s = gemes_position.size();
+            double[] from_fvalues = new double[s];
+            double[][] fvalues = new double[s][s];
+            double[] to_fvalues = new double[s];
+            Vector2d door = gameState.getPortalsPositions()[0].get(0).position.mul(factor);
+
+            for(int i = 0; i < s; ++i){
+                A_Node from_pos = a_star(gameState, chess_pos, gemes_position.get(i), false, null);
+                A_Node to_door = a_star(gameState, gemes_position.get(i), door, false, null);
+                from_fvalues[i] = from_pos != null && from_pos.fcal != 0.0 ? from_pos.fcal : 10e10;
+                to_fvalues[i] = to_door != null && to_door.fcal != 0.0 ? to_door.fcal : 10e10;
+                for(int j = i; j < s; ++j){
+                    A_Node path = a_star(gameState, gemes_position.get(i), gemes_position.get(j), false, null);
+                    double distance = path != null && path.fcal != 0.0 ? path.fcal : 10e10;
+                    fvalues[i][j] = distance;
+                    fvalues[j][i] = distance;
+                }
+            }
+
+            PriorityQueue<BranchAndBound> posible = new PriorityQueue<>();
+            for(int i = 0; i < gemes_position.size(); ++i){
+                posible.add(new BranchAndBound(null, i, from_fvalues, fvalues, to_fvalues));
+            }
+
+            double upper = 10e5;
+            BranchAndBound best = null;
+            while (!posible.isEmpty()){
+                BranchAndBound node = posible.poll();
+
+                if(elapsedTimer.exceededMaxTime()){ break; }
+
+                if(node.f < upper){
+                    if(node.isFinal()) {
+                        upper = node.f;
+                        best = node;
+                    }else{
+                        for (int i = 0; i < gemes_position.size(); ++i) {
+                            if(!node.used(i)) {
+                                posible.add(new BranchAndBound(node, i, from_fvalues, fvalues, to_fvalues));
+                            }
+                        }
+                    }
+                }
+            }
+
+            best_path = best.toArrayList();
+        }
     }
+
+
 
     private Double metric(Vector2d a, Vector2d b){
         return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
@@ -64,10 +175,8 @@ public class LukasPlayer {
 
     public void init(StateObservation gameState) {
 
-        ArrayList<Observation>[][] grid = gameState.getObservationGrid();
-
         chess_pos = gameState.getAvatarPosition().mul(factor);
-
+        grid = gameState.getObservationGrid();
         heatmap = new double[(int)chess_size.y][(int)chess_size.x];
 
         // Heatmap for the enemies
@@ -81,7 +190,7 @@ public class LukasPlayer {
 
                 for (int j = -KERNEL_SIZE; j <= KERNEL_SIZE; ++j) {
                     for (int i = -KERNEL_SIZE; i <= KERNEL_SIZE; ++i) {
-                        if(line_transitable(x + i, y + j, x, y, grid)) {
+                        if(line_transitable(x + i, y + j, x, y)) {
                             heatmap[y + j][x + i] += GaussKernel[j + KERNEL_SIZE][i + KERNEL_SIZE] * EnemyFactor;
                         }
                     }
@@ -94,61 +203,65 @@ public class LukasPlayer {
 
         init(gameState);
 
-        ArrayList<Observation>[][] grid = gameState.getObservationGrid();
+        grid = gameState.getObservationGrid();
         ArrayList<Observation>[] resources = gameState.getResourcesPositions();
 
-        if(INIT_ENEMIES && !INIT_GEMES && gameState.getGameTick() < 2000){ // Level 3/4
+        int x = (int) chess_pos.x;
+        int y = (int) chess_pos.y;
 
-            PriorityQueue<A_Node> posible = new PriorityQueue<>();
+        // Remove geme if score has changed
+        if(last_points < gameState.getGameScore()){
+            last_points = gameState.getGameScore();
+            for(int i = 0; i < best_path.size(); ++i){
+                Vector2d position = gemes_position.get(best_path.get(i));
+                ArrayList<Observation> list = grid[(int)position.x][(int)position.y];
+                if(list.size() == 1 && list.get(0).category == 0){
+                    best_path.remove(i);
+                    break;
+                }
+            }
+        }
 
-            int x = (int) chess_pos.x;
-            int y = (int) chess_pos.y;
-            for(int j = -INTEGRAL_RADIUS; j <= INTEGRAL_RADIUS; ++j){
-                for(int i = -INTEGRAL_RADIUS; i <= INTEGRAL_RADIUS; ++i){
-                    if(i != 0 && j != 0 && transitable(x + i, y + j, grid)) {
-                        A_Node neighbour = a_star(gameState, chess_pos, new Vector2d(x + i, y + j), grid, elapsedTimer);
+
+        if(INIT_ENEMIES && !INIT_GEMES){ // Level 3/4
+
+            PriorityQueue<A_Node> possible = new PriorityQueue<>();
+
+            for(int j = -(INTEGRAL_RADIUS + KERNEL_SIZE); j <= (INTEGRAL_RADIUS + KERNEL_SIZE); ++j){
+                for(int i = -(INTEGRAL_RADIUS + KERNEL_SIZE); i <= (INTEGRAL_RADIUS + KERNEL_SIZE); ++i){
+                    if(i != 0 && j != 0 && transitable(x + i, y + j)) {
+                        A_Node neighbour = a_star(gameState, chess_pos, new Vector2d(x + i, y + j), true, elapsedTimer);
                         if (neighbour != null) {
-                            neighbour.fcal += line_transitable(x + i * 2, y + j * 2, x + i, y + j, grid) ? 0.0 : EnemyFactor;
-                            posible.add(neighbour);
+                            possible.add(neighbour);
                         }
                     }
                 }
             }
 
-            return backtracking_action(gameState, posible.poll());
+            return backtracking_action(gameState, possible.poll());
 
-        }else if(resources == null || gameState.getGameScore() >= 2.0 * TOTAL_GEMES) {
+        }else if(best_path == null || best_path.isEmpty() || gameState.getGameScore() >= 2.0 * TOTAL_GEMES) {
             Vector2d door = gameState.getPortalsPositions()[0].get(0).position.mul(factor);
-            return backtracking_action(gameState, a_star(gameState, chess_pos, door, grid, elapsedTimer));
+            return backtracking_action(gameState, a_star(gameState, chess_pos, door, true, elapsedTimer));
         }else{
-            ArrayList<Observation> gemes = resources[0];
-
-            ArrayList<Vector2d> positions = new ArrayList<Vector2d>(gemes.stream().map(observation -> observation.position.copy().mul(factor)).collect(Collectors.toList()));
-            // sort by nearest if we dont have enough time
-            positions.sort((a, b) -> (int)(a.mag() - b.mag()));
-
-            A_Node best = a_star(gameState, chess_pos, positions.get(0), grid, elapsedTimer);
-            double best_f = best == null ? 0.0 : best.fcal;
-
-            int s = positions.size();
-            for (int j = 1; j < s && !elapsedTimer.exceededMaxTime(); ++j){
-                A_Node next = a_star(gameState, chess_pos, positions.get(j), grid, elapsedTimer);
-                double path_f = next.fcal;
-                if(path_f < best_f){
-                    best = next;
-                    best_f = path_f;
+            // From the planification given, re-planify if needed
+            A_Node best = a_star(gameState, chess_pos, gemes_position.get(best_path.get(0)), true, elapsedTimer);
+            if(best_path.size() > 1) {
+                A_Node best_next = a_star(gameState, chess_pos, gemes_position.get(best_path.get(1)), true, elapsedTimer);
+                if (best_next.fcal < best.fcal) {
+                    best = best_next;
+                    Collections.swap(best_path, 0, 1);
                 }
             }
-
             return backtracking_action(gameState, best);
         }
     }
 
-    public double discrete_integral(int x, int y, int r, ArrayList<Observation>[][] grid){
+    public double discrete_integral(int x, int y, int r){
         double ht = 0.0;
         for (int j = -r; j <= r; ++j) {
             for (int i = -r; i <= r; ++i) {
-                if(line_transitable(x + i, y + j, x, y, grid)) {
+                if(line_transitable(x + i, y + j, x, y)) {
                     ht += heatmap[y + j][x + i];
                 }
             }
@@ -177,14 +290,14 @@ public class LukasPlayer {
             this.fcal = 0.0;
         }
 
-        public void f(Vector2d goal, ArrayList<Observation>[][] grid){
-            h(goal, grid);
+        public void f(Vector2d goal, boolean heuristic){
+            if(heuristic){ h(goal); }
             g();
             this.fcal = h + g;
         };
 
-        public void h(Vector2d goal, ArrayList<Observation>[][] grid){
-            this.h = metric(pos, goal) + discrete_integral((int) pos.x, (int) pos.y, INTEGRAL_RADIUS, grid);
+        public void h(Vector2d goal){
+            this.h = metric(pos, goal) + discrete_integral((int) pos.x, (int) pos.y, INTEGRAL_RADIUS);
         };
 
         private void g(){
@@ -197,7 +310,7 @@ public class LukasPlayer {
         }
     };
 
-    private boolean transitable(int x, int y, ArrayList<Observation>[][] grid){
+    private boolean transitable(int x, int y){
         if(x < 0 || x >= chess_size.x || y < 0 || y >= chess_size.y) return false;
         ArrayList<Observation> cell = grid[x][y];
         return (
@@ -208,7 +321,7 @@ public class LukasPlayer {
     };
 
     // Bresenham's line algorithm https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-    private boolean line_transitable(int x0, int y0, int x1, int y1, ArrayList<Observation>[][] grid){
+    private boolean line_transitable(int x0, int y0, int x1, int y1){
 
         double dx = Math.abs(x1 - x0);
         double dy = -Math.abs(y1 - y0);
@@ -217,7 +330,7 @@ public class LukasPlayer {
         double err = dx + dy;
         while (true) {
 
-            if (!transitable(x0, y0, grid)) {
+            if (!transitable(x0, y0)) {
                 return false;
             }
 
@@ -241,7 +354,7 @@ public class LukasPlayer {
         return a.copy().subtract(b).mag() < 0.001;
     };
 
-    private A_Node a_star(StateObservation gameState, Vector2d from, Vector2d to, ArrayList<Observation>[][] grid, ElapsedCpuTimer elapsedTimer) {
+    private A_Node a_star(StateObservation gameState, Vector2d from, Vector2d to, boolean heuristic, ElapsedCpuTimer elapsedTimer) {
 
         Types.ACTIONS action = Types.ACTIONS.ACTION_NIL;
 
@@ -263,10 +376,10 @@ public class LukasPlayer {
 
             // Vertical
             // TOP
-            if(transitable(x, y - 1, grid)){
+            if(transitable(x, y - 1)){
                 A_Node a_top = visited[y - 1][x];
                 A_Node child = new A_Node(expanded, new Vector2d(x, y - 1), new Vector2d(+0.0, -1.0));
-                child.f(to, grid);
+                child.f(to, heuristic);
 
                 if (a_top == null || (a_top != null && child.g <= a_top.g)) {
                     open.add(child);
@@ -274,11 +387,11 @@ public class LukasPlayer {
                 }
             }
             // BOTTOM
-            if(transitable(x, y + 1, grid)) {
+            if(transitable(x, y + 1)) {
 
                 A_Node a_top = visited[y + 1][x];
                 A_Node child = new A_Node(expanded, new Vector2d(x, y + 1), new Vector2d(+0.0, +1.0));
-                child.f(to, grid);
+                child.f(to, heuristic);
 
                 if (a_top == null || (a_top != null && child.g <= a_top.g)) {
                     open.add(child);
@@ -287,10 +400,10 @@ public class LukasPlayer {
             }
             // Horizontal
             // LEFT
-            if(transitable(x - 1, y, grid)){
+            if(transitable(x - 1, y)){
                 A_Node a_top = visited[y][x - 1];
                 A_Node child = new A_Node(expanded, new Vector2d(x - 1, y), new Vector2d(-1.0, +0.0));
-                child.f(to, grid);
+                child.f(to, heuristic);
 
                 if (a_top == null || (a_top != null && child.g <= a_top.g)) {
                     open.add(child);
@@ -298,16 +411,19 @@ public class LukasPlayer {
                 }
             }
             // RIGHT
-            if(transitable(x + 1, y, grid)) {
+            if(transitable(x + 1, y)) {
                 A_Node a_top = visited[y][x + 1];
                 A_Node child = new A_Node(expanded, new Vector2d(x + 1, y), new Vector2d(+1.0, +0.0));
-                child.f(to, grid);
+                child.f(to, heuristic);
 
                 if (a_top == null || (a_top != null && child.g <= a_top.g)) {
                     open.add(child);
                     visited[y][x + 1] = child;
                 }
             }
+
+            // If Maxtime Elapsed, return null
+            if(elapsedTimer != null && elapsedTimer.exceededMaxTime()) break;
         }
 
         return null;
