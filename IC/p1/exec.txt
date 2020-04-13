@@ -1,0 +1,11 @@
+(clear)
+(load "D:/wamp64/www/University_Projects/IC/p1/3enRayaalumnos.clp")
+(reset)
+(run)
+
+
+
+(clear)
+(load "D:/wamp64/www/University_Projects/IC/p1/Sistema_Experto_Lukas_Haring_Garcia.clp")
+(reset)
+(run)
