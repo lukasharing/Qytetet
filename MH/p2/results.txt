@@ -1,0 +1,353 @@
+#############################################
+#########** rand **#########
+######### AGG-Uniform #########
+
+######### Iteration 1 in 218.39 s #########
+        1. Deviation = 0.72
+        2. Infeasibility = 0
+        3. Agregado = 0.72
+######### AGG-Position #########
+
+######### Iteration 1 in 229.27 s #########
+        1. Deviation = 0.72
+        2. Infeasibility = 0
+        3. Agregado = 0.72
+######### AGE-Uniform #########
+
+######### Iteration 1 in 235.6 s #########
+        1. Deviation = 0.72
+        2. Infeasibility = 0
+        3. Agregado = 0.72
+######### AGE-Position #########
+
+######### Iteration 1 in 247.55 s #########
+        1. Deviation = 0.72
+        2. Infeasibility = 0
+        3. Agregado = 0.72
+######### AM-10,1.0 #########
+
+######### Iteration 1 in 231.59 s #########
+        1. Deviation = 0.72
+        2. Infeasibility = 0
+        3. Agregado = 0.72
+######### AM-10,0.1 #########
+
+######### Iteration 1 in 227.39 s #########
+        1. Deviation = 0.72
+        2. Infeasibility = 0
+        3. Agregado = 0.72
+######### AM-10,0.1mej #########
+
+######### Iteration 1 in 227.67 s #########
+        1. Deviation = 0.72
+        2. Infeasibility = 0
+        3. Agregado = 0.72
+#############################################
+#########** iris **#########
+######### AGG-Uniform #########
+
+######### Iteration 1 in 237.08 s #########
+        1. Deviation = 0.67
+        2. Infeasibility = 0
+        3. Agregado = 0.67
+######### AGG-Position #########
+
+######### Iteration 1 in 236.67 s #########
+        1. Deviation = 0.67
+        2. Infeasibility = 0
+        3. Agregado = 0.67
+######### AGE-Uniform #########
+
+######### Iteration 1 in 242.77 s #########
+        1. Deviation = 0.67
+        2. Infeasibility = 0
+        3. Agregado = 0.67
+######### AGE-Position #########
+
+######### Iteration 1 in 246.41 s #########
+        1. Deviation = 0.67
+        2. Infeasibility = 0
+        3. Agregado = 0.67
+######### AM-10,1.0 #########
+
+######### Iteration 1 in 232.34 s #########
+        1. Deviation = 0.67
+        2. Infeasibility = 0
+        3. Agregado = 0.67
+######### AM-10,0.1 #########
+
+######### Iteration 1 in 226.21 s #########
+        1. Deviation = 0.67
+        2. Infeasibility = 0
+        3. Agregado = 0.67
+######### AM-10,0.1mej #########
+
+######### Iteration 1 in 224.57 s #########
+        1. Deviation = 0.67
+        2. Infeasibility = 0
+        3. Agregado = 0.67
+#############################################
+#########** ecoli **#########
+######### AGG-Uniform #########
+
+######### Iteration 1 in 993.35 s #########
+        1. Deviation = 25.33
+        2. Infeasibility = 132
+        3. Agregado = 28.88
+######### AGG-Position #########
+
+######### Iteration 1 in 1066.22 s #########
+        1. Deviation = 29.14
+        2. Infeasibility = 266
+        3. Agregado = 36.27
+######### AGE-Uniform #########
+
+######### Iteration 1 in 1045.12 s #########
+        1. Deviation = 22.52
+        2. Infeasibility = 32
+        3. Agregado = 23.38
+######### AGE-Position #########
+
+######### Iteration 1 in 1058.47 s #########
+        1. Deviation = 22.57
+        2. Infeasibility = 28
+        3. Agregado = 23.33
+######### AM-10,1.0 #########
+
+######### Iteration 1 in 1078.55 s #########
+        1. Deviation = 23.93
+        2. Infeasibility = 74
+        3. Agregado = 25.91
+######### AM-10,0.1 #########
+
+######### Iteration 1 in 1009.1 s #########
+        1. Deviation = 23.0
+        2. Infeasibility = 34
+        3. Agregado = 23.91
+######### AM-10,0.1mej #########
+
+######### Iteration 1 in 998.04 s #########
+        1. Deviation = 22.4
+        2. Infeasibility = 42
+        3. Agregado = 23.53
+#############################################
+#########** newthyroid **#########
+######### AGG-Uniform #########
+
+######### Iteration 1 in 384.94 s #########
+        1. Deviation = 10.87
+        2. Infeasibility = 192
+        3. Agregado = 17.9
+######### AGG-Position #########
+
+######### Iteration 1 in 394.37 s #########
+        1. Deviation = 14.09
+        2. Infeasibility = 4
+        3. Agregado = 14.23
+######### AGE-Uniform #########
+
+######### Iteration 1 in 394.13 s #########
+        1. Deviation = 14.09
+        2. Infeasibility = 4
+        3. Agregado = 14.23
+######### AGE-Position #########
+
+######### Iteration 1 in 400.3 s #########
+        1. Deviation = 14.09
+        2. Infeasibility = 4
+        3. Agregado = 14.23
+######### AM-10,1.0 #########
+
+######### Iteration 1 in 383.44 s #########
+        1. Deviation = 10.88
+        2. Infeasibility = 196
+        3. Agregado = 18.04
+######### AM-10,0.1 #########
+
+######### Iteration 1 in 375.31 s #########
+        1. Deviation = 10.87
+        2. Infeasibility = 192
+        3. Agregado = 17.9
+######### AM-10,0.1mej #########
+
+######### Iteration 1 in 378.54 s #########
+        1. Deviation = 14.09
+        2. Infeasibility = 4
+        3. Agregado = 14.23
+#############################################
+#########** rand **#########
+######### AGG-Uniform #########
+
+######### Iteration 1 in 230.0 s #########
+        1. Deviation = 0.72
+        2. Infeasibility = 0
+        3. Agregado = 0.72
+######### AGG-Position #########
+
+######### Iteration 1 in 231.44 s #########
+        1. Deviation = 0.72
+        2. Infeasibility = 0
+        3. Agregado = 0.72
+######### AGE-Uniform #########
+
+######### Iteration 1 in 238.35 s #########
+        1. Deviation = 0.72
+        2. Infeasibility = 0
+        3. Agregado = 0.72
+######### AGE-Position #########
+
+######### Iteration 1 in 236.29 s #########
+        1. Deviation = 0.72
+        2. Infeasibility = 0
+        3. Agregado = 0.72
+######### AM-10,1.0 #########
+
+######### Iteration 1 in 224.41 s #########
+        1. Deviation = 0.72
+        2. Infeasibility = 0
+        3. Agregado = 0.72
+######### AM-10,0.1 #########
+
+######### Iteration 1 in 221.49 s #########
+        1. Deviation = 0.72
+        2. Infeasibility = 0
+        3. Agregado = 0.72
+######### AM-10,0.1mej #########
+
+######### Iteration 1 in 223.59 s #########
+        1. Deviation = 0.72
+        2. Infeasibility = 0
+        3. Agregado = 0.72
+#############################################
+#########** iris **#########
+######### AGG-Uniform #########
+
+######### Iteration 1 in 231.98 s #########
+        1. Deviation = 0.67
+        2. Infeasibility = 0
+        3. Agregado = 0.67
+######### AGG-Position #########
+
+######### Iteration 1 in 230.73 s #########
+        1. Deviation = 0.67
+        2. Infeasibility = 0
+        3. Agregado = 0.67
+######### AGE-Uniform #########
+
+######### Iteration 1 in 235.8 s #########
+        1. Deviation = 0.67
+        2. Infeasibility = 0
+        3. Agregado = 0.67
+######### AGE-Position #########
+
+######### Iteration 1 in 240.93 s #########
+        1. Deviation = 0.67
+        2. Infeasibility = 0
+        3. Agregado = 0.67
+######### AM-10,1.0 #########
+
+######### Iteration 1 in 228.45 s #########
+        1. Deviation = 0.67
+        2. Infeasibility = 0
+        3. Agregado = 0.67
+######### AM-10,0.1 #########
+
+######### Iteration 1 in 222.77 s #########
+        1. Deviation = 0.67
+        2. Infeasibility = 0
+        3. Agregado = 0.67
+######### AM-10,0.1mej #########
+
+######### Iteration 1 in 223.51 s #########
+        1. Deviation = 0.67
+        2. Infeasibility = 0
+        3. Agregado = 0.67
+#############################################
+#########** ecoli **#########
+######### AGG-Uniform #########
+
+######### Iteration 1 in 1044.34 s #########
+        1. Deviation = 22.73
+        2. Infeasibility = 178
+        3. Agregado = 25.12
+######### AGG-Position #########
+
+######### Iteration 1 in 1051.0 s #########
+        1. Deviation = 25.63
+        2. Infeasibility = 186
+        3. Agregado = 28.13
+######### AGE-Uniform #########
+
+######### Iteration 1 in 1077.81 s #########
+        1. Deviation = 22.34
+        2. Infeasibility = 114
+        3. Agregado = 23.87
+
+
+######### Iteration 1 in 1042.75 s #########
+        1. Deviation = 22.6
+        2. Infeasibility = 74
+        3. Agregado = 23.59
+######### AM-10,1.0 #########
+
+######### Iteration 1 in 989.23 s #########
+        1. Deviation = 22.51
+        2. Infeasibility = 94
+        3. Agregado = 23.77
+######### AM-10,0.1 #########
+
+######### Iteration 1 in 994.94 s #########
+        1. Deviation = 22.37
+        2. Infeasibility = 108
+        3. Agregado = 23.82
+######### AM-10,0.1mej #########
+
+######### Iteration 1 in 988.22 s #########
+        1. Deviation = 22.44
+        2. Infeasibility = 106
+        3. Agregado = 23.86
+#############################################
+#########** newthyroid **#########
+######### AGG-Uniform #########
+
+######### Iteration 1 in 376.5 s #########
+        1. Deviation = 10.72
+        2. Infeasibility = 456
+        3. Agregado = 19.06
+######### AGG-Position #########
+
+######### Iteration 1 in 385.56 s #########
+        1. Deviation = 14.29
+        2. Infeasibility = 0
+        3. Agregado = 14.29
+######### AGE-Uniform #########
+
+######### Iteration 1 in 395.25 s #########
+        1. Deviation = 14.29
+        2. Infeasibility = 0
+        3. Agregado = 14.29
+######### AGE-Position #########
+
+######### Iteration 1 in 399.21 s #########
+        1. Deviation = 14.29
+        2. Infeasibility = 0
+        3. Agregado = 14.29
+######### AM-10,1.0 #########
+
+######### Iteration 1 in 379.67 s #########
+        1. Deviation = 10.66
+        2. Infeasibility = 454
+        3. Agregado = 18.96
+######### AM-10,0.1 #########
+
+######### Iteration 1 in 375.5 s #########
+        1. Deviation = 14.29
+        2. Infeasibility = 0
+        3. Agregado = 14.29
+######### AM-10,0.1mej #########
+
+######### Iteration 1 in 374.63 s #########
+        1. Deviation = 14.29
+        2. Infeasibility = 0
+        3. Agregado = 14.29
+
