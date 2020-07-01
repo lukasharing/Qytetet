@@ -1,0 +1,4 @@
+(clear)
+(load "D:/wamp64/www/University_Projects/IC/ejemplo_de_factores_de_certeza/certeza.clp")
+(reset)
+(run)

@@ -112,7 +112,7 @@ def plot2d(X, assigned, mis, negative_r, color = "red"):
 
 def has_one(assigned_result, k):
     for i in range(k):
-        if len(np.where(assigned_result == k)) == 0:
+        if len(np.where(assigned_result == i)[0]) == 0:
             return False
     return True
 
@@ -169,7 +169,7 @@ def fixed__cross(chromosome1, chromosome2, k):
     # Two cases i >= j or i < j
     indxs = np.arange(n)
     p1_indxs = indxs[min(i,j):max(j,i)]
-    p12_indxs = np.concatenate((indxs[0:i], indxs[j:n]))
+    p12_indxs = np.concatenate((indxs[0:min(i,j)], indxs[max(j,i):n]))
     if i > j:
         p12_indxs, p1_indxs = p1_indxs, p12_indxs
     
@@ -227,7 +227,7 @@ def selection_tournament(genome, k):
     # Get best chromosome (Minimum f)
     return sob_sorted[0]
 
-# EXTRA!
+# EXTRA! But not added
 def selection_roulette(genome, V, k):
     # Generate k random values (2 -> Binary)
     sub_i = np.random.sample(range(len(genome)), k)
@@ -458,7 +458,7 @@ def AGE(X, positive_r, negative_r, k, population_size, selection_f, selection_k,
         f_executions += 2
     
     # Return Best Chromosome
-    return sorted(genome, key=lambda t: t[1])[0][0]
+    return sorted(genome, key=lambda t: t[1])[0][0]    
 
 #######################################
 
@@ -511,7 +511,7 @@ def BLS(X, positive_r, negative_r, k, assigned_result, f_curr_executions, flambd
     
     return (assigned_result, min_f, f_executions)
 
-def AME(X, positive_r, negative_r, k, population_size, selection_f, selection_k, cross_f, cross_p, mutate_f, mutate_p, elitism, flambda = 0.0, seed = 10, ge_bls = 0, prob_bls = 0.0, to_best = False):
+def AM(X, positive_r, negative_r, k, population_size, selection_f, selection_k, cross_f, cross_p, mutate_f, mutate_p, elitism, flambda = 0.0, seed = 10, ge_bls = 0, prob_bls = 0.0, to_best = False):
     
     random.seed(seed)
     np.random.seed(seed)
@@ -603,106 +603,6 @@ def AME(X, positive_r, negative_r, k, population_size, selection_f, selection_k,
     # Return Best Chromosome
     return sorted(genome, key=lambda t: t[1])[0][0]
 
-
-def AM(X, positive_r, negative_r, k, population_size, selection_f, selection_k, cross_f, cross_p, mutate_f, mutate_p, elitism, flambda = 0.0, seed = 10, ge_bls = 0, prob_bls = 0.0, to_best = False):
-    
-    random.seed(seed)
-    np.random.seed(seed)
-        
-    size = len(X)
-    
-    # initial
-    initial_genome = generate_genome(k, size, population_size)
-    genes_evaluation = [f(X, assigned, positive_r, negative_r, k, flambda) for assigned in initial_genome]
-    sorted_genes = np.argsort(genes_evaluation)
-    
-    # Pair Gene, Value
-    genome = list(zip(initial_genome, genes_evaluation))
-    
-    # Maximum Number of executions of F
-    f_max = 100000
-    
-    # Mutation Hope Variables
-    have_to_mutate = 2 * size * mutate_p
-    
-    # Count First Nth mutations
-    f_executions = population_size
-    
-    # Number of generations
-    bls_its = 0
-    while f_executions < f_max:
-        if bls_its >= ge_bls: # BLS
-            bls_its = 0
-            
-            population_representation = int(prob_bls * population_size)
-            to_explore_idx = sorted_genes[:population_representation] if to_best else random.sample(list(sorted_genes), population_representation)
-            
-            # Search
-            for i in to_explore_idx:
-                new_gene, new_f_value, new_f_executions = BLS(X, positive_r, negative_r, k, genome[i][0], f_executions, flambda, 0.1)
-                genes_evaluation[i] = new_f_value
-                genome[i] = (new_gene, new_f_value)
-                f_executions = new_f_executions
-                
-            
-        else: # AGE
-            # Icrement BLS Iteration
-            bls_its += 1
-            
-            # Selection
-            selected_genome = [None] * population_size
-            for j in range(population_size):
-                selected_genome[j] = selection_f(genome, selection_k)
-            
-            # Cross
-            new_genome = [None] * population_size
-            for j in range(int(population_size / 2)):
-                
-                chr_i = random.sample(range(population_size), 2)
-                chr1, chr2 = [selected_genome[i] for i in chr_i]
-                
-                p = np.random.uniform()
-                if p < cross_p:
-                    chr1, chr2 = cross_f(chr1, chr2, k), cross_f(chr1, chr2, k) 
-                
-                new_genome[2 * j + 0] = chr1[0]
-                new_genome[2 * j + 1] = chr2[0]
-            
-            # Mutate elements by mathematic hope
-            if have_to_mutate >= 1:
-                number_mutations = int(have_to_mutate)
-                have_to_mutate -= number_mutations
-                mutations = np.random.randint(population_size, size = number_mutations)
-                for mutation_idx in mutations:
-                    new_genome[mutation_idx] = mutate_f(new_genome[mutation_idx], k)
-            
-            # Calculate new Genes Evaluations
-            new_genes_evaluation = [f(X, assigned, positive_r, negative_r, k, flambda) for assigned in new_genome]
-                    
-            # Elitism Replacement
-            if elitism > 0:
-                new_sorted = np.argsort(new_genes_evaluation)
-                for i in range(1, elitism + 1):
-                    new_genome[new_sorted[-i]] = genome[sorted_genes[i - 1]][0]
-                    new_genes_evaluation[new_sorted[-i]] = genome[sorted_genes[i - 1]][1]
-                 # Re-Sort Array
-                sorted_genes = np.argsort(new_genes_evaluation)
-            
-            # Genome Replacement
-            genome = list(zip(new_genome, new_genes_evaluation))
-            
-            have_to_mutate += population_size * size * mutate_p
-            f_executions += population_size
-            
-        
-        # Re-Sort Elements
-        sorted_genes = np.argsort(genes_evaluation)
-        f_executions += 2
-    
-    # Return Best Chromosome
-    return sorted(genome, key=lambda t: t[1])[0][0]
-
-
 def main(name, n_constrictions, k):
     
     print("#########** {} **#########".format(name))
@@ -714,8 +614,8 @@ def main(name, n_constrictions, k):
     path_const = "./dataset/{}_set_const_{}.const".format(name, n_constrictions)
     constrictions = np.loadtxt(path_const, dtype='f', delimiter=',')
     
-    seeds = [11, 12, 13, 14] # 10, 
-    """
+    seeds = [10, 11, 12, 13, 14] 
+    
     algoritm(
         "AGG-Uniform",
         AGG,
@@ -732,7 +632,7 @@ def main(name, n_constrictions, k):
         constrictions,
         k
     )
-    """
+    
     algoritm(
         "AGG-Position",
         AGG,
@@ -749,7 +649,6 @@ def main(name, n_constrictions, k):
         constrictions,
         k
     )
-    
     algoritm(
         "AGE-Uniform",
         AGE,
@@ -849,14 +748,14 @@ def main(name, n_constrictions, k):
 print("#############################################")
 main("rand", 10, 3)
 print("#############################################")
-
-main("iris", 10, 3)
 """
+main("iris", 10, 3)
 
+"""
 print("#############################################")
 main("ecoli", 10, 8)
 
-"""
+
 print("#############################################")
 main("newthyroid", 10, 3)
 

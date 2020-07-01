@@ -133,7 +133,7 @@ def random_centroids(X, k):
 
 def has_one(assigned_result, k):
     for i in range(k):
-        if len(np.where(assigned_result == k)) == 0:
+        if len(np.where(assigned_result == i)[0]) == 0:
             return False
     return True
 

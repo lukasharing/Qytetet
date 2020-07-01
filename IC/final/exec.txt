@@ -1,0 +1,4 @@
+(clear)
+(load "D:/wamp64/www/University_Projects/IC/final/Sistema_Experto_Lukas_Haring_Garcia.clp")
+(reset)
+(run)

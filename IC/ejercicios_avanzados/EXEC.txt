@@ -1,0 +1,14 @@
+(clear)
+(load "D:/wamp64/www/University_Projects/IC/ejercicios_avanzados/menu_1.clp")
+(reset)
+(run)
+
+(clear)
+(load "D:/wamp64/www/University_Projects/IC/ejercicios_avanzados/recuentos_1-2.clp")
+(reset)
+(run)
+
+(clear)
+(load "D:/wamp64/www/University_Projects/IC/ejercicios_avanzados/entrada_salida_1.clp")
+(reset)
+(run)
